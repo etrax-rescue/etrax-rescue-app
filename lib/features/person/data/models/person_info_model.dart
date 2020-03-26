@@ -11,9 +11,10 @@ class PersonInfoModel extends PersonInfo {
   }) : super(name: name, lastSeen: lastSeen, description: description);
 
   factory PersonInfoModel.fromJson(Map<String, dynamic> json) {
+    final DateTime lastSeen = DateTime.parse(json['lastSeen']);
     return PersonInfoModel(
         name: json['name'],
-        lastSeen: json['lastSeen'],
+        lastSeen: lastSeen,
         description: json['description']);
   }
 }

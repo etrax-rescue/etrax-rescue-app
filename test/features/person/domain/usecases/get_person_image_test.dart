@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
@@ -8,6 +8,8 @@ import 'package:etrax_rescue_app/features/person/domain/usecases/get_person_imag
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../fixtures/fixture_reader.dart';
 
 class MockPersonImageRepository extends Mock implements PersonImageRepository {}
 
@@ -19,13 +21,8 @@ void main() {
     usecase = GetPersonImage(mockPersonImageRepository);
   });
 
-  final imageFile = File('test/fixtures/person.png');
   final tPersonImage = PersonImage(
-      image: new Image.file(
-    imageFile,
-    width: 300,
-    height: 300,
-  ));
+      image: Image.memory(base64.decode(fixture('person_image.base64'))));
   final String tUrl = "https://etrax.at/person";
   final String tToken = "0123456789ABCDEF";
 

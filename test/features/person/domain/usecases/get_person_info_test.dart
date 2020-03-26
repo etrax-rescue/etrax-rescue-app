@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
 import 'package:etrax_rescue_app/features/person/domain/entities/person_info.dart';
 import 'package:etrax_rescue_app/features/person/domain/repositories/person_info_repository.dart';
 import 'package:etrax_rescue_app/features/person/domain/usecases/get_person_info.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -24,6 +21,7 @@ void main() {
       name: "John Doe",
       lastSeen: DateTime.parse("2020-02-02"),
       description: "Very Average Person");
+
   final String tUrl = "https://etrax.at/person";
   final String tToken = "0123456789ABCDEF";
 
