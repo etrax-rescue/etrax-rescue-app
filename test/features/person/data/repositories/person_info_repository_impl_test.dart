@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/platform/network_info.dart';
+import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:etrax_rescue_app/features/person/data/datasources/person_info_local_data_source.dart';
 import 'package:etrax_rescue_app/features/person/data/datasources/person_info_remote_data_source.dart';
 import 'package:etrax_rescue_app/features/person/data/models/person_info_model.dart';
@@ -33,8 +33,10 @@ void main() {
   });
 
   group('getPersonInfo', () {
-    final String tUrl = "https://etrax.at/person";
+    final Uri tUri = Uri.parse("https://etrax.at/person");
     final String tToken = "0123456789ABCDEF";
+    final tEid = "0123456789ABCDEF";
+
     final tPersonInfoModel = PersonInfoModel(
         name: "John Doe",
         lastSeen: DateTime.parse("2020-02-02"),
@@ -47,7 +49,7 @@ void main() {
         // arrange
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
         // act
-        repository.getPersonInfo(tUrl, tToken);
+        repository.getPersonInfo(tUri, tToken, tEid);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -76,12 +78,12 @@ void main() {
         'should return remote data when the call to the remote data source is successful',
         () async {
           // arrange
-          when(mockRemoteDataSource.getPersonInfo(any, any))
+          when(mockRemoteDataSource.getPersonInfo(any, any, any))
               .thenAnswer((_) async => tPersonInfoModel);
           // act
-          final result = await repository.getPersonInfo(tUrl, tToken);
+          final result = await repository.getPersonInfo(tUri, tToken, tEid);
           // assert
-          verify(mockRemoteDataSource.getPersonInfo(tUrl, tToken));
+          verify(mockRemoteDataSource.getPersonInfo(tUri, tToken, tEid));
           expect(result, equals(Right(tPersonInfo)));
         },
       );
@@ -90,12 +92,12 @@ void main() {
         'should cache the data locally when the call to the remote data source is successful',
         () async {
           // arrange
-          when(mockRemoteDataSource.getPersonInfo(any, any))
+          when(mockRemoteDataSource.getPersonInfo(any, any, any))
               .thenAnswer((_) async => tPersonInfoModel);
           // act
-          await repository.getPersonInfo(tUrl, tToken);
+          await repository.getPersonInfo(tUri, tToken, tEid);
           // assert
-          verify(mockRemoteDataSource.getPersonInfo(tUrl, tToken));
+          verify(mockRemoteDataSource.getPersonInfo(tUri, tToken, tEid));
           verify(mockLocalDataSource.cachePersonInfo(tPersonInfoModel));
         },
       );
@@ -104,12 +106,12 @@ void main() {
         'should return ServerFailure when the call to the remote data source is unsuccessful',
         () async {
           // arrange
-          when(mockRemoteDataSource.getPersonInfo(any, any))
+          when(mockRemoteDataSource.getPersonInfo(any, any, any))
               .thenThrow(ServerException());
           // act
-          final result = await repository.getPersonInfo(tUrl, tToken);
+          final result = await repository.getPersonInfo(tUri, tToken, tEid);
           // assert
-          verify(mockRemoteDataSource.getPersonInfo(tUrl, tToken));
+          verify(mockRemoteDataSource.getPersonInfo(tUri, tToken, tEid));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -124,7 +126,7 @@ void main() {
           when(mockLocalDataSource.getCachedPersonInfo())
               .thenAnswer((_) async => tPersonInfoModel);
           // act
-          final result = await repository.getPersonInfo(tUrl, tToken);
+          final result = await repository.getPersonInfo(tUri, tToken, tEid);
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getCachedPersonInfo());
@@ -139,7 +141,7 @@ void main() {
           when(mockLocalDataSource.getCachedPersonInfo())
               .thenThrow(CacheException());
           // act
-          final result = await repository.getPersonInfo(tUrl, tToken);
+          final result = await repository.getPersonInfo(tUri, tToken, tEid);
           // assert
           verifyZeroInteractions(mockRemoteDataSource);
           verify(mockLocalDataSource.getCachedPersonInfo());

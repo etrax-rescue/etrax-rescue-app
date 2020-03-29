@@ -3,7 +3,7 @@ import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../core/platform/network_info.dart';
+import '../../../../core/network/network_info.dart';
 import '../../domain/entities/person_info.dart';
 import '../../domain/repositories/person_info_repository.dart';
 import '../datasources/person_info_local_data_source.dart';
@@ -22,11 +22,11 @@ class PersonInfoRepositoryImpl implements PersonInfoRepository {
 
   @override
   Future<Either<Failure, PersonInfo>> getPersonInfo(
-      String url, String token) async {
+      Uri uri, String token, String eid) async {
     if (await networkInfo.isConnected) {
       try {
         final remotePersonInfo =
-            await remoteDataSource.getPersonInfo(url, token);
+            await remoteDataSource.getPersonInfo(uri, token, eid);
         localDataSource.cachePersonInfo(remotePersonInfo);
         return Right(remotePersonInfo);
       } on ServerException {

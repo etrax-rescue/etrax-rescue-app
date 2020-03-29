@@ -15,17 +15,22 @@ dependencies:
   #flutter_bloc: ^3.2.0
   # Value equality
   equatable: ^1.1.0
-  # Functional programming thingies
+  # Functional programming features
   dartz: ^0.8.9
   #http: ^0.12.0+3
   # Local cache
-  #shared_preferences: ^0.5.6
+  shared_preferences: ^0.5.6
   # Reactive persistence library built ontop of SQLite 
   #moor:
   # Location data Source
   #location: ^2.5.0
   # QR scanner data source
   #qrscan: ^0.2.17
+  # Internet connection checker
+  data_connection_checker: ^0.3.4
+  # For proper conversion of DateTime to string
+  intl: ^0.16.1
+  http: ^0.12.0+4
 
 dev_dependencies:
   flutter_test:
