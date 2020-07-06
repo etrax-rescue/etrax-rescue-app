@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>This app needs access to location when open and in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>This app needs access to location when in the background</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera access required to send photos of POIs to server.</string>
 	<key>CFBundleDevelopmentRegion</key>

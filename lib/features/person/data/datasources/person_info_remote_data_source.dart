@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../core/error/exceptions.dart';
 import '../models/person_info_model.dart';
 
 abstract class PersonInfoRemoteDataSource {
