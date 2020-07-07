@@ -1,7 +1,6 @@
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-
-import '../models/base_uri_model.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../../core/error/exceptions.dart';
 
 abstract class BaseUriRemoteEndpointVerification {
   Future<bool> verifyRemoteEndpoint(String baseUri);
@@ -14,7 +13,7 @@ class BaseUriRemoteEndpointVerificationImpl
 
   @override
   Future<bool> verifyRemoteEndpoint(String baseUri) async {
-    final response = await client.get(baseUri + '/version');
+    final response = await client.get(baseUri + '/version_info.json');
     if (response.statusCode == 200) {
       // TODO: how should we handle different versions?
       return true;

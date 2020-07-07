@@ -36,7 +36,7 @@ class BaseUriRepositoryImpl implements BaseUriRepository {
       return Left(NetworkFailure());
     }
     try {
-      final valid = remoteEndpointVerification.verifyRemoteEndpoint(baseUri);
+      await remoteEndpointVerification.verifyRemoteEndpoint(baseUri);
     } on ServerException {
       return Left(ServerFailure());
     }

@@ -35,7 +35,7 @@ BlocProvider<BaseUriBloc> buildBody(BuildContext context) {
                 } else if (state is BaseUriVerifying) {
                   return LoadingWidget();
                 } else if (state is BaseUriStored) {
-                  return MessageDisplay(message: '');
+                  return MessageDisplay(message: 'Erfolg!');
                 } else if (state is BaseUriError) {
                   return MessageDisplay(
                     message: state.message,
@@ -76,12 +76,12 @@ class MessageDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 3,
+      //height: MediaQuery.of(context).size.height / 3,
       child: Center(
         child: SingleChildScrollView(
           child: Text(
             message,
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ),
@@ -105,19 +105,25 @@ class _LinkAppPageControlsState extends State<LinkAppPageControls> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          controller: controller,
-          keyboardType: TextInputType.url,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'https://etrax.at/appdata',
-          ),
-          onChanged: (value) {
-            inputStr = value;
-          },
-          onSubmitted: (_) {
-            submit();
-          },
+        Row(
+          children: <Widget>[
+            Text('https://'),
+            Expanded(
+              child: TextField(
+                controller: controller,
+                keyboardType: TextInputType.url,
+                decoration: InputDecoration(
+                  hintText: 'etrax.at/appdata',
+                ),
+                onChanged: (value) {
+                  inputStr = value;
+                },
+                onSubmitted: (_) {
+                  submit();
+                },
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 10),
         SizedBox(
@@ -139,6 +145,6 @@ class _LinkAppPageControlsState extends State<LinkAppPageControls> {
     }
     controller.clear();
     BlocProvider.of<BaseUriBloc>(context)
-        .add((StoreBaseUri(uriString: inputStr)));
+        .add((StoreBaseUri(uriString: 'https://' + inputStr)));
   }
 }
