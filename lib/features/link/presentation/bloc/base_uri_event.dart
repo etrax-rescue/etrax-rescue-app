@@ -6,7 +6,7 @@ abstract class BaseUriEvent extends Equatable {
 
 class StoreBaseUri extends BaseUriEvent {
   final String uriString;
-  StoreBaseUri(this.uriString);
+  StoreBaseUri({@required this.uriString});
 
   @override
   List<Object> get props => [uriString];

@@ -24,7 +24,7 @@ void main() {
       when(mockServerLinkRepository.verifyAndStoreBaseUri(any))
           .thenAnswer((_) async => Right(None()));
       // act
-      final result = await usecase(baseUri: tUriString);
+      final result = await usecase(BaseUriParams(baseUri: tUriString));
       // assert
       expect(result, Right(None()));
       verify(mockServerLinkRepository.verifyAndStoreBaseUri(tUriString));

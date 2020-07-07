@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/core/error/failures.dart';
+import 'package:etrax_rescue_app/core/messages/messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
 import 'package:etrax_rescue_app/features/link/domain/usecases/verify_and_store_base_uri.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +12,12 @@ part 'base_uri_event.dart';
 part 'base_uri_state.dart';
 
 class BaseUriBloc extends Bloc<BaseUriEvent, BaseUriState> {
-  final VerifyAndStoreBaseUri store;
+  final VerifyAndStoreBaseUri verifyAndStore;
   final UriInputConverter inputConverter;
   BaseUriBloc({
-    @required this.store,
+    @required this.verifyAndStore,
     @required this.inputConverter,
-  })  : assert(store != null),
+  })  : assert(verifyAndStore != null),
         assert(inputConverter != null),
         super(BaseUriInitial());
 
@@ -27,10 +29,28 @@ class BaseUriBloc extends Bloc<BaseUriEvent, BaseUriState> {
       final inputEither = inputConverter.convert(event.uriString);
 
       yield* inputEither.fold((failure) async* {
-        yield BaseUriError(message: null);
+        yield BaseUriError(message: INVALID_INPUT_FAILURE_MESSAGE);
       }, (uri) async* {
-        store(baseUri: uri);
+        yield BaseUriVerifying();
+        final failureOrOk = await verifyAndStore(BaseUriParams(baseUri: uri));
+
+        yield failureOrOk.fold(
+            (failure) => BaseUriError(message: _mapFailureToMessage(failure)),
+            (ok) => BaseUriStored());
       });
     }
+  }
+}
+
+String _mapFailureToMessage(Failure failure) {
+  switch (failure.runtimeType) {
+    case NetworkFailure:
+      return NETWORK_FAILURE_MESSAGE;
+    case ServerFailure:
+      return SERVER_FAILURE_MESSAGE;
+    case CacheFailure:
+      return CACHE_FAILURE_MESSAGE;
+    default:
+      return UNEXPECTED_FAILURE_MESSAGE;
   }
 }

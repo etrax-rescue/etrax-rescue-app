@@ -9,7 +9,7 @@ class BaseUriInitial extends BaseUriState {
   List<Object> get props => [];
 }
 
-class BaseUriTesting extends BaseUriState {
+class BaseUriVerifying extends BaseUriState {
   @override
   List<Object> get props => [];
 }
