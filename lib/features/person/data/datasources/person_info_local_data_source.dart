@@ -22,7 +22,7 @@ class PersonInfoLocalDataSourceImpl implements PersonInfoLocalDataSource {
   Future<PersonInfoModel> getCachedPersonInfo() async {
     final data = sharedPreferences.getString(CACHE_PERSON_INFO);
     if (data != null) {
-      return Future.value(PersonInfoModel.fromJson(json.decode(data)));
+      return PersonInfoModel.fromJson(json.decode(data));
     } else {
       throw CacheException();
     }

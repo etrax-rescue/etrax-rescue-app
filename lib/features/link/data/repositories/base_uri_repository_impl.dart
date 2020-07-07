@@ -32,22 +32,6 @@ class BaseUriRepositoryImpl implements BaseUriRepository {
 
   @override
   Future<Either<Failure, None>> verifyAndStoreBaseUri(String baseUri) async {
-    Uri uri;
-    try {
-      uri = Uri.parse(baseUri);
-    } on FormatException {
-      return Left(MalformedUriFailure());
-    }
-
-    bool valid = uri.isAbsolute && !uri.hasQuery;
-
-    if (!valid) {
-      return Left(MalformedUriFailure());
-    }
-
-    if (uri.scheme != 'https') {
-      return Left(MalformedUriFailure());
-    }
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }

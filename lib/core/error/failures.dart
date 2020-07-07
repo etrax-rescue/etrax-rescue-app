@@ -5,8 +5,6 @@ abstract class Failure extends Equatable {
   List<Object> get props => [];
 }
 
-class MalformedUriFailure extends Failure {}
-
 class NetworkFailure extends Failure {}
 
 class ServerFailure extends Failure {}
@@ -14,3 +12,7 @@ class ServerFailure extends Failure {}
 class CacheFailure extends Failure {}
 
 class PermissionsFailure extends Failure {}
+
+class VersionFailure extends Failure {}
+
+class InvalidInputFailure extends Failure {}

@@ -38,39 +38,6 @@ void main() {
 
   group('verifyAndStoreBaseUri', () {
     test(
-      'should return a MalformedUriException when a uri with query param is given',
-      () async {
-        // arrange
-        final tBadUri = 'https://www.etrax.at/?test=foo';
-        // act
-        final result = await repository.verifyAndStoreBaseUri(tBadUri);
-        // assert
-        expect(result, equals(Left(MalformedUriFailure())));
-      },
-    );
-    test(
-      'should return a MalformedUriException when a uri without schema is given',
-      () async {
-        // arrange
-        final tBadUri = '/www.etrax.at/';
-        // act
-        final result = await repository.verifyAndStoreBaseUri(tBadUri);
-        // assert
-        expect(result, equals(Left(MalformedUriFailure())));
-      },
-    );
-    test(
-      'should return a MalformedUriException when a non https uri is given',
-      () async {
-        // arrange
-        final tBadUri = 'http://www.etrax.at/';
-        // act
-        final result = await repository.verifyAndStoreBaseUri(tBadUri);
-        // assert
-        expect(result, equals(Left(MalformedUriFailure())));
-      },
-    );
-    test(
       'should check if the device is online',
       () async {
         // arrange
