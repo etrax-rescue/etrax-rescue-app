@@ -17,13 +17,14 @@ final sl = GetIt.instance;
 Future<void> init() async {
   //! Features - Link
   // Bloc
-  sl.registerFactory(() => BaseUriBloc(
+  sl.registerFactory<BaseUriBloc>(() => BaseUriBloc(
         inputConverter: sl(),
         verifyAndStore: sl(),
       ));
 
   // Use Cases
-  sl.registerLazySingleton(() => VerifyAndStoreBaseUri(sl()));
+  sl.registerLazySingleton<VerifyAndStoreBaseUri>(
+      () => VerifyAndStoreBaseUri(sl()));
 
   // Repository
   sl.registerLazySingleton<BaseUriRepository>(() => BaseUriRepositoryImpl(
@@ -38,8 +39,8 @@ Future<void> init() async {
       () => BaseUriLocalDataSourceImpl(sl()));
 
   //! Core
-  sl.registerLazySingleton(() => NetworkInfoImpl(sl()));
-  sl.registerLazySingleton(() => UriInputConverter());
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<UriInputConverter>(() => UriInputConverter());
 
   //! External
   final sharedPreferences = await SharedPreferences.getInstance();
