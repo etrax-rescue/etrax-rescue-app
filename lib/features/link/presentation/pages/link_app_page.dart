@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../injection_container.dart';
 import '../bloc/base_uri_bloc.dart';
+import '../widgets/link_app_page_controls.dart';
+import '../widgets/loading_widget.dart';
+import '../widgets/message_display.dart';
 
 class LinkAppPage extends StatelessWidget {
   const LinkAppPage({Key key}) : super(key: key);
@@ -13,7 +16,9 @@ class LinkAppPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Application Link'),
       ),
-      body: buildBody(context),
+      body: SingleChildScrollView(
+        child: buildBody(context),
+      ),
     );
   }
 }
@@ -50,101 +55,4 @@ BlocProvider<BaseUriBloc> buildBody(BuildContext context) {
       ),
     ),
   );
-}
-
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 3,
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-}
-
-class MessageDisplay extends StatelessWidget {
-  final String message;
-  const MessageDisplay({
-    Key key,
-    @required this.message,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      //height: MediaQuery.of(context).size.height / 3,
-      child: Center(
-        child: SingleChildScrollView(
-          child: Text(
-            message,
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LinkAppPageControls extends StatefulWidget {
-  LinkAppPageControls({Key key}) : super(key: key);
-
-  @override
-  _LinkAppPageControlsState createState() => _LinkAppPageControlsState();
-}
-
-class _LinkAppPageControlsState extends State<LinkAppPageControls> {
-  final controller = TextEditingController();
-  String inputStr;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: <Widget>[
-            Text('https://'),
-            Expanded(
-              child: TextField(
-                controller: controller,
-                keyboardType: TextInputType.url,
-                decoration: InputDecoration(
-                  hintText: 'etrax.at/appdata',
-                ),
-                onChanged: (value) {
-                  inputStr = value;
-                },
-                onSubmitted: (_) {
-                  submit();
-                },
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          child: RaisedButton(
-            child: Text('Link'),
-            color: Theme.of(context).accentColor,
-            textTheme: ButtonTextTheme.primary,
-            onPressed: submit,
-          ),
-        ),
-      ],
-    );
-  }
-
-  void submit() {
-    if (inputStr == '') {
-      return;
-    }
-    controller.clear();
-    BlocProvider.of<BaseUriBloc>(context)
-        .add((StoreBaseUri(uriString: 'https://' + inputStr)));
-  }
 }

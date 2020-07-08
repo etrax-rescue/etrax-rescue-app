@@ -31,11 +31,14 @@ dependencies:
   background_location:
     git: 
       url: git@github.com:yozoon/flutter_background_location.git
+  auto_route: ^0.6.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+  build_runner:
+  auto_route_generator: ^0.6.0
   
 
 

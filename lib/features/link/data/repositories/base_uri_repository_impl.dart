@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +41,10 @@ class BaseUriRepositoryImpl implements BaseUriRepository {
     try {
       await remoteEndpointVerification.verifyRemoteEndpoint(baseUri);
     } on ServerException {
+      return Left(ServerFailure());
+    } on SocketException {
+      return Left(ServerFailure());
+    } on TimeoutException {
       return Left(ServerFailure());
     }
     try {

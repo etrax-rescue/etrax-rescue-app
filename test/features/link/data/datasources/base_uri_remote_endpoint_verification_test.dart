@@ -24,7 +24,7 @@ void main() {
   final String tBaseUri = 'https://www.etrax.at';
 
   test(
-    'should perform GET request on the /version endpoint',
+    'should perform GET request on the /version_info.json endpoint',
     () async {
       // arrange
       when(mockedHttpClient.get(any)).thenAnswer(
@@ -32,7 +32,7 @@ void main() {
       // act
       endpointVerification.verifyRemoteEndpoint(tBaseUri);
       // assert
-      verify(mockedHttpClient.get(tBaseUri + '/version'));
+      verify(mockedHttpClient.get(tBaseUri + '/version_info.json'));
     },
   );
 

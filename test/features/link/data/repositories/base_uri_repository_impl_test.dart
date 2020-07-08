@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
@@ -99,6 +102,34 @@ void main() {
           // arrange
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
               .thenThrow(ServerException());
+          // act
+          final result = await repository.verifyAndStoreBaseUri(tBaseUri);
+          // assert
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(tBaseUri));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalDataSource);
+        },
+      );
+      test(
+        'should return ServerFailure when a TimeoutException occurs',
+        () async {
+          // arrange
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
+              .thenThrow(TimeoutException(''));
+          // act
+          final result = await repository.verifyAndStoreBaseUri(tBaseUri);
+          // assert
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(tBaseUri));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalDataSource);
+        },
+      );
+      test(
+        'should return ServerFailure when a SocketException occurs',
+        () async {
+          // arrange
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
+              .thenThrow(SocketException(''));
           // act
           final result = await repository.verifyAndStoreBaseUri(tBaseUri);
           // assert

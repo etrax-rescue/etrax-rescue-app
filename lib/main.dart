@@ -1,7 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import 'features/link/presentation/pages/link_app_page.dart';
 import 'injection_container.dart' as di;
+import 'routes/router.gr.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ class EtraxApp extends StatelessWidget {
         primaryColor: Colors.red.shade800,
         accentColor: Colors.green.shade600,
       ),
-      home: LinkAppPage(),
+      builder: ExtendedNavigator<Router>(router: Router()),
     );
   }
 }
