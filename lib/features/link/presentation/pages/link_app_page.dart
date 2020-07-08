@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,6 +41,8 @@ BlocProvider<BaseUriBloc> buildBody(BuildContext context) {
                 } else if (state is BaseUriVerifying) {
                   return LoadingWidget();
                 } else if (state is BaseUriStored) {
+                  // TODO: Maybe login page should be a widget of this page?
+                  ExtendedNavigator.root.pushNamed('/login-page');
                   return MessageDisplay(message: 'Erfolg!');
                 } else if (state is BaseUriError) {
                   return MessageDisplay(

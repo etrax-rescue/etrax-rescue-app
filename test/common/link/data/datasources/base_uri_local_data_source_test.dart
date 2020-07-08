@@ -1,6 +1,6 @@
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/features/link/data/datasources/base_uri_local_datasource.dart';
-import 'package:etrax_rescue_app/features/link/data/models/base_uri_model.dart';
+import 'package:etrax_rescue_app/common/link/data/datasources/base_uri_local_datasource.dart';
+import 'package:etrax_rescue_app/common/link/data/models/base_uri_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';

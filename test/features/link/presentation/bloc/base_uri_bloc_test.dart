@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/messages/messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
-import 'package:etrax_rescue_app/features/link/domain/usecases/verify_and_store_base_uri.dart';
+import 'package:etrax_rescue_app/common/link/domain/usecases/verify_and_store_base_uri.dart';
 import 'package:etrax_rescue_app/features/link/presentation/bloc/base_uri_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

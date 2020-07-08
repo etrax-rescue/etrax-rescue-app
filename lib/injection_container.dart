@@ -1,15 +1,15 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/features/link/data/datasources/base_uri_local_datasource.dart';
-import 'package:etrax_rescue_app/features/link/data/datasources/base_uri_remote_endpoint_verification.dart';
-import 'package:etrax_rescue_app/features/link/data/repositories/base_uri_repository_impl.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'common/link/data/datasources/base_uri_local_datasource.dart';
+import 'common/link/data/datasources/base_uri_remote_endpoint_verification.dart';
+import 'common/link/data/repositories/base_uri_repository_impl.dart';
+import 'common/link/domain/repositories/base_uri_repository.dart';
+import 'common/link/domain/usecases/verify_and_store_base_uri.dart';
 import 'core/network/network_info.dart';
 import 'core/util/uri_input_converter.dart';
-import 'features/link/domain/repositories/base_uri_repository.dart';
-import 'features/link/domain/usecases/verify_and_store_base_uri.dart';
 import 'features/link/presentation/bloc/base_uri_bloc.dart';
 
 final sl = GetIt.instance;

@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/messages/messages.dart';
-import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
-import 'package:etrax_rescue_app/features/link/domain/usecases/verify_and_store_base_uri.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../common/link/domain/usecases/verify_and_store_base_uri.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../core/messages/messages.dart';
+import '../../../../core/util/uri_input_converter.dart';
 
 part 'base_uri_event.dart';
 part 'base_uri_state.dart';
