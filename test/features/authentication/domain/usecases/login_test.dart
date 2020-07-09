@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/link/domain/usecases/verify_and_store_base_uri.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
 import 'package:flutter_test/flutter_test.dart';

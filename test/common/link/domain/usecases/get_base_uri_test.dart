@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/common/link/domain/repositories/base_uri_repository.dart';
 import 'package:etrax_rescue_app/common/link/domain/usecases/get_base_uri.dart';
 import 'package:etrax_rescue_app/common/link/domain/entities/base_uri.dart';
+import 'package:etrax_rescue_app/core/usecases/usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -25,7 +26,7 @@ void main() {
       when(mockServerLinkRepository.getBaseUri())
           .thenAnswer((_) async => Right(tBaseUri));
       // act
-      final result = await usecase();
+      final result = await usecase(NoParams());
       // assert
       expect(result, Right(tBaseUri));
       verify(mockServerLinkRepository.getBaseUri());
