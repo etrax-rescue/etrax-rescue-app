@@ -6,3 +6,5 @@ const CACHE_FAILURE_MESSAGE =
     'Beim Speichern des Links ist ein Fehler aufgetreten.';
 const INVALID_INPUT_FAILURE_MESSAGE =
     'Der eingegebene URL entspricht nicht dem erwarteten Format.\n Beispiel für das richtige Format: https://www.etrax.at/appdata';
+const LOGIN_FAILURE_MESSAGE =
+    'Der eingegebene Username oder das Password ist falsch';
