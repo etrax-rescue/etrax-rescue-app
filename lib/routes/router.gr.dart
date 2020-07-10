@@ -7,7 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/features/link/presentation/pages/link_app_page.dart';
+import 'package:etrax_rescue_app/features/appconnect/presentation/pages/link_app_page.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/pages/login_page.dart';
 
 class Routes {

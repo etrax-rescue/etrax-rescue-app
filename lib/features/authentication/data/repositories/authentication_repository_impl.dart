@@ -28,7 +28,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<Either<Failure, AuthenticationData>> getAuthenticationData() async {
     AuthenticationDataModel data;
     try {
-      data = await localAuthenticationDataSource.loadCredentials();
+      data = await localAuthenticationDataSource.getCachedAuthenticationData();
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -55,11 +55,16 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return Left(LoginFailure());
     }
     try {
-      localAuthenticationDataSource.cacheCredentials(
-          authenticationDataModel.username, authenticationDataModel.token);
+      localAuthenticationDataSource
+          .cacheAuthenticationData(authenticationDataModel);
     } on CacheException {
       return Left(CacheFailure());
     }
     return Right(None());
+  }
+
+  @override
+  Future<Either<Failure, None>> deleteAuthenticationData() {
+    localAuthenticationDataSource.deleteAuthenticationData();
   }
 }

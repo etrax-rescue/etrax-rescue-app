@@ -169,7 +169,8 @@ void main() {
           // act
           await repository.login(tBaseUri, tUsername, tPassword);
           // assert
-          verify(mockLocalDataSource.cacheCredentials(tUsername, tToken));
+          verify(mockLocalDataSource
+              .cacheAuthenticationData(tAuthenticationDataModel));
           verifyNoMoreInteractions(mockLocalDataSource);
         },
       );
@@ -193,7 +194,7 @@ void main() {
           // arrange
           when(mockRemoteDataSource.login(any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
-          when(mockLocalDataSource.cacheCredentials(any, any))
+          when(mockLocalDataSource.cacheAuthenticationData(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.login(tBaseUri, tUsername, tPassword);
@@ -209,19 +210,19 @@ void main() {
       'should ask local data source for cached data',
       () async {
         // arrange
-        when(mockLocalDataSource.loadCredentials())
+        when(mockLocalDataSource.getCachedAuthenticationData())
             .thenAnswer((_) async => tAuthenticationDataModel);
         // act
         await repository.getAuthenticationData();
         // assert
-        verify(mockLocalDataSource.loadCredentials());
+        verify(mockLocalDataSource.getCachedAuthenticationData());
       },
     );
     test(
       'should return cached AuthenticationDataModel',
       () async {
         // arrange
-        when(mockLocalDataSource.loadCredentials())
+        when(mockLocalDataSource.getCachedAuthenticationData())
             .thenAnswer((_) async => tAuthenticationDataModel);
         // act
         final result = await repository.getAuthenticationData();
@@ -233,11 +234,27 @@ void main() {
       'should return CacheFailure when retrieving cached data fails',
       () async {
         // arrange
-        when(mockLocalDataSource.loadCredentials()).thenThrow(CacheException());
+        when(mockLocalDataSource.getCachedAuthenticationData())
+            .thenThrow(CacheException());
         // act
         final result = await repository.getAuthenticationData();
         // assert
         expect(result, Left(CacheFailure()));
+      },
+    );
+  });
+
+  group('deleteAuthenticationData', () {
+    test(
+      'should ask local data source to delete the authentication data',
+      () async {
+        // arrange
+        when(mockLocalDataSource.deleteAuthenticationData())
+            .thenAnswer((_) async => true);
+        // act
+        await repository.deleteAuthenticationData();
+        // assert
+        verify(mockLocalDataSource.deleteAuthenticationData());
       },
     );
   });

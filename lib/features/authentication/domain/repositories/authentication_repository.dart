@@ -5,9 +5,9 @@ import '../entities/authentication_data.dart';
 
 abstract class AuthenticationRepository {
   Future<Either<Failure, None>> login(
-    String baseUri,
-    String username,
-    String password,
-  );
+      String baseUri, String username, String password);
+
   Future<Either<Failure, AuthenticationData>> getAuthenticationData();
+
+  Future<Either<Failure, None>> deleteAuthenticationData();
 }

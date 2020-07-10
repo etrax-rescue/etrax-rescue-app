@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../common/shared_preferences_keys.dart';
+import '../../../../core/error/exceptions.dart';
 import '../models/person_info_model.dart';
 
 abstract class PersonInfoLocalDataSource {
@@ -10,8 +11,6 @@ abstract class PersonInfoLocalDataSource {
 
   Future<void> cachePersonInfo(PersonInfoModel personInfoToCache);
 }
-
-const CACHE_PERSON_INFO = 'CACHE_PERSON_INFO';
 
 class PersonInfoLocalDataSourceImpl implements PersonInfoLocalDataSource {
   final SharedPreferences sharedPreferences;
