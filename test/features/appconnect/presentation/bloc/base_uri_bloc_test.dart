@@ -34,6 +34,8 @@ void main() {
     () async {
       // arrange
       mockInputConverterSuccess();
+      when(mockVerifyAndStoreBaseUri(any))
+          .thenAnswer((_) async => Right(None()));
       // act
       bloc.add(StoreBaseUri(uriString: tBaseUri));
       await untilCalled(mockUriInputConverter.convert(any));

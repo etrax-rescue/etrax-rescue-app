@@ -43,6 +43,17 @@ void main() {
       },
     );
     test(
+      'should return a InvalidInputFailure when the provided uri contains whitespaces',
+      () async {
+        // arrange
+        final tBadUri = 'https://www etrax.at/';
+        // act
+        final result = inputConverter.convert(tBadUri);
+        // assert
+        expect(result, equals(Left(InvalidInputFailure())));
+      },
+    );
+    test(
       'should return a InvalidInputFailure when a non https uri is given',
       () async {
         // arrange

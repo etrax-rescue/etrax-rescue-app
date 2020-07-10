@@ -3,6 +3,9 @@ import 'package:etrax_rescue_app/core/error/failures.dart';
 
 class UriInputConverter {
   Either<Failure, String> convert(String str) {
+    if (str.contains(' ')) {
+      return Left(InvalidInputFailure());
+    }
     Uri uri;
     try {
       uri = Uri.parse(str);

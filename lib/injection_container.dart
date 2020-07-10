@@ -1,4 +1,13 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/common/appconnect/domain/usecases/get_base_uri.dart';
+import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
+import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
+import 'package:etrax_rescue_app/features/authentication/data/repositories/authentication_repository_impl.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/repositories/authentication_repository.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/usecases/delete_authentication_data.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_authentication_data.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
+import 'package:etrax_rescue_app/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +25,7 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   //! Features - Link
-  // Bloc
+  // BLoC
   sl.registerFactory<BaseUriBloc>(() => BaseUriBloc(
         inputConverter: sl(),
         verifyAndStore: sl(),
@@ -25,6 +34,8 @@ Future<void> init() async {
   // Use Cases
   sl.registerLazySingleton<VerifyAndStoreBaseUri>(
       () => VerifyAndStoreBaseUri(sl()));
+
+  sl.registerLazySingleton<GetBaseUri>(() => GetBaseUri(sl()));
 
   // Repository
   sl.registerLazySingleton<BaseUriRepository>(() => BaseUriRepositoryImpl(
@@ -37,6 +48,35 @@ Future<void> init() async {
       () => BaseUriRemoteEndpointVerificationImpl(sl()));
   sl.registerLazySingleton<BaseUriLocalDataSource>(
       () => BaseUriLocalDataSourceImpl(sl()));
+
+  //! Features - Authentication
+  // BLoC
+  sl.registerFactory<AuthenticationBloc>(() => AuthenticationBloc(
+        login: sl(),
+        getBaseUri: sl(),
+      ));
+
+  // Use Cases
+  sl.registerLazySingleton<Login>(() => Login(sl()));
+
+  sl.registerLazySingleton<GetAuthenticationData>(
+      () => GetAuthenticationData(sl()));
+
+  sl.registerLazySingleton<DeleteAuthenticationData>(
+      () => DeleteAuthenticationData(sl()));
+
+  // Repository
+  sl.registerLazySingleton<AuthenticationRepository>(() =>
+      AuthenticationRepositoryImpl(
+          remoteLoginDataSource: sl(),
+          localAuthenticationDataSource: sl(),
+          networkInfo: sl()));
+
+  // Data Sources
+  sl.registerLazySingleton<RemoteLoginDataSource>(
+      () => RemoteLoginDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalAuthenticationDataSource>(
+      () => LocalAuthenticationDataSourceImpl(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

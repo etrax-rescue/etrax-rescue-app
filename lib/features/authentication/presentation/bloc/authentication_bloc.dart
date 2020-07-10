@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/usecases/get_base_uri.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/messages/messages.dart';
-import 'package:etrax_rescue_app/core/usecases/usecase.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../common/appconnect/domain/usecases/get_base_uri.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../core/messages/messages.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../domain/usecases/login.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';

@@ -36,6 +36,7 @@ void main() {
     () async {
       // arrange
       mockGetBaseUriSuccess();
+      when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // act
       bloc.add(SubmitLogin(username: tUsername, password: tPassword));
       await untilCalled(mockGetBaseUri(any));
