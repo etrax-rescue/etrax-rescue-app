@@ -27,7 +27,7 @@ class _AppconnectControlsState extends State<AppconnectControls> {
                   keyboardType: TextInputType.url,
                   decoration: InputDecoration(
                     icon: Text('https://'),
-                    hintText: 'etrax.at/appdata',
+                    hintText: 'etrax.at',
                   ),
                   onChanged: (value) {
                     inputStr = value;
