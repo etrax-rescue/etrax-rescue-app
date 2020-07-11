@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/entities/base_uri.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/usecases/get_base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/entities/base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/usecases/get_base_uri.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/messages/messages.dart';
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
@@ -67,6 +67,7 @@ void main() {
     () async {
       // arrange
       mockGetBaseUriSuccess();
+      when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // act
       bloc.add(SubmitLogin(username: tUsername, password: tPassword));
       await untilCalled(mockGetBaseUri(any));

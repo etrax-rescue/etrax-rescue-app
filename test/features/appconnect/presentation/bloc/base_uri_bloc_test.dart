@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/messages/messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/usecases/verify_and_store_base_uri.dart';
-import 'package:etrax_rescue_app/features/appconnect/presentation/bloc/base_uri_bloc.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/usecases/verify_and_store_base_uri.dart';
+import 'package:etrax_rescue_app/features/app_connect/presentation/bloc/app_connect_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -12,14 +12,14 @@ class MockVerifyAndStoreBaseUri extends Mock implements VerifyAndStoreBaseUri {}
 class MockUriInputConverter extends Mock implements UriInputConverter {}
 
 void main() {
-  BaseUriBloc bloc;
+  AppConnectBloc bloc;
   MockVerifyAndStoreBaseUri mockVerifyAndStoreBaseUri;
   MockUriInputConverter mockUriInputConverter;
 
   setUp(() {
     mockVerifyAndStoreBaseUri = MockVerifyAndStoreBaseUri();
     mockUriInputConverter = MockUriInputConverter();
-    bloc = BaseUriBloc(
+    bloc = AppConnectBloc(
         verifyAndStore: mockVerifyAndStoreBaseUri,
         inputConverter: mockUriInputConverter);
   });
@@ -37,7 +37,7 @@ void main() {
       when(mockVerifyAndStoreBaseUri(any))
           .thenAnswer((_) async => Right(None()));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
       await untilCalled(mockUriInputConverter.convert(any));
       // assert
       verify(mockUriInputConverter.convert(tBaseUri));
@@ -51,12 +51,12 @@ void main() {
           .thenReturn(Left(InvalidInputFailure()));
       // assert
       final expected = [
-        BaseUriInitial(),
-        BaseUriError(message: INVALID_INPUT_FAILURE_MESSAGE),
+        AppConnectInitial(),
+        AppConnectError(message: INVALID_INPUT_FAILURE_MESSAGE),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
     },
   );
   test(
@@ -67,7 +67,7 @@ void main() {
       when(mockVerifyAndStoreBaseUri(any))
           .thenAnswer((_) async => Right(None()));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
       await untilCalled(mockVerifyAndStoreBaseUri(any));
       // assert
       verify(mockVerifyAndStoreBaseUri(BaseUriParams(baseUri: tBaseUri)));
@@ -83,13 +83,13 @@ void main() {
           .thenAnswer((_) async => Right(None()));
       // assert
       final expected = [
-        BaseUriInitial(),
-        BaseUriVerifying(),
-        BaseUriStored(),
+        AppConnectInitial(),
+        AppConnectVerifying(),
+        AppConnectStored(),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
     },
   );
 
@@ -102,13 +102,13 @@ void main() {
           .thenAnswer((_) async => Left(NetworkFailure()));
       // assert
       final expected = [
-        BaseUriInitial(),
-        BaseUriVerifying(),
-        BaseUriError(message: NETWORK_FAILURE_MESSAGE),
+        AppConnectInitial(),
+        AppConnectVerifying(),
+        AppConnectError(message: NETWORK_FAILURE_MESSAGE),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
     },
   );
 
@@ -121,13 +121,13 @@ void main() {
           .thenAnswer((_) async => Left(ServerFailure()));
       // assert
       final expected = [
-        BaseUriInitial(),
-        BaseUriVerifying(),
-        BaseUriError(message: SERVER_FAILURE_MESSAGE),
+        AppConnectInitial(),
+        AppConnectVerifying(),
+        AppConnectError(message: SERVER_URL_FAILURE_MESSAGE),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
     },
   );
 
@@ -140,13 +140,13 @@ void main() {
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        BaseUriInitial(),
-        BaseUriVerifying(),
-        BaseUriError(message: CACHE_FAILURE_MESSAGE),
+        AppConnectInitial(),
+        AppConnectVerifying(),
+        AppConnectError(message: CACHE_FAILURE_MESSAGE),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(StoreBaseUri(uriString: tBaseUri));
+      bloc.add(ConnectApp(uriString: tBaseUri));
     },
   );
 }

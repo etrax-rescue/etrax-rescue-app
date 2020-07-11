@@ -7,14 +7,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/features/appconnect/presentation/pages/link_app_page.dart';
+import 'package:etrax_rescue_app/features/app_connect/presentation/pages/app_connect_page.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/pages/login_page.dart';
 
 class Routes {
-  static const String linkAppPage = '/';
+  static const String appconnectPage = '/';
   static const String loginPage = '/login-page';
   static const all = <String>{
-    linkAppPage,
+    appconnectPage,
     loginPage,
   };
 }
@@ -23,17 +23,17 @@ class Router extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
-    RouteDef(Routes.linkAppPage, page: LinkAppPage),
+    RouteDef(Routes.appconnectPage, page: AppconnectPage),
     RouteDef(Routes.loginPage, page: LoginPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
-    LinkAppPage: (RouteData data) {
-      var args = data.getArgs<LinkAppPageArguments>(
-          orElse: () => LinkAppPageArguments());
+    AppconnectPage: (RouteData data) {
+      var args = data.getArgs<AppconnectPageArguments>(
+          orElse: () => AppconnectPageArguments());
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LinkAppPage(key: args.key),
+        builder: (context) => AppconnectPage(key: args.key),
         settings: data,
       );
     },
@@ -52,10 +52,10 @@ class Router extends RouterBase {
 // Arguments holder classes
 // **************************************************************************
 
-//LinkAppPage arguments holder class
-class LinkAppPageArguments {
+//AppconnectPage arguments holder class
+class AppconnectPageArguments {
   final Key key;
-  LinkAppPageArguments({this.key});
+  AppconnectPageArguments({this.key});
 }
 
 //LoginPage arguments holder class

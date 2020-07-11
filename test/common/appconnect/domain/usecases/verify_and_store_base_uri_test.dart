@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/appconnect/data/repositories/base_uri_repository_impl.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/usecases/verify_and_store_base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/repositories/base_uri_repository_impl.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/usecases/verify_and_store_base_uri.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

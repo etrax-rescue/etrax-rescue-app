@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/base_uri_bloc.dart';
+import '../bloc/app_connect_bloc.dart';
 
 class AppconnectControls extends StatefulWidget {
   AppconnectControls({Key key}) : super(key: key);
@@ -24,7 +24,6 @@ class _AppconnectControlsState extends State<AppconnectControls> {
             children: <Widget>[
               Expanded(
                 child: TextFormField(
-                  autofocus: true,
                   keyboardType: TextInputType.url,
                   decoration: InputDecoration(
                     icon: Text('https://'),
@@ -56,8 +55,8 @@ class _AppconnectControlsState extends State<AppconnectControls> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      BlocProvider.of<BaseUriBloc>(context)
-          .add((StoreBaseUri(uriString: 'https://' + inputStr)));
+      BlocProvider.of<AppConnectBloc>(context)
+          .add((ConnectApp(uriString: 'https://' + inputStr)));
     }
   }
 }

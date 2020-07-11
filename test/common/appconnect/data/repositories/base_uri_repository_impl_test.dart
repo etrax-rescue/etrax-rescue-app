@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/common/appconnect/data/models/base_uri_model.dart';
-import 'package:etrax_rescue_app/common/appconnect/data/repositories/base_uri_repository_impl.dart';
-import 'package:etrax_rescue_app/common/appconnect/data/datasources/base_uri_local_datasource.dart';
-import 'package:etrax_rescue_app/common/appconnect/data/datasources/base_uri_remote_endpoint_verification.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/models/base_uri_model.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/repositories/base_uri_repository_impl.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/datasources/base_uri_local_datasource.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/datasources/base_uri_remote_endpoint_verification.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
@@ -145,7 +145,7 @@ void main() {
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
               .thenAnswer((_) async => true);
           // act
-          final result = await repository.verifyAndStoreBaseUri(tBaseUri);
+          await repository.verifyAndStoreBaseUri(tBaseUri);
           // assert
           verify(mockLocalDataSource.cacheBaseUri(tBaseUri));
           verifyNoMoreInteractions(mockLocalDataSource);

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../injection_container.dart';
-import '../bloc/base_uri_bloc.dart';
-import '../widgets/appconnect_controls.dart';
+import '../bloc/app_connect_bloc.dart';
+import '../widgets/app_connect_controls.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/message_display.dart';
 
-class LinkAppPage extends StatelessWidget {
-  const LinkAppPage({Key key}) : super(key: key);
+class AppconnectPage extends StatelessWidget {
+  const AppconnectPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class LinkAppPage extends StatelessWidget {
   }
 }
 
-BlocProvider<BaseUriBloc> buildBody(BuildContext context) {
+BlocProvider<AppConnectBloc> buildBody(BuildContext context) {
   return BlocProvider(
-    create: (_) => sl<BaseUriBloc>(),
+    create: (_) => sl<AppConnectBloc>(),
     child: Column(
       children: <Widget>[
         SizedBox(height: MediaQuery.of(context).padding.top),
@@ -42,23 +42,20 @@ BlocProvider<BaseUriBloc> buildBody(BuildContext context) {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  BlocBuilder<BaseUriBloc, BaseUriState>(
+                  BlocBuilder<AppConnectBloc, AppConnectState>(
                     builder: (context, state) {
-                      if (state is BaseUriInitial) {
-                        return Container();
-                      } else if (state is BaseUriVerifying) {
+                      if (state is AppConnectVerifying) {
                         return LoadingWidget();
-                      } else if (state is BaseUriStored) {
-                        // TODO: Maybe login page should be a widget of this page?
+                      } else if (state is AppConnectStored) {
                         ExtendedNavigator.root
                             .pushReplacementNamed('/login-page');
                         //ExtendedNavigator.root.pushNamed('/login-page');
-                        return MessageDisplay(message: 'Erfolg!');
-                      } else if (state is BaseUriError) {
+                      } else if (state is AppConnectError) {
                         return MessageDisplay(
                           message: state.message,
                         );
                       }
+                      return Container();
                     },
                   ),
                   SizedBox(height: 10),

@@ -1,5 +1,5 @@
-import 'package:etrax_rescue_app/common/appconnect/data/models/base_uri_model.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/entities/base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/models/base_uri_model.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/entities/base_uri.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

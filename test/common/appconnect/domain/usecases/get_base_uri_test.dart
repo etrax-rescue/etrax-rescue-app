@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/repositories/base_uri_repository.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/usecases/get_base_uri.dart';
-import 'package:etrax_rescue_app/common/appconnect/domain/entities/base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/repositories/base_uri_repository.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/usecases/get_base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connect/domain/entities/base_uri.dart';
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

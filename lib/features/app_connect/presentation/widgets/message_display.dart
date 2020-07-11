@@ -13,7 +13,7 @@ class MessageDisplay extends StatelessWidget {
       width: double.infinity,
       child: Text(
         message,
-        style: TextStyle(fontSize: 12, color: Colors.red),
+        style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor),
       ),
     );
   }

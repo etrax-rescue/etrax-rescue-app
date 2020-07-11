@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../common/appconnect/domain/usecases/get_base_uri.dart';
+import '../../../../common/app_connect/domain/usecases/get_base_uri.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/messages/messages.dart';
 import '../../../../core/usecases/usecase.dart';

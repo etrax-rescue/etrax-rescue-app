@@ -1,5 +1,5 @@
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/common/appconnect/data/datasources/base_uri_remote_endpoint_verification.dart';
+import 'package:etrax_rescue_app/common/app_connect/data/datasources/base_uri_remote_endpoint_verification.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;

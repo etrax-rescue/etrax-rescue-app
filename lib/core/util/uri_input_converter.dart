@@ -23,7 +23,7 @@ class UriInputConverter {
       return Left(InvalidInputFailure());
     }
     // Removes trailing backslash from uri
-    final new_str = str.replaceAllMapped(RegExp(r'\/$'), (match) => '');
-    return Right(new_str);
+    final newStr = str.replaceAllMapped(RegExp(r'\/$'), (match) => '');
+    return Right(newStr);
   }
 }
