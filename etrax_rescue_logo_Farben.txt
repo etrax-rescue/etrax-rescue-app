@@ -1,0 +1,11 @@
+Webfarben für eTrax | rescue
+
+Primärfarbe (Text): #455a64 (69-90-100)
+	- hell: #718792 (113-135-146)
+	- dunkel: #1c313a (28-49-58)
+
+Sekundärfarbe (rot): #D3302F (211-48-47)
+	- hell: #ff6659 (255-102-89)
+	- dunkel: #9a0007 (154-0-7)
+
+Hintergrund in Icon: #C0D4DF (192-212-223)

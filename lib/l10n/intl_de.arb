@@ -1,0 +1,19 @@
+{
+    "FIELD_REQUIRED": "Bitte dieses Feld ausfüllen",
+    
+    "CONNECT": "Verbinden",
+    "APP_CONNECT_HEADING": "App verbinden",
+
+    "LOGIN": "Anmelden",
+    "USERNAME": "Benutzername",
+    "PASSWORD": "Password",
+    "AUTHENTICATION_SUCCESS": "Erfolg!",
+
+    "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",
+    "NETWORK_FAILURE_MESSAGE": "Ihr Gerät ist offline.",
+    "SERVER_URL_FAILURE_MESSAGE": "Der angegebene URL zeigt zu keinem eTrax|rescue Server, bzw. dieser ist derzeit nicht erreichbar.",
+    "SERVER_FAILURE_MESSAGE": "Der Server ist derzeit nicht erreichbar.",
+    "CACHE_FAILURE_MESSAGE": "Beim Speichern des Links ist ein Fehler aufgetreten.",
+    "INVALID_INPUT_FAILURE_MESSAGE": "Der eingegebene URL entspricht nicht dem erwarteten Format.\n Beispiel für das richtige Format: https://etrax.at",
+    "LOGIN_FAILURE_MESSAGE": "Der eingegebene Username oder das Password ist falsch"
+}

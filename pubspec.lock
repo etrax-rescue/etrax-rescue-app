@@ -246,6 +246,18 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
+  flutter_i18n:
+    dependency: "direct main"
+    description:
+      name: flutter_i18n
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.2"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -312,6 +324,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  intl_translation:
+    dependency: "direct dev"
+    description:
+      name: intl_translation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.10"
   io:
     dependency: transitive
     description:
@@ -347,6 +366,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.6"
+  merge_map:
+    dependency: transitive
+    description:
+      name: merge_map
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   meta:
     dependency: transitive
     description:
@@ -410,6 +436,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.0"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.4"
   pool:
     dependency: transitive
     description:
@@ -604,6 +637,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.0"
+  xml2json:
+    dependency: transitive
+    description:
+      name: xml2json
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.0"
   yaml:
     dependency: transitive
     description:
