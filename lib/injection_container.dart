@@ -1,5 +1,5 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/common/app_connect/domain/usecases/get_base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/usecases/get_app_connection.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/repositories/authentication_repository_impl.dart';
@@ -12,48 +12,49 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'common/app_connect/data/datasources/base_uri_local_datasource.dart';
-import 'common/app_connect/data/datasources/base_uri_remote_endpoint_verification.dart';
-import 'common/app_connect/data/repositories/base_uri_repository_impl.dart';
-import 'common/app_connect/domain/repositories/base_uri_repository.dart';
-import 'common/app_connect/domain/usecases/verify_and_store_base_uri.dart';
+import 'common/app_connection/data/datasources/app_connection_local_datasource.dart';
+import 'common/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
+import 'common/app_connection/data/repositories/app_connection_repository_impl.dart';
+import 'common/app_connection/domain/repositories/app_connection_repository.dart';
+import 'common/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'core/network/network_info.dart';
 import 'core/util/uri_input_converter.dart';
-import 'features/app_connect/presentation/bloc/app_connect_bloc.dart';
+import 'features/app_connection/presentation/bloc/app_connection_bloc.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  //! Features - Link
+  //! Features - App Connection
   // BLoC
-  sl.registerFactory<AppConnectBloc>(() => AppConnectBloc(
+  sl.registerFactory<AppConnectionBloc>(() => AppConnectionBloc(
         inputConverter: sl(),
         verifyAndStore: sl(),
       ));
 
   // Use Cases
-  sl.registerLazySingleton<VerifyAndStoreBaseUri>(
-      () => VerifyAndStoreBaseUri(sl()));
+  sl.registerLazySingleton<VerifyAndStoreAppConnection>(
+      () => VerifyAndStoreAppConnection(sl()));
 
-  sl.registerLazySingleton<GetBaseUri>(() => GetBaseUri(sl()));
+  sl.registerLazySingleton<GetAppConnection>(() => GetAppConnection(sl()));
 
   // Repository
-  sl.registerLazySingleton<BaseUriRepository>(() => BaseUriRepositoryImpl(
-      remoteEndpointVerification: sl(),
-      localDataSource: sl(),
-      networkInfo: sl()));
+  sl.registerLazySingleton<AppConnectionRepository>(() =>
+      AppConnectionRepositoryImpl(
+          remoteEndpointVerification: sl(),
+          localDataSource: sl(),
+          networkInfo: sl()));
 
   // Data Sources
-  sl.registerLazySingleton<BaseUriRemoteEndpointVerification>(
-      () => BaseUriRemoteEndpointVerificationImpl(sl()));
-  sl.registerLazySingleton<BaseUriLocalDataSource>(
-      () => BaseUriLocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<AppConnectionRemoteEndpointVerification>(
+      () => AppConnectionRemoteEndpointVerificationImpl(sl()));
+  sl.registerLazySingleton<AppConnectionLocalDataSource>(
+      () => AppConnectionLocalDataSourceImpl(sl()));
 
   //! Features - Authentication
   // BLoC
   sl.registerFactory<AuthenticationBloc>(() => AuthenticationBloc(
         login: sl(),
-        getBaseUri: sl(),
+        getAppConnection: sl(),
       ));
 
   // Use Cases

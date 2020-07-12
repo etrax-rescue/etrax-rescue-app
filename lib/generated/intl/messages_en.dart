@@ -21,14 +21,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "APP_CONNECT_HEADING" : MessageLookupByLibrary.simpleMessage("Connect App:"),
+    "AUTHENTICATION_SUCCESS" : MessageLookupByLibrary.simpleMessage("Success!"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("An error occured during the URI storage process."),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Connect"),
     "FIELD_REQUIRED" : MessageLookupByLibrary.simpleMessage("required"),
     "INVALID_INPUT_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("The provided URL does not resemble a valid format.\n Example for a valid URL: https://etrax.at"),
+    "LOGIN" : MessageLookupByLibrary.simpleMessage("Login"),
     "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Invalid username or password"),
+    "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Login:"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Your device is offline."),
+    "PASSWORD" : MessageLookupByLibrary.simpleMessage("Password"),
     "SERVER_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("The server is not reachable at the moment."),
     "SERVER_URL_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Either the provided URI doesn\'t point to a valid eTrax|rescue Server,\n or the server is not reachable at the moment."),
-    "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("A unexpected error occured.")
+    "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("A unexpected error occured."),
+    "USERNAME" : MessageLookupByLibrary.simpleMessage("Username")
   };
 }

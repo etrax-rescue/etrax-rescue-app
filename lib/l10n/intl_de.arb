@@ -1,12 +1,13 @@
 {
     "FIELD_REQUIRED": "Bitte dieses Feld ausfüllen",
     
-    "CONNECT": "Verbinden",
     "APP_CONNECT_HEADING": "App verbinden",
+    "CONNECT": "Verbinden",
 
+    "LOGIN_HEADING": "Anmelden:",
     "LOGIN": "Anmelden",
     "USERNAME": "Benutzername",
-    "PASSWORD": "Password",
+    "PASSWORD": "Passwort",
     "AUTHENTICATION_SUCCESS": "Erfolg!",
 
     "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",

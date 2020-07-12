@@ -7,14 +7,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/features/app_connect/presentation/pages/app_connect_page.dart';
+import 'package:etrax_rescue_app/features/app_connection/presentation/pages/app_connection_page.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/pages/login_page.dart';
 
 class Routes {
-  static const String appconnectPage = '/';
+  static const String appConnectionPage = '/';
   static const String loginPage = '/login-page';
   static const all = <String>{
-    appconnectPage,
+    appConnectionPage,
     loginPage,
   };
 }
@@ -23,17 +23,17 @@ class Router extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
-    RouteDef(Routes.appconnectPage, page: AppconnectPage),
+    RouteDef(Routes.appConnectionPage, page: AppConnectionPage),
     RouteDef(Routes.loginPage, page: LoginPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
-    AppconnectPage: (RouteData data) {
-      var args = data.getArgs<AppconnectPageArguments>(
-          orElse: () => AppconnectPageArguments());
+    AppConnectionPage: (RouteData data) {
+      var args = data.getArgs<AppConnectionPageArguments>(
+          orElse: () => AppConnectionPageArguments());
       return MaterialPageRoute<dynamic>(
-        builder: (context) => AppconnectPage(key: args.key),
+        builder: (context) => AppConnectionPage(key: args.key),
         settings: data,
       );
     },
@@ -52,10 +52,10 @@ class Router extends RouterBase {
 // Arguments holder classes
 // **************************************************************************
 
-//AppconnectPage arguments holder class
-class AppconnectPageArguments {
+//AppConnectionPage arguments holder class
+class AppConnectionPageArguments {
   final Key key;
-  AppconnectPageArguments({this.key});
+  AppConnectionPageArguments({this.key});
 }
 
 //LoginPage arguments holder class

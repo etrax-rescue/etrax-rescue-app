@@ -43,11 +43,71 @@ class S {
     );
   }
 
+  /// `Connect App:`
+  String get APP_CONNECT_HEADING {
+    return Intl.message(
+      'Connect App:',
+      name: 'APP_CONNECT_HEADING',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connect`
   String get CONNECT {
     return Intl.message(
       'Connect',
       name: 'CONNECT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login:`
+  String get LOGIN_HEADING {
+    return Intl.message(
+      'Login:',
+      name: 'LOGIN_HEADING',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login`
+  String get LOGIN {
+    return Intl.message(
+      'Login',
+      name: 'LOGIN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username`
+  String get USERNAME {
+    return Intl.message(
+      'Username',
+      name: 'USERNAME',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get PASSWORD {
+    return Intl.message(
+      'Password',
+      name: 'PASSWORD',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Success!`
+  String get AUTHENTICATION_SUCCESS {
+    return Intl.message(
+      'Success!',
+      name: 'AUTHENTICATION_SUCCESS',
       desc: '',
       args: [],
     );

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/app_connect/domain/entities/base_uri.dart';
-import 'package:etrax_rescue_app/common/app_connect/domain/usecases/get_base_uri.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/usecases/get_app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/messages/messages.dart';
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
@@ -11,37 +11,38 @@ import 'package:mockito/mockito.dart';
 
 class MockLogin extends Mock implements Login {}
 
-class MockGetBaseUri extends Mock implements GetBaseUri {}
+class MockGetAppConnection extends Mock implements GetAppConnection {}
 
 void main() {
   AuthenticationBloc bloc;
   MockLogin mockLogin;
-  MockGetBaseUri mockGetBaseUri;
+  MockGetAppConnection mockGetAppConnection;
 
   setUp(() {
     mockLogin = MockLogin();
-    mockGetBaseUri = MockGetBaseUri();
-    bloc = AuthenticationBloc(login: mockLogin, getBaseUri: mockGetBaseUri);
+    mockGetAppConnection = MockGetAppConnection();
+    bloc = AuthenticationBloc(
+        login: mockLogin, getAppConnection: mockGetAppConnection);
   });
 
   String tUsername = 'JohnDoe';
   String tPassword = '0123456789ABCDEF';
   String tBaseUri = 'https://etrax.at/appdata';
 
-  void mockGetBaseUriSuccess() => when(mockGetBaseUri(any))
-      .thenAnswer((_) async => Right(BaseUri(baseUri: tBaseUri)));
+  void mockGetAppConnectionSuccess() => when(mockGetAppConnection(any))
+      .thenAnswer((_) async => Right(AppConnection(baseUri: tBaseUri)));
 
   test(
     'should retrieve stored base URI',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // act
       bloc.add(SubmitLogin(username: tUsername, password: tPassword));
-      await untilCalled(mockGetBaseUri(any));
+      await untilCalled(mockGetAppConnection(any));
       // assert
-      verify(mockGetBaseUri(NoParams()));
+      verify(mockGetAppConnection(NoParams()));
     },
   );
 
@@ -49,7 +50,8 @@ void main() {
     'should emit [Login, Error] when storing of the uri failed',
     () async {
       // arrange
-      when(mockGetBaseUri(any)).thenAnswer((_) async => Left(CacheFailure()));
+      when(mockGetAppConnection(any))
+          .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
         AuthenticationInitial(),
@@ -66,13 +68,13 @@ void main() {
     'should retrieve stored base URI',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // act
       bloc.add(SubmitLogin(username: tUsername, password: tPassword));
-      await untilCalled(mockGetBaseUri(any));
+      await untilCalled(mockGetAppConnection(any));
       // assert
-      verify(mockGetBaseUri(NoParams()));
+      verify(mockGetAppConnection(NoParams()));
     },
   );
 
@@ -80,7 +82,7 @@ void main() {
     'should call usecase',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // act
       bloc.add(SubmitLogin(username: tUsername, password: tPassword));
@@ -95,7 +97,7 @@ void main() {
     'should emit [AuthenticationVerifying, AuthenticationSuccess] when login was successful',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // assert
       final expected = [
@@ -113,7 +115,7 @@ void main() {
     'should emit [AuthenticationVerifying, Error] when no network is available',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Left(NetworkFailure()));
       // assert
       final expected = [
@@ -130,7 +132,7 @@ void main() {
     'should emit [AuthenticationVerifying, Error] when login failed',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Left(LoginFailure()));
       // assert
       final expected = [
@@ -148,7 +150,7 @@ void main() {
     'should emit [AuthenticationVerifying, Error] when a server failure occurs',
     () async {
       // arrange
-      mockGetBaseUriSuccess();
+      mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Left(ServerFailure()));
       // assert
       final expected = [

@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../common/app_connect/domain/usecases/get_base_uri.dart';
+import '../../../../common/app_connection/domain/usecases/get_app_connection.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/messages/messages.dart';
 import '../../../../core/usecases/usecase.dart';
@@ -16,10 +16,10 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final Login login;
-  final GetBaseUri getBaseUri;
-  AuthenticationBloc({@required this.login, @required this.getBaseUri})
+  final GetAppConnection getAppConnection;
+  AuthenticationBloc({@required this.login, @required this.getAppConnection})
       : assert(login != null),
-        assert(getBaseUri != null),
+        assert(getAppConnection != null),
         super(AuthenticationInitial());
 
   @override
@@ -28,7 +28,7 @@ class AuthenticationBloc
   ) async* {
     if (event is SubmitLogin) {
       yield AuthenticationVerifying();
-      final baseUriEither = await getBaseUri(NoParams());
+      final baseUriEither = await getAppConnection(NoParams());
 
       yield* baseUriEither.fold((failure) async* {
         yield AuthenticationError(message: CACHE_FAILURE_MESSAGE);

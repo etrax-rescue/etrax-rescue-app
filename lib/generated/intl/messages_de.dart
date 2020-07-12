@@ -21,14 +21,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "APP_CONNECT_HEADING" : MessageLookupByLibrary.simpleMessage("App verbinden"),
+    "AUTHENTICATION_SUCCESS" : MessageLookupByLibrary.simpleMessage("Erfolg!"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Beim Speichern des Links ist ein Fehler aufgetreten."),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Verbinden"),
     "FIELD_REQUIRED" : MessageLookupByLibrary.simpleMessage("Bitte dieses Feld ausfüllen"),
     "INVALID_INPUT_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene URL entspricht nicht dem erwarteten Format.\n Beispiel für das richtige Format: https://etrax.at"),
+    "LOGIN" : MessageLookupByLibrary.simpleMessage("Anmelden"),
     "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene Username oder das Password ist falsch"),
+    "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Anmelden:"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ihr Gerät ist offline."),
+    "PASSWORD" : MessageLookupByLibrary.simpleMessage("Passwort"),
     "SERVER_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der Server ist derzeit nicht erreichbar."),
     "SERVER_URL_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der angegebene URL zeigt zu keinem eTrax|rescue Server, bzw. dieser ist derzeit nicht erreichbar."),
-    "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ein unerwarteter Fehler ist aufgetreten.")
+    "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ein unerwarteter Fehler ist aufgetreten."),
+    "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername")
   };
 }

@@ -1,15 +1,15 @@
-import 'package:etrax_rescue_app/generated/l10n.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../injection_container.dart';
-import '../../../app_connection/presentation/widgets/loading_widget.dart';
-import '../../../app_connection/presentation/widgets/message_display.dart';
-import '../bloc/authentication_bloc.dart';
-import '../widgets/login_controls.dart';
+import '../bloc/app_connection_bloc.dart';
+import '../widgets/app_connection_controls.dart';
+import '../widgets/loading_widget.dart';
+import '../widgets/message_display.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key key}) : super(key: key);
+class AppConnectionPage extends StatelessWidget {
+  const AppConnectionPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-BlocProvider<AuthenticationBloc> buildBody(BuildContext context) {
+BlocProvider<AppConnectionBloc> buildBody(BuildContext context) {
   return BlocProvider(
-    create: (_) => sl<AuthenticationBloc>(),
+    create: (_) => sl<AppConnectionBloc>(),
     child: Column(
       children: <Widget>[
         SizedBox(height: MediaQuery.of(context).padding.top),
@@ -38,19 +38,20 @@ BlocProvider<AuthenticationBloc> buildBody(BuildContext context) {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        S.of(context).LOGIN,
+                        'App verbinden:',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                    BlocBuilder<AppConnectionBloc, AppConnectionState>(
                       builder: (context, state) {
-                        if (state is AuthenticationVerifying) {
+                        if (state is AppConnectionVerifying) {
                           return LoadingWidget();
-                        } else if (state is AuthenticationSuccess) {
-                          return MessageDisplay(
-                              message: S.of(context).AUTHENTICATION_SUCCESS);
-                        } else if (state is AuthenticationError) {
+                        } else if (state is AppConnectionSuccess) {
+                          ExtendedNavigator.root
+                              .pushReplacementNamed('/login-page');
+                          //ExtendedNavigator.root.pushNamed('/login-page');
+                        } else if (state is AppConnectionError) {
                           return MessageDisplay(
                             message: state.message,
                           );
@@ -58,7 +59,8 @@ BlocProvider<AuthenticationBloc> buildBody(BuildContext context) {
                         return Container();
                       },
                     ),
-                    LoginControls(),
+                    SizedBox(height: 10),
+                    AppConnectionControls(),
                   ],
                 ),
               ),

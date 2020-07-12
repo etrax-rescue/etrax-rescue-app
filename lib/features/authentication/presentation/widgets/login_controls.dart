@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +25,7 @@ class _LoginControlsState extends State<LoginControls> {
           TextFormField(
             autofocus: true,
             decoration: InputDecoration(
-              hintText: 'username',
+              hintText: S.of(context).USERNAME,
             ),
             onChanged: (value) {
               _usernameStr = value;
@@ -33,12 +34,12 @@ class _LoginControlsState extends State<LoginControls> {
               _usernameStr = value;
             },
             validator: (val) =>
-                val.length < 1 ? 'Bitte dieses Feld ausfüllen' : null,
+                val.length < 1 ? S.of(context).FIELD_REQUIRED : null,
           ),
           TextFormField(
             keyboardType: TextInputType.visiblePassword,
             decoration: InputDecoration(
-              hintText: 'password',
+              hintText: S.of(context).PASSWORD,
             ),
             onChanged: (value) {
               _passwordStr = value;
@@ -47,14 +48,14 @@ class _LoginControlsState extends State<LoginControls> {
               _passwordStr = value;
             },
             validator: (val) =>
-                val.length < 1 ? 'Bitte dieses Feld ausfüllen' : null,
+                val.length < 1 ? S.of(context).FIELD_REQUIRED : null,
             obscureText: true,
           ),
           SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
             child: RaisedButton(
-              child: Text('Login'),
+              child: Text(S.of(context).LOGIN),
               color: Theme.of(context).accentColor,
               textTheme: ButtonTextTheme.primary,
               onPressed: submit,
