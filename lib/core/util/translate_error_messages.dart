@@ -25,7 +25,6 @@ String translateErrorMessage(BuildContext context, String key) {
       return S.of(context).INVALID_INPUT_FAILURE_MESSAGE;
     case LOGIN_FAILURE_MESSAGE_KEY:
       return S.of(context).LOGIN_FAILURE_MESSAGE;
-    default:
-      S.of(context).UNEXPECTED_FAILURE_MESSAGE;
   }
+  return S.of(context).UNEXPECTED_FAILURE_MESSAGE;
 }
