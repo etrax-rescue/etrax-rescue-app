@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/messages/messages.dart';
+import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
 import 'package:etrax_rescue_app/common/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'package:etrax_rescue_app/features/app_connection/presentation/bloc/app_connection_bloc.dart';
@@ -53,7 +53,7 @@ void main() {
       // assert
       final expected = [
         AppConnectionInitial(),
-        AppConnectionError(message: INVALID_INPUT_FAILURE_MESSAGE),
+        AppConnectionError(message_key: INVALID_INPUT_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -106,7 +106,7 @@ void main() {
       final expected = [
         AppConnectionInitial(),
         AppConnectionVerifying(),
-        AppConnectionError(message: NETWORK_FAILURE_MESSAGE),
+        AppConnectionError(message_key: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -125,7 +125,7 @@ void main() {
       final expected = [
         AppConnectionInitial(),
         AppConnectionVerifying(),
-        AppConnectionError(message: SERVER_URL_FAILURE_MESSAGE),
+        AppConnectionError(message_key: SERVER_URL_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -144,7 +144,7 @@ void main() {
       final expected = [
         AppConnectionInitial(),
         AppConnectionVerifying(),
-        AppConnectionError(message: CACHE_FAILURE_MESSAGE),
+        AppConnectionError(message_key: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act

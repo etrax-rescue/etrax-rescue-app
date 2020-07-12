@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../common/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/messages/messages.dart';
 import '../../../../core/util/uri_input_converter.dart';
 
 part 'app_connection_event.dart';
@@ -30,7 +30,8 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
       final inputEither = inputConverter.convert(event.uriString);
 
       yield* inputEither.fold((failure) async* {
-        yield AppConnectionError(message: INVALID_INPUT_FAILURE_MESSAGE);
+        yield AppConnectionError(
+            message_key: INVALID_INPUT_FAILURE_MESSAGE_KEY);
       }, (uri) async* {
         yield AppConnectionVerifying();
         final failureOrOk =
@@ -38,7 +39,7 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
 
         yield failureOrOk.fold(
             (failure) =>
-                AppConnectionError(message: _mapFailureToMessage(failure)),
+                AppConnectionError(message_key: _mapFailureToMessage(failure)),
             (ok) => AppConnectionSuccess());
       });
     }
@@ -48,12 +49,12 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
 String _mapFailureToMessage(Failure failure) {
   switch (failure.runtimeType) {
     case NetworkFailure:
-      return NETWORK_FAILURE_MESSAGE;
+      return NETWORK_FAILURE_MESSAGE_KEY;
     case ServerFailure:
-      return SERVER_URL_FAILURE_MESSAGE;
+      return SERVER_URL_FAILURE_MESSAGE_KEY;
     case CacheFailure:
-      return CACHE_FAILURE_MESSAGE;
+      return CACHE_FAILURE_MESSAGE_KEY;
     default:
-      return UNEXPECTED_FAILURE_MESSAGE;
+      return UNEXPECTED_FAILURE_MESSAGE_KEY;
   }
 }

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../common/app_connection/domain/usecases/get_app_connection.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/messages/messages.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/usecases/login.dart';
 
@@ -31,7 +31,7 @@ class AuthenticationBloc
       final baseUriEither = await getAppConnection(NoParams());
 
       yield* baseUriEither.fold((failure) async* {
-        yield AuthenticationError(message: CACHE_FAILURE_MESSAGE);
+        yield AuthenticationError(message_key: CACHE_FAILURE_MESSAGE_KEY);
       }, (baseUri) async* {
         final authenticationEither = await login(LoginParams(
           baseUri: baseUri.baseUri,
@@ -39,7 +39,7 @@ class AuthenticationBloc
           password: event.password,
         ));
         yield* authenticationEither.fold((failure) async* {
-          yield AuthenticationError(message: _mapFailureToMessage(failure));
+          yield AuthenticationError(message_key: _mapFailureToMessage(failure));
         }, (_) async* {
           yield AuthenticationSuccess();
         });
@@ -51,14 +51,14 @@ class AuthenticationBloc
 String _mapFailureToMessage(Failure failure) {
   switch (failure.runtimeType) {
     case NetworkFailure:
-      return NETWORK_FAILURE_MESSAGE;
+      return NETWORK_FAILURE_MESSAGE_KEY;
     case ServerFailure:
-      return SERVER_FAILURE_MESSAGE;
+      return SERVER_FAILURE_MESSAGE_KEY;
     case CacheFailure:
-      return CACHE_FAILURE_MESSAGE;
+      return CACHE_FAILURE_MESSAGE_KEY;
     case LoginFailure:
-      return LOGIN_FAILURE_MESSAGE;
+      return LOGIN_FAILURE_MESSAGE_KEY;
     default:
-      return UNEXPECTED_FAILURE_MESSAGE;
+      return UNEXPECTED_FAILURE_MESSAGE_KEY;
   }
 }

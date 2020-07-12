@@ -25,6 +25,7 @@ class _AppConnectionControlsState extends State<AppConnectionControls> {
             children: <Widget>[
               Expanded(
                 child: TextFormField(
+                  autofocus: true,
                   keyboardType: TextInputType.url,
                   decoration: InputDecoration(
                     icon: Text('https://'),

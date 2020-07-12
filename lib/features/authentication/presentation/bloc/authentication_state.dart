@@ -20,10 +20,10 @@ class AuthenticationSuccess extends AuthenticationState {
 }
 
 class AuthenticationError extends AuthenticationState {
-  final String message;
+  final String message_key;
 
-  AuthenticationError({@required this.message});
+  AuthenticationError({@required this.message_key});
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [message_key];
 }

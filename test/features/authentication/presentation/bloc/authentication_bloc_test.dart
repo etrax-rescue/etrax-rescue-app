@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:etrax_rescue_app/common/app_connection/domain/usecases/get_app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/messages/messages.dart';
+import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/bloc/authentication_bloc.dart';
@@ -56,7 +56,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message: CACHE_FAILURE_MESSAGE),
+        AuthenticationError(message_key: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -121,7 +121,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message: NETWORK_FAILURE_MESSAGE),
+        AuthenticationError(message_key: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -138,7 +138,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message: LOGIN_FAILURE_MESSAGE),
+        AuthenticationError(message_key: LOGIN_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -156,7 +156,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message: SERVER_FAILURE_MESSAGE),
+        AuthenticationError(message_key: SERVER_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
