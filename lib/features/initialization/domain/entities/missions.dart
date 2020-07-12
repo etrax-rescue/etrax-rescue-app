@@ -13,16 +13,20 @@ class Missions extends Equatable {
 }
 
 class Mission extends Equatable {
-  final String missionID;
-  final String missionName;
-  final DateTime missionStart;
+  final String id;
+  final String name;
+  final DateTime start;
+  final double latitude;
+  final double longitude;
 
   Mission({
-    @required this.missionID,
-    @required this.missionName,
-    @required this.missionStart,
+    @required this.id,
+    @required this.name,
+    @required this.start,
+    @required this.latitude,
+    @required this.longitude,
   });
 
   @override
-  List<Object> get props => [missionID, missionName, missionStart];
+  List<Object> get props => [id, name, start, latitude, longitude];
 }

@@ -21,10 +21,15 @@ void main() {
   final tMissionID = '0123456789ABCDEF';
   final tMissionName = 'TestMission';
   final tMissionStart = DateTime.utc(2020, 1, 1);
+  final tLatitude = 48.2206635;
+  final tLongitude = 16.309849;
   final tMission = Mission(
-      missionID: tMissionID,
-      missionName: tMissionName,
-      missionStart: tMissionStart);
+    id: tMissionID,
+    name: tMissionName,
+    start: tMissionStart,
+    latitude: tLatitude,
+    longitude: tLongitude,
+  );
   final tMissions = Missions(missions: <Mission>[tMission]);
 
   test(

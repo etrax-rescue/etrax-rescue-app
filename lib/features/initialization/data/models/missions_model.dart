@@ -7,12 +7,16 @@ class MissionsModel extends Missions {
 }
 
 class MissionModel extends Mission {
-  MissionModel(
-      {@required String missionID,
-      @required String missionName,
-      @required DateTime missionStart})
-      : super(
-            missionID: missionID,
-            missionName: missionName,
-            missionStart: missionStart);
+  MissionModel({
+    @required String id,
+    @required String name,
+    @required DateTime start,
+    @required double latitude,
+    @required double longitude,
+  }) : super(
+            id: id,
+            name: name,
+            start: start,
+            latitude: latitude,
+            longitude: longitude);
 }
