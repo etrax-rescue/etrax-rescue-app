@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/usecases/usecase.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/entities/mission.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/get_missions.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,18 +25,18 @@ void main() {
       missionID: tMissionID,
       missionName: tMissionName,
       missionStart: tMissionStart);
-  final tMissionList = <Mission>[tMission];
+  final tMissions = Missions(missions: <Mission>[tMission]);
 
   test(
-    'should return a mission list',
+    'should return Missions',
     () async {
       // arrange
       when(mockInitializationRepository.getMissions())
-          .thenAnswer((_) async => Right(tMissionList));
+          .thenAnswer((_) async => Right(tMissions));
       // act
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tMissionList));
+      expect(result, Right(tMissions));
       verify(mockInitializationRepository.getMissions());
       verifyNoMoreInteractions(mockInitializationRepository);
     },

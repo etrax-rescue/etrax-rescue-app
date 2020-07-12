@@ -1,6 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
+class Missions extends Equatable {
+  final List<Mission> missions;
+
+  Missions({
+    @required this.missions,
+  });
+
+  @override
+  List<Object> get props => [missions];
+}
+
 class Mission extends Equatable {
   final String missionID;
   final String missionName;

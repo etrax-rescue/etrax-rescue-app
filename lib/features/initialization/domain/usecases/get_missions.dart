@@ -1,16 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/entities/mission.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/initialization_repository.dart';
 
-class GetMissions extends UseCase<List<Mission>, NoParams> {
+class GetMissions extends UseCase<Missions, NoParams> {
   final InitializationRepository repository;
   GetMissions(this.repository);
 
   @override
-  Future<Either<Failure, List<Mission>>> call(NoParams params) async {
+  Future<Either<Failure, Missions>> call(NoParams params) async {
     return await repository.getMissions();
   }
 }
