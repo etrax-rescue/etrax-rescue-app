@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
 
@@ -36,21 +37,25 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
 
   @override
   Future<Either<Failure, None>> verifyAndStoreAppConnection(
-      String baseUri) async {
+      String authority, String basePath) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
+    AppConnectionModel model;
     try {
-      await remoteEndpointVerification.verifyRemoteEndpoint(baseUri);
+      model = await remoteEndpointVerification.verifyRemoteEndpoint(
+          authority, basePath);
     } on ServerException {
       return Left(ServerFailure());
     } on SocketException {
       return Left(ServerFailure());
     } on TimeoutException {
       return Left(ServerFailure());
+    } on HandshakeException {
+      return Left(ServerFailure());
     }
     try {
-      localDataSource.cacheAppConnection(baseUri);
+      localDataSource.cacheAppConnection(model);
       return Right(None());
     } on CacheException {
       return Left(CacheFailure());

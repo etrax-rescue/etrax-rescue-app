@@ -12,15 +12,17 @@ class VerifyAndStoreAppConnection extends UseCase<None, AppConnectionParams> {
 
   @override
   Future<Either<Failure, None>> call(AppConnectionParams param) async {
-    return await repository.verifyAndStoreAppConnection(param.baseUri);
+    return await repository.verifyAndStoreAppConnection(
+        param.authority, param.basePath);
   }
 }
 
 class AppConnectionParams extends Equatable {
-  final String baseUri;
+  final String authority;
+  final String basePath;
 
-  AppConnectionParams({@required this.baseUri});
+  AppConnectionParams({@required this.authority, @required this.basePath});
 
   @override
-  List<Object> get props => [baseUri];
+  List<Object> get props => [authority, basePath];
 }

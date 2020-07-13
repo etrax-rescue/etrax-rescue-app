@@ -37,6 +37,7 @@ dependencies:
   auto_route: ^0.6.1
   flutter_i18n: ^0.16.2
   moor_flutter: ^3.1.0
+  path: ^1.7.0
 
 dev_dependencies:
   flutter_test:

@@ -5,9 +5,9 @@ abstract class AppConnectionEvent extends Equatable {
 }
 
 class ConnectApp extends AppConnectionEvent {
-  final String uriString;
-  ConnectApp({@required this.uriString});
+  final String authority;
+  ConnectApp({@required this.authority});
 
   @override
-  List<Object> get props => [uriString];
+  List<Object> get props => [authority];
 }

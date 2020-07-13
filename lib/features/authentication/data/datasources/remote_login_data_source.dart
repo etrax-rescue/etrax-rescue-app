@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:path/path.dart' as p;
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -7,7 +8,7 @@ import '../models/authentication_data_model.dart';
 
 abstract class RemoteLoginDataSource {
   Future<AuthenticationDataModel> login(
-      String baseUri, String username, String password);
+      AppConnection appConnection, String username, String password);
 }
 
 class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
@@ -16,8 +17,10 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
 
   @override
   Future<AuthenticationDataModel> login(
-      String baseUri, String username, String password) async {
-    final request = client.post(baseUri + '/login.php',
+      AppConnection appConnection, String username, String password) async {
+    final request = client.post(
+        Uri.https(appConnection.authority,
+            p.join(appConnection.basePath, 'login.php')),
         body: {'username': username, 'password': password});
     final response = await request.timeout(const Duration(seconds: 2));
     if (response.statusCode == 200) {

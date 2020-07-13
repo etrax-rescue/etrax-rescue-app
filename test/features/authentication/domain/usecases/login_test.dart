@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,11 +17,14 @@ void main() {
     usecase = Login(mockAuthenticationRepository);
   });
 
-  final tBaseUri = 'https://etrax.at/appdata';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
   final tLoginParams = LoginParams(
-    baseUri: tBaseUri,
+    appConnection: tAppConnection,
     username: tUsername,
     password: tPassword,
   );
@@ -34,8 +38,8 @@ void main() {
       final result = await usecase(tLoginParams);
       // assert
       expect(result, Right(None()));
-      verify(
-          mockAuthenticationRepository.login(tBaseUri, tUsername, tPassword));
+      verify(mockAuthenticationRepository.login(
+          tAppConnection, tUsername, tPassword));
       verifyNoMoreInteractions(mockAuthenticationRepository);
     },
   );

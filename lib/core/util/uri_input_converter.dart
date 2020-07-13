@@ -2,13 +2,16 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 
 class UriInputConverter {
-  Either<Failure, String> convert(String str) {
-    if (str.contains(' ')) {
+  Either<Failure, String> convert(String authorityString) {
+    if (authorityString.contains(' ')) {
       return Left(InvalidInputFailure());
     }
+    // Removes trailing backslash from uri
+    authorityString =
+        authorityString.replaceAllMapped(RegExp(r'\/$'), (match) => '');
     Uri uri;
     try {
-      uri = Uri.parse(str);
+      uri = Uri.https(authorityString, '');
     } on FormatException {
       return Left(InvalidInputFailure());
     }
@@ -19,11 +22,6 @@ class UriInputConverter {
       return Left(InvalidInputFailure());
     }
 
-    if (uri.scheme != 'https') {
-      return Left(InvalidInputFailure());
-    }
-    // Removes trailing backslash from uri
-    final newStr = str.replaceAllMapped(RegExp(r'\/$'), (match) => '');
-    return Right(newStr);
+    return Right(authorityString);
   }
 }

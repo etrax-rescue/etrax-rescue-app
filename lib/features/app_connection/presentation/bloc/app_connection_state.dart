@@ -20,10 +20,9 @@ class AppConnectionSuccess extends AppConnectionState {
 }
 
 class AppConnectionError extends AppConnectionState {
-  final String message_key;
-
-  AppConnectionError({@required this.message_key});
+  final String messageKey;
+  AppConnectionError({@required this.messageKey});
 
   @override
-  List<Object> get props => [message_key];
+  List<Object> get props => [messageKey];
 }

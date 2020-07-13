@@ -58,7 +58,7 @@ class _AppConnectionControlsState extends State<AppConnectionControls> {
   void submit() {
     if (_formKey.currentState.validate()) {
       BlocProvider.of<AppConnectionBloc>(context)
-          .add((ConnectApp(uriString: 'https://' + inputStr)));
+          .add((ConnectApp(authority: inputStr)));
     }
   }
 }

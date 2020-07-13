@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
@@ -13,21 +14,21 @@ class Login extends UseCase<None, LoginParams> {
   @override
   Future<Either<Failure, None>> call(LoginParams params) async {
     return await repository.login(
-        params.baseUri, params.username, params.password);
+        params.appConnection, params.username, params.password);
   }
 }
 
 class LoginParams extends Equatable {
-  final String baseUri;
+  final AppConnection appConnection;
   final String username;
   final String password;
 
   LoginParams({
-    @required this.baseUri,
+    @required this.appConnection,
     @required this.username,
     @required this.password,
   });
 
   @override
-  List<Object> get props => [baseUri, username, password];
+  List<Object> get props => [appConnection, username, password];
 }

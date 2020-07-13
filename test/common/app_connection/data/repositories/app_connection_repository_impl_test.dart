@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
@@ -38,7 +39,10 @@ void main() {
     );
   });
 
-  final tBaseUri = 'https://www.etrax.at/';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnectionModel =
+      AppConnectionModel(authority: tAuthority, basePath: tBasePath);
 
   group('verifyAndStoreBaseUri', () {
     test(
@@ -47,7 +51,7 @@ void main() {
         // arrange
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
         // act
-        repository.verifyAndStoreAppConnection(tBaseUri);
+        repository.verifyAndStoreAppConnection(tAuthority, tBasePath);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -76,7 +80,8 @@ void main() {
         'should return a NetworkFailure when the device is offline',
         () async {
           // act
-          final result = await repository.verifyAndStoreAppConnection(tBaseUri);
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
           // assert
           expect(result, equals(Left(NetworkFailure())));
         },
@@ -88,12 +93,13 @@ void main() {
         'should call the RemoteEndpointVerification when the device is online',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
-              .thenAnswer((_) async => true);
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
+              .thenAnswer((_) async => tAppConnectionModel);
           // act
-          await repository.verifyAndStoreAppConnection(tBaseUri);
+          await repository.verifyAndStoreAppConnection(tAuthority, tBasePath);
           // assert
-          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(tBaseUri));
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(
+              tAuthority, tBasePath));
           verifyNoMoreInteractions(mockRemoteEndpointVerification);
         },
       );
@@ -101,26 +107,31 @@ void main() {
         'should return ServerFailure when the device is online and remote endpoint verification fails',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
               .thenThrow(ServerException());
           // act
-          final result = await repository.verifyAndStoreAppConnection(tBaseUri);
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
           // assert
-          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(tBaseUri));
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(
+              tAuthority, tBasePath));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
       );
+
       test(
         'should return ServerFailure when a TimeoutException occurs',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
               .thenThrow(TimeoutException(''));
           // act
-          final result = await repository.verifyAndStoreAppConnection(tBaseUri);
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
           // assert
-          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(tBaseUri));
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(
+              tAuthority, tBasePath));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -129,26 +140,46 @@ void main() {
         'should return ServerFailure when a SocketException occurs',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
               .thenThrow(SocketException(''));
           // act
-          final result = await repository.verifyAndStoreAppConnection(tBaseUri);
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
           // assert
-          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(tBaseUri));
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(
+              tAuthority, tBasePath));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
       );
+
+      test(
+        'should return ServerFailure when a HandshakeException occurs',
+        () async {
+          // arrange
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
+              .thenThrow(HandshakeException(''));
+          // act
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
+          // assert
+          verify(mockRemoteEndpointVerification.verifyRemoteEndpoint(
+              tAuthority, tBasePath));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalDataSource);
+        },
+      );
+
       test(
         'should cache the uri when the device is online and remote endpoint verification succeeds',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
-              .thenAnswer((_) async => true);
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
+              .thenAnswer((_) async => tAppConnectionModel);
           // act
-          await repository.verifyAndStoreAppConnection(tBaseUri);
+          await repository.verifyAndStoreAppConnection(tAuthority, tBasePath);
           // assert
-          verify(mockLocalDataSource.cacheAppConnection(tBaseUri));
+          verify(mockLocalDataSource.cacheAppConnection(tAppConnectionModel));
           verifyNoMoreInteractions(mockLocalDataSource);
         },
       );
@@ -156,10 +187,11 @@ void main() {
         'should return None when the device is online and remote endpoint verification succeeds',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
-              .thenAnswer((_) async => true);
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
+              .thenAnswer((_) async => tAppConnectionModel);
           // act
-          final result = await repository.verifyAndStoreAppConnection(tBaseUri);
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
           // assert
           expect(result, equals(Right(None())));
         },
@@ -168,12 +200,13 @@ void main() {
         'should return CacheFailure when caching fails',
         () async {
           // arrange
-          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any))
-              .thenAnswer((_) async => true);
+          when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
+              .thenAnswer((_) async => tAppConnectionModel);
           when(mockLocalDataSource.cacheAppConnection(any))
               .thenThrow(CacheException());
           // act
-          final result = await repository.verifyAndStoreAppConnection(tBaseUri);
+          final result = await repository.verifyAndStoreAppConnection(
+              tAuthority, tBasePath);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -182,13 +215,14 @@ void main() {
   });
 
   group('getBaseUri', () {
-    final tBaseUriModel = AppConnectionModel(baseUri: tBaseUri);
+    final tAppConnectionModel =
+        AppConnectionModel(authority: tAuthority, basePath: tBasePath);
     test(
       'should ask local datasource for cached data',
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAppConnection())
-            .thenAnswer((_) async => tBaseUriModel);
+            .thenAnswer((_) async => tAppConnectionModel);
         // act
         await repository.getAppConnection();
         // assert
@@ -200,11 +234,11 @@ void main() {
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAppConnection())
-            .thenAnswer((_) async => tBaseUriModel);
+            .thenAnswer((_) async => tAppConnectionModel);
         // act
         final result = await repository.getAppConnection();
         // assert
-        expect(result, Right(tBaseUriModel));
+        expect(result, Right(tAppConnectionModel));
       },
     );
     test(

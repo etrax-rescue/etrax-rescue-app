@@ -8,34 +8,22 @@ void main() {
   setUp(() {
     inputConverter = UriInputConverter();
   });
-
-  final tBaseUri = 'https://www.etrax.at';
+  final tAuthority = 'etrax.at';
   group('convert', () {
     test(
-      'should return the the input string if a valid url string is given',
+      'should return the the input string if a valid authority string is given',
       () async {
         // act
-        final result = inputConverter.convert(tBaseUri);
+        final result = inputConverter.convert(tAuthority);
         // assert
-        expect(result, Right(tBaseUri));
+        expect(result, Right(tAuthority));
       },
     );
     test(
-      'should return a InvalidInputFailure when a uri with query param is given',
+      'should return a InvalidInputFailure when an authority string with query param is given',
       () async {
         // arrange
-        final tBadUri = 'https://www.etrax.at/?test=foo';
-        // act
-        final result = inputConverter.convert(tBadUri);
-        // assert
-        expect(result, equals(Left(InvalidInputFailure())));
-      },
-    );
-    test(
-      'should return a InvalidInputFailure when a uri without schema is given',
-      () async {
-        // arrange
-        final tBadUri = '/www.etrax.at/';
+        final tBadUri = 'etrax.at/?test=foo';
         // act
         final result = inputConverter.convert(tBadUri);
         // assert
@@ -43,43 +31,43 @@ void main() {
       },
     );
     test(
-      'should return a InvalidInputFailure when the provided uri contains whitespaces',
+      'should return a InvalidInputFailure when an authority string with schema is given',
       () async {
         // arrange
-        final tBadUri = 'https://www etrax.at/';
+        final tBadAuthority = 'https://www.etrax.at';
         // act
-        final result = inputConverter.convert(tBadUri);
+        final result = inputConverter.convert(tBadAuthority);
         // assert
         expect(result, equals(Left(InvalidInputFailure())));
       },
     );
     test(
-      'should return a InvalidInputFailure when a non https uri is given',
+      'should return a InvalidInputFailure when the provided authority string contains whitespaces',
       () async {
         // arrange
-        final tBadUri = 'http://www.etrax.at/';
+        final tBadAuthority = 'www etrax.at/';
         // act
-        final result = inputConverter.convert(tBadUri);
+        final result = inputConverter.convert(tBadAuthority);
         // assert
         expect(result, equals(Left(InvalidInputFailure())));
       },
     );
     test(
-      'should remove trailing backslash from uri',
+      'should remove trailing backslash from authority string',
       () async {
         // arrange
-        final tUri = 'https://www.etrax.at/';
+        final tUri = 'etrax.at/';
         // act
         final result = inputConverter.convert(tUri);
         // assert
-        expect(result, Right(tBaseUri));
+        expect(result, Right(tAuthority));
       },
     );
     test(
-      'should work with uris that do not include www',
+      'should work with authority strings that include www',
       () async {
         // arrange
-        final tUri = 'https://etrax.at';
+        final tUri = 'www.etrax.at';
         // act
         final result = inputConverter.convert(tUri);
         // assert

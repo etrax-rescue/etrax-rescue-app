@@ -28,18 +28,18 @@ class AuthenticationBloc
   ) async* {
     if (event is SubmitLogin) {
       yield AuthenticationVerifying();
-      final baseUriEither = await getAppConnection(NoParams());
+      final appConnectionEither = await getAppConnection(NoParams());
 
-      yield* baseUriEither.fold((failure) async* {
-        yield AuthenticationError(message_key: CACHE_FAILURE_MESSAGE_KEY);
-      }, (baseUri) async* {
+      yield* appConnectionEither.fold((failure) async* {
+        yield AuthenticationError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+      }, (appConnection) async* {
         final authenticationEither = await login(LoginParams(
-          baseUri: baseUri.baseUri,
+          appConnection: appConnection,
           username: event.username,
           password: event.password,
         ));
         yield* authenticationEither.fold((failure) async* {
-          yield AuthenticationError(message_key: _mapFailureToMessage(failure));
+          yield AuthenticationError(messageKey: _mapFailureToMessage(failure));
         }, (_) async* {
           yield AuthenticationSuccess();
         });

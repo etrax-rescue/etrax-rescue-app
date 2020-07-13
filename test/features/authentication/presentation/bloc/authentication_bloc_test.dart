@@ -25,12 +25,16 @@ void main() {
         login: mockLogin, getAppConnection: mockGetAppConnection);
   });
 
-  String tUsername = 'JohnDoe';
-  String tPassword = '0123456789ABCDEF';
-  String tBaseUri = 'https://etrax.at/appdata';
+  final tUsername = 'JohnDoe';
+  final tPassword = '0123456789ABCDEF';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
 
-  void mockGetAppConnectionSuccess() => when(mockGetAppConnection(any))
-      .thenAnswer((_) async => Right(AppConnection(baseUri: tBaseUri)));
+  void mockGetAppConnectionSuccess() =>
+      when(mockGetAppConnection(any)).thenAnswer((_) async =>
+          Right(AppConnection(authority: tAuthority, basePath: tBasePath)));
 
   test(
     'should retrieve stored base URI',
@@ -56,7 +60,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message_key: CACHE_FAILURE_MESSAGE_KEY),
+        AuthenticationError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -89,7 +93,9 @@ void main() {
       await untilCalled(mockLogin(any));
       // assert
       verify(mockLogin(LoginParams(
-          baseUri: tBaseUri, username: tUsername, password: tPassword)));
+          appConnection: tAppConnection,
+          username: tUsername,
+          password: tPassword)));
     },
   );
 
@@ -121,7 +127,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message_key: NETWORK_FAILURE_MESSAGE_KEY),
+        AuthenticationError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -138,7 +144,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message_key: LOGIN_FAILURE_MESSAGE_KEY),
+        AuthenticationError(messageKey: LOGIN_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -156,7 +162,7 @@ void main() {
       final expected = [
         AuthenticationInitial(),
         AuthenticationVerifying(),
-        AuthenticationError(message_key: SERVER_FAILURE_MESSAGE_KEY),
+        AuthenticationError(messageKey: SERVER_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act

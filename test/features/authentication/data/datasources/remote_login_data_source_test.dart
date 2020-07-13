@@ -1,9 +1,11 @@
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 import 'package:matcher/matcher.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
@@ -19,10 +21,13 @@ void main() {
     remoteDataSource = RemoteLoginDataSourceImpl(mockedHttpClient);
   });
 
-  final String tBaseUri = 'https://www.etrax.at';
-  final String tUsername = 'JohnDoe';
-  final String tPassword = '0123456789ABCDEF';
-  final String tToken = '0123456789ABCDEF';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
+  final tUsername = 'JohnDoe';
+  final tPassword = '0123456789ABCDEF';
+  final tToken = '0123456789ABCDEF';
   final AuthenticationDataModel tAuthenticationDataModel =
       AuthenticationDataModel(username: tUsername, token: tToken);
 
@@ -33,9 +38,10 @@ void main() {
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
           (_) async => http.Response(fixture('login_success.json'), 200));
       // act
-      await remoteDataSource.login(tBaseUri, tUsername, tPassword);
+      await remoteDataSource.login(tAppConnection, tUsername, tPassword);
       // assert
-      verify(mockedHttpClient.post(tBaseUri + '/login.php',
+      verify(mockedHttpClient.post(
+          Uri.https(tAuthority, p.join(tBasePath, 'login.php')),
           body: {'username': tUsername, 'password': tPassword}));
     },
   );
@@ -48,7 +54,7 @@ void main() {
           .thenAnswer((_) async => http.Response('', 200));
       final call = remoteDataSource.login;
       // assert
-      expect(() => call(tBaseUri, tUsername, tPassword),
+      expect(() => call(tAppConnection, tUsername, tPassword),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -61,7 +67,7 @@ void main() {
           (_) async => http.Response(fixture('login_wrong_reply.json'), 200));
       final call = remoteDataSource.login;
       // assert
-      expect(() => call(tBaseUri, tUsername, tPassword),
+      expect(() => call(tAppConnection, tUsername, tPassword),
           throwsA(TypeMatcher<FormatException>()));
     },
   );
@@ -74,7 +80,7 @@ void main() {
           (_) async => http.Response(fixture('login_success.json'), 403));
       final call = remoteDataSource.login;
       // assert
-      expect(() => call(tBaseUri, tUsername, tPassword),
+      expect(() => call(tAppConnection, tUsername, tPassword),
           throwsA(TypeMatcher<PermissionException>()));
     },
   );
@@ -87,7 +93,7 @@ void main() {
           (_) async => http.Response(fixture('login_success.json'), 404));
       final call = remoteDataSource.login;
       // assert
-      expect(() => call(tBaseUri, tUsername, tPassword),
+      expect(() => call(tAppConnection, tUsername, tPassword),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -100,7 +106,7 @@ void main() {
           (_) async => http.Response(fixture('login_success.json'), 200));
       // act
       final result =
-          await remoteDataSource.login(tBaseUri, tUsername, tPassword);
+          await remoteDataSource.login(tAppConnection, tUsername, tPassword);
       // assert
       expect(result, tAuthenticationDataModel);
     },

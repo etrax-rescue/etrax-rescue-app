@@ -1,9 +1,11 @@
+import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/common/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
+import 'package:path/path.dart' as p;
 
 import '../../../../fixtures/fixture_reader.dart';
 
@@ -19,7 +21,10 @@ void main() {
         AppConnectionRemoteEndpointVerificationImpl(mockedHttpClient);
   });
 
-  final String tBaseUri = 'https://www.etrax.at';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnectionModel =
+      AppConnectionModel(authority: tAuthority, basePath: tBasePath);
 
   test(
     'should perform GET request on the /appdata/version_info.json endpoint',
@@ -28,9 +33,10 @@ void main() {
       when(mockedHttpClient.get(any)).thenAnswer(
           (_) async => http.Response(fixture('version_info.json'), 200));
       // act
-      await endpointVerification.verifyRemoteEndpoint(tBaseUri);
+      await endpointVerification.verifyRemoteEndpoint(tAuthority, tBasePath);
       // assert
-      verify(mockedHttpClient.get(tBaseUri + '/appdata/version_info.json'));
+      verify(mockedHttpClient
+          .get(Uri.https(tAuthority, p.join(tBasePath, 'version_info.json'))));
     },
   );
 
@@ -42,9 +48,10 @@ void main() {
       when(mockedHttpClient.get(any)).thenAnswer(
           (_) async => http.Response(fixture('version_info.json'), 200));
       // act
-      final result = await endpointVerification.verifyRemoteEndpoint(tBaseUri);
+      final result = await endpointVerification.verifyRemoteEndpoint(
+          tAuthority, tBasePath);
       // assert
-      expect(result, equals(true));
+      expect(result, equals(tAppConnectionModel));
     },
   );
 
@@ -57,7 +64,8 @@ void main() {
       // act
       final call = endpointVerification.verifyRemoteEndpoint;
       // assert
-      expect(() => call(tBaseUri), throwsA(TypeMatcher<ServerException>()));
+      expect(() => call(tAuthority, tBasePath),
+          throwsA(TypeMatcher<ServerException>()));
     },
   );
 }

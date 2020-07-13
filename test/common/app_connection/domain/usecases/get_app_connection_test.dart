@@ -18,7 +18,7 @@ void main() {
     usecase = GetAppConnection(mockAppConnectionRepository);
   });
 
-  final tBaseUri = AppConnection(baseUri: 'https://etrax.at/appdata/');
+  final tBaseUri = AppConnection(authority: 'etrax.at', basePath: 'appdata');
 
   test(
     'should return a valid base uri',

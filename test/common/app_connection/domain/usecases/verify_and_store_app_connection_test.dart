@@ -16,20 +16,22 @@ void main() {
     usecase = VerifyAndStoreAppConnection(mockAppConnectionRepository);
   });
 
-  final tUriString = 'https://etrax.at/appdata/';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
 
   test(
     'should return None when a valid uri is given',
     () async {
       // arrange
-      when(mockAppConnectionRepository.verifyAndStoreAppConnection(any))
+      when(mockAppConnectionRepository.verifyAndStoreAppConnection(any, any))
           .thenAnswer((_) async => Right(None()));
       // act
-      final result = await usecase(AppConnectionParams(baseUri: tUriString));
+      final result = await usecase(
+          AppConnectionParams(authority: tAuthority, basePath: tBasePath));
       // assert
       expect(result, Right(None()));
-      verify(
-          mockAppConnectionRepository.verifyAndStoreAppConnection(tUriString));
+      verify(mockAppConnectionRepository.verifyAndStoreAppConnection(
+          tAuthority, tBasePath));
       verifyNoMoreInteractions(mockAppConnectionRepository);
     },
   );

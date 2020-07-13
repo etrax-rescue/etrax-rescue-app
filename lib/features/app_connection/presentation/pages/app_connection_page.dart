@@ -59,7 +59,7 @@ BlocProvider<AppConnectionBloc> buildBody(BuildContext context) {
                           } else if (state is AppConnectionError) {
                             return MessageDisplay(
                               message: translateErrorMessage(
-                                  context, state.message_key),
+                                  context, state.messageKey),
                             );
                           }
                           return Container();

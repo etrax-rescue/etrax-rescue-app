@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
@@ -25,10 +26,13 @@ void main() {
         inputConverter: mockUriInputConverter);
   });
 
-  final tBaseUri = 'https://www.etrax.at';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
 
   void mockInputConverterSuccess() =>
-      when(mockUriInputConverter.convert(any)).thenReturn(Right(tBaseUri));
+      when(mockUriInputConverter.convert(any)).thenReturn(Right(tAuthority));
 
   test(
     'should call the input converter first',
@@ -38,10 +42,10 @@ void main() {
       when(mockVerifyAndStoreAppConnection(any))
           .thenAnswer((_) async => Right(None()));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
       await untilCalled(mockUriInputConverter.convert(any));
       // assert
-      verify(mockUriInputConverter.convert(tBaseUri));
+      verify(mockUriInputConverter.convert(tAuthority));
     },
   );
   test(
@@ -53,11 +57,11 @@ void main() {
       // assert
       final expected = [
         AppConnectionInitial(),
-        AppConnectionError(message_key: INVALID_INPUT_FAILURE_MESSAGE_KEY),
+        AppConnectionError(messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
     },
   );
   test(
@@ -68,11 +72,11 @@ void main() {
       when(mockVerifyAndStoreAppConnection(any))
           .thenAnswer((_) async => Right(None()));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
       await untilCalled(mockVerifyAndStoreAppConnection(any));
       // assert
       verify(mockVerifyAndStoreAppConnection(
-          AppConnectionParams(baseUri: tBaseUri)));
+          AppConnectionParams(authority: tAuthority, basePath: tBasePath)));
     },
   );
 
@@ -91,7 +95,7 @@ void main() {
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
     },
   );
 
@@ -106,11 +110,11 @@ void main() {
       final expected = [
         AppConnectionInitial(),
         AppConnectionVerifying(),
-        AppConnectionError(message_key: NETWORK_FAILURE_MESSAGE_KEY),
+        AppConnectionError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
     },
   );
 
@@ -125,11 +129,11 @@ void main() {
       final expected = [
         AppConnectionInitial(),
         AppConnectionVerifying(),
-        AppConnectionError(message_key: SERVER_URL_FAILURE_MESSAGE_KEY),
+        AppConnectionError(messageKey: SERVER_URL_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
     },
   );
 
@@ -144,11 +148,11 @@ void main() {
       final expected = [
         AppConnectionInitial(),
         AppConnectionVerifying(),
-        AppConnectionError(message_key: CACHE_FAILURE_MESSAGE_KEY),
+        AppConnectionError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
-      bloc.add(ConnectApp(uriString: tBaseUri));
+      bloc.add(ConnectApp(authority: tAuthority));
     },
   );
 }

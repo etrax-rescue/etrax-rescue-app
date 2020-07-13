@@ -27,19 +27,18 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
     AppConnectionEvent event,
   ) async* {
     if (event is ConnectApp) {
-      final inputEither = inputConverter.convert(event.uriString);
+      final inputEither = inputConverter.convert(event.authority);
 
       yield* inputEither.fold((failure) async* {
-        yield AppConnectionError(
-            message_key: INVALID_INPUT_FAILURE_MESSAGE_KEY);
-      }, (uri) async* {
+        yield AppConnectionError(messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY);
+      }, (authority) async* {
         yield AppConnectionVerifying();
-        final failureOrOk =
-            await verifyAndStore(AppConnectionParams(baseUri: uri));
+        final failureOrOk = await verifyAndStore(
+            AppConnectionParams(authority: authority, basePath: 'appdata'));
 
         yield failureOrOk.fold(
             (failure) =>
-                AppConnectionError(message_key: _mapFailureToMessage(failure)),
+                AppConnectionError(messageKey: _mapFailureToMessage(failure)),
             (ok) => AppConnectionSuccess());
       });
     }

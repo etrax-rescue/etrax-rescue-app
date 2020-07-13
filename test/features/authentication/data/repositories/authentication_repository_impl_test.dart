@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
@@ -36,10 +37,13 @@ void main() {
     );
   });
 
-  String tBaseUri = 'https://etrax.at/appdata';
-  String tUsername = 'JohnDoe';
-  String tPassword = '0123456789ABCDEF';
-  String tToken = tPassword;
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
+  final tUsername = 'JohnDoe';
+  final tPassword = '0123456789ABCDEF';
+  final tToken = tPassword;
 
   AuthenticationDataModel tAuthenticationDataModel =
       AuthenticationDataModel(username: tUsername, token: tToken);
@@ -51,7 +55,7 @@ void main() {
         // arrange
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
         // act
-        await repository.login(tBaseUri, tUsername, tPassword);
+        await repository.login(tAppConnection, tUsername, tPassword);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -80,7 +84,8 @@ void main() {
         'should return a NetworkFailure when the device is offline',
         () async {
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
           expect(result, equals(Left(NetworkFailure())));
         },
@@ -95,9 +100,10 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           // act
-          await repository.login(tBaseUri, tUsername, tPassword);
+          await repository.login(tAppConnection, tUsername, tPassword);
           // assert
-          verify(mockRemoteDataSource.login(tBaseUri, tUsername, tPassword));
+          verify(
+              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
           verifyNoMoreInteractions(mockRemoteDataSource);
         },
       );
@@ -109,9 +115,11 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenThrow(ServerException());
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
-          verify(mockRemoteDataSource.login(tBaseUri, tUsername, tPassword));
+          verify(
+              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -123,9 +131,11 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenThrow(TimeoutException(''));
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
-          verify(mockRemoteDataSource.login(tBaseUri, tUsername, tPassword));
+          verify(
+              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -137,9 +147,11 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenThrow(SocketException(''));
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
-          verify(mockRemoteDataSource.login(tBaseUri, tUsername, tPassword));
+          verify(
+              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -152,9 +164,11 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenThrow(LoginException());
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
-          verify(mockRemoteDataSource.login(tBaseUri, tUsername, tPassword));
+          verify(
+              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
           expect(result, equals(Left(LoginFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -167,7 +181,7 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           // act
-          await repository.login(tBaseUri, tUsername, tPassword);
+          await repository.login(tAppConnection, tUsername, tPassword);
           // assert
           verify(mockLocalDataSource
               .cacheAuthenticationData(tAuthenticationDataModel));
@@ -182,7 +196,8 @@ void main() {
           when(mockRemoteDataSource.login(any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
           expect(result, equals(Right(None())));
         },
@@ -197,7 +212,8 @@ void main() {
           when(mockLocalDataSource.cacheAuthenticationData(any))
               .thenThrow(CacheException());
           // act
-          final result = await repository.login(tBaseUri, tUsername, tPassword);
+          final result =
+              await repository.login(tAppConnection, tUsername, tPassword);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
