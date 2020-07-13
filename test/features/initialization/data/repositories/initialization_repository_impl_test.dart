@@ -18,6 +18,7 @@ import 'package:etrax_rescue_app/features/initialization/data/models/missions_mo
 import 'package:etrax_rescue_app/features/initialization/data/repositories/initialization_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 
 class MockRemoteInitializationDataSource extends Mock
     implements RemoteInitializationDataSource {}
@@ -61,9 +62,47 @@ void main() {
         networkInfo: mockNetworkInfo);
   });
 
-  String tBaseUri = 'https://etrax.at/appdata';
-  String tUsername = 'JohnDoe';
-  String tToken = '0123456789ABCDEF';
+  final tBaseUri = 'https://etrax.at/appdata';
+  final tUsername = 'JohnDoe';
+  final tToken = '0123456789ABCDEF';
+
+  final tLocationUpdateInterval = 0;
+  final tAppSettingsModel =
+      AppSettingsModel(locationUpdateInterval: tLocationUpdateInterval);
+
+  final tMissionID = '0123456789ABCDEF';
+  final tMissionName = 'TestMission';
+  final tMissionStart = DateTime.utc(2020, 1, 1);
+  final tLatitude = 48.2206635;
+  final tLongitude = 16.309849;
+  final tMissionModel = MissionModel(
+    id: tMissionID,
+    name: tMissionName,
+    start: tMissionStart,
+    latitude: tLatitude,
+    longitude: tLongitude,
+  );
+  final tMissionsModel = MissionsModel(missions: <MissionModel>[tMissionModel]);
+
+  final tID = 42;
+  final tName = 'approaching';
+  final tDescription = 'is on its way';
+  final tUserStateModel =
+      UserStateModel(id: tID, name: tName, description: tDescription);
+  final tUserStatesModel =
+      UserStatesModel(states: <UserStateModel>[tUserStateModel]);
+
+  final tUserRoleModel =
+      UserRoleModel(id: tID, name: tName, description: tDescription);
+  final tUserRolesModel =
+      UserRolesModel(roles: <UserRoleModel>[tUserRoleModel]);
+
+  final tInitializationDataModel = InitializationDataModel(
+    appSettingsModel: tAppSettingsModel,
+    missionsModel: tMissionsModel,
+    userStatesModel: tUserStatesModel,
+    userRolesModel: tUserRolesModel,
+  );
 
   group('fetchInitializationData', () {
     test(
@@ -108,45 +147,6 @@ void main() {
         },
       );
     });
-
-    final tLocationUpdateInterval = 0;
-    final tAppSettingsModel =
-        AppSettingsModel(locationUpdateInterval: tLocationUpdateInterval);
-
-    final tMissionID = '0123456789ABCDEF';
-    final tMissionName = 'TestMission';
-    final tMissionStart = DateTime.utc(2020, 1, 1);
-    final tLatitude = 48.2206635;
-    final tLongitude = 16.309849;
-    final tMissionModel = MissionModel(
-      id: tMissionID,
-      name: tMissionName,
-      start: tMissionStart,
-      latitude: tLatitude,
-      longitude: tLongitude,
-    );
-    final tMissionsModel =
-        MissionsModel(missions: <MissionModel>[tMissionModel]);
-
-    final tID = 42;
-    final tName = 'approaching';
-    final tDescription = 'is on its way';
-    final tUserStateModel =
-        UserStateModel(id: tID, name: tName, description: tDescription);
-    final tUserStatesModel =
-        UserStatesModel(states: <UserStateModel>[tUserStateModel]);
-
-    final tUserRoleModel =
-        UserRoleModel(id: tID, name: tName, description: tDescription);
-    final tUserRolesModel =
-        UserRolesModel(roles: <UserRoleModel>[tUserRoleModel]);
-
-    final tInitializationDataModel = InitializationDataModel(
-      appSettingsModel: tAppSettingsModel,
-      missionsModel: tMissionsModel,
-      userStatesModel: tUserStatesModel,
-      userRolesModel: tUserRolesModel,
-    );
 
     testOnline(() {
       test(
@@ -341,5 +341,322 @@ void main() {
         },
       );
     });
+  });
+
+  group('getAppSettings', () {
+    test(
+      'should ask local data source for cached data',
+      () async {
+        // arrange
+        when(mockLocalAppSettingsDataSource.getAppSettings())
+            .thenAnswer((_) async => tAppSettingsModel);
+        // act
+        await repository.getAppSettings();
+        // assert
+        verify(mockLocalAppSettingsDataSource.getAppSettings());
+      },
+    );
+
+    test(
+      'should return CacheFailure when retrieving cached data fails',
+      () async {
+        // arrange
+        when(mockLocalAppSettingsDataSource.getAppSettings())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.getAppSettings();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return cached AppSettingsModel',
+      () async {
+        // arrange
+        when(mockLocalAppSettingsDataSource.getAppSettings())
+            .thenAnswer((_) async => tAppSettingsModel);
+        // act
+        final result = await repository.getAppSettings();
+        // assert
+        expect(result, equals(Right(tAppSettingsModel)));
+      },
+    );
+  });
+
+  group('clearAppSettings', () {
+    test(
+      'should ask local data source to clear data',
+      () async {
+        // act
+        await repository.clearAppSettings();
+        // assert
+        verify(mockLocalAppSettingsDataSource.clearAppSettings());
+      },
+    );
+
+    test(
+      'should return CacheFailure when clearing cached data fails',
+      () async {
+        // arrange
+        when(mockLocalAppSettingsDataSource.clearAppSettings())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.clearAppSettings();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return None when data was cleared successfully',
+      () async {
+        // act
+        final result = await repository.clearAppSettings();
+        // assert
+        expect(result, equals(Right(None())));
+      },
+    );
+  });
+
+  group('getUserStates', () {
+    test(
+      'should ask local data source for cached data',
+      () async {
+        // arrange
+        when(mockLocalUserStatesDataSource.getUserStates())
+            .thenAnswer((_) async => tUserStatesModel);
+        // act
+        await repository.getUserStates();
+        // assert
+        verify(mockLocalUserStatesDataSource.getUserStates());
+      },
+    );
+
+    test(
+      'should return CacheFailure when retrieving cached data fails',
+      () async {
+        // arrange
+        when(mockLocalUserStatesDataSource.getUserStates())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.getUserStates();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return cached UserStatesModel',
+      () async {
+        // arrange
+        when(mockLocalUserStatesDataSource.getUserStates())
+            .thenAnswer((_) async => tUserStatesModel);
+        // act
+        final result = await repository.getUserStates();
+        // assert
+        expect(result, equals(Right(tUserStatesModel)));
+      },
+    );
+  });
+
+  group('clearUserStates', () {
+    test(
+      'should ask local data source to clear data',
+      () async {
+        // act
+        await repository.clearUserStates();
+        // assert
+        verify(mockLocalUserStatesDataSource.clearUserStates());
+      },
+    );
+
+    test(
+      'should return CacheFailure when clearing cached data fails',
+      () async {
+        // arrange
+        when(mockLocalUserStatesDataSource.clearUserStates())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.clearUserStates();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return None when data was cleared successfully',
+      () async {
+        // act
+        final result = await repository.clearUserStates();
+        // assert
+        expect(result, equals(Right(None())));
+      },
+    );
+  });
+
+  group('getUserRoles', () {
+    test(
+      'should ask local data source for cached data',
+      () async {
+        // arrange
+        when(mockLocalUserRolesDataSource.getUserRoles())
+            .thenAnswer((_) async => tUserRolesModel);
+        // act
+        await repository.getUserRoles();
+        // assert
+        verify(mockLocalUserRolesDataSource.getUserRoles());
+      },
+    );
+
+    test(
+      'should return CacheFailure when retrieving cached data fails',
+      () async {
+        // arrange
+        when(mockLocalUserRolesDataSource.getUserRoles())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.getUserRoles();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return cached UserRolesModel',
+      () async {
+        // arrange
+        when(mockLocalUserRolesDataSource.getUserRoles())
+            .thenAnswer((_) async => tUserRolesModel);
+        // act
+        final result = await repository.getUserRoles();
+        // assert
+        expect(result, equals(Right(tUserRolesModel)));
+      },
+    );
+  });
+
+  group('clearUserStates', () {
+    test(
+      'should ask local data source to clear data',
+      () async {
+        // act
+        await repository.clearUserRoles();
+        // assert
+        verify(mockLocalUserRolesDataSource.clearUserRoles());
+      },
+    );
+
+    test(
+      'should return CacheFailure when clearing cached data fails',
+      () async {
+        // arrange
+        when(mockLocalUserRolesDataSource.clearUserRoles())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.clearUserRoles();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return None when data was cleared successfully',
+      () async {
+        // act
+        final result = await repository.clearUserRoles();
+        // assert
+        expect(result, equals(Right(None())));
+      },
+    );
+  });
+
+  group('getMissions', () {
+    test(
+      'should ask local data source for cached data',
+      () async {
+        // arrange
+        when(mockLocalMissionsDataSource.getMissions())
+            .thenAnswer((_) async => tMissionsModel);
+        // act
+        await repository.getMissions();
+        // assert
+        verify(mockLocalMissionsDataSource.getMissions());
+      },
+    );
+
+    test(
+      'should return CacheFailure when a CacheException occurs',
+      () async {
+        // arrange
+        when(mockLocalMissionsDataSource.getMissions())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.getMissions();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return CacheFailure when a InvalidDataException occurs',
+      () async {
+        // arrange
+        when(mockLocalMissionsDataSource.getMissions())
+            .thenThrow(InvalidDataException(''));
+        // act
+        final result = await repository.getMissions();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return cached MissionsModel',
+      () async {
+        // arrange
+        when(mockLocalMissionsDataSource.getMissions())
+            .thenAnswer((_) async => tMissionsModel);
+        // act
+        final result = await repository.getMissions();
+        // assert
+        expect(result, equals(Right(tMissionsModel)));
+      },
+    );
+  });
+
+  group('clearMissions', () {
+    test(
+      'should ask local data source to clear data',
+      () async {
+        // act
+        await repository.clearMissions();
+        // assert
+        verify(mockLocalMissionsDataSource.clearMissions());
+      },
+    );
+
+    test(
+      'should return CacheFailure when clearing cached data fails',
+      () async {
+        // arrange
+        when(mockLocalMissionsDataSource.clearMissions())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.clearMissions();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+
+    test(
+      'should return None when data was cleared successfully',
+      () async {
+        // act
+        final result = await repository.clearMissions();
+        // assert
+        expect(result, equals(Right(None())));
+      },
+    );
   });
 }

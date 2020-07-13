@@ -3,8 +3,13 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/initialization_data_model.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/user_roles_model.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/user_states_model.dart';
 import 'package:flutter/material.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
@@ -72,50 +77,88 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, AppSettings>> getAppSettings() {
-    // TODO: implement getAppSettings
-    throw UnimplementedError();
+  Future<Either<Failure, AppSettings>> getAppSettings() async {
+    AppSettingsModel data;
+    try {
+      data = await localAppSettingsDataSource.getAppSettings();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(data);
   }
 
   @override
-  Future<Either<Failure, None>> clearAppSettings() {
-    // TODO: implement clearAppSettings
-    throw UnimplementedError();
+  Future<Either<Failure, None>> clearAppSettings() async {
+    try {
+      await localAppSettingsDataSource.clearAppSettings();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, Missions>> getMissions() {
-    // TODO: implement getMissions
-    throw UnimplementedError();
+  Future<Either<Failure, Missions>> getMissions() async {
+    MissionsModel data;
+    try {
+      data = await localMissionsDataSource.getMissions();
+    } on CacheException {
+      return Left(CacheFailure());
+    } on InvalidDataException {
+      return Left(CacheFailure());
+    }
+    return Right(data);
   }
 
   @override
-  Future<Either<Failure, None>> clearMissions() {
-    // TODO: implement clearMissions
-    throw UnimplementedError();
+  Future<Either<Failure, None>> clearMissions() async {
+    try {
+      await localMissionsDataSource.clearMissions();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, UserStates>> getUserStates() {
-    // TODO: implement getUserStates
-    throw UnimplementedError();
+  Future<Either<Failure, UserStates>> getUserStates() async {
+    UserStatesModel data;
+    try {
+      data = await localUserStatesDataSource.getUserStates();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(data);
   }
 
   @override
-  Future<Either<Failure, None>> clearUserStates() {
-    // TODO: implement clearUserStates
-    throw UnimplementedError();
+  Future<Either<Failure, None>> clearUserStates() async {
+    try {
+      await localUserStatesDataSource.clearUserStates();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, None>> clearUserRoles() {
-    // TODO: implement clearUserRoles
-    throw UnimplementedError();
+  Future<Either<Failure, None>> clearUserRoles() async {
+    try {
+      await localUserRolesDataSource.clearUserRoles();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, UserRoles>> getUserRoles() {
-    // TODO: implement getUserRoles
-    throw UnimplementedError();
+  Future<Either<Failure, UserRoles>> getUserRoles() async {
+    UserRolesModel data;
+    try {
+      data = await localUserRolesDataSource.getUserRoles();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(data);
   }
 }

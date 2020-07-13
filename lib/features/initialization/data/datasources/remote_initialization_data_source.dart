@@ -4,3 +4,13 @@ abstract class RemoteInitializationDataSource {
   Future<InitializationDataModel> fetchInitialization(
       String baseUri, String username, String token);
 }
+
+class RemoteInitializationDataSourceImpl
+    implements RemoteInitializationDataSource {
+  @override
+  Future<InitializationDataModel> fetchInitialization(
+      String baseUri, String username, String token) {
+    // TODO: implement fetchInitialization
+    throw UnimplementedError();
+  }
+}
