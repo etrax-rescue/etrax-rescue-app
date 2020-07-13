@@ -7,6 +7,7 @@ import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/remote_initialization_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_states_data_source.dart';
+import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_roles_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_missions_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_app_settings_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/initialization_data_model.dart';
@@ -24,6 +25,9 @@ class MockRemoteInitializationDataSource extends Mock
 class MockLocalUserStatesDataSource extends Mock
     implements LocalUserStatesDataSource {}
 
+class MockLocalUserRolesDataSource extends Mock
+    implements LocalUserRolesDataSource {}
+
 class MockLocalMissionsDataSource extends Mock
     implements LocalMissionsDataSource {}
 
@@ -35,6 +39,7 @@ class MockNetworkInfo extends Mock implements NetworkInfo {}
 void main() {
   MockRemoteInitializationDataSource mockRemoteDataSource;
   MockLocalUserStatesDataSource mockLocalUserStatesDataSource;
+  MockLocalUserRolesDataSource mockLocalUserRolesDataSource;
   MockLocalMissionsDataSource mockLocalMissionsDataSource;
   MockLocalAppSettingsDataSource mockLocalAppSettingsDataSource;
   MockNetworkInfo mockNetworkInfo;
@@ -43,6 +48,7 @@ void main() {
   setUp(() {
     mockRemoteDataSource = MockRemoteInitializationDataSource();
     mockLocalUserStatesDataSource = MockLocalUserStatesDataSource();
+    mockLocalUserRolesDataSource = MockLocalUserRolesDataSource();
     mockLocalMissionsDataSource = MockLocalMissionsDataSource();
     mockLocalAppSettingsDataSource = MockLocalAppSettingsDataSource();
     mockNetworkInfo = MockNetworkInfo();
@@ -51,6 +57,7 @@ void main() {
         localUserStatesDataSource: mockLocalUserStatesDataSource,
         localAppSettingsDataSource: mockLocalAppSettingsDataSource,
         localMissionsDataSource: mockLocalMissionsDataSource,
+        localUserRolesDataSource: mockLocalUserRolesDataSource,
         networkInfo: mockNetworkInfo);
   });
 
@@ -154,6 +161,183 @@ void main() {
           verify(mockRemoteDataSource.fetchInitialization(
               tBaseUri, tUsername, tToken));
           verifyNoMoreInteractions(mockRemoteDataSource);
+        },
+      );
+
+      test(
+        'should return ServerFailure when a ServerException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenThrow(ServerException());
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          verify(mockRemoteDataSource.fetchInitialization(
+              tBaseUri, tUsername, tToken));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalMissionsDataSource);
+          verifyZeroInteractions(mockLocalUserRolesDataSource);
+          verifyZeroInteractions(mockLocalUserStatesDataSource);
+        },
+      );
+
+      test(
+        'should return ServerFailure when a TimeoutException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenThrow(TimeoutException(''));
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          verify(mockRemoteDataSource.fetchInitialization(
+              tBaseUri, tUsername, tToken));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalMissionsDataSource);
+          verifyZeroInteractions(mockLocalUserRolesDataSource);
+          verifyZeroInteractions(mockLocalUserStatesDataSource);
+        },
+      );
+
+      test(
+        'should return ServerFailure when a SocketException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenThrow(SocketException(''));
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          verify(mockRemoteDataSource.fetchInitialization(
+              tBaseUri, tUsername, tToken));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalMissionsDataSource);
+          verifyZeroInteractions(mockLocalUserRolesDataSource);
+          verifyZeroInteractions(mockLocalUserStatesDataSource);
+        },
+      );
+      test(
+        'should return AuthenticationFailure when a AuthenticationException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenThrow(AuthenticationException());
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          verify(mockRemoteDataSource.fetchInitialization(
+              tBaseUri, tUsername, tToken));
+          expect(result, equals(Left(AuthenticationFailure())));
+          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalMissionsDataSource);
+          verifyZeroInteractions(mockLocalUserRolesDataSource);
+          verifyZeroInteractions(mockLocalUserStatesDataSource);
+        },
+      );
+
+      test(
+        'should cache the initialization data',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenAnswer((_) async => tInitializationDataModel);
+          // act
+          await repository.fetchInitializationData(tBaseUri, tUsername, tToken);
+          // assert
+          verify(mockLocalAppSettingsDataSource
+              .storeAppSettings(tInitializationDataModel.appSettingsModel));
+          verify(mockLocalUserStatesDataSource
+              .storeUserStates(tInitializationDataModel.userStatesModel));
+          verify(mockLocalUserRolesDataSource
+              .storeUserRoles(tInitializationDataModel.userRolesModel));
+          verify(mockLocalMissionsDataSource
+              .insertMissions(tInitializationDataModel.missionsModel));
+        },
+      );
+
+      test(
+        'should return CacheFailure when caching AppSettings fails',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenAnswer((_) async => tInitializationDataModel);
+          when(mockLocalAppSettingsDataSource.storeAppSettings(any))
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
+
+      test(
+        'should return CacheFailure when caching UserStates fails',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenAnswer((_) async => tInitializationDataModel);
+          when(mockLocalUserStatesDataSource.storeUserStates(any))
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
+
+      test(
+        'should return CacheFailure when caching UserRoles fails',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenAnswer((_) async => tInitializationDataModel);
+          when(mockLocalUserRolesDataSource.storeUserRoles(any))
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
+
+      test(
+        'should return CacheFailure when caching Missions fails',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenAnswer((_) async => tInitializationDataModel);
+          when(mockLocalMissionsDataSource.insertMissions(any))
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
+
+      test(
+        'should return None if all operations succeed',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+              .thenAnswer((_) async => tInitializationDataModel);
+          // act
+          final result = await repository.fetchInitializationData(
+              tBaseUri, tUsername, tToken);
+          // assert
+          expect(result, equals(Right(None())));
         },
       );
     });

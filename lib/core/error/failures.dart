@@ -18,3 +18,5 @@ class VersionFailure extends Failure {}
 class InvalidInputFailure extends Failure {}
 
 class LoginFailure extends Failure {}
+
+class AuthenticationFailure extends Failure {}
