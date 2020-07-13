@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 
 import '../../../../core/error/failures.dart';
 import '../entities/authentication_data.dart';

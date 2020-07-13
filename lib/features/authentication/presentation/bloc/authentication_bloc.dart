@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../common/app_connection/domain/usecases/get_app_connection.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/usecases/usecase.dart';
+import '../../../../core/types/usecase.dart';
 import '../../domain/usecases/login.dart';
 
 part 'authentication_event.dart';

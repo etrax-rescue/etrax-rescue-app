@@ -1,4 +1,4 @@
-import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';

@@ -1,6 +1,6 @@
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/usecases/usecase.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/entities/authentication_data.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/repositories/authentication_repository.dart';
 

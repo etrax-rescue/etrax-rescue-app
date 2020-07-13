@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../core/usecases/usecase.dart';
+import '../../../../core/types/usecase.dart';
 import '../repositories/authentication_repository.dart';
 
 class Login extends UseCase<None, LoginParams> {

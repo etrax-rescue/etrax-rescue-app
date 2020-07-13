@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/usecases/usecase.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
 
 import '../../../../core/error/failures.dart';
-import '../entities/app_connection.dart';
+import '../../../../core/types/app_connection.dart';
 import '../repositories/app_connection_repository.dart';
 
 class GetAppConnection extends UseCase<AppConnection, NoParams> {

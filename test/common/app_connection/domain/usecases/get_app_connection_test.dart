@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/common/app_connection/domain/repositories/app_connection_repository.dart';
 import 'package:etrax_rescue_app/common/app_connection/domain/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
-import 'package:etrax_rescue_app/core/usecases/usecase.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

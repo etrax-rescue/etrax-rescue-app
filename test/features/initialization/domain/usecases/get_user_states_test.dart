@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/usecases/usecase.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/user_states.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/get_user_states.dart';

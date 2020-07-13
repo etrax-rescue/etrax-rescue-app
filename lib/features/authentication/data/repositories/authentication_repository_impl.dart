@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/entities/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
@@ -65,8 +65,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, None>> deleteAuthenticationData() {
+  Future<Either<Failure, None>> deleteAuthenticationData() async {
     // TODO: implement this!
-    localAuthenticationDataSource.deleteAuthenticationData();
+    await localAuthenticationDataSource.deleteAuthenticationData();
   }
 }

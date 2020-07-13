@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/core/usecases/usecase.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../core/error/failures.dart';

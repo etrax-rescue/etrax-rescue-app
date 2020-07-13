@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/app_connection.dart';
+import '../../../../core/types/app_connection.dart';
 
 class AppConnectionModel extends AppConnection {
   AppConnectionModel({@required String authority, @required String basePath})

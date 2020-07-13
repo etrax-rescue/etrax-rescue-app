@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/features/person/domain/usecases/person_retrieval_params.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../../../core/usecases/usecase.dart';
+import '../../../../core/types/usecase.dart';
 import '../entities/person_info.dart';
 import '../repositories/person_info_repository.dart';
 

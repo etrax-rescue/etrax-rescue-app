@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
-import '../../domain/entities/app_connection.dart';
+import '../../../../core/types/app_connection.dart';
 import '../../domain/repositories/app_connection_repository.dart';
 import '../datasources/app_connection_local_datasource.dart';
 import '../datasources/app_connection_remote_endpoint_verification.dart';
