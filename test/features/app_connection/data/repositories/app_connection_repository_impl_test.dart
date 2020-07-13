@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:path/path.dart' as p;
 
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/repositories/app_connection_repository_impl.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/datasources/app_connection_local_datasource.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/models/app_connection_model.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/repositories/app_connection_repository_impl.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/datasources/app_connection_local_datasource.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';

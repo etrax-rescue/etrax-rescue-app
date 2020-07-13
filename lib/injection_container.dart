@@ -1,25 +1,25 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
-import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
-import 'package:etrax_rescue_app/features/authentication/data/repositories/authentication_repository_impl.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/repositories/authentication_repository.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/usecases/delete_authentication_data.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_authentication_data.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
-import 'package:etrax_rescue_app/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'common/app_connection/data/datasources/app_connection_local_datasource.dart';
-import 'common/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
-import 'common/app_connection/data/repositories/app_connection_repository_impl.dart';
-import 'common/app_connection/domain/repositories/app_connection_repository.dart';
-import 'common/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'core/network/network_info.dart';
 import 'core/util/uri_input_converter.dart';
+import 'features/app_connection/data/datasources/app_connection_local_datasource.dart';
+import 'features/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
+import 'features/app_connection/data/repositories/app_connection_repository_impl.dart';
+import 'features/app_connection/domain/repositories/app_connection_repository.dart';
+import 'features/app_connection/domain/usecases/get_app_connection.dart';
+import 'features/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'features/app_connection/presentation/bloc/app_connection_bloc.dart';
+import 'features/authentication/data/datasources/local_authentication_data_source.dart';
+import 'features/authentication/data/datasources/remote_login_data_source.dart';
+import 'features/authentication/data/repositories/authentication_repository_impl.dart';
+import 'features/authentication/domain/repositories/authentication_repository.dart';
+import 'features/authentication/domain/usecases/delete_authentication_data.dart';
+import 'features/authentication/domain/usecases/get_authentication_data.dart';
+import 'features/authentication/domain/usecases/login.dart';
+import 'features/authentication/presentation/bloc/authentication_bloc.dart';
 
 final sl = GetIt.instance;
 

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../shared_preferences_keys.dart';
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/shared_preferences_keys.dart';
 import '../models/app_connection_model.dart';
 
 abstract class AppConnectionLocalDataSource {

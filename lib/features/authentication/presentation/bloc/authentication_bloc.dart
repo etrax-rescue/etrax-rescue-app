@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../common/app_connection/domain/usecases/get_app_connection.dart';
+import '../../../app_connection/domain/usecases/get_app_connection.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/types/usecase.dart';
 import '../../domain/usecases/login.dart';

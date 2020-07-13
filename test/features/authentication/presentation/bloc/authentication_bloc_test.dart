@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/usecases/get_app_connection.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/types/usecase.dart';

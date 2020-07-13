@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/models/app_connection_model.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:flutter_test/flutter_test.dart';
 

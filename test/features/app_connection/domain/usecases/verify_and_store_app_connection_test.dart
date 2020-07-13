@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/repositories/app_connection_repository_impl.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/usecases/verify_and_store_app_connection.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/repositories/app_connection_repository_impl.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

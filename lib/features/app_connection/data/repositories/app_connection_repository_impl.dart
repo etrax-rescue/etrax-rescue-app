@@ -2,16 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/types/app_connection.dart';
 import '../../domain/repositories/app_connection_repository.dart';
 import '../datasources/app_connection_local_datasource.dart';
 import '../datasources/app_connection_remote_endpoint_verification.dart';
+import '../models/app_connection_model.dart';
 
 class AppConnectionRepositoryImpl implements AppConnectionRepository {
   final AppConnectionRemoteEndpointVerification remoteEndpointVerification;

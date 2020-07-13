@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/common/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/datasources/app_connection_local_datasource.dart';
-import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/datasources/app_connection_local_datasource.dart';
+import 'package:etrax_rescue_app/features/app_connection/data/models/app_connection_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';

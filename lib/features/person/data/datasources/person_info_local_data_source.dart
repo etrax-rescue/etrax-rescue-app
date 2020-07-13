@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../common/shared_preferences_keys.dart';
+import '../../../../core/shared_preferences_keys.dart';
 import '../../../../core/error/exceptions.dart';
 import '../models/person_info_model.dart';
 

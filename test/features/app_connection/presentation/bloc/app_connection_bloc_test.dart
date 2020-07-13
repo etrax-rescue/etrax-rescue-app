@@ -3,7 +3,7 @@ import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
-import 'package:etrax_rescue_app/common/app_connection/domain/usecases/verify_and_store_app_connection.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'package:etrax_rescue_app/features/app_connection/presentation/bloc/app_connection_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

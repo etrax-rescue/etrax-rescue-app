@@ -1,8 +1,8 @@
-import 'package:etrax_rescue_app/common/app_connection/data/models/app_connection_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 
 import '../../../../core/error/exceptions.dart';
+import '../models/app_connection_model.dart';
 
 abstract class AppConnectionRemoteEndpointVerification {
   Future<AppConnectionModel> verifyRemoteEndpoint(

@@ -1,4 +1,4 @@
-import 'package:etrax_rescue_app/common/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
