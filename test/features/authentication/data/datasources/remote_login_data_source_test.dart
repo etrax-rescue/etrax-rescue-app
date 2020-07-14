@@ -36,7 +36,7 @@ void main() {
     () async {
       // arrange
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
-          (_) async => http.Response(fixture('login_success.json'), 200));
+          (_) async => http.Response(fixture('login/valid.json'), 200));
       // act
       await remoteDataSource.login(tAppConnection, tUsername, tPassword);
       // assert
@@ -64,7 +64,7 @@ void main() {
     () async {
       // arrange
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
-          (_) async => http.Response(fixture('login_wrong_reply.json'), 200));
+          (_) async => http.Response(fixture('login/invalid.json'), 200));
       final call = remoteDataSource.login;
       // assert
       expect(() => call(tAppConnection, tUsername, tPassword),
@@ -77,7 +77,7 @@ void main() {
     () async {
       // arrange
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
-          (_) async => http.Response(fixture('login_success.json'), 403));
+          (_) async => http.Response(fixture('login/valid.json'), 403));
       final call = remoteDataSource.login;
       // assert
       expect(() => call(tAppConnection, tUsername, tPassword),
@@ -90,7 +90,7 @@ void main() {
     () async {
       // arrange
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
-          (_) async => http.Response(fixture('login_success.json'), 404));
+          (_) async => http.Response(fixture('login/valid.json'), 404));
       final call = remoteDataSource.login;
       // assert
       expect(() => call(tAppConnection, tUsername, tPassword),
@@ -103,7 +103,7 @@ void main() {
     () async {
       // arrange
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
-          (_) async => http.Response(fixture('login_success.json'), 200));
+          (_) async => http.Response(fixture('login/valid.json'), 200));
       // act
       final result =
           await remoteDataSource.login(tAppConnection, tUsername, tPassword);

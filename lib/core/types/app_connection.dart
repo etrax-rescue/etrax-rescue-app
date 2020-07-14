@@ -7,7 +7,7 @@ class AppConnection extends Equatable {
   final String basePath;
   AppConnection({@required this.authority, @required this.basePath});
 
-  Uri createUri({String subPath, Map<String, dynamic> paramMap}) {
+  Uri generateUri({String subPath, Map<String, String> paramMap}) {
     if (subPath == null && paramMap == null) {
       return Uri.https(authority, basePath);
     } else if (subPath != null) {

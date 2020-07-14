@@ -8,12 +8,12 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
-  group('createUri', () {
+  group('generateUri', () {
     test(
       'should return a valid uri when no parameters are given',
       () async {
         // act
-        final result = tAppConnection.createUri();
+        final result = tAppConnection.generateUri();
         // assert
         expect(result, equals(Uri.https(tAuthority, tBasePath)));
       },
@@ -25,7 +25,7 @@ void main() {
         // arrange
         final tSubPath = 'test.php';
         // act
-        final result = tAppConnection.createUri(subPath: tSubPath);
+        final result = tAppConnection.generateUri(subPath: tSubPath);
         // assert
         expect(
             result, equals(Uri.https(tAuthority, tBasePath + '/' + tSubPath)));
@@ -42,7 +42,7 @@ void main() {
         };
         // act
         final result =
-            tAppConnection.createUri(subPath: tSubPath, paramMap: tParamMap);
+            tAppConnection.generateUri(subPath: tSubPath, paramMap: tParamMap);
         // assert
         expect(
             result,
@@ -59,7 +59,7 @@ void main() {
           'username': 'JohnDoe',
         };
         // act
-        final result = tAppConnection.createUri(paramMap: tParamMap);
+        final result = tAppConnection.generateUri(paramMap: tParamMap);
         // assert
         expect(result, equals(Uri.https(tAuthority, tBasePath, tParamMap)));
       },

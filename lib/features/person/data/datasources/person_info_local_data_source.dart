@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/shared_preferences_keys.dart';
+import '../../../../core/types/shared_preferences_keys.dart';
 import '../../../../core/error/exceptions.dart';
 import '../models/person_info_model.dart';
 
@@ -19,7 +19,7 @@ class PersonInfoLocalDataSourceImpl implements PersonInfoLocalDataSource {
 
   @override
   Future<PersonInfoModel> getCachedPersonInfo() async {
-    final data = sharedPreferences.getString(CACHE_PERSON_INFO);
+    final data = sharedPreferences.getString(SharedPreferencesKeys.personInfo);
     if (data != null) {
       return PersonInfoModel.fromJson(json.decode(data));
     } else {
@@ -29,7 +29,7 @@ class PersonInfoLocalDataSourceImpl implements PersonInfoLocalDataSource {
 
   @override
   Future<void> cachePersonInfo(PersonInfoModel personInfoToCache) {
-    return sharedPreferences.setString(
-        CACHE_PERSON_INFO, json.encode(personInfoToCache.toJson()));
+    return sharedPreferences.setString(SharedPreferencesKeys.personInfo,
+        json.encode(personInfoToCache.toJson()));
   }
 }

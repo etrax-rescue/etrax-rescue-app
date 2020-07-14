@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:etrax_rescue_app/features/app_connection/data/models/app_connection_model.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/app_connection/data/datasources/app_connection_remote_endpoint_verification.dart';
@@ -30,13 +31,13 @@ void main() {
     'should perform GET request on the /appdata/version_info.json endpoint',
     () async {
       // arrange
-      when(mockedHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(fixture('version_info.json'), 200));
+      when(mockedHttpClient.get(any)).thenAnswer((_) async =>
+          http.Response(fixture('version/version_info.json'), 200));
       // act
       await endpointVerification.verifyRemoteEndpoint(tAuthority, tBasePath);
       // assert
-      verify(mockedHttpClient
-          .get(Uri.https(tAuthority, p.join(tBasePath, 'version_info.json'))));
+      verify(mockedHttpClient.get(Uri.https(
+          tAuthority, p.join(tBasePath, EtraxServerEndpoints.version))));
     },
   );
 
@@ -45,8 +46,8 @@ void main() {
     () async {
       // TODO: How should we handle different versions?
       // arrange
-      when(mockedHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(fixture('version_info.json'), 200));
+      when(mockedHttpClient.get(any)).thenAnswer((_) async =>
+          http.Response(fixture('version/version_info.json'), 200));
       // act
       final result = await endpointVerification.verifyRemoteEndpoint(
           tAuthority, tBasePath);

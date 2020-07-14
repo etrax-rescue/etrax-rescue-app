@@ -18,7 +18,7 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   @override
   Future<AuthenticationDataModel> login(
       AppConnection appConnection, String username, String password) async {
-    final request = client.post(appConnection.createUri(subPath: 'login.php'),
+    final request = client.post(appConnection.generateUri(subPath: 'login.php'),
         body: {'username': username, 'password': password});
 
     final response = await request.timeout(const Duration(seconds: 2));

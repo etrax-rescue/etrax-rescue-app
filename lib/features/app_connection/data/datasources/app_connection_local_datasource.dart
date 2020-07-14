@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/error/exceptions.dart';
-import '../../../../core/shared_preferences_keys.dart';
+import '../../../../core/types/shared_preferences_keys.dart';
 import '../models/app_connection_model.dart';
 
 abstract class AppConnectionLocalDataSource {
@@ -19,12 +19,13 @@ class AppConnectionLocalDataSourceImpl implements AppConnectionLocalDataSource {
   @override
   Future<void> cacheAppConnection(AppConnectionModel model) async {
     sharedPreferences.setString(
-        CACHE_APP_CONNECTION, json.encode(model.toJson()));
+        SharedPreferencesKeys.appConnection, json.encode(model.toJson()));
   }
 
   @override
   Future<AppConnectionModel> getCachedAppConnection() async {
-    final data = sharedPreferences.getString(CACHE_APP_CONNECTION);
+    final data =
+        sharedPreferences.getString(SharedPreferencesKeys.appConnection);
     if (data != null) {
       return AppConnectionModel.fromJson(json.decode(data));
     } else {

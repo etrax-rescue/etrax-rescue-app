@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/initialization_data_model.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
@@ -43,14 +44,14 @@ class InitializationRepositoryImpl implements InitializationRepository {
 
   @override
   Future<Either<Failure, None>> fetchInitializationData(
-      String baseUri, String username, String token) async {
+      AppConnection appConnection, String username, String token) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
     InitializationDataModel data;
     try {
       data = await remoteInitializationDataSource.fetchInitialization(
-          baseUri, username, token);
+          appConnection, username, token);
     } on ServerException {
       return Left(ServerFailure());
     } on TimeoutException {
@@ -64,11 +65,11 @@ class InitializationRepositoryImpl implements InitializationRepository {
     try {
       localAppSettingsDataSource.storeAppSettings(data.appSettingsModel);
 
-      localUserRolesDataSource.storeUserRoles(data.userRolesModel);
+      localUserRolesDataSource.storeUserRoles(data.userRoleCollectionModel);
 
-      localUserStatesDataSource.storeUserStates(data.userStatesModel);
+      localUserStatesDataSource.storeUserStates(data.userStateCollectionModel);
 
-      localMissionsDataSource.insertMissions(data.missionsModel);
+      localMissionsDataSource.insertMissions(data.missionCollectionModel);
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -98,8 +99,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, Missions>> getMissions() async {
-    MissionsModel data;
+  Future<Either<Failure, MissionCollectionModel>> getMissions() async {
+    MissionCollectionModel data;
     try {
       data = await localMissionsDataSource.getMissions();
     } on CacheException {
@@ -121,8 +122,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, UserStates>> getUserStates() async {
-    UserStatesModel data;
+  Future<Either<Failure, UserStateCollectionModel>> getUserStates() async {
+    UserStateCollectionModel data;
     try {
       data = await localUserStatesDataSource.getUserStates();
     } on CacheException {
@@ -152,8 +153,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, UserRoles>> getUserRoles() async {
-    UserRolesModel data;
+  Future<Either<Failure, UserRoleCollectionModel>> getUserRoles() async {
+    UserRoleCollectionModel data;
     try {
       data = await localUserRolesDataSource.getUserRoles();
     } on CacheException {

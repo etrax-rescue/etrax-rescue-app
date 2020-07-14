@@ -5,12 +5,12 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/types/usecase.dart';
 import '../repositories/initialization_repository.dart';
 
-class GetMissions extends UseCase<Missions, NoParams> {
+class GetMissions extends UseCase<MissionCollection, NoParams> {
   final InitializationRepository repository;
   GetMissions(this.repository);
 
   @override
-  Future<Either<Failure, Missions>> call(NoParams params) async {
+  Future<Either<Failure, MissionCollection>> call(NoParams params) async {
     return await repository.getMissions();
   }
 }

@@ -9,6 +9,8 @@ void main() {
     inputConverter = UriInputConverter();
   });
   final tAuthority = 'etrax.at';
+
+  // TODO: handle the case where the eTrax server is installed in a subdirectory. Thus the uri would look something like: organization.org/etrax/appdata
   group('convert', () {
     test(
       'should return the the input string if a valid authority string is given',
@@ -46,6 +48,17 @@ void main() {
       () async {
         // arrange
         final tBadAuthority = 'www etrax.at/';
+        // act
+        final result = inputConverter.convert(tBadAuthority);
+        // assert
+        expect(result, equals(Left(InvalidInputFailure())));
+      },
+    );
+    test(
+      'should return a InvalidInputFailure when a FormatException occurs',
+      () async {
+        // arrange
+        final tBadAuthority = 'Müsli';
         // act
         final result = inputConverter.convert(tBadAuthority);
         // assert

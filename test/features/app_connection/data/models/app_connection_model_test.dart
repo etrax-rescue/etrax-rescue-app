@@ -25,7 +25,7 @@ void main() {
       () async {
         // arrange
         final Map<String, dynamic> jsonMap =
-            json.decode(fixture('app_connection.json'));
+            json.decode(fixture('app_connection/valid.json'));
         // act
         final result = AppConnectionModel.fromJson(jsonMap);
         // assert

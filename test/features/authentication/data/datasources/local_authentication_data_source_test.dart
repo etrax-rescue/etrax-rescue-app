@@ -1,4 +1,4 @@
-import 'package:etrax_rescue_app/core/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
@@ -31,11 +31,12 @@ void main() {
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
-            .thenReturn(fixture('authentication_data.json'));
+            .thenReturn(fixture('authentication_data/valid.json'));
         // act
         final result = await dataSource.getCachedAuthenticationData();
         // assert
-        verify(mockSharedPreferences.getString(CACHE_AUTHENTICATION_DATA));
+        verify(mockSharedPreferences
+            .getString(SharedPreferencesKeys.authenticationData));
         expect(result, equals(tAuthenticationDataModel));
       },
     );
@@ -62,7 +63,7 @@ void main() {
         final expectedJsonString =
             json.encode(tAuthenticationDataModel.toJson());
         verify(mockSharedPreferences.setString(
-            CACHE_AUTHENTICATION_DATA, expectedJsonString));
+            SharedPreferencesKeys.authenticationData, expectedJsonString));
       },
     );
   });
@@ -74,7 +75,8 @@ void main() {
         // act
         dataSource.deleteAuthenticationData();
         // assert
-        verify(mockSharedPreferences.remove(CACHE_AUTHENTICATION_DATA));
+        verify(mockSharedPreferences
+            .remove(SharedPreferencesKeys.authenticationData));
       },
     );
   });

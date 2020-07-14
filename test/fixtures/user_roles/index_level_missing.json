@@ -1,0 +1,6 @@
+{
+    "roles": {
+        "name": "operator",
+        "description": "the one who does stuff"
+    } 
+}

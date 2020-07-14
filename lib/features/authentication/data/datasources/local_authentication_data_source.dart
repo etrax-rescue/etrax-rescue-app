@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:etrax_rescue_app/core/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,12 +20,13 @@ class LocalAuthenticationDataSourceImpl
   @override
   Future<void> cacheAuthenticationData(AuthenticationDataModel model) async {
     sharedPreferences.setString(
-        CACHE_AUTHENTICATION_DATA, json.encode(model.toJson()));
+        SharedPreferencesKeys.authenticationData, json.encode(model.toJson()));
   }
 
   @override
   Future<AuthenticationDataModel> getCachedAuthenticationData() async {
-    final data = sharedPreferences.getString(CACHE_AUTHENTICATION_DATA);
+    final data =
+        sharedPreferences.getString(SharedPreferencesKeys.authenticationData);
     if (data == null) {
       throw CacheException();
     }
@@ -34,6 +35,6 @@ class LocalAuthenticationDataSourceImpl
 
   @override
   Future<void> deleteAuthenticationData() async {
-    sharedPreferences.remove(CACHE_AUTHENTICATION_DATA);
+    sharedPreferences.remove(SharedPreferencesKeys.authenticationData);
   }
 }

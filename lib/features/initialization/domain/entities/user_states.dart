@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class UserStates extends Equatable {
+class UserStateCollection extends Equatable {
   final List<UserState> states;
 
-  UserStates({
+  UserStateCollection({
     @required this.states,
   });
 

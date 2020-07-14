@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,11 +17,15 @@ void main() {
     usecase = FetchInitializationData(mockInitializationRepository);
   });
 
-  final tBaseUri = 'https://etrax.at/appdata';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
+
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
   final tFetchInitializationDataParams = FetchInitializationDataParams(
-    baseUri: tBaseUri,
+    appConnection: tAppConnection,
     username: tUsername,
     token: tToken,
   );
@@ -36,7 +41,7 @@ void main() {
       // assert
       expect(result, Right(None()));
       verify(mockInitializationRepository.fetchInitializationData(
-          tBaseUri, tUsername, tToken));
+          tAppConnection, tUsername, tToken));
       verifyNoMoreInteractions(mockInitializationRepository);
     },
   );

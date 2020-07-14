@@ -26,7 +26,7 @@ void main() {
       () async {
         // arrange
         final Map<String, dynamic> jsonMap =
-            json.decode(fixture('authentication_data_invalid.json'));
+            json.decode(fixture('authentication_data/token_missing.json'));
         // assert
         expect(() => AuthenticationDataModel.fromJson(jsonMap),
             throwsA(TypeMatcher<FormatException>()));
@@ -37,7 +37,7 @@ void main() {
       () async {
         // arrange
         final Map<String, dynamic> jsonMap =
-            json.decode(fixture('authentication_data.json'));
+            json.decode(fixture('authentication_data/valid.json'));
         // act
         final result = AuthenticationDataModel.fromJson(jsonMap);
         // assert

@@ -30,18 +30,18 @@ void main() {
     latitude: tLatitude,
     longitude: tLongitude,
   );
-  final tMissions = Missions(missions: <Mission>[tMission]);
+  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
 
   test(
     'should return Missions',
     () async {
       // arrange
       when(mockInitializationRepository.getMissions())
-          .thenAnswer((_) async => Right(tMissions));
+          .thenAnswer((_) async => Right(tMissionCollection));
       // act
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tMissions));
+      expect(result, Right(tMissionCollection));
       verify(mockInitializationRepository.getMissions());
       verifyNoMoreInteractions(mockInitializationRepository);
     },

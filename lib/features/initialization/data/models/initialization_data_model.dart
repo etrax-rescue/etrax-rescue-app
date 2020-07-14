@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 
 class InitializationDataModel {
   final AppSettingsModel appSettingsModel;
-  final MissionsModel missionsModel;
-  final UserStatesModel userStatesModel;
-  final UserRolesModel userRolesModel;
+  final MissionCollectionModel missionCollectionModel;
+  final UserStateCollectionModel userStateCollectionModel;
+  final UserRoleCollectionModel userRoleCollectionModel;
 
   InitializationDataModel({
     @required this.appSettingsModel,
-    @required this.missionsModel,
-    @required this.userStatesModel,
-    @required this.userRolesModel,
+    @required this.missionCollectionModel,
+    @required this.userStateCollectionModel,
+    @required this.userRoleCollectionModel,
   });
 }

@@ -1,9 +1,9 @@
 import '../models/user_roles_model.dart';
 
 abstract class LocalUserRolesDataSource {
-  Future<void> storeUserRoles(UserRolesModel roles);
+  Future<void> storeUserRoles(UserRoleCollectionModel roles);
 
-  Future<UserRolesModel> getUserRoles();
+  Future<UserRoleCollectionModel> getUserRoles();
 
   Future<void> clearUserRoles();
 }

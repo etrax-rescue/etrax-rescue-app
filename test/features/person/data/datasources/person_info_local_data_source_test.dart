@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/core/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/person/data/datasources/person_info_local_data_source.dart';
 import 'package:etrax_rescue_app/features/person/data/models/person_info_model.dart';
@@ -34,7 +34,8 @@ void main() {
         // act
         final result = await dataSource.getCachedPersonInfo();
         // assert
-        verify(mockSharedPreferences.getString(CACHE_PERSON_INFO));
+        verify(
+            mockSharedPreferences.getString(SharedPreferencesKeys.personInfo));
         expect(result, equals(tPersonInfoModel));
       },
     );
@@ -65,7 +66,7 @@ void main() {
         // assert
         final expectedJsonString = json.encode(tPersonInfoModel.toJson());
         verify(mockSharedPreferences.setString(
-            CACHE_PERSON_INFO, expectedJsonString));
+            SharedPreferencesKeys.personInfo, expectedJsonString));
       },
     );
   });

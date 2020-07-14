@@ -16,6 +16,10 @@ class UriInputConverter {
       return Left(InvalidInputFailure());
     }
 
+    if (Uri.encodeFull(uri.authority) != uri.authority) {
+      return Left(InvalidInputFailure());
+    }
+
     bool valid = uri.isAbsolute && !uri.hasQuery;
 
     if (!valid) {

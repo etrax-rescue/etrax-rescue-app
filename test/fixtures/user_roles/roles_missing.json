@@ -1,0 +1,8 @@
+{
+    "something": {
+        "42": {
+            "name": "operator",
+            "description": "the one who does stuff"
+        }
+    } 
+}

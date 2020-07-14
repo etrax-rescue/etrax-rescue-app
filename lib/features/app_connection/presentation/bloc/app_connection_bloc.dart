@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
-import '../../../app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/util/translate_error_messages.dart';
 import '../../../../core/util/uri_input_converter.dart';
+import '../../../app_connection/domain/usecases/verify_and_store_app_connection.dart';
 
 part 'app_connection_event.dart';
 part 'app_connection_state.dart';

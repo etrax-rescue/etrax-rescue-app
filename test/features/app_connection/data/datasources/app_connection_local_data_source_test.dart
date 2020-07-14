@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/core/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/app_connection/data/datasources/app_connection_local_datasource.dart';
 import 'package:etrax_rescue_app/features/app_connection/data/models/app_connection_model.dart';
@@ -32,11 +32,12 @@ void main() {
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
-            .thenReturn(fixture('app_connection.json'));
+            .thenReturn(fixture('app_connection/valid.json'));
         // act
         final result = await dataSource.getCachedAppConnection();
         // assert
-        verify(mockSharedPreferences.getString(CACHE_APP_CONNECTION));
+        verify(mockSharedPreferences
+            .getString(SharedPreferencesKeys.appConnection));
         expect(result, equals(tAppConnectionModel));
       },
     );
@@ -62,7 +63,8 @@ void main() {
         dataSource.cacheAppConnection(tAppConnectionModel);
         // assert
         verify(mockSharedPreferences.setString(
-            CACHE_APP_CONNECTION, json.encode(tAppConnectionModel.toJson())));
+            SharedPreferencesKeys.appConnection,
+            json.encode(tAppConnectionModel.toJson())));
       },
     );
   });

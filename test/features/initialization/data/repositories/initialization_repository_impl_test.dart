@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
+import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/remote_initialization_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_states_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_roles_data_source.dart';
@@ -62,7 +63,11 @@ void main() {
         networkInfo: mockNetworkInfo);
   });
 
-  final tBaseUri = 'https://etrax.at/appdata';
+  final tAuthority = 'etrax.at';
+  final tBasePath = 'appdata';
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
+
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
 
@@ -82,26 +87,27 @@ void main() {
     latitude: tLatitude,
     longitude: tLongitude,
   );
-  final tMissionsModel = MissionsModel(missions: <MissionModel>[tMissionModel]);
+  final tMissionCollectionModel =
+      MissionCollectionModel(missions: <MissionModel>[tMissionModel]);
 
   final tID = 42;
   final tName = 'approaching';
   final tDescription = 'is on its way';
   final tUserStateModel =
       UserStateModel(id: tID, name: tName, description: tDescription);
-  final tUserStatesModel =
-      UserStatesModel(states: <UserStateModel>[tUserStateModel]);
+  final tUserStateCollectionModel =
+      UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
 
   final tUserRoleModel =
       UserRoleModel(id: tID, name: tName, description: tDescription);
-  final tUserRolesModel =
-      UserRolesModel(roles: <UserRoleModel>[tUserRoleModel]);
+  final tUserRoleCollectionModel =
+      UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
 
   final tInitializationDataModel = InitializationDataModel(
     appSettingsModel: tAppSettingsModel,
-    missionsModel: tMissionsModel,
-    userStatesModel: tUserStatesModel,
-    userRolesModel: tUserRolesModel,
+    missionCollectionModel: tMissionCollectionModel,
+    userStateCollectionModel: tUserStateCollectionModel,
+    userRoleCollectionModel: tUserRoleCollectionModel,
   );
 
   group('fetchInitializationData', () {
@@ -111,7 +117,8 @@ void main() {
         // arrange
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
         // act
-        await repository.fetchInitializationData(tBaseUri, tUsername, tToken);
+        await repository.fetchInitializationData(
+            tAppConnection, tUsername, tToken);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -141,7 +148,7 @@ void main() {
         () async {
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           expect(result, equals(Left(NetworkFailure())));
         },
@@ -156,10 +163,11 @@ void main() {
           when(mockRemoteDataSource.fetchInitialization(any, any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           // act
-          await repository.fetchInitializationData(tBaseUri, tUsername, tToken);
+          await repository.fetchInitializationData(
+              tAppConnection, tUsername, tToken);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tBaseUri, tUsername, tToken));
+              tAppConnection, tUsername, tToken));
           verifyNoMoreInteractions(mockRemoteDataSource);
         },
       );
@@ -172,10 +180,10 @@ void main() {
               .thenThrow(ServerException());
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tBaseUri, tUsername, tToken));
+              tAppConnection, tUsername, tToken));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -192,10 +200,10 @@ void main() {
               .thenThrow(TimeoutException(''));
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tBaseUri, tUsername, tToken));
+              tAppConnection, tUsername, tToken));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -212,10 +220,10 @@ void main() {
               .thenThrow(SocketException(''));
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tBaseUri, tUsername, tToken));
+              tAppConnection, tUsername, tToken));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -231,10 +239,10 @@ void main() {
               .thenThrow(AuthenticationException());
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tBaseUri, tUsername, tToken));
+              tAppConnection, tUsername, tToken));
           expect(result, equals(Left(AuthenticationFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -250,16 +258,17 @@ void main() {
           when(mockRemoteDataSource.fetchInitialization(any, any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           // act
-          await repository.fetchInitializationData(tBaseUri, tUsername, tToken);
+          await repository.fetchInitializationData(
+              tAppConnection, tUsername, tToken);
           // assert
           verify(mockLocalAppSettingsDataSource
               .storeAppSettings(tInitializationDataModel.appSettingsModel));
-          verify(mockLocalUserStatesDataSource
-              .storeUserStates(tInitializationDataModel.userStatesModel));
-          verify(mockLocalUserRolesDataSource
-              .storeUserRoles(tInitializationDataModel.userRolesModel));
+          verify(mockLocalUserStatesDataSource.storeUserStates(
+              tInitializationDataModel.userStateCollectionModel));
+          verify(mockLocalUserRolesDataSource.storeUserRoles(
+              tInitializationDataModel.userRoleCollectionModel));
           verify(mockLocalMissionsDataSource
-              .insertMissions(tInitializationDataModel.missionsModel));
+              .insertMissions(tInitializationDataModel.missionCollectionModel));
         },
       );
 
@@ -273,7 +282,7 @@ void main() {
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -289,7 +298,7 @@ void main() {
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -305,7 +314,7 @@ void main() {
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -321,7 +330,7 @@ void main() {
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -335,7 +344,7 @@ void main() {
               .thenAnswer((_) async => tInitializationDataModel);
           // act
           final result = await repository.fetchInitializationData(
-              tBaseUri, tUsername, tToken);
+              tAppConnection, tUsername, tToken);
           // assert
           expect(result, equals(Right(None())));
         },
@@ -425,7 +434,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalUserStatesDataSource.getUserStates())
-            .thenAnswer((_) async => tUserStatesModel);
+            .thenAnswer((_) async => tUserStateCollectionModel);
         // act
         await repository.getUserStates();
         // assert
@@ -451,11 +460,11 @@ void main() {
       () async {
         // arrange
         when(mockLocalUserStatesDataSource.getUserStates())
-            .thenAnswer((_) async => tUserStatesModel);
+            .thenAnswer((_) async => tUserStateCollectionModel);
         // act
         final result = await repository.getUserStates();
         // assert
-        expect(result, equals(Right(tUserStatesModel)));
+        expect(result, equals(Right(tUserStateCollectionModel)));
       },
     );
   });
@@ -501,7 +510,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalUserRolesDataSource.getUserRoles())
-            .thenAnswer((_) async => tUserRolesModel);
+            .thenAnswer((_) async => tUserRoleCollectionModel);
         // act
         await repository.getUserRoles();
         // assert
@@ -527,11 +536,11 @@ void main() {
       () async {
         // arrange
         when(mockLocalUserRolesDataSource.getUserRoles())
-            .thenAnswer((_) async => tUserRolesModel);
+            .thenAnswer((_) async => tUserRoleCollectionModel);
         // act
         final result = await repository.getUserRoles();
         // assert
-        expect(result, equals(Right(tUserRolesModel)));
+        expect(result, equals(Right(tUserRoleCollectionModel)));
       },
     );
   });
@@ -577,7 +586,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalMissionsDataSource.getMissions())
-            .thenAnswer((_) async => tMissionsModel);
+            .thenAnswer((_) async => tMissionCollectionModel);
         // act
         await repository.getMissions();
         // assert
@@ -616,11 +625,11 @@ void main() {
       () async {
         // arrange
         when(mockLocalMissionsDataSource.getMissions())
-            .thenAnswer((_) async => tMissionsModel);
+            .thenAnswer((_) async => tMissionCollectionModel);
         // act
         final result = await repository.getMissions();
         // assert
-        expect(result, equals(Right(tMissionsModel)));
+        expect(result, equals(Right(tMissionCollectionModel)));
       },
     );
   });

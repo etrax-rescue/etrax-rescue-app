@@ -1,14 +1,10 @@
 {
-    "app_settings": {
-      "location_update_interval": 60
+    "appSettings": {
+      "locationUpdateInterval": 60
     },
     "roles": {
       "0": "Hundeführer*in",
       "1": "Funkbeauftragt*e"
-    },
-    "states": {
-      "0": "Anreise",
-      "1": "Am Einsatzort"
     },
     "missions": [
       {

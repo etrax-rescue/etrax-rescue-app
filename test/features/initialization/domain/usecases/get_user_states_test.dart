@@ -22,18 +22,18 @@ void main() {
   final tName = 'TestMission';
   final tDescription = 'asdf';
   final tState = UserState(id: tID, name: tName, description: tDescription);
-  final tStates = UserStates(states: <UserState>[tState]);
+  final tStateCollection = UserStateCollection(states: <UserState>[tState]);
 
   test(
     'should return UserStates',
     () async {
       // arrange
       when(mockInitializationRepository.getUserStates())
-          .thenAnswer((_) async => Right(tStates));
+          .thenAnswer((_) async => Right(tStateCollection));
       // act
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tStates));
+      expect(result, Right(tStateCollection));
       verify(mockInitializationRepository.getUserStates());
       verifyNoMoreInteractions(mockInitializationRepository);
     },

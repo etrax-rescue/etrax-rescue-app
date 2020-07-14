@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class UserRoles extends Equatable {
+class UserRoleCollection extends Equatable {
   final List<UserRole> roles;
 
-  UserRoles({
+  UserRoleCollection({
     @required this.roles,
   });
 
