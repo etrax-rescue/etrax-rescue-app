@@ -13,10 +13,10 @@ void main() {
   final tDescription = 'is on their way';
   final tUserStateModel =
       UserStateModel(id: tID, name: tName, description: tDescription);
-  final tUserStatesModel =
+  final tUserStateCollectionModel =
       UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
 
-  group('UserState', () {
+  group('UserStateModel', () {
     test(
       'should be a subclass of UserState entity',
       () async {
@@ -24,79 +24,42 @@ void main() {
         expect(tUserStateModel, isA<UserState>());
       },
     );
-  });
-
-  group('UserStates', () {
-    test(
-      'should be a subclass of UserStates entity',
-      () async {
-        // assert
-        expect(tUserStatesModel, isA<UserStateCollection>());
-      },
-    );
-
     group('fromJson', () {
       test(
-        'should throw a FormatException when the JSON is missing the states field',
+        'should throw a FormatException when the UserStateModel has no name field',
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_states/states_missing.json'));
+              json.decode(fixture('user_state/no_name.json'));
           // act & assert
-          expect(() => UserStateCollectionModel.fromJson(jsonMap),
+          expect(() => UserStateModel.fromJson(jsonMap),
               throwsA(TypeMatcher<FormatException>()));
         },
       );
 
       test(
-        'should throw a FormatException when the JSON is missing the index level of the document',
+        'should throw a FormatException when the UserStateModel has no id field',
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_states/index_level_missing.json'));
+              json.decode(fixture('user_state/no_id.json'));
           // act & assert
-          expect(() => UserStateCollectionModel.fromJson(jsonMap),
+          expect(() => UserStateModel.fromJson(jsonMap),
               throwsA(TypeMatcher<FormatException>()));
         },
       );
 
       test(
-        'should throw a FormatException when the JSON is only contains the top level field states',
+        'should return a valid model when the UserStateModel has no description field',
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_states/top_level_only.json'));
-          // act & assert
-          expect(() => UserStateCollectionModel.fromJson(jsonMap),
-              throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
-        'should throw a FormatException when the UserModel has no name field',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_states/no_name.json'));
-          // act & assert
-          expect(() => UserStateCollectionModel.fromJson(jsonMap),
-              throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
-        'should return a valid model when the UserModel has no description field',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_states/no_description.json'));
+              json.decode(fixture('user_state/no_description.json'));
           final tModel = UserStateModel(id: tID, name: tName, description: '');
-          final tModels =
-              UserStateCollectionModel(states: <UserStateModel>[tModel]);
           // act
-          final result = UserStateCollectionModel.fromJson(jsonMap);
+          final result = UserStateModel.fromJson(jsonMap);
           // assert
-          expect(result, tModels);
+          expect(result, tModel);
         },
       );
 
@@ -105,11 +68,60 @@ void main() {
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_states/valid.json'));
+              json.decode(fixture('user_state/valid.json'));
+          // act
+          final result = UserStateModel.fromJson(jsonMap);
+          // assert
+          expect(result, tUserStateModel);
+        },
+      );
+    });
+  });
+
+  group('UserStateCollectionModel', () {
+    test(
+      'should be a subclass of UserStateCollection entity',
+      () async {
+        // assert
+        expect(tUserStateCollectionModel, isA<UserStateCollection>());
+      },
+    );
+
+    group('fromJson', () {
+      test(
+        'should throw a FormatException when the JSON is missing the roles field',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_state_collection/states_missing.json'));
+          // act & assert
+          expect(() => UserStateCollectionModel.fromJson(jsonMap),
+              throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+
+      test(
+        'should throw a FormatException when the JSON does not contain an array',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_state_collection/no_array.json'));
+          // act & assert
+          expect(() => UserStateCollectionModel.fromJson(jsonMap),
+              throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+
+      test(
+        'should return a valid model when the JSON is properly formatted',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_state_collection/valid.json'));
           // act
           final result = UserStateCollectionModel.fromJson(jsonMap);
           // assert
-          expect(result, tUserStatesModel);
+          expect(result, tUserStateCollectionModel);
         },
       );
     });
