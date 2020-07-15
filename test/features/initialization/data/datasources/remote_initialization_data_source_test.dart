@@ -28,23 +28,27 @@ void main() {
     remoteDataSource = RemoteInitializationDataSourceImpl(mockedHttpClient);
   });
 
+  // AppConnection
   final tAuthority = 'etrax.at';
   final tBasePath = 'appdata';
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
+  // Authorization
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
 
-  final tLocationUpdateInterval = 0;
+  // AppSettings
+  final tLocationUpdateInterval = 60;
   final tAppSettingsModel =
       AppSettingsModel(locationUpdateInterval: tLocationUpdateInterval);
 
-  final tMissionID = '0123456789ABCDEF';
-  final tMissionName = 'TestMission';
-  final tMissionStart = DateTime.utc(2020, 1, 1);
-  final tLatitude = 48.2206635;
-  final tLongitude = 16.309849;
+  // MissionCollection
+  final tMissionID = '1234abcd';
+  final tMissionName = 'Wien';
+  final tMissionStart = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
+  final tLatitude = 48.2084114;
+  final tLongitude = 16.3712767;
   final tMissionModel = MissionModel(
     id: tMissionID,
     name: tMissionName,
@@ -55,19 +59,27 @@ void main() {
   final tMissionCollectionModel =
       MissionCollectionModel(missions: <MissionModel>[tMissionModel]);
 
-  final tID = 42;
-  final tName = 'approaching';
-  final tDescription = 'is on its way';
-  final tUserStateModel =
-      UserStateModel(id: tID, name: tName, description: tDescription);
+  // UserStateCollection
+  final tUserStateID = 42;
+  final tUserStateName = 'approaching';
+  final tUserStateDescription = 'is on their way';
+  final tUserStateModel = UserStateModel(
+      id: tUserStateID,
+      name: tUserStateName,
+      description: tUserStateDescription);
   final tUserStateCollectionModel =
       UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
 
-  final tUserRoleModel =
-      UserRoleModel(id: tID, name: tName, description: tDescription);
+  // UserRoleCollection
+  final tUserRoleID = 42;
+  final tUserRoleName = 'operator';
+  final tUserRoleDescription = 'the one who does stuff';
+  final tUserRoleModel = UserRoleModel(
+      id: tUserRoleID, name: tUserRoleName, description: tUserRoleDescription);
   final tUserRoleCollectionModel =
       UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
 
+  // InitializationDataModel
   final tInitializationDataModel = InitializationDataModel(
     appSettingsModel: tAppSettingsModel,
     missionCollectionModel: tMissionCollectionModel,

@@ -5,7 +5,9 @@ import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/entities/app_settings.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/user_roles_model.dart';
+import 'package:etrax_rescue_app/features/initialization/data/models/user_states_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/initialization_data_model.dart';
@@ -32,10 +34,25 @@ class RemoteInitializationDataSourceImpl
       throw ServerException();
     }
     final body = json.decode(response.body);
+    AppSettingsModel appSettingsModel;
+    UserRoleCollectionModel userRoleCollectionModel;
+    UserStateCollectionModel userStateCollectionModel;
+    MissionCollectionModel missionCollectionModel;
+
     try {
-      final appSettingsModel = AppSettingsModel.fromJson(body['appSettings']);
+      appSettingsModel = AppSettingsModel.fromJson(body['appSettings']);
+      userRoleCollectionModel = UserRoleCollectionModel.fromJson(body);
+      userStateCollectionModel = UserStateCollectionModel.fromJson(body);
+      missionCollectionModel = MissionCollectionModel.fromJson(body);
     } on NoSuchMethodError {
       throw ServerException();
+    } on FormatException {
+      throw ServerException();
     }
+    return InitializationDataModel(
+        appSettingsModel: appSettingsModel,
+        missionCollectionModel: missionCollectionModel,
+        userStateCollectionModel: userStateCollectionModel,
+        userRoleCollectionModel: userRoleCollectionModel);
   }
 }

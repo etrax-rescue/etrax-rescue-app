@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/user_roles_model.dart';
 import 'package:etrax_rescue_app/features/initialization/data/models/user_states_model.dart';
 import 'package:flutter/material.dart';
 
-class InitializationDataModel {
+class InitializationDataModel extends Equatable {
   final AppSettingsModel appSettingsModel;
   final MissionCollectionModel missionCollectionModel;
   final UserStateCollectionModel userStateCollectionModel;
@@ -16,4 +17,12 @@ class InitializationDataModel {
     @required this.userStateCollectionModel,
     @required this.userRoleCollectionModel,
   });
+
+  @override
+  List<Object> get props => [
+        appSettingsModel,
+        missionCollectionModel,
+        userStateCollectionModel,
+        userRoleCollectionModel
+      ];
 }
