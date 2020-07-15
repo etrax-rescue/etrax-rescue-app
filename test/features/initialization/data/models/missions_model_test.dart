@@ -142,7 +142,7 @@ void main() {
           final expectedJsonMap = {
             'id': tMissionID,
             'name': tMissionName,
-            'start': tMissionStart,
+            'start': tMissionStart.toIso8601String(),
             'latitude': tLatitude,
             'longitude': tLongitude,
           };
@@ -213,6 +213,17 @@ void main() {
         },
       );
       test(
+        'formatted date string should equal initial date string',
+        () async {
+          // arrange
+          final tDate = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
+          // act
+          final result = tDate.toIso8601String();
+          // assert
+          expect(result, equals('2020-02-02T20:20:02.020Z'));
+        },
+      );
+      test(
         'should return a JSON map containing the proper data',
         () async {
           // act
@@ -223,7 +234,7 @@ void main() {
               {
                 'id': tMissionID,
                 'name': tMissionName,
-                'start': tMissionStart,
+                'start': tMissionStart.toIso8601String(),
                 'latitude': tLatitude,
                 'longitude': tLongitude,
               },

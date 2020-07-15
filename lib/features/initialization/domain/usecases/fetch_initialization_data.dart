@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/types/app_connection.dart';
 import '../../../../core/types/usecase.dart';
 import '../repositories/initialization_repository.dart';
 

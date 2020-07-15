@@ -1,5 +1,6 @@
-import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:flutter/material.dart';
+
+import '../../domain/entities/missions.dart';
 
 class MissionCollectionModel extends MissionCollection {
   MissionCollectionModel({@required List<MissionModel> missions})
@@ -67,7 +68,7 @@ class MissionModel extends Mission {
     return {
       'id': this.id,
       'name': this.name,
-      'start': this.start,
+      'start': this.start.toIso8601String(),
       'latitude': this.latitude,
       'longitude': this.longitude,
     };

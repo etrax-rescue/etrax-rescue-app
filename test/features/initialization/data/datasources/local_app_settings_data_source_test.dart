@@ -54,7 +54,7 @@ void main() {
     );
   });
 
-  group('storeAppConnection', () {
+  group('storeAppSettings', () {
     test(
       'should call Shared Preferences to store the data',
       () async {

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/types/usecase.dart';
+import '../entities/missions.dart';
 import '../repositories/initialization_repository.dart';
 
 class GetMissions extends UseCase<MissionCollection, NoParams> {

@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/user_roles_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/user_states_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/types/app_connection.dart';
+import '../../../../core/types/etrax_server_endpoints.dart';
+import '../models/app_settings_model.dart';
 import '../models/initialization_data_model.dart';
+import '../models/missions_model.dart';
+import '../models/user_roles_model.dart';
+import '../models/user_states_model.dart';
 
 abstract class RemoteInitializationDataSource {
   Future<InitializationDataModel> fetchInitialization(

@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/user_roles_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/user_states_model.dart';
 import 'package:flutter/material.dart';
+
+import 'app_settings_model.dart';
+import 'missions_model.dart';
+import 'user_roles_model.dart';
+import 'user_states_model.dart';
 
 class InitializationDataModel extends Equatable {
   final AppSettingsModel appSettingsModel;

@@ -1,6 +1,7 @@
-import 'package:etrax_rescue_app/features/initialization/domain/entities/user_states.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../../domain/entities/user_states.dart';
 
 class UserStateCollectionModel extends UserStateCollection {
   UserStateCollectionModel({@required List<UserStateModel> states})
