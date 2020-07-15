@@ -2,21 +2,27 @@
     "appSettings": {
       "locationUpdateInterval": 60
     },
-    "roles": {
-      "0": "Hundeführer*in",
-      "1": "Funkbeauftragt*e"
-    },
-    "states": {
-      "0": "Anreise",
-      "1": "Am Einsatzort"
-    },
+    "roles": [
+      {
+          "id": 42,
+          "name": "operator",
+          "description": "the one who does stuff"
+      }
+    ],
+    "states": [
+      {
+          "id": 42,
+          "name": "approaching",
+          "description": "is on their way"
+      }
+    ],
     "missions": [
       {
         "id": "1234abcd",
         "name": "Wien",
-        "start": "2020-07-13T09:15:21.964Z",
-        "latitude": 48.2206635,
-        "longitude": 16.309849
+        "start": "2020-02-02T20:20:02.020Z",
+        "latitude": 48.2084114,
+        "longitude": 16.3712767
       }
     ]
   }

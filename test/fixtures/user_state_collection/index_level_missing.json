@@ -1,0 +1,8 @@
+{
+    "states": 
+        {
+            "id": 42,
+            "name": "approaching",
+            "description": "is on their way"
+        }
+}

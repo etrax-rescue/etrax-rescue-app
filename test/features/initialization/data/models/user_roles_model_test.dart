@@ -16,7 +16,7 @@ void main() {
   final tUserRolesModel =
       UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
 
-  group('UserRole', () {
+  group('UserRoleModel', () {
     test(
       'should be a subclass of UserRole entity',
       () async {
@@ -24,9 +24,61 @@ void main() {
         expect(tUserRoleModel, isA<UserRole>());
       },
     );
+    group('fromJson', () {
+      test(
+        'should throw a FormatException when the UserRoleModel has no name field',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_role/no_name.json'));
+          // act & assert
+          expect(() => UserRoleModel.fromJson(jsonMap),
+              throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+
+      test(
+        'should throw a FormatException when the UserRoleModel has no id field',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_role/no_id.json'));
+          // act & assert
+          expect(() => UserRoleModel.fromJson(jsonMap),
+              throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+
+      test(
+        'should return a valid model when the UserRoleModel has no description field',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_role/no_description.json'));
+          final tModel = UserRoleModel(id: tID, name: tName, description: '');
+          // act
+          final result = UserRoleModel.fromJson(jsonMap);
+          // assert
+          expect(result, tModel);
+        },
+      );
+
+      test(
+        'should return a valid model when the JSON is properly formatted',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_role/valid.json'));
+          // act
+          final result = UserRoleModel.fromJson(jsonMap);
+          // assert
+          expect(result, tUserRoleModel);
+        },
+      );
+    });
   });
 
-  group('UserRoles', () {
+  group('UserRoleCollectionModel', () {
     test(
       'should be a subclass of UserRoles entity',
       () async {
@@ -41,7 +93,7 @@ void main() {
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_roles/roles_missing.json'));
+              json.decode(fixture('user_role_collection/roles_missing.json'));
           // act & assert
           expect(() => UserRoleCollectionModel.fromJson(jsonMap),
               throwsA(TypeMatcher<FormatException>()));
@@ -49,54 +101,14 @@ void main() {
       );
 
       test(
-        'should throw a FormatException when the JSON is missing the index level of the document',
+        'should throw a FormatException when the JSON does not contain an array',
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_roles/index_level_missing.json'));
+              json.decode(fixture('user_role_collection/no_array.json'));
           // act & assert
           expect(() => UserRoleCollectionModel.fromJson(jsonMap),
               throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
-        'should throw a FormatException when the JSON is only contains the top level field roles',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_roles/top_level_only.json'));
-          // act & assert
-          expect(() => UserRoleCollectionModel.fromJson(jsonMap),
-              throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
-        'should throw a FormatException when the UserModel has no name field',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_roles/no_name.json'));
-          // act & assert
-          expect(() => UserRoleCollectionModel.fromJson(jsonMap),
-              throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
-        'should return a valid model when the UserModel has no description field',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_roles/no_description.json'));
-          final tModel = UserRoleModel(id: tID, name: tName, description: '');
-          final tModels =
-              UserRoleCollectionModel(roles: <UserRoleModel>[tModel]);
-          // act
-          final result = UserRoleCollectionModel.fromJson(jsonMap);
-          // assert
-          expect(result, tModels);
         },
       );
 
@@ -105,7 +117,7 @@ void main() {
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
-              json.decode(fixture('user_roles/valid.json'));
+              json.decode(fixture('user_role_collection/valid.json'));
           // act
           final result = UserRoleCollectionModel.fromJson(jsonMap);
           // assert

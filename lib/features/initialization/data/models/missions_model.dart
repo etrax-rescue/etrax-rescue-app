@@ -6,6 +6,8 @@ class MissionCollectionModel extends MissionCollection {
       : super(missions: missions);
 
   factory MissionCollectionModel.fromJson(Map<String, dynamic> json) {
+    // Iterable it = map['missions'];
+    // final strs = List<String>.from(it.map((Map el) => el['name']).toList());
     throw UnimplementedError();
   }
 }

@@ -20,7 +20,7 @@ void main() {
     latitude: tLatitude,
     longitude: tLongitude,
   );
-  final tMissionsModel =
+  final tMissionCollectionModel =
       MissionCollectionModel(missions: <MissionModel>[tMissionModel]);
   group('MissionModel', () {
     test(
@@ -36,7 +36,7 @@ void main() {
       'should be a subclass of Missions entity',
       () async {
         // assert
-        expect(tMissionsModel, isA<MissionCollection>());
+        expect(tMissionCollectionModel, isA<MissionCollection>());
       },
     );
 
@@ -86,7 +86,7 @@ void main() {
           // act
           final result = MissionCollectionModel.fromJson(jsonMap);
           // assert
-          expect(result, tMissionsModel);
+          expect(result, tMissionCollectionModel);
         },
       );
     });
