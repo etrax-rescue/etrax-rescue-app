@@ -89,7 +89,7 @@ void main() {
 
     group('fromJson', () {
       test(
-        'should throw a FormatException when the JSON is missing the roles field',
+        'should throw a FormatException when the JSON is missing the states field',
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
