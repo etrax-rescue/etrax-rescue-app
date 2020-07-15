@@ -2,28 +2,25 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/app_settings_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/initialization_data_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/missions_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/user_roles_model.dart';
-import 'package:etrax_rescue_app/features/initialization/data/models/user_states_model.dart';
 import 'package:flutter/material.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../../core/types/app_connection.dart';
 import '../../domain/entities/app_settings.dart';
-import '../../domain/entities/missions.dart';
-import '../../domain/entities/user_roles.dart';
-import '../../domain/entities/user_states.dart';
 import '../../domain/repositories/initialization_repository.dart';
 import '../datasources/local_app_settings_data_source.dart';
 import '../datasources/local_missions_data_source.dart';
 import '../datasources/local_user_roles_data_source.dart';
 import '../datasources/local_user_states_data_source.dart';
 import '../datasources/remote_initialization_data_source.dart';
+import '../models/app_settings_model.dart';
+import '../models/initialization_data_model.dart';
+import '../models/missions_model.dart';
+import '../models/user_roles_model.dart';
+import '../models/user_states_model.dart';
 
 class InitializationRepositoryImpl implements InitializationRepository {
   final RemoteInitializationDataSource remoteInitializationDataSource;
@@ -48,28 +45,34 @@ class InitializationRepositoryImpl implements InitializationRepository {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
-    InitializationDataModel data;
+    InitializationDataModel initializationData;
     try {
-      data = await remoteInitializationDataSource.fetchInitialization(
-          appConnection, username, token);
+      initializationData = await remoteInitializationDataSource
+          .fetchInitialization(appConnection, username, token);
     } on ServerException {
       return Left(ServerFailure());
     } on TimeoutException {
       return Left(ServerFailure());
     } on SocketException {
       return Left(ServerFailure());
+    } on FormatException {
+      return Left(ServerFailure());
     } on AuthenticationException {
       return Left(AuthenticationFailure());
     }
 
     try {
-      localAppSettingsDataSource.storeAppSettings(data.appSettingsModel);
+      localAppSettingsDataSource
+          .storeAppSettings(initializationData.appSettingsModel);
 
-      localUserRolesDataSource.storeUserRoles(data.userRoleCollectionModel);
+      localUserRolesDataSource
+          .storeUserRoles(initializationData.userRoleCollectionModel);
 
-      localUserStatesDataSource.storeUserStates(data.userStateCollectionModel);
+      localUserStatesDataSource
+          .storeUserStates(initializationData.userStateCollectionModel);
 
-      localMissionsDataSource.insertMissions(data.missionCollectionModel);
+      localMissionsDataSource
+          .insertMissions(initializationData.missionCollectionModel);
     } on CacheException {
       return Left(CacheFailure());
     }
