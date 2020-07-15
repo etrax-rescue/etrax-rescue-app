@@ -131,6 +131,25 @@ void main() {
         },
       );
     });
+
+    group('toJson', () {
+      test(
+        'should return a JSON map containing the proper data',
+        () async {
+          // act
+          final result = tMissionModel.toJson();
+          // assert
+          final expectedJsonMap = {
+            'id': tMissionID,
+            'name': tMissionName,
+            'start': tMissionStart,
+            'latitude': tLatitude,
+            'longitude': tLongitude,
+          };
+          expect(result, expectedJsonMap);
+        },
+      );
+    });
   });
   group('MissionCollectionModel', () {
     test(
@@ -176,6 +195,41 @@ void main() {
           final result = MissionCollectionModel.fromJson(jsonMap);
           // assert
           expect(result, tMissionCollectionModel);
+        },
+      );
+    });
+
+    group('toJson', () {
+      test(
+        'should throw FormatException when the MissionCollectionModel contains a null element',
+        () async {
+          // arrange
+          final tModel = MissionCollectionModel(
+              missions: <MissionModel>[tMissionModel, null]);
+          // act
+          final call = tModel.toJson;
+          // assert
+          expect(() => call(), throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+      test(
+        'should return a JSON map containing the proper data',
+        () async {
+          // act
+          final result = tMissionCollectionModel.toJson();
+          // assert
+          final expectedJsonMap = {
+            'missions': [
+              {
+                'id': tMissionID,
+                'name': tMissionName,
+                'start': tMissionStart,
+                'latitude': tLatitude,
+                'longitude': tLongitude,
+              },
+            ],
+          };
+          expect(result, expectedJsonMap);
         },
       );
     });

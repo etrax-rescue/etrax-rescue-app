@@ -76,6 +76,23 @@ void main() {
         },
       );
     });
+
+    group('toJson', () {
+      test(
+        'should return a JSON map containing the proper data',
+        () async {
+          // act
+          final result = tUserStateModel.toJson();
+          // assert
+          final expectedJsonMap = {
+            'id': tID,
+            'name': tName,
+            'description': tDescription,
+          };
+          expect(result, expectedJsonMap);
+        },
+      );
+    });
   });
 
   group('UserStateCollectionModel', () {
@@ -122,6 +139,39 @@ void main() {
           final result = UserStateCollectionModel.fromJson(jsonMap);
           // assert
           expect(result, tUserStateCollectionModel);
+        },
+      );
+    });
+
+    group('toJson', () {
+      test(
+        'should throw FormatException when the UserStateCollectionModel contains a null element',
+        () async {
+          // arrange
+          final tModel = UserStateCollectionModel(
+              states: <UserStateModel>[tUserStateModel, null]);
+          // act
+          final call = tModel.toJson;
+          // assert
+          expect(() => call(), throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+      test(
+        'should return a JSON map containing the proper data',
+        () async {
+          // act
+          final result = tUserStateCollectionModel.toJson();
+          // assert
+          final expectedJsonMap = {
+            'states': [
+              {
+                'id': tID,
+                'name': tName,
+                'description': tDescription,
+              },
+            ],
+          };
+          expect(result, expectedJsonMap);
         },
       );
     });

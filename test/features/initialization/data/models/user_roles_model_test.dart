@@ -13,7 +13,7 @@ void main() {
   final tDescription = 'the one who does stuff';
   final tUserRoleModel =
       UserRoleModel(id: tID, name: tName, description: tDescription);
-  final tUserRolesModel =
+  final tUserRoleCollectionModel =
       UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
 
   group('UserRoleModel', () {
@@ -76,6 +76,23 @@ void main() {
         },
       );
     });
+
+    group('toJson', () {
+      test(
+        'should return a JSON map containing the proper data',
+        () async {
+          // act
+          final result = tUserRoleModel.toJson();
+          // assert
+          final expectedJsonMap = {
+            'id': tID,
+            'name': tName,
+            'description': tDescription,
+          };
+          expect(result, expectedJsonMap);
+        },
+      );
+    });
   });
 
   group('UserRoleCollectionModel', () {
@@ -83,7 +100,7 @@ void main() {
       'should be a subclass of UserRoles entity',
       () async {
         // assert
-        expect(tUserRolesModel, isA<UserRoleCollection>());
+        expect(tUserRoleCollectionModel, isA<UserRoleCollection>());
       },
     );
 
@@ -121,7 +138,40 @@ void main() {
           // act
           final result = UserRoleCollectionModel.fromJson(jsonMap);
           // assert
-          expect(result, tUserRolesModel);
+          expect(result, tUserRoleCollectionModel);
+        },
+      );
+    });
+
+    group('toJson', () {
+      test(
+        'should throw FormatException when the UserRoleCollectionModel contains a null element',
+        () async {
+          // arrange
+          final tModel = UserRoleCollectionModel(
+              roles: <UserRoleModel>[tUserRoleModel, null]);
+          // act
+          final call = tModel.toJson;
+          // assert
+          expect(() => call(), throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+      test(
+        'should return a JSON map containing the proper data',
+        () async {
+          // act
+          final result = tUserRoleCollectionModel.toJson();
+          // assert
+          final expectedJsonMap = {
+            'roles': [
+              {
+                'id': tID,
+                'name': tName,
+                'description': tDescription,
+              },
+            ],
+          };
+          expect(result, expectedJsonMap);
         },
       );
     });

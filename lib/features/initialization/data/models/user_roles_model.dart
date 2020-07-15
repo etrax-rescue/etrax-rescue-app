@@ -1,5 +1,6 @@
-import 'package:etrax_rescue_app/features/initialization/domain/entities/user_roles.dart';
 import 'package:flutter/material.dart';
+
+import '../../domain/entities/user_roles.dart';
 
 class UserRoleCollectionModel extends UserRoleCollection {
   UserRoleCollectionModel({@required List<UserRoleModel> roles})
@@ -17,6 +18,15 @@ class UserRoleCollectionModel extends UserRoleCollection {
     }
     return UserRoleCollectionModel(roles: userRoleModelList);
   }
+
+  Map<String, dynamic> toJson() {
+    final jsonList = List<Map<String, dynamic>>.from(roles
+        .map((e) => e is UserRoleModel ? e.toJson() : throw FormatException())
+        .toList());
+    return {
+      'roles': jsonList,
+    };
+  }
 }
 
 class UserRoleModel extends UserRole {
@@ -29,5 +39,13 @@ class UserRoleModel extends UserRole {
         id: json['id'] == null ? throw FormatException() : json['id'],
         name: json['name'] == null ? throw FormatException() : json['name'],
         description: json['description'] == null ? '' : json['description']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'description': this.description,
+    };
   }
 }

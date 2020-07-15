@@ -19,6 +19,15 @@ class UserStateCollectionModel extends UserStateCollection {
     }
     return UserStateCollectionModel(states: userStateModelList);
   }
+
+  Map<String, dynamic> toJson() {
+    final jsonList = List<Map<String, dynamic>>.from(states
+        .map((e) => e is UserStateModel ? e.toJson() : throw FormatException())
+        .toList());
+    return {
+      'states': jsonList,
+    };
+  }
 }
 
 class UserStateModel extends UserState {
@@ -31,5 +40,13 @@ class UserStateModel extends UserState {
         id: json['id'] == null ? throw FormatException() : json['id'],
         name: json['name'] == null ? throw FormatException() : json['name'],
         description: json['description'] == null ? '' : json['description']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'description': this.description,
+    };
   }
 }

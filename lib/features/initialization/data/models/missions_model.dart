@@ -18,6 +18,15 @@ class MissionCollectionModel extends MissionCollection {
     }
     return MissionCollectionModel(missions: missionModelList);
   }
+
+  Map<String, dynamic> toJson() {
+    final jsonList = List<Map<String, dynamic>>.from(missions
+        .map((e) => e is MissionModel ? e.toJson() : throw FormatException())
+        .toList());
+    return {
+      'missions': jsonList,
+    };
+  }
 }
 
 class MissionModel extends Mission {
@@ -52,5 +61,15 @@ class MissionModel extends Mission {
           ? null
           : json['longitude'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'start': this.start,
+      'latitude': this.latitude,
+      'longitude': this.longitude,
+    };
   }
 }
