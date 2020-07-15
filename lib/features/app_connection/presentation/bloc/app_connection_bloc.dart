@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
@@ -33,8 +34,8 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
         yield AppConnectionError(messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY);
       }, (authority) async* {
         yield AppConnectionVerifying();
-        final failureOrOk = await verifyAndStore(
-            AppConnectionParams(authority: authority, basePath: 'appdata'));
+        final failureOrOk = await verifyAndStore(AppConnectionParams(
+            authority: authority, basePath: SERVER_API_BASE_PATH));
 
         yield failureOrOk.fold(
             (failure) =>

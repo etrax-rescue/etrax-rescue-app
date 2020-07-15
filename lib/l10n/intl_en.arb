@@ -16,5 +16,6 @@
     "SERVER_FAILURE_MESSAGE": "The server is not reachable at the moment.",
     "CACHE_FAILURE_MESSAGE": "An error occured during the URI storage process.",
     "INVALID_INPUT_FAILURE_MESSAGE": "The provided URL does not resemble a valid format.\n Example for a valid URL: https://etrax.at",
-    "LOGIN_FAILURE_MESSAGE": "Invalid username or password"
+    "LOGIN_FAILURE_MESSAGE": "Invalid username or password",
+    "AUTHENTICATION_FAILURE_MESSAGE": "Access rights to the ressources on the server expired. Please log in again."
 }

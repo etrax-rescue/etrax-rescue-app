@@ -182,6 +182,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Access rights to the ressources on the server expired. Please log in again.`
+  String get AUTHENTICATION_FAILURE_MESSAGE {
+    return Intl.message(
+      'Access rights to the ressources on the server expired. Please log in again.',
+      name: 'AUTHENTICATION_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

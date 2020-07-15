@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
+import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
 import 'package:etrax_rescue_app/features/app_connection/domain/usecases/verify_and_store_app_connection.dart';
@@ -27,7 +28,7 @@ void main() {
   });
 
   final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
+  final tBasePath = SERVER_API_BASE_PATH;
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 

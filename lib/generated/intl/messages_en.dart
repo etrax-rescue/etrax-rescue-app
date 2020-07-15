@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "APP_CONNECT_HEADING" : MessageLookupByLibrary.simpleMessage("Connect App:"),
+    "AUTHENTICATION_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Access rights to the ressources on the server expired. Please log in again."),
     "AUTHENTICATION_SUCCESS" : MessageLookupByLibrary.simpleMessage("Success!"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("An error occured during the URI storage process."),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Connect"),
