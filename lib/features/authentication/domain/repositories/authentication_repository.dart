@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/types/app_connection.dart';
 import '../entities/authentication_data.dart';
 
 abstract class AuthenticationRepository {

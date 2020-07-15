@@ -1,8 +1,9 @@
-import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/entities/authentication_data.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/repositories/authentication_repository.dart';
+
+import '../../../../core/error/failures.dart';
+import '../../../../core/types/usecase.dart';
+import '../entities/authentication_data.dart';
+import '../repositories/authentication_repository.dart';
 
 class GetAuthenticationData extends UseCase<AuthenticationData, NoParams> {
   final AuthenticationRepository repository;

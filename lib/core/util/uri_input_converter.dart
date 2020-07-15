@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
+
+import '../error/failures.dart';
 
 class UriInputConverter {
   Either<Failure, String> convert(String authorityString) {

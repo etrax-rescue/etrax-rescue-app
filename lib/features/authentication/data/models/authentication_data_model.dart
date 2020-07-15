@@ -1,5 +1,6 @@
-import 'package:etrax_rescue_app/features/authentication/domain/entities/authentication_data.dart';
 import 'package:flutter/material.dart';
+
+import '../../domain/entities/authentication_data.dart';
 
 class AuthenticationDataModel extends AuthenticationData {
   AuthenticationDataModel({@required String username, @required String token})

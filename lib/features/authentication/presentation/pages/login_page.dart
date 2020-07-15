@@ -1,8 +1,8 @@
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/util/translate_error_messages.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../injection_container.dart';
 import '../../../app_connection/presentation/widgets/loading_widget.dart';
 import '../../../app_connection/presentation/widgets/message_display.dart';

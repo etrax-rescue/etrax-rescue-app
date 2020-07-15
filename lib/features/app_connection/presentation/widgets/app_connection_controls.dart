@@ -1,7 +1,7 @@
-import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../generated/l10n.dart';
 import '../bloc/app_connection_bloc.dart';
 
 class AppConnectionControls extends StatefulWidget {

@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/network/network_info.dart';
-import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
-import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
-import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/network/network_info.dart';
+import '../../../../core/types/app_connection.dart';
 import '../../domain/entities/authentication_data.dart';
 import '../../domain/repositories/authentication_repository.dart';
+import '../datasources/local_authentication_data_source.dart';
+import '../datasources/remote_login_data_source.dart';
+import '../models/authentication_data_model.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final RemoteLoginDataSource remoteLoginDataSource;

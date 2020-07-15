@@ -1,8 +1,10 @@
 import 'dart:convert';
-import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/types/shared_preferences_keys.dart';
+import '../models/authentication_data_model.dart';
 
 abstract class LocalAuthenticationDataSource {
   Future<void> cacheAuthenticationData(AuthenticationDataModel model);

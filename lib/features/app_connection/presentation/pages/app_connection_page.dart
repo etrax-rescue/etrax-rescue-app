@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/util/translate_error_messages.dart';
+import '../../../../generated/l10n.dart';
 import '../../../../injection_container.dart';
 import '../bloc/app_connection_bloc.dart';
 import '../widgets/app_connection_controls.dart';

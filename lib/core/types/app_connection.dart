@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:path/path.dart' as p;
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as p;
 
 class AppConnection extends Equatable {
   final String authority;

@@ -1,5 +1,6 @@
-import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
+
+import '../../generated/l10n.dart';
 
 const UNEXPECTED_FAILURE_MESSAGE_KEY = 'UNEXPECTED_FAILURE_MESSAGE';
 const NETWORK_FAILURE_MESSAGE_KEY = 'NETWORK_FAILURE_MESSAGE';
