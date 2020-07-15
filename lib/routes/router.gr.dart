@@ -9,13 +9,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:etrax_rescue_app/features/app_connection/presentation/pages/app_connection_page.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/pages/login_page.dart';
+import 'package:etrax_rescue_app/features/app_connection/presentation/widgets/loading_widget.dart';
 
 class Routes {
   static const String appConnectionPage = '/';
   static const String loginPage = '/login-page';
+  static const String loadingWidget = '/loading-widget';
   static const all = <String>{
     appConnectionPage,
     loginPage,
+    loadingWidget,
   };
 }
 
@@ -25,6 +28,7 @@ class Router extends RouterBase {
   final _routes = <RouteDef>[
     RouteDef(Routes.appConnectionPage, page: AppConnectionPage),
     RouteDef(Routes.loginPage, page: LoginPage),
+    RouteDef(Routes.loadingWidget, page: LoadingWidget),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -45,6 +49,14 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    LoadingWidget: (RouteData data) {
+      var args = data.getArgs<LoadingWidgetArguments>(
+          orElse: () => LoadingWidgetArguments());
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => LoadingWidget(key: args.key),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -62,4 +74,10 @@ class AppConnectionPageArguments {
 class LoginPageArguments {
   final Key key;
   LoginPageArguments({this.key});
+}
+
+//LoadingWidget arguments holder class
+class LoadingWidgetArguments {
+  final Key key;
+  LoadingWidgetArguments({this.key});
 }

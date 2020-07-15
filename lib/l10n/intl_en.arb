@@ -1,5 +1,7 @@
 {
     "FIELD_REQUIRED": "required",
+    "BACK": "Go back",
+    "RETRY": "Retry",
     
     "APP_CONNECT_HEADING": "Connect App:",
     "CONNECT": "Connect",

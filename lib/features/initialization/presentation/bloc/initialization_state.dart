@@ -14,15 +14,24 @@ class InitializationFetching extends InitializationState {
   List<Object> get props => [];
 }
 
-class InitializationFetched extends InitializationState {
+class InitializationSuccess extends InitializationState {
   @override
   List<Object> get props => [];
 }
 
-class InitializationError extends InitializationState {
+class InitializationRecoverableError extends InitializationState {
   final String messageKey;
 
-  InitializationError({@required this.messageKey});
+  InitializationRecoverableError({@required this.messageKey});
+
+  @override
+  List<Object> get props => [messageKey];
+}
+
+class InitializationUnrecoverableError extends InitializationState {
+  final String messageKey;
+
+  InitializationUnrecoverableError({@required this.messageKey});
 
   @override
   List<Object> get props => [messageKey];

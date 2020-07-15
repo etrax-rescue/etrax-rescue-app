@@ -1,5 +1,7 @@
 {
     "FIELD_REQUIRED": "Bitte dieses Feld ausfüllen",
+    "BACK": "Zurück",
+    "RETRY": "Erneut versuchen",
     
     "APP_CONNECT_HEADING": "App verbinden:",
     "CONNECT": "Verbinden",

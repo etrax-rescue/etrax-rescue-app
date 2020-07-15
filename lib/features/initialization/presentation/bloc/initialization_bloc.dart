@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/error/failures.dart';
 import '../../../../core/types/usecase.dart';
+import '../../../../core/util/translate_error_messages.dart';
 import '../../../app_connection/domain/usecases/get_app_connection.dart';
 import '../../../authentication/domain/usecases/get_authentication_data.dart';
 import '../../domain/usecases/fetch_initialization_data.dart';
@@ -38,13 +38,15 @@ class InitializationBloc
       final appConnectionEither = await getAppConnection(NoParams());
 
       yield* appConnectionEither.fold((failure) async* {
-        yield InitializationError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+        yield InitializationUnrecoverableError(
+            messageKey: CACHE_FAILURE_MESSAGE_KEY);
       }, (appConnection) async* {
         final authenticationDataEither =
             await getAuthenticationData(NoParams());
 
         yield* authenticationDataEither.fold((failure) async* {
-          yield InitializationError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+          yield InitializationUnrecoverableError(
+              messageKey: CACHE_FAILURE_MESSAGE_KEY);
         }, (authenticationData) async* {
           final initializationEither = await fetchInitializationData(
               FetchInitializationDataParams(
@@ -53,10 +55,9 @@ class InitializationBloc
                   token: authenticationData.token));
 
           yield* initializationEither.fold((failure) async* {
-            yield InitializationError(
-                messageKey: _mapFailureToMessageKey(failure));
+            yield _mapFailureToErrorState(failure);
           }, (_) async* {
-            yield InitializationFetched();
+            yield InitializationSuccess();
           });
         });
       });
@@ -64,19 +65,25 @@ class InitializationBloc
   }
 }
 
-String _mapFailureToMessageKey(Failure failure) {
+InitializationState _mapFailureToErrorState(Failure failure) {
   switch (failure.runtimeType) {
     case NetworkFailure:
-      return NETWORK_FAILURE_MESSAGE_KEY;
+      return InitializationRecoverableError(
+          messageKey: NETWORK_FAILURE_MESSAGE_KEY);
     case ServerFailure:
-      return SERVER_FAILURE_MESSAGE_KEY;
+      return InitializationRecoverableError(
+          messageKey: SERVER_FAILURE_MESSAGE_KEY);
     case CacheFailure:
-      return CACHE_FAILURE_MESSAGE_KEY;
+      return InitializationUnrecoverableError(
+          messageKey: CACHE_FAILURE_MESSAGE_KEY);
     case LoginFailure:
-      return LOGIN_FAILURE_MESSAGE_KEY;
+      return InitializationUnrecoverableError(
+          messageKey: LOGIN_FAILURE_MESSAGE_KEY);
     case AuthenticationFailure:
-      return AUTHENTICATION_FAILURE_MESSAGE_KEY;
+      return InitializationUnrecoverableError(
+          messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY);
     default:
-      return UNEXPECTED_FAILURE_MESSAGE_KEY;
+      return InitializationUnrecoverableError(
+          messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY);
   }
 }

@@ -43,6 +43,26 @@ class S {
     );
   }
 
+  /// `Go back`
+  String get BACK {
+    return Intl.message(
+      'Go back',
+      name: 'BACK',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get RETRY {
+    return Intl.message(
+      'Retry',
+      name: 'RETRY',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connect App:`
   String get APP_CONNECT_HEADING {
     return Intl.message(

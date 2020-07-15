@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,6 +54,8 @@ BlocProvider<AuthenticationBloc> buildBody(BuildContext context) {
                           if (state is AuthenticationVerifying) {
                             return LoadingWidget();
                           } else if (state is AuthenticationSuccess) {
+                            ExtendedNavigator.root
+                                .pushNamed('/initialization-page');
                             return MessageDisplay(
                                 message: S.of(context).AUTHENTICATION_SUCCESS);
                           } else if (state is AuthenticationError) {

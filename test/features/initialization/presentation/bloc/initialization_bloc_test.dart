@@ -42,8 +42,6 @@ void main() {
 
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
-  final tAuthenticationData =
-      AuthenticationData(username: tUsername, token: tToken);
 
   void mockGetAppConnectionSuccess() =>
       when(mockGetAppConnection(any)).thenAnswer((_) async =>
@@ -95,7 +93,7 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
+        InitializationUnrecoverableError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -114,7 +112,7 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
+        InitializationUnrecoverableError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -151,7 +149,7 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationFetched(),
+        InitializationSuccess(),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -171,7 +169,7 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
+        InitializationUnrecoverableError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -191,7 +189,7 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
+        InitializationRecoverableError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -211,7 +209,7 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationError(messageKey: SERVER_FAILURE_MESSAGE_KEY),
+        InitializationRecoverableError(messageKey: SERVER_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -231,7 +229,8 @@ void main() {
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationError(messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY),
+        InitializationUnrecoverableError(
+            messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
