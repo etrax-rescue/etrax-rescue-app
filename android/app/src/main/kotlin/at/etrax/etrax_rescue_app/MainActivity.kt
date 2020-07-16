@@ -1,4 +1,4 @@
-package com.example.etrax_rescue_app
+package at.etrax.etrax_rescue_app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
