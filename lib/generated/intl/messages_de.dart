@@ -30,7 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "FIELD_REQUIRED" : MessageLookupByLibrary.simpleMessage("Bitte dieses Feld ausfüllen"),
     "INVALID_INPUT_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene URL entspricht nicht dem erwarteten Format.\n Beispiel für das richtige Format: https://etrax.at"),
     "LOGIN" : MessageLookupByLibrary.simpleMessage("Anmelden"),
-    "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene Username oder das Password ist falsch"),
+    "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene Username oder das Passwort ist falsch"),
     "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Anmelden:"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ihr Gerät ist offline."),
     "PASSWORD" : MessageLookupByLibrary.simpleMessage("Passwort"),

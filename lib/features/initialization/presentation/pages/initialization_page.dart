@@ -33,23 +33,42 @@ BlocProvider<InitializationBloc> buildBody(BuildContext context) {
         children: <Widget>[
           SizedBox(height: MediaQuery.of(context).padding.top),
           Center(
-            child: BlocBuilder<InitializationBloc, InitializationState>(
-              builder: (context, state) {
-                if (state is InitializationFetching) {
-                  return LoadingWidget();
-                } else if (state is InitializationSuccess) {
-                  //ExtendedNavigator.root.pushReplacementNamed('/login-page');
-                } else if (state is InitializationRecoverableError) {
-                  return RecoverableErrorDisplay(
-                    message: translateErrorMessage(context, state.messageKey),
-                  );
-                } else if (state is InitializationUnrecoverableError) {
-                  return UnrecoverableErrorDisplay(
-                    message: translateErrorMessage(context, state.messageKey),
-                  );
-                }
-                return Container();
-              },
+            child: Card(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Center(
+                    child: BlocBuilder<InitializationBloc, InitializationState>(
+                      builder: (context, state) {
+                        if (state is InitializationInitial) {
+                          BlocProvider.of<InitializationBloc>(context)
+                              .add(StartFetchingInitializationData());
+                        } else if (state is InitializationFetching) {
+                          return LoadingWidget();
+                        } else if (state is InitializationSuccess) {
+                          // TODO: implement go to dashboard page
+                          return Text(
+                            'Done!',
+                          );
+                          //ExtendedNavigator.root.pushReplacementNamed('/login-page');
+                        } else if (state is InitializationRecoverableError) {
+                          return RecoverableErrorDisplay(
+                            message: translateErrorMessage(
+                                context, state.messageKey),
+                          );
+                        } else if (state is InitializationUnrecoverableError) {
+                          return UnrecoverableErrorDisplay(
+                            message: translateErrorMessage(
+                                context, state.messageKey),
+                          );
+                        }
+                        print(state.toString());
+                        return Container();
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

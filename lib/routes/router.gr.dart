@@ -9,16 +9,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:etrax_rescue_app/features/app_connection/presentation/pages/app_connection_page.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/pages/login_page.dart';
-import 'package:etrax_rescue_app/features/app_connection/presentation/widgets/loading_widget.dart';
+import 'package:etrax_rescue_app/features/initialization/presentation/pages/initialization_page.dart';
 
 class Routes {
   static const String appConnectionPage = '/';
   static const String loginPage = '/login-page';
-  static const String loadingWidget = '/loading-widget';
+  static const String initializationPage = '/initialization-page';
   static const all = <String>{
     appConnectionPage,
     loginPage,
-    loadingWidget,
+    initializationPage,
   };
 }
 
@@ -28,7 +28,7 @@ class Router extends RouterBase {
   final _routes = <RouteDef>[
     RouteDef(Routes.appConnectionPage, page: AppConnectionPage),
     RouteDef(Routes.loginPage, page: LoginPage),
-    RouteDef(Routes.loadingWidget, page: LoadingWidget),
+    RouteDef(Routes.initializationPage, page: InitializationPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -49,11 +49,11 @@ class Router extends RouterBase {
         settings: data,
       );
     },
-    LoadingWidget: (RouteData data) {
-      var args = data.getArgs<LoadingWidgetArguments>(
-          orElse: () => LoadingWidgetArguments());
+    InitializationPage: (RouteData data) {
+      var args = data.getArgs<InitializationPageArguments>(
+          orElse: () => InitializationPageArguments());
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LoadingWidget(key: args.key),
+        builder: (context) => InitializationPage(key: args.key),
         settings: data,
       );
     },
@@ -76,8 +76,8 @@ class LoginPageArguments {
   LoginPageArguments({this.key});
 }
 
-//LoadingWidget arguments holder class
-class LoadingWidgetArguments {
+//InitializationPage arguments holder class
+class InitializationPageArguments {
   final Key key;
-  LoadingWidgetArguments({this.key});
+  InitializationPageArguments({this.key});
 }

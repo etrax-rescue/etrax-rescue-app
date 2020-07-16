@@ -1,4 +1,13 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/features/initialization/data/datasources/local_app_settings_data_source.dart';
+import 'package:etrax_rescue_app/features/initialization/data/datasources/local_missions_data_source.dart';
+import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_roles_data_source.dart';
+import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_states_data_source.dart';
+import 'package:etrax_rescue_app/features/initialization/data/datasources/remote_initialization_data_source.dart';
+import 'package:etrax_rescue_app/features/initialization/data/repositories/initialization_repository_impl.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
+import 'package:etrax_rescue_app/features/initialization/presentation/bloc/initialization_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,6 +87,40 @@ Future<void> init() async {
       () => RemoteLoginDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalAuthenticationDataSource>(
       () => LocalAuthenticationDataSourceImpl(sl()));
+
+  //! Features - Initialization
+  // BLoC
+  sl.registerFactory<InitializationBloc>(() => InitializationBloc(
+        getAppConnection: sl(),
+        getAuthenticationData: sl(),
+        fetchInitializationData: sl(),
+      ));
+
+  // Use Cases
+  sl.registerLazySingleton<FetchInitializationData>(
+      () => FetchInitializationData(sl()));
+
+  // Repository
+  sl.registerLazySingleton<InitializationRepository>(() =>
+      InitializationRepositoryImpl(
+          remoteInitializationDataSource: sl(),
+          localAppSettingsDataSource: sl(),
+          localMissionsDataSource: sl(),
+          localUserRolesDataSource: sl(),
+          localUserStatesDataSource: sl(),
+          networkInfo: sl()));
+
+  // Data Sources
+  sl.registerLazySingleton<RemoteInitializationDataSource>(
+      () => RemoteInitializationDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalAppSettingsDataSource>(
+      () => LocalAppSettingsDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalUserRolesDataSource>(
+      () => LocalUserRolesDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalUserStatesDataSource>(
+      () => LocalUserStatesDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalMissionsDataSource>(
+      () => LocalMissionsDataSourceImpl(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

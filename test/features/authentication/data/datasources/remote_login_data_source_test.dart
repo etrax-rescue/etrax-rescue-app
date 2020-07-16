@@ -73,15 +73,15 @@ void main() {
   );
 
   test(
-    'should throw a PermissionException when the return code is 403 - permission denied',
+    'should throw a LoginException when the return code is 403 - permission denied',
     () async {
       // arrange
       when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
-          (_) async => http.Response(fixture('login/valid.json'), 403));
+          (_) async => http.Response(fixture('login/valid.json'), 401));
       final call = remoteDataSource.login;
       // assert
       expect(() => call(tAppConnection, tUsername, tPassword),
-          throwsA(TypeMatcher<PermissionException>()));
+          throwsA(TypeMatcher<LoginException>()));
     },
   );
 

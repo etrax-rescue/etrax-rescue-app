@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -18,7 +19,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   @override
   Future<AuthenticationDataModel> login(
       AppConnection appConnection, String username, String password) async {
-    final request = client.post(appConnection.generateUri(subPath: 'login.php'),
+    final request = client.post(
+        appConnection.generateUri(subPath: EtraxServerEndpoints.login),
         body: {'username': username, 'password': password});
 
     final response = await request.timeout(const Duration(seconds: 2));
@@ -31,8 +33,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       jsonResponse['username'] = username;
       final data = AuthenticationDataModel.fromJson(jsonResponse);
       return data;
-    } else if (response.statusCode == 403) {
-      throw PermissionException();
+    } else if (response.statusCode == 401) {
+      throw LoginException();
     } else {
       throw ServerException();
     }
