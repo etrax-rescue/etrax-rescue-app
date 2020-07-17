@@ -49,6 +49,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+  - family:  CustomMaterialIcons
+    fonts:
+     - asset: fonts/CustomMaterialIcons.ttf
 
 flutter_intl:
   enabled: true

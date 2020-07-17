@@ -15,8 +15,11 @@ class InitializationFetching extends InitializationState {
 }
 
 class InitializationSuccess extends InitializationState {
+  final MissionCollection missionCollection;
+  InitializationSuccess(this.missionCollection);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [missionCollection];
 }
 
 class InitializationRecoverableError extends InitializationState {

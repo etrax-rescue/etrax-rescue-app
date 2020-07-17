@@ -1,5 +1,6 @@
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -41,7 +42,7 @@ void main() {
       await remoteDataSource.login(tAppConnection, tUsername, tPassword);
       // assert
       verify(mockedHttpClient.post(
-          Uri.https(tAuthority, p.join(tBasePath, 'login.php')),
+          Uri.https(tAuthority, p.join(tBasePath, EtraxServerEndpoints.login)),
           body: {'username': tUsername, 'password': tPassword}));
     },
   );

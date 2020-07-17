@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:flutter/material.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -40,7 +41,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
   });
 
   @override
-  Future<Either<Failure, None>> fetchInitializationData(
+  Future<Either<Failure, MissionCollection>> fetchInitializationData(
       AppConnection appConnection, String username, String token) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
@@ -77,7 +78,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
       return Left(CacheFailure());
     }
 
-    return Right(None());
+    return Right(initializationData.missionCollectionModel);
   }
 
   @override

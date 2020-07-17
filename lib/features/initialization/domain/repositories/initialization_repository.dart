@@ -8,7 +8,7 @@ import '../entities/user_roles.dart';
 import '../entities/user_states.dart';
 
 abstract class InitializationRepository {
-  Future<Either<Failure, None>> fetchInitializationData(
+  Future<Either<Failure, MissionCollection>> fetchInitializationData(
       AppConnection appConnection, String username, String token);
 
   Future<Either<Failure, MissionCollection>> getMissions();

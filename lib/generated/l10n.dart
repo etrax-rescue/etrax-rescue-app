@@ -133,6 +133,26 @@ class S {
     );
   }
 
+  /// `Missions`
+  String get MISSIONS {
+    return Intl.message(
+      'Missions',
+      name: 'MISSIONS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get LOGOUT {
+    return Intl.message(
+      'Logout',
+      name: 'LOGOUT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `A unexpected error occured.`
   String get UNEXPECTED_FAILURE_MESSAGE {
     return Intl.message(

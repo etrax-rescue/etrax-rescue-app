@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
@@ -56,8 +57,8 @@ class InitializationBloc
 
           yield* initializationEither.fold((failure) async* {
             yield _mapFailureToErrorState(failure);
-          }, (_) async* {
-            yield InitializationSuccess();
+          }, (missionCollection) async* {
+            yield InitializationSuccess(missionCollection);
           });
         });
       });

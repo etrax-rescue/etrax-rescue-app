@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "LOGIN" : MessageLookupByLibrary.simpleMessage("Anmelden"),
     "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene Username oder das Passwort ist falsch"),
     "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Anmelden:"),
+    "LOGOUT" : MessageLookupByLibrary.simpleMessage("Abmelden"),
+    "MISSIONS" : MessageLookupByLibrary.simpleMessage("Einsätze"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ihr Gerät ist offline."),
     "PASSWORD" : MessageLookupByLibrary.simpleMessage("Passwort"),
     "RETRY" : MessageLookupByLibrary.simpleMessage("Erneut versuchen"),

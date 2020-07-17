@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,16 +31,30 @@ void main() {
     token: tToken,
   );
 
+  final tMissionID = '0123456789ABCDEF';
+  final tMissionName = 'TestMission';
+  final tMissionStart = DateTime.utc(2020, 1, 1);
+  final tLatitude = 48.2206635;
+  final tLongitude = 16.309849;
+  final tMission = Mission(
+    id: tMissionID,
+    name: tMissionName,
+    start: tMissionStart,
+    latitude: tLatitude,
+    longitude: tLongitude,
+  );
+  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
+
   test(
-    'should return None when fetching data succeeds',
+    'should return MissionCollection when fetching data succeeds',
     () async {
       // arrange
       when(mockInitializationRepository.fetchInitializationData(any, any, any))
-          .thenAnswer((_) async => Right(None()));
+          .thenAnswer((_) async => Right(tMissionCollection));
       // act
       final result = await usecase(tFetchInitializationDataParams);
       // assert
-      expect(result, Right(None()));
+      expect(result, Right(tMissionCollection));
       verify(mockInitializationRepository.fetchInitializationData(
           tAppConnection, tUsername, tToken));
       verifyNoMoreInteractions(mockInitializationRepository);

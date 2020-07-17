@@ -12,6 +12,9 @@
     "PASSWORD": "Passwort",
     "AUTHENTICATION_SUCCESS": "Erfolg!",
 
+    "MISSIONS": "Einsätze",
+    "LOGOUT": "Abmelden",
+
     "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",
     "NETWORK_FAILURE_MESSAGE": "Ihr Gerät ist offline.",
     "SERVER_URL_FAILURE_MESSAGE": "Der angegebene URL zeigt zu keinem eTrax|rescue Server, bzw. dieser ist derzeit nicht erreichbar.",

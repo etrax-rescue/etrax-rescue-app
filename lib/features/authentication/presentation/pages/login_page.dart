@@ -55,9 +55,8 @@ BlocProvider<AuthenticationBloc> buildBody(BuildContext context) {
                             return LoadingWidget();
                           } else if (state is AuthenticationSuccess) {
                             ExtendedNavigator.root
-                                .pushNamed('/initialization-page');
-                            return MessageDisplay(
-                                message: S.of(context).AUTHENTICATION_SUCCESS);
+                                .pushReplacementNamed('/initialization-page');
+                            return Container();
                           } else if (state is AuthenticationError) {
                             return MessageDisplay(
                               message: translateErrorMessage(

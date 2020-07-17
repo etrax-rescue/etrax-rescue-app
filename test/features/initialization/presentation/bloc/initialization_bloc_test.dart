@@ -7,6 +7,7 @@ import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/entities/authentication_data.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_authentication_data.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
 import 'package:etrax_rescue_app/features/initialization/presentation/bloc/initialization_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,6 +44,20 @@ void main() {
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
 
+  final tMissionID = '0123456789ABCDEF';
+  final tMissionName = 'TestMission';
+  final tMissionStart = DateTime.utc(2020, 1, 1);
+  final tLatitude = 48.2206635;
+  final tLongitude = 16.309849;
+  final tMission = Mission(
+    id: tMissionID,
+    name: tMissionName,
+    start: tMissionStart,
+    latitude: tLatitude,
+    longitude: tLongitude,
+  );
+  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
+
   void mockGetAppConnectionSuccess() =>
       when(mockGetAppConnection(any)).thenAnswer((_) async =>
           Right(AppConnection(authority: tAuthority, basePath: tBasePath)));
@@ -58,7 +73,7 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(None()));
+          .thenAnswer((_) async => Right(tMissionCollection));
       // act
       bloc.add(StartFetchingInitializationData());
       await untilCalled(mockGetAppConnection(any));
@@ -74,7 +89,7 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(None()));
+          .thenAnswer((_) async => Right(tMissionCollection));
       // act
       bloc.add(StartFetchingInitializationData());
       await untilCalled(mockGetAuthenticationData(any));
@@ -127,7 +142,7 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(None()));
+          .thenAnswer((_) async => Right(tMissionCollection));
       // act
       bloc.add(StartFetchingInitializationData());
       await untilCalled(mockFetchInitializationData(any));
@@ -144,12 +159,12 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(None()));
+          .thenAnswer((_) async => Right(tMissionCollection));
       // assert
       final expected = [
         InitializationInitial(),
         InitializationFetching(),
-        InitializationSuccess(),
+        InitializationSuccess(tMissionCollection),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -231,6 +246,26 @@ void main() {
         InitializationFetching(),
         InitializationUnrecoverableError(
             messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY),
+      ];
+      expectLater(bloc, emitsInOrder(expected));
+      // act
+      bloc.add(StartFetchingInitializationData());
+    },
+  );
+
+  test(
+    'should emit [InitializationInitial, InitializationFetching, InitializationFetched] when retrieving of the AuthenticationData failed',
+    () async {
+      // arrange
+      mockGetAppConnectionSuccess();
+      mockGetAuthenticationDataSuccess();
+      when(mockFetchInitializationData(any))
+          .thenAnswer((_) async => Right(tMissionCollection));
+      // assert
+      final expected = [
+        InitializationInitial(),
+        InitializationFetching(),
+        InitializationSuccess(tMissionCollection),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act

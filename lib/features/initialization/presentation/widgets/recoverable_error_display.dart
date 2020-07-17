@@ -24,18 +24,21 @@ class _RecoverableErrorDisplayState extends State<RecoverableErrorDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          message,
-          style: TextStyle(fontSize: 12, color: Theme.of(context).accentColor),
-        ),
-        RaisedButton(
-          child: Text(S.of(context).RETRY),
-          textTheme: ButtonTextTheme.primary,
-          onPressed: _retry,
-        ),
-      ],
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Text(
+            message,
+            style:
+                TextStyle(fontSize: 12, color: Theme.of(context).accentColor),
+          ),
+          RaisedButton(
+            child: Text(S.of(context).RETRY),
+            textTheme: ButtonTextTheme.primary,
+            onPressed: _retry,
+          ),
+        ],
+      ),
     );
   }
 }
