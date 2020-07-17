@@ -14,6 +14,7 @@
 
     "MISSIONS": "Einsätze",
     "LOGOUT": "Abmelden",
+    "RECONNECT": "App neu verbinden",
 
     "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",
     "NETWORK_FAILURE_MESSAGE": "Ihr Gerät ist offline.",

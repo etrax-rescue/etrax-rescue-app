@@ -153,6 +153,16 @@ class S {
     );
   }
 
+  /// `Reconnect App`
+  String get RECONNECT {
+    return Intl.message(
+      'Reconnect App',
+      name: 'RECONNECT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `A unexpected error occured.`
   String get UNEXPECTED_FAILURE_MESSAGE {
     return Intl.message(

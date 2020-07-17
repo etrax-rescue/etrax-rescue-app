@@ -21,7 +21,7 @@ class UnrecoverableErrorDisplay extends StatelessWidget {
           message,
           style: TextStyle(fontSize: 12, color: Theme.of(context).accentColor),
         ),
-        RaisedButton(
+        MaterialButton(
           child: Text(S.of(context).BACK),
           textTheme: ButtonTextTheme.primary,
           onPressed: _goBack,

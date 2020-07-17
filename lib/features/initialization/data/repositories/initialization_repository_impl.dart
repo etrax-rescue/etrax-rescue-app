@@ -60,6 +60,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
       return Left(ServerFailure());
     } on AuthenticationException {
       return Left(AuthenticationFailure());
+    } on HttpException {
+      return Left(AuthenticationFailure());
     }
 
     try {

@@ -29,8 +29,9 @@ class RemoteInitializationDataSourceImpl
     final request = client.get(
         appConnection.generateUri(subPath: EtraxServerEndpoints.initialization),
         headers: {HttpHeaders.authorizationHeader: 'Basic $authString'});
+
     final response = await request.timeout(const Duration(seconds: 2));
-    print(response.body);
+
     if (response.body == '') {
       throw ServerException();
     }
@@ -42,24 +43,18 @@ class RemoteInitializationDataSourceImpl
 
     try {
       appSettingsModel = AppSettingsModel.fromJson(body['appSettings']);
-      print('AppSettings done');
       userRoleCollectionModel = UserRoleCollectionModel.fromJson(body);
-      print('Roles done');
       userStateCollectionModel = UserStateCollectionModel.fromJson(body);
-      print('States done');
       missionCollectionModel = MissionCollectionModel.fromJson(body);
-      print('Missions done');
     } on NoSuchMethodError {
       throw ServerException();
     } on FormatException {
       throw ServerException();
     }
-    final initializationDataModel = InitializationDataModel(
+    return InitializationDataModel(
         appSettingsModel: appSettingsModel,
         missionCollectionModel: missionCollectionModel,
         userStateCollectionModel: userStateCollectionModel,
         userRoleCollectionModel: userRoleCollectionModel);
-    print(initializationDataModel);
-    return initializationDataModel;
   }
 }

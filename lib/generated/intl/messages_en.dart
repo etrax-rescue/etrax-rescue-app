@@ -36,6 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "MISSIONS" : MessageLookupByLibrary.simpleMessage("Missions"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Your device is offline."),
     "PASSWORD" : MessageLookupByLibrary.simpleMessage("Password"),
+    "RECONNECT" : MessageLookupByLibrary.simpleMessage("Reconnect App"),
     "RETRY" : MessageLookupByLibrary.simpleMessage("Retry"),
     "SERVER_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("The server is not reachable at the moment."),
     "SERVER_URL_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Either the provided URI doesn\'t point to a valid eTrax|rescue Server,\n or the server is not reachable at the moment."),

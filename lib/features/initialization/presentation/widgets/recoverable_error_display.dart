@@ -32,7 +32,7 @@ class _RecoverableErrorDisplayState extends State<RecoverableErrorDisplay> {
             style:
                 TextStyle(fontSize: 12, color: Theme.of(context).accentColor),
           ),
-          RaisedButton(
+          MaterialButton(
             child: Text(S.of(context).RETRY),
             textTheme: ButtonTextTheme.primary,
             onPressed: _retry,

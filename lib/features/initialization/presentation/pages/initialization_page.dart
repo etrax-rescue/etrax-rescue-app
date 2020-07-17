@@ -12,21 +12,36 @@ import '../widgets/loading_widget.dart';
 import '../widgets/recoverable_error_display.dart';
 import '../widgets/unrecoverable_error_display.dart';
 
+enum PopupChoices {
+  relink,
+}
+
 class InitializationPage extends StatelessWidget {
   const InitializationPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).MISSIONS)),
-      backgroundColor: Theme.of(context).primaryColor,
-      body: Container(
-        height: double.infinity,
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: buildBody(context),
-        ),
+      appBar: AppBar(
+        title: Text(S.of(context).MISSIONS),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (value) {
+              if (value == PopupChoices.relink) {
+                ExtendedNavigator.root.pushReplacementNamed('/');
+              }
+            },
+            itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<PopupChoices>>[
+              PopupMenuItem<PopupChoices>(
+                value: PopupChoices.relink,
+                child: Text(S.of(context).RECONNECT),
+              ),
+            ],
+          ),
+        ],
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           ExtendedNavigator.root.pushReplacementNamed('/login-page');
@@ -35,6 +50,7 @@ class InitializationPage extends StatelessWidget {
         icon: Icon(CustomMaterialIcons.logout_24px),
         backgroundColor: Theme.of(context).accentColor,
       ),
+      body: buildBody(context),
     );
   }
 }
@@ -42,49 +58,54 @@ class InitializationPage extends StatelessWidget {
 BlocProvider<InitializationBloc> buildBody(BuildContext context) {
   return BlocProvider(
     create: (_) => sl<InitializationBloc>(),
-    child: Column(
-      children: <Widget>[
-        BlocBuilder<InitializationBloc, InitializationState>(
-          builder: (context, state) {
-            if (state is InitializationInitial) {
-              BlocProvider.of<InitializationBloc>(context)
-                  .add(StartFetchingInitializationData());
-            } else if (state is InitializationFetching) {
-              return LoadingWidget();
-            } else if (state is InitializationSuccess) {
-              return ListView.builder(
-                padding: const EdgeInsets.all(8),
-                shrinkWrap: true,
-                itemCount: state.missionCollection.missions.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        title: Text(DateFormat('dd.MM.yyyy - HH:mm').format(
-                            state.missionCollection.missions[index].start)),
-                        subtitle: Text(
-                            '${state.missionCollection.missions[index].name}'),
-                        trailing: Icon(Icons.chevron_right),
-                      ),
-                    ),
-                  );
-                },
-              );
-            } else if (state is InitializationRecoverableError) {
-              return RecoverableErrorDisplay(
-                message: translateErrorMessage(context, state.messageKey),
-              );
-            } else if (state is InitializationUnrecoverableError) {
-              return UnrecoverableErrorDisplay(
-                message: translateErrorMessage(context, state.messageKey),
-              );
-            }
-            print(state.toString());
-            return Container();
+    child: BlocBuilder<InitializationBloc, InitializationState>(
+      builder: (context, state) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<InitializationBloc>(context)
+                .add(StartFetchingInitializationData());
           },
-        ),
-      ],
+          child: Builder(
+            builder: (BuildContext context) {
+              if (state is InitializationInitial) {
+                BlocProvider.of<InitializationBloc>(context)
+                    .add(StartFetchingInitializationData());
+              } else if (state is InitializationSuccess) {
+                return ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: state.missionCollection.missions.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: InkWell(
+                        onTap: () {},
+                        child: ListTile(
+                          title: Text(
+                              state.missionCollection.missions[index].name),
+                          subtitle: Text(DateFormat('dd.MM.yyyy - HH:mm')
+                              .format(state
+                                  .missionCollection.missions[index].start)),
+                          trailing: Icon(Icons.chevron_right),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else if (state is InitializationRecoverableError) {
+                return RecoverableErrorDisplay(
+                  message: translateErrorMessage(context, state.messageKey),
+                );
+              } else if (state is InitializationUnrecoverableError) {
+                return UnrecoverableErrorDisplay(
+                  message: translateErrorMessage(context, state.messageKey),
+                );
+              }
+              print(state.toString());
+              return Container();
+            },
+          ),
+        );
+      },
     ),
   );
 }
