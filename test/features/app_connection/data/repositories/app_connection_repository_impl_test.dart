@@ -213,7 +213,7 @@ void main() {
     });
   });
 
-  group('getBaseUri', () {
+  group('getAppConnection', () {
     final tAppConnectionModel =
         AppConnectionModel(authority: tAuthority, basePath: tBasePath);
     test(
@@ -238,6 +238,45 @@ void main() {
         final result = await repository.getAppConnection();
         // assert
         expect(result, Right(tAppConnectionModel));
+      },
+    );
+    test(
+      'should return CacheFailure when retrieving cached data fails',
+      () async {
+        // arrange
+        when(mockLocalDataSource.getCachedAppConnection())
+            .thenThrow(CacheException());
+        // act
+        final result = await repository.getAppConnection();
+        // assert
+        expect(result, Left(CacheFailure()));
+      },
+    );
+  });
+
+  group('shouldUpdateAppConnection', () {
+    test(
+      'should ask local datasource for cached data',
+      () async {
+        // arrange
+        when(mockLocalDataSource.getCachedAppConnection())
+            .thenAnswer((_) async => tAppConnectionModel);
+        // act
+        await repository.getAppConnection();
+        // assert
+        verify(mockLocalDataSource.getCachedAppConnection());
+      },
+    );
+    test(
+      'should return boolean',
+      () async {
+        // arrange
+        when(mockLocalDataSource.getAppConnectionMarkedForUpdate())
+            .thenAnswer((_) async => true);
+        // act
+        final result = await repository.getAppConnectionMarkedForUpdate();
+        // assert
+        expect(result, Right(true));
       },
     );
     test(

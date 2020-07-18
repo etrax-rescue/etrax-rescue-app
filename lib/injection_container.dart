@@ -1,4 +1,6 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app_connection_marked_for_update.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/mark_app_connection_for_update.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_app_settings_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_missions_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_roles_data_source.dart';
@@ -36,11 +38,18 @@ Future<void> init() async {
   //! Features - App Connection
   // BLoC
   sl.registerFactory<AppConnectionBloc>(() => AppConnectionBloc(
+        markedForUpdate: sl(),
         inputConverter: sl(),
         verifyAndStore: sl(),
       ));
 
   // Use Cases
+  sl.registerLazySingleton<GetAppConnectionMarkedForUpdate>(
+      () => GetAppConnectionMarkedForUpdate(sl()));
+
+  sl.registerLazySingleton<MarkAppConnectionForUpdate>(
+      () => MarkAppConnectionForUpdate(sl()));
+
   sl.registerLazySingleton<VerifyAndStoreAppConnection>(
       () => VerifyAndStoreAppConnection(sl()));
 

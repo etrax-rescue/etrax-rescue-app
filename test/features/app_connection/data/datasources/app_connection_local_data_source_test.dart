@@ -68,4 +68,18 @@ void main() {
       },
     );
   });
+
+  group('getShouldUpdateAppConnection', () {
+    test(
+      'should call Shared Preferences to store the data',
+      () async {
+        // act
+        dataSource.cacheAppConnection(tAppConnectionModel);
+        // assert
+        verify(mockSharedPreferences.setString(
+            SharedPreferencesKeys.appConnection,
+            json.encode(tAppConnectionModel.toJson())));
+      },
+    );
+  });
 }

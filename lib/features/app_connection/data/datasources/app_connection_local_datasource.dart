@@ -9,6 +9,8 @@ import '../models/app_connection_model.dart';
 abstract class AppConnectionLocalDataSource {
   Future<AppConnectionModel> getCachedAppConnection();
   Future<void> cacheAppConnection(AppConnectionModel model);
+  Future<bool> getAppConnectionUpdateStatus();
+  Future<void> setAppConnectionUpdateStatus(bool update);
 }
 
 class AppConnectionLocalDataSourceImpl implements AppConnectionLocalDataSource {
@@ -31,5 +33,22 @@ class AppConnectionLocalDataSourceImpl implements AppConnectionLocalDataSource {
     } else {
       throw CacheException();
     }
+  }
+
+  @override
+  Future<bool> getAppConnectionUpdateStatus() async {
+    final data =
+        sharedPreferences.getBool(SharedPreferencesKeys.appConnectionUpdate);
+    if (data != null) {
+      return data;
+    } else {
+      return true;
+    }
+  }
+
+  @override
+  Future<void> setAppConnectionUpdateStatus(bool update) async {
+    sharedPreferences.setBool(
+        SharedPreferencesKeys.appConnectionUpdate, update);
   }
 }

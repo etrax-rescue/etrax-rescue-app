@@ -32,7 +32,11 @@ class RemoteInitializationDataSourceImpl
 
     final response = await request.timeout(const Duration(seconds: 2));
 
-    if (response.body == '') {
+    if (response.statusCode == 403) {
+      throw AuthenticationException();
+    }
+
+    if (response.body == '' || response.statusCode != 200) {
       throw ServerException();
     }
     final body = json.decode(response.body);

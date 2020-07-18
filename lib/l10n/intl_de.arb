@@ -1,13 +1,15 @@
 {
-    "FIELD_REQUIRED": "Bitte dieses Feld ausfüllen",
+    "FIELD_REQUIRED": "Pflichtfeld",
     "BACK": "Zurück",
     "RETRY": "Erneut versuchen",
+    "DROPDOWN_HINT": "-- Bitte Auswählen --",
     
     "APP_CONNECT_HEADING": "App verbinden:",
     "CONNECT": "Verbinden",
 
     "LOGIN_HEADING": "Anmelden:",
     "LOGIN": "Anmelden",
+    "ORGANIZATION": "Organisation",
     "USERNAME": "Benutzername",
     "PASSWORD": "Passwort",
     "AUTHENTICATION_SUCCESS": "Erfolg!",

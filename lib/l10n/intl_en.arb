@@ -2,12 +2,14 @@
     "FIELD_REQUIRED": "required",
     "BACK": "Go back",
     "RETRY": "Retry",
+    "DROPDOWN_HINT": "-- Please Select --",
     
     "APP_CONNECT_HEADING": "Connect App:",
     "CONNECT": "Connect",
 
     "LOGIN_HEADING": "Login:",
     "LOGIN": "Login",
+    "ORGANIZATION": "Organization",
     "USERNAME": "Username",
     "PASSWORD": "Password",
     "AUTHENTICATION_SUCCESS": "Success!",

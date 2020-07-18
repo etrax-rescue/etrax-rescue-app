@@ -14,11 +14,11 @@ import 'package:etrax_rescue_app/features/initialization/presentation/pages/init
 class Routes {
   static const String appConnectionPage = '/';
   static const String loginPage = '/login-page';
-  static const String initializationPage = '/initialization-page';
+  static const String missionPage = '/mission-page';
   static const all = <String>{
     appConnectionPage,
     loginPage,
-    initializationPage,
+    missionPage,
   };
 }
 
@@ -28,7 +28,7 @@ class Router extends RouterBase {
   final _routes = <RouteDef>[
     RouteDef(Routes.appConnectionPage, page: AppConnectionPage),
     RouteDef(Routes.loginPage, page: LoginPage),
-    RouteDef(Routes.initializationPage, page: InitializationPage),
+    RouteDef(Routes.missionPage, page: MissionPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -49,11 +49,11 @@ class Router extends RouterBase {
         settings: data,
       );
     },
-    InitializationPage: (RouteData data) {
-      var args = data.getArgs<InitializationPageArguments>(
-          orElse: () => InitializationPageArguments());
+    MissionPage: (RouteData data) {
+      var args = data.getArgs<MissionPageArguments>(
+          orElse: () => MissionPageArguments());
       return MaterialPageRoute<dynamic>(
-        builder: (context) => InitializationPage(key: args.key),
+        builder: (context) => MissionPage(key: args.key),
         settings: data,
       );
     },
@@ -76,8 +76,8 @@ class LoginPageArguments {
   LoginPageArguments({this.key});
 }
 
-//InitializationPage arguments holder class
-class InitializationPageArguments {
+//MissionPage arguments holder class
+class MissionPageArguments {
   final Key key;
-  InitializationPageArguments({this.key});
+  MissionPageArguments({this.key});
 }

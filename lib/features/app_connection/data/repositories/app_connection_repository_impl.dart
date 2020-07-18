@@ -56,6 +56,27 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
     }
     try {
       localDataSource.cacheAppConnection(model);
+      localDataSource.setAppConnectionUpdateStatus(false);
+      return Right(None());
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> getAppConnectionUpdateStatus() async {
+    try {
+      final update = await localDataSource.getAppConnectionUpdateStatus();
+      return Right(update);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, None>> markAppConnectionForUpdate() async {
+    try {
+      localDataSource.setAppConnectionUpdateStatus(true);
       return Right(None());
     } on CacheException {
       return Left(CacheFailure());

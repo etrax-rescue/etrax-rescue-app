@@ -120,6 +120,19 @@ void main() {
   );
 
   test(
+    'should throw an AuthenticationException when the server responds with code 403',
+    () async {
+      // arrange
+      when(mockedHttpClient.get(any, headers: anyNamed('headers')))
+          .thenAnswer((_) async => http.Response('', 403));
+      final call = remoteDataSource.fetchInitialization;
+      // assert
+      expect(() => call(tAppConnection, tUsername, tToken),
+          throwsA(TypeMatcher<AuthenticationException>()));
+    },
+  );
+
+  test(
     'should throw a ServerException when the JSON response is missing the appSettings field',
     () async {
       // arrange

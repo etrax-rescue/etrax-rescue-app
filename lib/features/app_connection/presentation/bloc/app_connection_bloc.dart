@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app_connection_marked_for_update.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
@@ -14,12 +16,15 @@ part 'app_connection_event.dart';
 part 'app_connection_state.dart';
 
 class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
+  final GetAppConnectionMarkedForUpdate markedForUpdate;
   final VerifyAndStoreAppConnection verifyAndStore;
   final UriInputConverter inputConverter;
   AppConnectionBloc({
+    @required this.markedForUpdate,
     @required this.verifyAndStore,
     @required this.inputConverter,
-  })  : assert(verifyAndStore != null),
+  })  : assert(markedForUpdate != null),
+        assert(verifyAndStore != null),
         assert(inputConverter != null),
         super(AppConnectionInitial());
 
@@ -27,13 +32,26 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
   Stream<AppConnectionState> mapEventToState(
     AppConnectionEvent event,
   ) async* {
-    if (event is ConnectApp) {
+    if (event is CheckUpdateStatus) {
+      final appConnectionStatusEither = await markedForUpdate(NoParams());
+
+      yield* appConnectionStatusEither.fold((failure) async* {
+        yield AppConnectionError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+      }, (updateRequired) async* {
+        if (updateRequired) {
+          yield AppConnectionReady();
+        } else {
+          yield AppConnectionSuccess();
+        }
+      });
+    } else if (event is ConnectApp) {
       final inputEither = inputConverter.convert(event.authority);
 
       yield* inputEither.fold((failure) async* {
         yield AppConnectionError(messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY);
       }, (authority) async* {
         yield AppConnectionVerifying();
+
         final failureOrOk = await verifyAndStore(AppConnectionParams(
             authority: authority, basePath: SERVER_API_BASE_PATH));
 

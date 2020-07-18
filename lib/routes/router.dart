@@ -8,7 +8,7 @@ import '../features/initialization/presentation/pages/initialization_page.dart';
   routes: <AutoRoute>[
     MaterialRoute(page: AppConnectionPage, initial: true),
     MaterialRoute(page: LoginPage),
-    MaterialRoute(page: InitializationPage),
+    MaterialRoute(page: MissionPage),
   ],
 )
 class $Router {}

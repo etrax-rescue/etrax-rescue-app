@@ -63,6 +63,16 @@ class S {
     );
   }
 
+  /// `-- Please Select --`
+  String get DROPDOWN_HINT {
+    return Intl.message(
+      '-- Please Select --',
+      name: 'DROPDOWN_HINT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connect App:`
   String get APP_CONNECT_HEADING {
     return Intl.message(
@@ -98,6 +108,16 @@ class S {
     return Intl.message(
       'Login',
       name: 'LOGIN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Organization`
+  String get ORGANIZATION {
+    return Intl.message(
+      'Organization',
+      name: 'ORGANIZATION',
       desc: '',
       args: [],
     );

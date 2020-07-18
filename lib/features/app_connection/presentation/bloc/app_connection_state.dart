@@ -9,6 +9,11 @@ class AppConnectionInitial extends AppConnectionState {
   List<Object> get props => [];
 }
 
+class AppConnectionReady extends AppConnectionState {
+  @override
+  List<Object> get props => [];
+}
+
 class AppConnectionVerifying extends AppConnectionState {
   @override
   List<Object> get props => [];

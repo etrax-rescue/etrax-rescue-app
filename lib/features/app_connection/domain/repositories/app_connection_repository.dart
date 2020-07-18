@@ -7,4 +7,6 @@ abstract class AppConnectionRepository {
   Future<Either<Failure, None>> verifyAndStoreAppConnection(
       String authority, String basePath);
   Future<Either<Failure, AppConnection>> getAppConnection();
+  Future<Either<Failure, bool>> getAppConnectionUpdateStatus();
+  Future<Either<Failure, None>> markAppConnectionForUpdate();
 }
