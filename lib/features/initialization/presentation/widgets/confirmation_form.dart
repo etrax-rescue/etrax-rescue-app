@@ -36,9 +36,8 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Text(
+          ListTile(
+            title: Text(
               S.of(context).MISSION,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
@@ -47,14 +46,14 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
             title: Text(
               S.of(context).MISSION_NAME,
             ),
-            subtitle: Text(mission.name),
+            subtitle: Text(mission.name + '\n'),
           ),
           ListTile(
             title: Text(
               S.of(context).MISSION_START,
             ),
             subtitle:
-                Text(DateFormat('dd.MM.yyyy - HH:mm').format(mission.start)),
+                Text(DateFormat('dd.MM.yyyy - HH:mm\n').format(mission.start)),
           ),
           ListTile(
             title: Text(

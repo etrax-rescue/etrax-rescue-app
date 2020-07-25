@@ -47,6 +47,14 @@ void main() {
       when(mockUriInputConverter.convert(any)).thenReturn(Right(tAuthority));
 
   test(
+    'should contain proper initial state',
+    () async {
+      // assert
+      expect(bloc.state, AppConnectionInitial());
+    },
+  );
+
+  test(
     'should call the input converter first',
     () async {
       // arrange
@@ -60,6 +68,7 @@ void main() {
       verify(mockUriInputConverter.convert(tAuthority));
     },
   );
+
   test(
     'should emit Error when input is invalid',
     () async {
@@ -75,6 +84,7 @@ void main() {
       bloc.add(AppConnectionEventConnect(authority: tAuthority));
     },
   );
+
   test(
     'should call usecase',
     () async {

@@ -51,6 +51,14 @@ void main() {
           Right(AppConnection(authority: tAuthority, basePath: tBasePath)));
 
   test(
+    'should contain proper initial state',
+    () async {
+      // assert
+      expect(bloc.state, AuthenticationInitial());
+    },
+  );
+
+  test(
     'should retrieve stored base URI',
     () async {
       // arrange

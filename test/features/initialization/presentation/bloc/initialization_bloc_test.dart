@@ -71,6 +71,14 @@ void main() {
           Right(AuthenticationData(username: tUsername, token: tToken)));
 
   test(
+    'should contain proper initial state',
+    () async {
+      // assert
+      expect(bloc.state, InitializationInitial());
+    },
+  );
+
+  test(
     'should retrieve stored AppConnection',
     () async {
       // arrange
