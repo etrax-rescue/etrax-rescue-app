@@ -2,12 +2,11 @@ part of 'app_connection_bloc.dart';
 
 abstract class AppConnectionEvent extends Equatable {
   const AppConnectionEvent();
-}
-
-class AppConnectionEventCheck extends AppConnectionEvent {
   @override
   List<Object> get props => [];
 }
+
+class AppConnectionEventCheck extends AppConnectionEvent {}
 
 class AppConnectionEventConnect extends AppConnectionEvent {
   final String authority;
