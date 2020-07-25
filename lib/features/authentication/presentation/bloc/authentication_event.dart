@@ -2,6 +2,8 @@ part of 'authentication_bloc.dart';
 
 abstract class AuthenticationEvent extends Equatable {
   const AuthenticationEvent();
+  @override
+  List<Object> get props => [];
 }
 
 class SubmitLogin extends AuthenticationEvent {
@@ -14,7 +16,4 @@ class SubmitLogin extends AuthenticationEvent {
   List<Object> get props => [username, password];
 }
 
-class RequestAppConnectionUpdate extends AuthenticationEvent {
-  @override
-  List<Object> get props => [];
-}
+class RequestAppConnectionUpdate extends AuthenticationEvent {}

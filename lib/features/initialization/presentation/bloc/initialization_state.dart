@@ -2,17 +2,13 @@ part of 'initialization_bloc.dart';
 
 abstract class InitializationState extends Equatable {
   const InitializationState();
-}
-
-class InitializationInitial extends InitializationState {
   @override
   List<Object> get props => [];
 }
 
-class InitializationFetching extends InitializationState {
-  @override
-  List<Object> get props => [];
-}
+class InitializationInitial extends InitializationState {}
+
+class InitializationInProgress extends InitializationState {}
 
 class InitializationSuccess extends InitializationState {
   final MissionCollection missionCollection;

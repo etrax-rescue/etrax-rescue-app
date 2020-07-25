@@ -179,6 +179,7 @@ void main() {
           await repository.verifyAndStoreAppConnection(tAuthority, tBasePath);
           // assert
           verify(mockLocalDataSource.cacheAppConnection(tAppConnectionModel));
+          verify(mockLocalDataSource.setAppConnectionUpdateStatus(false));
           verifyNoMoreInteractions(mockLocalDataSource);
         },
       );
@@ -271,10 +272,10 @@ void main() {
       'should return boolean',
       () async {
         // arrange
-        when(mockLocalDataSource.getAppConnectionMarkedForUpdate())
+        when(mockLocalDataSource.getAppConnectionUpdateStatus())
             .thenAnswer((_) async => true);
         // act
-        final result = await repository.getAppConnectionMarkedForUpdate();
+        final result = await repository.getAppConnectionUpdateStatus();
         // assert
         expect(result, Right(true));
       },

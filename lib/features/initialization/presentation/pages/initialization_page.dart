@@ -87,7 +87,7 @@ class _MissionPageState extends State<MissionPage> {
                         BlocProvider.of<InitializationBloc>(context)
                             .add(StartFetchingInitializationData());
                         return _createInitialView();
-                      } else if (state is InitializationFetching) {
+                      } else if (state is InitializationInProgress) {
                         return _createInitialView();
                       }
                       _refreshCompleter?.complete();

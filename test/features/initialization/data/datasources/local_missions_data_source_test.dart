@@ -21,7 +21,7 @@ void main() {
     dataSource = LocalMissionsDataSourceImpl(mockSharedPreferences);
   });
 
-  final tMissionID = '1234abcd';
+  final tMissionID = 42;
   final tMissionName = 'Wien';
   final tMissionStart = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
   final tLatitude = 48.2084114;

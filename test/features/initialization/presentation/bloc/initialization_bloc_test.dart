@@ -36,6 +36,10 @@ void main() {
         getAuthenticationData: mockGetAuthenticationData);
   });
 
+  tearDown(() {
+    bloc?.close();
+  });
+
   final tAuthority = 'etrax.at';
   final tBasePath = SERVER_API_BASE_PATH;
   final tAppConnection =
@@ -44,7 +48,7 @@ void main() {
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
 
-  final tMissionID = '0123456789ABCDEF';
+  final tMissionID = 42;
   final tMissionName = 'TestMission';
   final tMissionStart = DateTime.utc(2020, 1, 1);
   final tLatitude = 48.2206635;
@@ -99,15 +103,14 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationError] when retrieving of the AppConnection failed',
+    'should emit [InitializationInProgress, InitializationError] when retrieving of the AppConnection failed',
     () async {
       // arrange
       when(mockGetAppConnection(any))
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationUnrecoverableError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -117,7 +120,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationError] when retrieving of the AuthenticationData failed',
+    'should emit [InitializationInProgress, InitializationError] when retrieving of the AuthenticationData failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -125,8 +128,7 @@ void main() {
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationUnrecoverableError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -153,7 +155,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationFetched] when retrieving of the AuthenticationData failed',
+    'should emit [InitializationInProgress, InitializationSuccess] when retrieving of the AuthenticationData failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -162,8 +164,7 @@ void main() {
           .thenAnswer((_) async => Right(tMissionCollection));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationSuccess(tMissionCollection),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -173,7 +174,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationError] when storing the initialization data failed',
+    'should emit [InitializationInProgress, InitializationError] when storing the initialization data failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -182,8 +183,7 @@ void main() {
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationUnrecoverableError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -193,7 +193,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationError] when no network connection is available',
+    'should emit [InitializationInProgress, InitializationError] when no network connection is available',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -202,8 +202,7 @@ void main() {
           .thenAnswer((_) async => Left(NetworkFailure()));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationRecoverableError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -213,7 +212,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationError] when a server failure occurs',
+    'should emit [InitializationInProgress, InitializationError] when a server failure occurs',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -222,8 +221,7 @@ void main() {
           .thenAnswer((_) async => Left(ServerFailure()));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationRecoverableError(messageKey: SERVER_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -233,7 +231,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationError] when an authentication failure occurs',
+    'should emit [InitializationInProgress, InitializationError] when an authentication failure occurs',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -242,8 +240,7 @@ void main() {
           .thenAnswer((_) async => Left(AuthenticationFailure()));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationUnrecoverableError(
             messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY),
       ];
@@ -254,7 +251,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInitial, InitializationFetching, InitializationFetched] when retrieving of the AuthenticationData failed',
+    'should emit [InitializationInProgress, InitializationSuccess] when retrieving of the AuthenticationData failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -263,8 +260,7 @@ void main() {
           .thenAnswer((_) async => Right(tMissionCollection));
       // assert
       final expected = [
-        InitializationInitial(),
-        InitializationFetching(),
+        InitializationInProgress(),
         InitializationSuccess(tMissionCollection),
       ];
       expectLater(bloc, emitsInOrder(expected));

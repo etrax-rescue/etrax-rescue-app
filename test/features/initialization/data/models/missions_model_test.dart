@@ -8,7 +8,7 @@ import 'package:matcher/matcher.dart';
 import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
-  final tMissionID = '1234abcd';
+  final tMissionID = 42;
   final tMissionName = 'Wien';
   final tMissionStart = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
   final tLatitude = 48.2084114;

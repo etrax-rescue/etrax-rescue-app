@@ -51,7 +51,7 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
         yield AppConnectionStateError(
             messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY);
       }, (authority) async* {
-        yield AppConnectionStateVerifying();
+        yield AppConnectionStateInProgress();
 
         final failureOrOk = await verifyAndStore(AppConnectionParams(
             authority: authority, basePath: SERVER_API_BASE_PATH));

@@ -34,7 +34,7 @@ class InitializationBloc
     InitializationEvent event,
   ) async* {
     if (event is StartFetchingInitializationData) {
-      yield InitializationFetching();
+      yield InitializationInProgress();
 
       final appConnectionEither = await getAppConnection(NoParams());
 

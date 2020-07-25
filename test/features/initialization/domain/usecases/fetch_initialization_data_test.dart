@@ -31,7 +31,7 @@ void main() {
     token: tToken,
   );
 
-  final tMissionID = '0123456789ABCDEF';
+  final tMissionID = 42;
   final tMissionName = 'TestMission';
   final tMissionStart = DateTime.utc(2020, 1, 1);
   final tLatitude = 48.2206635;

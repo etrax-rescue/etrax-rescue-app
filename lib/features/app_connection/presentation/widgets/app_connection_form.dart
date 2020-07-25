@@ -50,14 +50,14 @@ class _AppConnectionFormState extends State<AppConnectionForm> {
                 style: TextStyle(
                     fontSize: 12, color: Theme.of(context).accentColor),
               );
-            } else if (state is AppConnectionStateVerifying) {
+            } else if (state is AppConnectionStateInProgress) {
               return Center(child: CircularProgressIndicator());
             }
             return Container();
           }),
           BlocBuilder<AppConnectionBloc, AppConnectionState>(
             builder: (context, state) {
-              if (!(state is AppConnectionStateVerifying)) {
+              if (!(state is AppConnectionStateInProgress)) {
                 return ButtonTheme(
                   minWidth: double.infinity,
                   child: RaisedButton(

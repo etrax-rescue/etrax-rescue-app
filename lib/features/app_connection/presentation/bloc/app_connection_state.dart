@@ -2,27 +2,17 @@ part of 'app_connection_bloc.dart';
 
 abstract class AppConnectionState extends Equatable {
   const AppConnectionState();
-}
-
-class AppConnectionInitial extends AppConnectionState {
   @override
   List<Object> get props => [];
 }
 
-class AppConnectionStateReady extends AppConnectionState {
-  @override
-  List<Object> get props => [];
-}
+class AppConnectionInitial extends AppConnectionState {}
 
-class AppConnectionStateVerifying extends AppConnectionState {
-  @override
-  List<Object> get props => [];
-}
+class AppConnectionStateReady extends AppConnectionState {}
 
-class AppConnectionStateSuccess extends AppConnectionState {
-  @override
-  List<Object> get props => [];
-}
+class AppConnectionStateInProgress extends AppConnectionState {}
+
+class AppConnectionStateSuccess extends AppConnectionState {}
 
 class AppConnectionStateError extends AppConnectionState {
   final String messageKey;

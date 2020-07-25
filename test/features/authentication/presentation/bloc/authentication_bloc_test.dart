@@ -1,4 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
@@ -6,23 +9,34 @@ import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/login.dart';
 import 'package:etrax_rescue_app/features/authentication/presentation/bloc/authentication_bloc.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/mark_app_connection_for_update.dart';
 
 class MockLogin extends Mock implements Login {}
 
 class MockGetAppConnection extends Mock implements GetAppConnection {}
 
+class MockMarkAppConnectionForUpdate extends Mock
+    implements MarkAppConnectionForUpdate {}
+
 void main() {
   AuthenticationBloc bloc;
   MockLogin mockLogin;
   MockGetAppConnection mockGetAppConnection;
+  MarkAppConnectionForUpdate mockMarkAppConnection;
 
   setUp(() {
     mockLogin = MockLogin();
     mockGetAppConnection = MockGetAppConnection();
+    mockMarkAppConnection = MockMarkAppConnectionForUpdate();
     bloc = AuthenticationBloc(
-        login: mockLogin, getAppConnection: mockGetAppConnection);
+      login: mockLogin,
+      getAppConnection: mockGetAppConnection,
+      markAppConnectionForUpdate: mockMarkAppConnection,
+    );
+  });
+
+  tearDown(() {
+    bloc?.close();
   });
 
   final tUsername = 'JohnDoe';
@@ -51,15 +65,14 @@ void main() {
   );
 
   test(
-    'should emit [Login, Error] when storing of the uri failed',
+    'should emit [AuthenticationInProgress, AuthenticationError] when storing of the uri failed',
     () async {
       // arrange
       when(mockGetAppConnection(any))
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        AuthenticationInitial(),
-        AuthenticationVerifying(),
+        AuthenticationInProgress(),
         AuthenticationError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -100,15 +113,14 @@ void main() {
   );
 
   test(
-    'should emit [AuthenticationVerifying, AuthenticationSuccess] when login was successful',
+    'should emit [AuthenticationInProgress, AuthenticationSuccess] when login was successful',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Right(None()));
       // assert
       final expected = [
-        AuthenticationInitial(),
-        AuthenticationVerifying(),
+        AuthenticationInProgress(),
         AuthenticationSuccess(),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -118,15 +130,14 @@ void main() {
   );
 
   test(
-    'should emit [AuthenticationVerifying, Error] when no network is available',
+    'should emit [AuthenticationInProgress, AuthenticationError] when no network is available',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Left(NetworkFailure()));
       // assert
       final expected = [
-        AuthenticationInitial(),
-        AuthenticationVerifying(),
+        AuthenticationInProgress(),
         AuthenticationError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -135,15 +146,14 @@ void main() {
     },
   );
   test(
-    'should emit [AuthenticationVerifying, Error] when login failed',
+    'should emit [AuthenticationInProgress, AuthenticationError] when login failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Left(LoginFailure()));
       // assert
       final expected = [
-        AuthenticationInitial(),
-        AuthenticationVerifying(),
+        AuthenticationInProgress(),
         AuthenticationError(messageKey: LOGIN_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));
@@ -153,15 +163,14 @@ void main() {
   );
 
   test(
-    'should emit [AuthenticationVerifying, Error] when a server failure occurs',
+    'should emit [AuthenticationInProgress, AuthenticationError] when a server failure occurs',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
       when(mockLogin(any)).thenAnswer((_) async => Left(ServerFailure()));
       // assert
       final expected = [
-        AuthenticationInitial(),
-        AuthenticationVerifying(),
+        AuthenticationInProgress(),
         AuthenticationError(messageKey: SERVER_FAILURE_MESSAGE_KEY),
       ];
       expectLater(bloc, emitsInOrder(expected));

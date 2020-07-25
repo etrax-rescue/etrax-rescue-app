@@ -91,14 +91,14 @@ class _LoginFormState extends State<LoginForm> {
                 style: TextStyle(
                     fontSize: 12, color: Theme.of(context).accentColor),
               );
-            } else if (state is AuthenticationVerifying) {
+            } else if (state is AuthenticationInProgress) {
               return Center(child: CircularProgressIndicator());
             }
             return Container();
           }),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
-              if (!(state is AuthenticationVerifying)) {
+              if (!(state is AuthenticationInProgress)) {
                 return ButtonTheme(
                   minWidth: double.infinity,
                   child: RaisedButton(

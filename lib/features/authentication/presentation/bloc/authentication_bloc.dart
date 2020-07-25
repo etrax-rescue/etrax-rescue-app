@@ -33,7 +33,7 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is SubmitLogin) {
-      yield AuthenticationVerifying();
+      yield AuthenticationInProgress();
       final appConnectionEither = await getAppConnection(NoParams());
 
       yield* appConnectionEither.fold((failure) async* {
