@@ -53,6 +53,9 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
       return Left(ServerFailure());
     } on HandshakeException {
       return Left(ServerFailure());
+    } on Exception {
+      // TODO: handle empty header error!
+      return Left(ServerFailure());
     }
     try {
       localDataSource.cacheAppConnection(model);

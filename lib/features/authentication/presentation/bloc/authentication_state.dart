@@ -27,3 +27,8 @@ class AuthenticationError extends AuthenticationState {
   @override
   List<Object> get props => [messageKey];
 }
+
+class RequestedAppConnectionUpdate extends AuthenticationState {
+  @override
+  List<Object> get props => [];
+}

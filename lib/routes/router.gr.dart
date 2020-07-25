@@ -4,21 +4,27 @@
 // AutoRouteGenerator
 // **************************************************************************
 
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: public_member_api_docs
+
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/features/app_connection/presentation/pages/app_connection_page.dart';
-import 'package:etrax_rescue_app/features/authentication/presentation/pages/login_page.dart';
-import 'package:etrax_rescue_app/features/initialization/presentation/pages/initialization_page.dart';
+import 'package:flutter/material.dart';
+
+import '../features/app_connection/presentation/pages/app_connection_page.dart';
+import '../features/authentication/presentation/pages/login_page.dart';
+import '../features/initialization/domain/entities/missions.dart';
+import '../features/initialization/presentation/pages/confirmation_page.dart';
+import '../features/initialization/presentation/pages/initialization_page.dart';
 
 class Routes {
   static const String appConnectionPage = '/';
   static const String loginPage = '/login-page';
   static const String missionPage = '/mission-page';
+  static const String confirmationPage = '/confirmation-page';
   static const all = <String>{
     appConnectionPage,
     loginPage,
     missionPage,
+    confirmationPage,
   };
 }
 
@@ -29,55 +35,58 @@ class Router extends RouterBase {
     RouteDef(Routes.appConnectionPage, page: AppConnectionPage),
     RouteDef(Routes.loginPage, page: LoginPage),
     RouteDef(Routes.missionPage, page: MissionPage),
+    RouteDef(Routes.confirmationPage, page: ConfirmationPage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
-    AppConnectionPage: (RouteData data) {
-      var args = data.getArgs<AppConnectionPageArguments>(
-          orElse: () => AppConnectionPageArguments());
+    AppConnectionPage: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => AppConnectionPage(key: args.key),
+        builder: (context) => const AppConnectionPage(),
         settings: data,
       );
     },
-    LoginPage: (RouteData data) {
-      var args =
-          data.getArgs<LoginPageArguments>(orElse: () => LoginPageArguments());
+    LoginPage: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LoginPage(key: args.key),
+        builder: (context) => const LoginPage(),
         settings: data,
       );
     },
-    MissionPage: (RouteData data) {
+    MissionPage: (data) {
       var args = data.getArgs<MissionPageArguments>(
-          orElse: () => MissionPageArguments());
+        orElse: () => MissionPageArguments(),
+      );
       return MaterialPageRoute<dynamic>(
         builder: (context) => MissionPage(key: args.key),
+        settings: data,
+      );
+    },
+    ConfirmationPage: (data) {
+      var args = data.getArgs<ConfirmationPageArguments>(nullOk: false);
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => ConfirmationPage(
+          key: args.key,
+          mission: args.mission,
+        ),
         settings: data,
       );
     },
   };
 }
 
-// *************************************************************************
-// Arguments holder classes
-// **************************************************************************
+/// ************************************************************************
+/// Arguments holder classes
+/// *************************************************************************
 
-//AppConnectionPage arguments holder class
-class AppConnectionPageArguments {
-  final Key key;
-  AppConnectionPageArguments({this.key});
-}
-
-//LoginPage arguments holder class
-class LoginPageArguments {
-  final Key key;
-  LoginPageArguments({this.key});
-}
-
-//MissionPage arguments holder class
+/// MissionPage arguments holder class
 class MissionPageArguments {
   final Key key;
   MissionPageArguments({this.key});
+}
+
+/// ConfirmationPage arguments holder class
+class ConfirmationPageArguments {
+  final Key key;
+  final Mission mission;
+  ConfirmationPageArguments({this.key, @required this.mission});
 }

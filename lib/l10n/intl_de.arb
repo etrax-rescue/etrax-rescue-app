@@ -4,10 +4,10 @@
     "RETRY": "Erneut versuchen",
     "DROPDOWN_HINT": "-- Bitte Auswählen --",
     
-    "APP_CONNECT_HEADING": "App verbinden:",
+    "APP_CONNECTION_HEADING": "App verbinden:",
     "CONNECT": "Verbinden",
 
-    "LOGIN_HEADING": "Anmelden:",
+    "LOGIN_HEADING": "Anmelden",
     "LOGIN": "Anmelden",
     "ORGANIZATION": "Organisation",
     "USERNAME": "Benutzername",
@@ -15,8 +15,18 @@
     "AUTHENTICATION_SUCCESS": "Erfolg!",
 
     "MISSIONS": "Einsätze",
+    "MISSION": "Einsatz",
+    "MISSION_NAME": "Einsatzbezeichnung",
     "LOGOUT": "Abmelden",
     "RECONNECT": "App neu verbinden",
+    "CONFIRMATION_HEADING": "Rückmelden",
+    "ACCEPT_MISSION": "Zusagen",
+    "LATITUDE": "Latitude",
+    "LONGITUDE": "Longitude",
+    "SHOW_ON_MAP": "Auf Karte anzeigen",
+    "MISSION_LOCATION": "Einsatzort",
+    "MISSION_START": "Alarmierung",
+    "FUNCTION": "Funktion",
 
     "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",
     "NETWORK_FAILURE_MESSAGE": "Ihr Gerät ist offline.",

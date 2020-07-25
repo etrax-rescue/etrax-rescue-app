@@ -4,14 +4,14 @@ abstract class AppConnectionEvent extends Equatable {
   const AppConnectionEvent();
 }
 
-class CheckUpdateStatus extends AppConnectionEvent {
+class AppConnectionEventCheck extends AppConnectionEvent {
   @override
   List<Object> get props => [];
 }
 
-class ConnectApp extends AppConnectionEvent {
+class AppConnectionEventConnect extends AppConnectionEvent {
   final String authority;
-  ConnectApp({@required this.authority});
+  AppConnectionEventConnect({@required this.authority});
 
   @override
   List<Object> get props => [authority];

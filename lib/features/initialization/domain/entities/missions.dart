@@ -13,7 +13,7 @@ class MissionCollection extends Equatable {
 }
 
 class Mission extends Equatable {
-  final String id;
+  final int id;
   final String name;
   final DateTime start;
   final double latitude;

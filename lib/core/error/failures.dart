@@ -20,3 +20,5 @@ class InvalidInputFailure extends Failure {}
 class LoginFailure extends Failure {}
 
 class AuthenticationFailure extends Failure {}
+
+class UnknownFailure extends Failure {}

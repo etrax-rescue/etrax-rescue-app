@@ -9,24 +9,24 @@ class AppConnectionInitial extends AppConnectionState {
   List<Object> get props => [];
 }
 
-class AppConnectionReady extends AppConnectionState {
+class AppConnectionStateReady extends AppConnectionState {
   @override
   List<Object> get props => [];
 }
 
-class AppConnectionVerifying extends AppConnectionState {
+class AppConnectionStateVerifying extends AppConnectionState {
   @override
   List<Object> get props => [];
 }
 
-class AppConnectionSuccess extends AppConnectionState {
+class AppConnectionStateSuccess extends AppConnectionState {
   @override
   List<Object> get props => [];
 }
 
-class AppConnectionError extends AppConnectionState {
+class AppConnectionStateError extends AppConnectionState {
   final String messageKey;
-  AppConnectionError({@required this.messageKey});
+  AppConnectionStateError({@required this.messageKey});
 
   @override
   List<Object> get props => [messageKey];

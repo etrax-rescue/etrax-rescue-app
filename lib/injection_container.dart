@@ -1,15 +1,4 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app_connection_marked_for_update.dart';
-import 'package:etrax_rescue_app/features/app_connection/domain/usecases/mark_app_connection_for_update.dart';
-import 'package:etrax_rescue_app/features/initialization/data/datasources/local_app_settings_data_source.dart';
-import 'package:etrax_rescue_app/features/initialization/data/datasources/local_missions_data_source.dart';
-import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_roles_data_source.dart';
-import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_states_data_source.dart';
-import 'package:etrax_rescue_app/features/initialization/data/datasources/remote_initialization_data_source.dart';
-import 'package:etrax_rescue_app/features/initialization/data/repositories/initialization_repository_impl.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
-import 'package:etrax_rescue_app/features/initialization/presentation/bloc/initialization_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +10,8 @@ import 'features/app_connection/data/datasources/app_connection_remote_endpoint_
 import 'features/app_connection/data/repositories/app_connection_repository_impl.dart';
 import 'features/app_connection/domain/repositories/app_connection_repository.dart';
 import 'features/app_connection/domain/usecases/get_app_connection.dart';
+import 'features/app_connection/domain/usecases/get_app_connection_marked_for_update.dart';
+import 'features/app_connection/domain/usecases/mark_app_connection_for_update.dart';
 import 'features/app_connection/domain/usecases/verify_and_store_app_connection.dart';
 import 'features/app_connection/presentation/bloc/app_connection_bloc.dart';
 import 'features/authentication/data/datasources/local_authentication_data_source.dart';
@@ -31,6 +22,15 @@ import 'features/authentication/domain/usecases/delete_authentication_data.dart'
 import 'features/authentication/domain/usecases/get_authentication_data.dart';
 import 'features/authentication/domain/usecases/login.dart';
 import 'features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'features/initialization/data/datasources/local_app_settings_data_source.dart';
+import 'features/initialization/data/datasources/local_missions_data_source.dart';
+import 'features/initialization/data/datasources/local_user_roles_data_source.dart';
+import 'features/initialization/data/datasources/local_user_states_data_source.dart';
+import 'features/initialization/data/datasources/remote_initialization_data_source.dart';
+import 'features/initialization/data/repositories/initialization_repository_impl.dart';
+import 'features/initialization/domain/repositories/initialization_repository.dart';
+import 'features/initialization/domain/usecases/fetch_initialization_data.dart';
+import 'features/initialization/presentation/bloc/initialization_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -73,6 +73,7 @@ Future<void> init() async {
   sl.registerFactory<AuthenticationBloc>(() => AuthenticationBloc(
         login: sl(),
         getAppConnection: sl(),
+        markAppConnectionForUpdate: sl(),
       ));
 
   // Use Cases

@@ -32,33 +32,34 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
   Stream<AppConnectionState> mapEventToState(
     AppConnectionEvent event,
   ) async* {
-    if (event is CheckUpdateStatus) {
+    if (event is AppConnectionEventCheck) {
       final appConnectionStatusEither = await markedForUpdate(NoParams());
 
       yield* appConnectionStatusEither.fold((failure) async* {
-        yield AppConnectionError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+        yield AppConnectionStateError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
       }, (updateRequired) async* {
         if (updateRequired) {
-          yield AppConnectionReady();
+          yield AppConnectionStateReady();
         } else {
-          yield AppConnectionSuccess();
+          yield AppConnectionStateSuccess();
         }
       });
-    } else if (event is ConnectApp) {
+    } else if (event is AppConnectionEventConnect) {
       final inputEither = inputConverter.convert(event.authority);
 
       yield* inputEither.fold((failure) async* {
-        yield AppConnectionError(messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY);
+        yield AppConnectionStateError(
+            messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY);
       }, (authority) async* {
-        yield AppConnectionVerifying();
+        yield AppConnectionStateVerifying();
 
         final failureOrOk = await verifyAndStore(AppConnectionParams(
             authority: authority, basePath: SERVER_API_BASE_PATH));
 
         yield failureOrOk.fold(
-            (failure) =>
-                AppConnectionError(messageKey: _mapFailureToMessage(failure)),
-            (ok) => AppConnectionSuccess());
+            (failure) => AppConnectionStateError(
+                messageKey: _mapFailureToMessage(failure)),
+            (ok) => AppConnectionStateSuccess());
       });
     }
   }

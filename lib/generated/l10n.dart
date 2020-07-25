@@ -74,10 +74,10 @@ class S {
   }
 
   /// `Connect App:`
-  String get APP_CONNECT_HEADING {
+  String get APP_CONNECTION_HEADING {
     return Intl.message(
       'Connect App:',
-      name: 'APP_CONNECT_HEADING',
+      name: 'APP_CONNECTION_HEADING',
       desc: '',
       args: [],
     );
@@ -93,10 +93,10 @@ class S {
     );
   }
 
-  /// `Login:`
+  /// `Login`
   String get LOGIN_HEADING {
     return Intl.message(
-      'Login:',
+      'Login',
       name: 'LOGIN_HEADING',
       desc: '',
       args: [],
@@ -163,6 +163,26 @@ class S {
     );
   }
 
+  /// `Mission`
+  String get MISSION {
+    return Intl.message(
+      'Mission',
+      name: 'MISSION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mission Name`
+  String get MISSION_NAME {
+    return Intl.message(
+      'Mission Name',
+      name: 'MISSION_NAME',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Logout`
   String get LOGOUT {
     return Intl.message(
@@ -178,6 +198,86 @@ class S {
     return Intl.message(
       'Reconnect App',
       name: 'RECONNECT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirmation`
+  String get CONFIRMATION_HEADING {
+    return Intl.message(
+      'Confirmation',
+      name: 'CONFIRMATION_HEADING',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get ACCEPT_MISSION {
+    return Intl.message(
+      'Confirm',
+      name: 'ACCEPT_MISSION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Latitude`
+  String get LATITUDE {
+    return Intl.message(
+      'Latitude',
+      name: 'LATITUDE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Longitude`
+  String get LONGITUDE {
+    return Intl.message(
+      'Longitude',
+      name: 'LONGITUDE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show on map`
+  String get SHOW_ON_MAP {
+    return Intl.message(
+      'Show on map',
+      name: 'SHOW_ON_MAP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location`
+  String get MISSION_LOCATION {
+    return Intl.message(
+      'Location',
+      name: 'MISSION_LOCATION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Begin`
+  String get MISSION_START {
+    return Intl.message(
+      'Begin',
+      name: 'MISSION_START',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Function`
+  String get FUNCTION {
+    return Intl.message(
+      'Function',
+      name: 'FUNCTION',
       desc: '',
       args: [],
     );

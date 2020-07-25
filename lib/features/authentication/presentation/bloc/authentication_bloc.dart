@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/features/app_connection/domain/usecases/mark_app_connection_for_update.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
@@ -17,9 +18,14 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final Login login;
   final GetAppConnection getAppConnection;
-  AuthenticationBloc({@required this.login, @required this.getAppConnection})
+  final MarkAppConnectionForUpdate markAppConnectionForUpdate;
+  AuthenticationBloc(
+      {@required this.login,
+      @required this.getAppConnection,
+      @required this.markAppConnectionForUpdate})
       : assert(login != null),
         assert(getAppConnection != null),
+        assert(markAppConnectionForUpdate != null),
         super(AuthenticationInitial());
 
   @override
@@ -43,6 +49,13 @@ class AuthenticationBloc
         }, (_) async* {
           yield AuthenticationSuccess();
         });
+      });
+    } else if (event is RequestAppConnectionUpdate) {
+      final markEither = await markAppConnectionForUpdate(NoParams());
+      yield* markEither.fold((failure) async* {
+        yield AuthenticationError(messageKey: _mapFailureToMessage(failure));
+      }, (_) async* {
+        yield RequestedAppConnectionUpdate();
       });
     }
   }

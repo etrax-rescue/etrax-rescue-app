@@ -23,6 +23,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
         appConnection.generateUri(subPath: EtraxServerEndpoints.login),
         body: {'username': username, 'password': password});
 
+    // TODO: This delay is required until https://github.com/flutter/flutter/issues/41573 is resolved
+    await Future<void>.delayed(Duration(milliseconds: 100));
     final response = await request.timeout(const Duration(seconds: 2));
 
     if (response.statusCode == 200) {

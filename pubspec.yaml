@@ -13,15 +13,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   # Service locator
-  get_it: ^4.0.2
+  get_it: ^4.0.4
   # Bloc for state management
-  flutter_bloc: ^5.0.1
+  flutter_bloc: ^6.0.1
   # Value equality
-  equatable: ^1.2.0
+  equatable: ^1.2.2
   # Functional programming features
   dartz: ^0.9.1
   # Local cache
-  shared_preferences: ^0.5.7+3
+  shared_preferences: ^0.5.8
   # QR scanner data source
   #qrscan: ^0.2.17
   # Internet connection checker
@@ -29,22 +29,23 @@ dependencies:
   # For proper conversion of DateTime to string
   intl: ^0.16.1
   # Making requests to the API
-  http: ^0.12.1
+  http: ^0.12.2
   # Location data Source
   background_location:
     git:
       url: git@github.com:yozoon/flutter_background_location.git
-  auto_route: ^0.6.1
-  flutter_i18n: ^0.16.2
+  auto_route: ^0.6.6
+  flutter_i18n: ^0.18.0
   moor_flutter: ^3.1.0
   path: ^1.7.0
+  maps_launcher: ^1.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
   build_runner: null
-  auto_route_generator: ^0.6.0
+  auto_route_generator: ^0.6.6
   intl_translation: ^0.17.10
 
 flutter:
@@ -53,6 +54,8 @@ flutter:
   - family:  CustomMaterialIcons
     fonts:
      - asset: fonts/CustomMaterialIcons.ttf
+  assets:
+    - assets/images/background.jpg
 
 flutter_intl:
   enabled: true

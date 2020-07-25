@@ -13,3 +13,8 @@ class SubmitLogin extends AuthenticationEvent {
   @override
   List<Object> get props => [username, password];
 }
+
+class RequestAppConnectionUpdate extends AuthenticationEvent {
+  @override
+  List<Object> get props => [];
+}

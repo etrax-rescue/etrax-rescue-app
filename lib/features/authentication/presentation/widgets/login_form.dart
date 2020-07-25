@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/util/translate_error_messages.dart';
 import '../../../../generated/l10n.dart';
 import '../bloc/authentication_bloc.dart';
+import '../../../../common/widgets/popup_menu.dart';
 
-class LoginControls extends StatefulWidget {
-  LoginControls({Key key}) : super(key: key);
+class LoginForm extends StatefulWidget {
+  LoginForm({Key key}) : super(key: key);
 
   @override
-  _LoginControlsState createState() => _LoginControlsState();
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginControlsState extends State<LoginControls> {
+class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   String _usernameStr;
   String _passwordStr;
@@ -29,6 +31,7 @@ class _LoginControlsState extends State<LoginControls> {
     return Form(
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Visibility(
             child: DropdownButtonFormField<String>(
@@ -80,14 +83,34 @@ class _LoginControlsState extends State<LoginControls> {
             obscureText: true,
           ),
           SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: RaisedButton(
-              child: Text(S.of(context).LOGIN),
-              color: Theme.of(context).accentColor,
-              textTheme: ButtonTextTheme.primary,
-              onPressed: submit,
-            ),
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+            if (state is AuthenticationError) {
+              return Text(
+                translateErrorMessage(context, state.messageKey),
+                style: TextStyle(
+                    fontSize: 12, color: Theme.of(context).accentColor),
+              );
+            } else if (state is AuthenticationVerifying) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return Container();
+          }),
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            builder: (context, state) {
+              if (!(state is AuthenticationVerifying)) {
+                return ButtonTheme(
+                  minWidth: double.infinity,
+                  child: RaisedButton(
+                    color: Theme.of(context).accentColor,
+                    textTheme: ButtonTextTheme.primary,
+                    onPressed: submit,
+                    child: Text(S.of(context).LOGIN),
+                  ),
+                );
+              }
+              return Container();
+            },
           ),
         ],
       ),

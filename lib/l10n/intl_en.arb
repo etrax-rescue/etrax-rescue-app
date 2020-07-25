@@ -4,10 +4,10 @@
     "RETRY": "Retry",
     "DROPDOWN_HINT": "-- Please Select --",
     
-    "APP_CONNECT_HEADING": "Connect App:",
+    "APP_CONNECTION_HEADING": "Connect App:",
     "CONNECT": "Connect",
 
-    "LOGIN_HEADING": "Login:",
+    "LOGIN_HEADING": "Login",
     "LOGIN": "Login",
     "ORGANIZATION": "Organization",
     "USERNAME": "Username",
@@ -15,8 +15,18 @@
     "AUTHENTICATION_SUCCESS": "Success!",
 
     "MISSIONS": "Missions",
+    "MISSION": "Mission",
+    "MISSION_NAME": "Mission Name",
     "LOGOUT": "Logout",
     "RECONNECT": "Reconnect App",
+    "CONFIRMATION_HEADING": "Confirmation",
+    "ACCEPT_MISSION": "Confirm",
+    "LATITUDE": "Latitude",
+    "LONGITUDE": "Longitude",
+    "SHOW_ON_MAP": "Show on map",
+    "MISSION_LOCATION": "Location",
+    "MISSION_START": "Begin",
+    "FUNCTION": "Function",
 
     "UNEXPECTED_FAILURE_MESSAGE": "A unexpected error occured.",
     "NETWORK_FAILURE_MESSAGE": "Your device is offline.",

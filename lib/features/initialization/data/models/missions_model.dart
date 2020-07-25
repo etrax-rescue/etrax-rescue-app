@@ -32,7 +32,7 @@ class MissionCollectionModel extends MissionCollection {
 
 class MissionModel extends Mission {
   MissionModel({
-    @required String id,
+    @required int id,
     @required String name,
     @required DateTime start,
     @required double latitude,
