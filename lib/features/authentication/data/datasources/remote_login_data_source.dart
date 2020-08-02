@@ -65,6 +65,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       throw ServerException();
     } on FormatException {
       throw ServerException();
+    } on TypeError {
+      throw ServerException();
     }
     return organizationCollectionModel;
   }

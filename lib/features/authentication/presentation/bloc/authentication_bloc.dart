@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:etrax_rescue_app/features/app_connection/domain/usecases/mark_app_connection_for_update.dart';
+import 'package:etrax_rescue_app/features/authentication/data/models/organizations_model.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_organizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/types/usecase.dart';
@@ -18,13 +21,16 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final Login login;
   final GetAppConnection getAppConnection;
+  final GetOrganizations getOrganizations;
   final MarkAppConnectionForUpdate markAppConnectionForUpdate;
   AuthenticationBloc(
       {@required this.login,
       @required this.getAppConnection,
+      @required this.getOrganizations,
       @required this.markAppConnectionForUpdate})
       : assert(login != null),
         assert(getAppConnection != null),
+        assert(getOrganizations != null),
         assert(markAppConnectionForUpdate != null),
         super(AuthenticationInitial());
 
@@ -32,7 +38,21 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
-    if (event is SubmitLogin) {
+    if (event is InitializeLogin) {
+      final appConnectionEither = await getAppConnection(NoParams());
+
+      yield* appConnectionEither.fold((failure) async* {
+        yield AuthenticationError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+      }, (appConnection) async* {
+        final organizationsEither = await getOrganizations(
+            GetOrganizationsParams(appConnection: appConnection));
+
+        yield* organizationsEither.fold((failure) => null,
+            (organizations) async* {
+          yield LoginReady(organizationCollection: organizations);
+        });
+      });
+    } else if (event is SubmitLogin) {
       yield AuthenticationInProgress();
       final appConnectionEither = await getAppConnection(NoParams());
 

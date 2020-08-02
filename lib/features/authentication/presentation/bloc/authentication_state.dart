@@ -8,6 +8,15 @@ abstract class AuthenticationState extends Equatable {
 
 class AuthenticationInitial extends AuthenticationState {}
 
+class LoginReady extends AuthenticationState {
+  final OrganizationCollectionModel organizationCollection;
+
+  LoginReady({@required this.organizationCollection});
+
+  @override
+  List<Object> get props => [organizationCollection];
+}
+
 class AuthenticationInProgress extends AuthenticationState {}
 
 class AuthenticationSuccess extends AuthenticationState {}

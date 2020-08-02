@@ -5,10 +5,10 @@ import '../../domain/entities/organizations.dart';
 class OrganizationCollectionModel extends OrganizationCollection {
   OrganizationCollectionModel({@required List<OrganizationModel> organizations})
       : super(organizations: organizations);
-  factory OrganizationCollectionModel.fromJson(Map<String, dynamic> json) {
+  factory OrganizationCollectionModel.fromJson(List<dynamic> json) {
     List<OrganizationModel> organizationModelList;
     try {
-      Iterable it = json['organizations'];
+      Iterable it = json;
       organizationModelList = List<OrganizationModel>.from(
           it.map((el) => OrganizationModel.fromJson(el)).toList());
     } on NoSuchMethodError {
@@ -19,14 +19,12 @@ class OrganizationCollectionModel extends OrganizationCollection {
     return OrganizationCollectionModel(organizations: organizationModelList);
   }
 
-  Map<String, dynamic> toJson() {
+  List<Map<String, dynamic>> toJson() {
     final jsonList = List<Map<String, dynamic>>.from(organizations
         .map((e) =>
             e is OrganizationModel ? e.toJson() : throw FormatException())
         .toList());
-    return {
-      'organizations': jsonList,
-    };
+    return jsonList;
   }
 }
 

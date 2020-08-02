@@ -153,12 +153,11 @@ void main() {
     );
 
     test(
-      'should throw a ServerException when the JSON response is missing the organizations field',
+      'should throw a ServerException when the JSON response is not an array',
       () async {
         // arrange
         when(mockedHttpClient.get(any)).thenAnswer((_) async => http.Response(
-            fixture('organization_collection/organizations_missing.json'),
-            200));
+            fixture('organization_collection/no_array.json'), 200));
         // act
         final call = remoteDataSource.getOrganizations;
         // assert

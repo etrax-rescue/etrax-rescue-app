@@ -86,34 +86,10 @@ void main() {
 
     group('fromJson', () {
       test(
-        'should throw a FormatException when the JSON is missing the organizations field',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap = json.decode(
-              fixture('organization_collection/organizations_missing.json'));
-          // act & assert
-          expect(() => OrganizationCollectionModel.fromJson(jsonMap),
-              throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
-        'should throw a FormatException when the JSON does not contain an array',
-        () async {
-          // arrange
-          final Map<String, dynamic> jsonMap =
-              json.decode(fixture('organization_collection/no_array.json'));
-          // act & assert
-          expect(() => OrganizationCollectionModel.fromJson(jsonMap),
-              throwsA(TypeMatcher<FormatException>()));
-        },
-      );
-
-      test(
         'should return a valid model when the JSON is properly formatted',
         () async {
           // arrange
-          final Map<String, dynamic> jsonMap =
+          final List<dynamic> jsonMap =
               json.decode(fixture('organization_collection/valid.json'));
           // act
           final result = OrganizationCollectionModel.fromJson(jsonMap);
@@ -142,11 +118,9 @@ void main() {
           // act
           final result = tOrganizationCollectionModel.toJson();
           // assert
-          final expectedJsonMap = {
-            'organizations': [
-              {'id': tID, 'name': tName},
-            ],
-          };
+          final expectedJsonMap = [
+            {'id': tID, 'name': tName},
+          ];
           expect(result, expectedJsonMap);
         },
       );

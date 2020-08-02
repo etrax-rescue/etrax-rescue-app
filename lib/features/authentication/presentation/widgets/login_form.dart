@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/features/authentication/domain/entities/organizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,23 +8,24 @@ import '../bloc/authentication_bloc.dart';
 import '../../../../common/widgets/popup_menu.dart';
 
 class LoginForm extends StatefulWidget {
-  LoginForm({Key key}) : super(key: key);
+  final OrganizationCollection organizationCollection;
+  LoginForm({Key key, @required this.organizationCollection}) : super(key: key);
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  _LoginFormState createState() => _LoginFormState(this.organizationCollection);
 }
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   String _usernameStr;
   String _passwordStr;
-  String _organizationStr;
-  List<String> _organizations;
+  OrganizationCollection organizationCollection;
+  String _organizationID;
+  _LoginFormState(this.organizationCollection);
 
   @override
   void initState() {
     super.initState();
-    _organizations = ['A', 'B'];
   }
 
   @override
@@ -39,19 +41,20 @@ class _LoginFormState extends State<LoginForm> {
               decoration: InputDecoration(
                 labelText: S.of(context).ORGANIZATION,
               ),
-              items: _organizations.map((String value) {
+              items: organizationCollection.organizations
+                  .map((Organization organization) {
                 return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+                  value: organization.id,
+                  child: Text(organization.name),
                 );
               }).toList(),
               onChanged: (val) {
-                _organizationStr = val;
+                _organizationID = val;
               },
               validator: (val) =>
                   val == null ? S.of(context).FIELD_REQUIRED : null,
             ),
-            visible: _organizations.length > 1,
+            visible: organizationCollection.organizations.length > 1,
           ),
           TextFormField(
             autofocus: true,

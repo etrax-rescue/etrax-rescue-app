@@ -1,4 +1,5 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_organizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,7 @@ Future<void> init() async {
   sl.registerFactory<AuthenticationBloc>(() => AuthenticationBloc(
         login: sl(),
         getAppConnection: sl(),
+        getOrganizations: sl(),
         markAppConnectionForUpdate: sl(),
       ));
 
@@ -84,6 +86,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton<DeleteAuthenticationData>(
       () => DeleteAuthenticationData(sl()));
+
+  sl.registerLazySingleton<GetOrganizations>(() => GetOrganizations(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthenticationRepository>(() =>

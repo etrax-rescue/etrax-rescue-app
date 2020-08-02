@@ -1,6 +1,4 @@
 {
-    "organizations": {
-        "id": "DEV",
-        "name": "Rettungshunde"
-    }
+    "id": "DEV",
+    "name": "Rettungshunde"
 }
