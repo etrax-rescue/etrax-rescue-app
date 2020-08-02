@@ -20,9 +20,7 @@ class AppConnectionPage extends StatelessWidget {
         body: Background(
           child: BlocConsumer<AppConnectionBloc, AppConnectionState>(
             listener: (context, state) {
-              print('listener');
               if (state is AppConnectionStateSuccess) {
-                print('success');
                 // Go to next page when no update is required or when the update succeeded
                 ExtendedNavigator.root.popAndPush('/login-page');
               }

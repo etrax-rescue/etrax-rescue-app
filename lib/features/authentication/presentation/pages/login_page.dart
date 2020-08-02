@@ -8,7 +8,7 @@ import '../../../../common/widgets/popup_menu.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/organizations.dart';
-import '../bloc/authentication_bloc.dart';
+import '../bloc/login_bloc.dart';
 import '../widgets/login_form.dart';
 
 class LoginPage extends StatelessWidget {
@@ -16,16 +16,19 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => sl<AuthenticationBloc>(), child: LoginScreen());
+    return BlocProvider(create: (_) => sl<LoginBloc>(), child: LoginScreen());
   }
 }
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
 
-  OrganizationCollection _organizations;
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
 
+class _LoginScreenState extends State<LoginScreen> {
+  OrganizationCollection _organizations;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,36 +36,39 @@ class LoginScreen extends StatelessWidget {
         title: Text(S.of(context).LOGIN_HEADING),
         actions: <Widget>[
           RelinkPopupMenu(callback: () {
-            BlocProvider.of<AuthenticationBloc>(context)
+            BlocProvider.of<LoginBloc>(context)
                 .add(RequestAppConnectionUpdate());
           }),
         ],
       ),
       body: Background(
-        child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+        child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
-            if (state is AuthenticationSuccess) {
+            if (state is LoginSuccess) {
               ExtendedNavigator.of(context).popAndPush('/mission-page');
             } else if (state is RequestedAppConnectionUpdate) {
               ExtendedNavigator.of(context).popAndPush('/');
             }
           },
           builder: (context, state) {
-            if (state is AuthenticationInitial) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+            if (state is LoginInitial) {
+              BlocProvider.of<LoginBloc>(context).add(InitializeLogin());
             } else if (state is LoginReady) {
               _organizations = state.organizationCollection;
             }
-            return Center(
-              child: SingleChildScrollView(
-                child: CenteredCardView(
-                  child: LoginForm(
-                    organizationCollection: _organizations,
+            if (_organizations != null) {
+              return Center(
+                child: SingleChildScrollView(
+                  child: CenteredCardView(
+                    child: LoginForm(
+                      organizationCollection: _organizations,
+                    ),
                   ),
                 ),
-              ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
           },
         ),

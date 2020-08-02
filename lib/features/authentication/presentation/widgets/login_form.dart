@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/util/translate_error_messages.dart';
 import '../../../../generated/l10n.dart';
-import '../bloc/authentication_bloc.dart';
+import '../bloc/login_bloc.dart';
 import '../../../../common/widgets/popup_menu.dart';
 
 class LoginForm extends StatefulWidget {
@@ -86,22 +86,21 @@ class _LoginFormState extends State<LoginForm> {
             obscureText: true,
           ),
           SizedBox(height: 10),
-          BlocBuilder<AuthenticationBloc, AuthenticationState>(
-              builder: (context, state) {
-            if (state is AuthenticationError) {
+          BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+            if (state is LoginError) {
               return Text(
                 translateErrorMessage(context, state.messageKey),
                 style: TextStyle(
                     fontSize: 12, color: Theme.of(context).accentColor),
               );
-            } else if (state is AuthenticationInProgress) {
+            } else if (state is LoginInProgress) {
               return Center(child: CircularProgressIndicator());
             }
             return Container();
           }),
-          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
-              if (!(state is AuthenticationInProgress)) {
+              if (!(state is LoginInProgress)) {
                 return ButtonTheme(
                   minWidth: double.infinity,
                   child: RaisedButton(
@@ -122,7 +121,7 @@ class _LoginFormState extends State<LoginForm> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      BlocProvider.of<AuthenticationBloc>(context)
+      BlocProvider.of<LoginBloc>(context)
           .add(SubmitLogin(username: _usernameStr, password: _passwordStr));
     }
   }

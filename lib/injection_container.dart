@@ -22,7 +22,7 @@ import 'features/authentication/domain/repositories/authentication_repository.da
 import 'features/authentication/domain/usecases/delete_authentication_data.dart';
 import 'features/authentication/domain/usecases/get_authentication_data.dart';
 import 'features/authentication/domain/usecases/login.dart';
-import 'features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'features/authentication/presentation/bloc/login_bloc.dart';
 import 'features/initialization/data/datasources/local_app_settings_data_source.dart';
 import 'features/initialization/data/datasources/local_missions_data_source.dart';
 import 'features/initialization/data/datasources/local_user_roles_data_source.dart';
@@ -71,7 +71,7 @@ Future<void> init() async {
 
   //! Features - Authentication
   // BLoC
-  sl.registerFactory<AuthenticationBloc>(() => AuthenticationBloc(
+  sl.registerFactory<LoginBloc>(() => LoginBloc(
         login: sl(),
         getAppConnection: sl(),
         getOrganizations: sl(),

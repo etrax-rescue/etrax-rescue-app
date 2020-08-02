@@ -6,7 +6,6 @@ import 'package:etrax_rescue_app/features/app_connection/domain/usecases/mark_ap
 import 'package:etrax_rescue_app/features/authentication/data/models/organizations_model.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_organizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/types/usecase.dart';
@@ -14,16 +13,15 @@ import '../../../../core/util/translate_error_messages.dart';
 import '../../../app_connection/domain/usecases/get_app_connection.dart';
 import '../../domain/usecases/login.dart';
 
-part 'authentication_event.dart';
-part 'authentication_state.dart';
+part 'login_event.dart';
+part 'login_state.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final Login login;
   final GetAppConnection getAppConnection;
   final GetOrganizations getOrganizations;
   final MarkAppConnectionForUpdate markAppConnectionForUpdate;
-  AuthenticationBloc(
+  LoginBloc(
       {@required this.login,
       @required this.getAppConnection,
       @required this.getOrganizations,
@@ -32,48 +30,48 @@ class AuthenticationBloc
         assert(getAppConnection != null),
         assert(getOrganizations != null),
         assert(markAppConnectionForUpdate != null),
-        super(AuthenticationInitial());
+        super(LoginInitial());
 
   @override
-  Stream<AuthenticationState> mapEventToState(
-    AuthenticationEvent event,
+  Stream<LoginState> mapEventToState(
+    LoginEvent event,
   ) async* {
     if (event is InitializeLogin) {
       final appConnectionEither = await getAppConnection(NoParams());
 
       yield* appConnectionEither.fold((failure) async* {
-        yield AuthenticationError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+        yield LoginError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
       }, (appConnection) async* {
         final organizationsEither = await getOrganizations(
             GetOrganizationsParams(appConnection: appConnection));
 
-        yield* organizationsEither.fold((failure) => null,
+        yield* organizationsEither.fold((failure) async* {},
             (organizations) async* {
           yield LoginReady(organizationCollection: organizations);
         });
       });
     } else if (event is SubmitLogin) {
-      yield AuthenticationInProgress();
+      yield LoginInProgress();
       final appConnectionEither = await getAppConnection(NoParams());
 
       yield* appConnectionEither.fold((failure) async* {
-        yield AuthenticationError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+        yield LoginError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
       }, (appConnection) async* {
-        final authenticationEither = await login(LoginParams(
+        final loginEither = await login(LoginParams(
           appConnection: appConnection,
           username: event.username,
           password: event.password,
         ));
-        yield* authenticationEither.fold((failure) async* {
-          yield AuthenticationError(messageKey: _mapFailureToMessage(failure));
+        yield* loginEither.fold((failure) async* {
+          yield LoginError(messageKey: _mapFailureToMessage(failure));
         }, (_) async* {
-          yield AuthenticationSuccess();
+          yield LoginSuccess();
         });
       });
     } else if (event is RequestAppConnectionUpdate) {
       final markEither = await markAppConnectionForUpdate(NoParams());
       yield* markEither.fold((failure) async* {
-        yield AuthenticationError(messageKey: _mapFailureToMessage(failure));
+        yield LoginError(messageKey: _mapFailureToMessage(failure));
       }, (_) async* {
         yield RequestedAppConnectionUpdate();
       });
