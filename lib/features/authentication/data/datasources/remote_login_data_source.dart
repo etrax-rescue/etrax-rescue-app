@@ -1,13 +1,17 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/types/app_connection.dart';
+import '../../../../core/types/etrax_server_endpoints.dart';
 import '../models/authentication_data_model.dart';
+import '../models/organizations_model.dart';
 
 abstract class RemoteLoginDataSource {
+  Future<OrganizationCollectionModel> getOrganizations(
+      AppConnection appConnection);
+
   Future<AuthenticationDataModel> login(
       AppConnection appConnection, String username, String password);
 }
@@ -40,5 +44,28 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
     } else {
       throw ServerException();
     }
+  }
+
+  @override
+  Future<OrganizationCollectionModel> getOrganizations(
+      AppConnection appConnection) async {
+    final request = client.get(
+        appConnection.generateUri(subPath: EtraxServerEndpoints.organizations));
+
+    final response = await request.timeout(const Duration(seconds: 2));
+
+    if (response.body == '' || response.statusCode != 200) {
+      throw ServerException();
+    }
+    final body = json.decode(response.body);
+    OrganizationCollectionModel organizationCollectionModel;
+    try {
+      organizationCollectionModel = OrganizationCollectionModel.fromJson(body);
+    } on NoSuchMethodError {
+      throw ServerException();
+    } on FormatException {
+      throw ServerException();
+    }
+    return organizationCollectionModel;
   }
 }

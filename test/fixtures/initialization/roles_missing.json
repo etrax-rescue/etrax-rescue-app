@@ -1,6 +1,8 @@
 {
   "appSettings": {
-    "locationUpdateInterval": 60
+    "locationUpdateInterval": 0,
+    "locationUpdateMinDistance": 50,
+    "infoUpdateInterval": 300
   },
   "states": [
     {

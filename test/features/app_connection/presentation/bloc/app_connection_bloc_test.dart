@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
+import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
 import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app_connection_marked_for_update.dart';
@@ -43,9 +44,6 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
-  void mockInputConverterSuccess() =>
-      when(mockUriInputConverter.convert(any)).thenReturn(Right(tAuthority));
-
   test(
     'should contain proper initial state',
     () async {
@@ -54,122 +52,189 @@ void main() {
     },
   );
 
-  test(
-    'should call the input converter first',
-    () async {
-      // arrange
-      mockInputConverterSuccess();
-      when(mockVerifyAndStoreAppConnection(any))
-          .thenAnswer((_) async => Right(None()));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-      await untilCalled(mockUriInputConverter.convert(any));
-      // assert
-      verify(mockUriInputConverter.convert(tAuthority));
-    },
-  );
+  group('AppConnectionEventCheck', () {
+    test(
+      'should call markedForUpdate',
+      () async {
+        // arrange
+        when(mockGetMarkedForUpdate(any)).thenAnswer((_) async => Right(false));
+        // act
+        bloc.add(AppConnectionEventCheck());
+        await untilCalled(mockGetMarkedForUpdate(any));
+        // assert
+        verify(mockGetMarkedForUpdate(NoParams()));
+      },
+    );
 
-  test(
-    'should emit Error when input is invalid',
-    () async {
-      // arrange
-      when(mockUriInputConverter.convert(any))
-          .thenReturn(Left(InvalidInputFailure()));
-      // assert
-      final expected = [
-        AppConnectionStateError(messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY),
-      ];
-      expectLater(bloc, emitsInOrder(expected));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-    },
-  );
+    test(
+      'should emit AppConnectionStateReady when retrieving the cached app connection failed',
+      () async {
+        // arrange
+        when(mockGetMarkedForUpdate(any))
+            .thenAnswer((_) async => Left(CacheFailure()));
+        // assert
+        final expected = [
+          AppConnectionStateReady(),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventCheck());
+      },
+    );
 
-  test(
-    'should call usecase',
-    () async {
-      // arrange
-      mockInputConverterSuccess();
-      when(mockVerifyAndStoreAppConnection(any))
-          .thenAnswer((_) async => Right(None()));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-      await untilCalled(mockVerifyAndStoreAppConnection(any));
-      // assert
-      verify(mockVerifyAndStoreAppConnection(
-          AppConnectionParams(authority: tAuthority, basePath: tBasePath)));
-    },
-  );
+    test(
+      'should emit AppConnectionStateReady when the app connection was marked for update',
+      () async {
+        // arrange
+        when(mockGetMarkedForUpdate(any)).thenAnswer((_) async => Right(true));
+        // assert
+        final expected = [
+          AppConnectionStateReady(),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventCheck());
+      },
+    );
 
-  test(
-    'should emit [AppConnectionVerifying, AppConnectionStored] when base uri is stored successfully',
-    () async {
-      // arrange
-      mockInputConverterSuccess();
-      when(mockVerifyAndStoreAppConnection(any))
-          .thenAnswer((_) async => Right(None()));
-      // assert
-      final expected = [
-        AppConnectionStateInProgress(),
-        AppConnectionStateSuccess(),
-      ];
-      expectLater(bloc, emitsInOrder(expected));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-    },
-  );
+    test(
+      'should emit AppConnectionStateSuccess when the app connection was not marked for update',
+      () async {
+        // arrange
+        when(mockGetMarkedForUpdate(any)).thenAnswer((_) async => Right(false));
+        // assert
+        final expected = [
+          AppConnectionStateSuccess(),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventCheck());
+      },
+    );
+  });
 
-  test(
-    'should emit [AppConnectionVerifying, Error] when no network is available',
-    () async {
-      // arrange
-      mockInputConverterSuccess();
-      when(mockVerifyAndStoreAppConnection(any))
-          .thenAnswer((_) async => Left(NetworkFailure()));
-      // assert
-      final expected = [
-        AppConnectionStateInProgress(),
-        AppConnectionStateError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
-      ];
-      expectLater(bloc, emitsInOrder(expected));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-    },
-  );
+  void mockInputConverterSuccess() =>
+      when(mockUriInputConverter.convert(any)).thenReturn(Right(tAuthority));
 
-  test(
-    'should emit [AppConnectionVerifying, Error] when the Server could not be reached, or when the server does not host an instance of eTrax|rescue',
-    () async {
-      // arrange
-      mockInputConverterSuccess();
-      when(mockVerifyAndStoreAppConnection(any))
-          .thenAnswer((_) async => Left(ServerFailure()));
-      // assert
-      final expected = [
-        AppConnectionStateInProgress(),
-        AppConnectionStateError(messageKey: SERVER_URL_FAILURE_MESSAGE_KEY),
-      ];
-      expectLater(bloc, emitsInOrder(expected));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-    },
-  );
+  group('AppConnectionEventConnect', () {
+    test(
+      'should call the input converter first',
+      () async {
+        // arrange
+        mockInputConverterSuccess();
+        when(mockVerifyAndStoreAppConnection(any))
+            .thenAnswer((_) async => Right(None()));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+        await untilCalled(mockUriInputConverter.convert(any));
+        // assert
+        verify(mockUriInputConverter.convert(tAuthority));
+      },
+    );
 
-  test(
-    'should emit [AppConnectionVerifying, Error] when storing of the uri failed',
-    () async {
-      // arrange
-      mockInputConverterSuccess();
-      when(mockVerifyAndStoreAppConnection(any))
-          .thenAnswer((_) async => Left(CacheFailure()));
-      // assert
-      final expected = [
-        AppConnectionStateInProgress(),
-        AppConnectionStateError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
-      ];
-      expectLater(bloc, emitsInOrder(expected));
-      // act
-      bloc.add(AppConnectionEventConnect(authority: tAuthority));
-    },
-  );
+    test(
+      'should emit AppConnectionStateError when input is invalid',
+      () async {
+        // arrange
+        when(mockUriInputConverter.convert(any))
+            .thenReturn(Left(InvalidInputFailure()));
+        // assert
+        final expected = [
+          AppConnectionStateError(
+              messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+      },
+    );
+
+    test(
+      'should call mockVerifyAndStoreAppConnection',
+      () async {
+        // arrange
+        mockInputConverterSuccess();
+        when(mockVerifyAndStoreAppConnection(any))
+            .thenAnswer((_) async => Right(None()));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+        await untilCalled(mockVerifyAndStoreAppConnection(any));
+        // assert
+        verify(mockVerifyAndStoreAppConnection(
+            AppConnectionParams(authority: tAuthority, basePath: tBasePath)));
+      },
+    );
+
+    test(
+      'should emit [AppConnectionVerifying, AppConnectionStored] when base uri is stored successfully',
+      () async {
+        // arrange
+        mockInputConverterSuccess();
+        when(mockVerifyAndStoreAppConnection(any))
+            .thenAnswer((_) async => Right(None()));
+        // assert
+        final expected = [
+          AppConnectionStateInProgress(),
+          AppConnectionStateSuccess(),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+      },
+    );
+
+    test(
+      'should emit [AppConnectionStateInProgress, AppConnectionStateError] when no network is available',
+      () async {
+        // arrange
+        mockInputConverterSuccess();
+        when(mockVerifyAndStoreAppConnection(any))
+            .thenAnswer((_) async => Left(NetworkFailure()));
+        // assert
+        final expected = [
+          AppConnectionStateInProgress(),
+          AppConnectionStateError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+      },
+    );
+
+    test(
+      'should emit [AppConnectionStateInProgress, AppConnectionStateError] when the Server could not be reached, or when the server does not host an instance of eTrax|rescue',
+      () async {
+        // arrange
+        mockInputConverterSuccess();
+        when(mockVerifyAndStoreAppConnection(any))
+            .thenAnswer((_) async => Left(ServerFailure()));
+        // assert
+        final expected = [
+          AppConnectionStateInProgress(),
+          AppConnectionStateError(messageKey: SERVER_URL_FAILURE_MESSAGE_KEY),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+      },
+    );
+
+    test(
+      'should emit [AppConnectionStateInProgress, AppConnectionStateError] when storing of the uri failed',
+      () async {
+        // arrange
+        mockInputConverterSuccess();
+        when(mockVerifyAndStoreAppConnection(any))
+            .thenAnswer((_) async => Left(CacheFailure()));
+        // assert
+        final expected = [
+          AppConnectionStateInProgress(),
+          AppConnectionStateError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(AppConnectionEventConnect(authority: tAuthority));
+      },
+    );
+  });
 }

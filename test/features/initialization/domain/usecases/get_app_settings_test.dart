@@ -19,8 +19,12 @@ void main() {
   });
 
   final tLocationUpdateInterval = 0;
-  final tAppSettings =
-      AppSettings(locationUpdateInterval: tLocationUpdateInterval);
+  final tLocationUpdateMinDistance = 50;
+  final tInfoUpdateInterval = 300;
+  final tAppSettings = AppSettings(
+      locationUpdateInterval: tLocationUpdateInterval,
+      locationUpdateMinDistance: tLocationUpdateMinDistance,
+      infoUpdateInterval: tInfoUpdateInterval);
 
   test(
     'should return AppSettings when they are available',

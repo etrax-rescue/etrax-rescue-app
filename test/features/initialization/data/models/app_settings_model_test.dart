@@ -8,8 +8,12 @@ import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tLocationUpdateInterval = 0;
-  final tAppSettingsModel =
-      AppSettingsModel(locationUpdateInterval: tLocationUpdateInterval);
+  final tLocationUpdateMinDistance = 50;
+  final tInfoUpdateInterval = 300;
+  final tAppSettingsModel = AppSettingsModel(
+      locationUpdateInterval: tLocationUpdateInterval,
+      locationUpdateMinDistance: tLocationUpdateMinDistance,
+      infoUpdateInterval: tInfoUpdateInterval);
   test(
     'should be a subclass of Missions entity',
     () async {
@@ -42,6 +46,8 @@ void main() {
         // assert
         final expectedJsonMap = {
           "locationUpdateInterval": 0,
+          "locationUpdateMinDistance": 50,
+          "infoUpdateInterval": 300,
         };
         expect(result, expectedJsonMap);
       },

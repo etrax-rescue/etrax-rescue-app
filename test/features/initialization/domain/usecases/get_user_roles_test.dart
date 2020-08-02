@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/entities/user_states.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/user_roles.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/usecases/get_user_states.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/usecases/get_user_roles.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -10,31 +10,31 @@ class MockInitializationRepository extends Mock
     implements InitializationRepository {}
 
 void main() {
-  GetUserStates usecase;
+  GetUserRoles usecase;
   MockInitializationRepository mockInitializationRepository;
 
   setUp(() {
     mockInitializationRepository = MockInitializationRepository();
-    usecase = GetUserStates(mockInitializationRepository);
+    usecase = GetUserRoles(mockInitializationRepository);
   });
 
   final tID = 42;
-  final tName = 'TestMission';
-  final tDescription = 'asdf';
-  final tState = UserState(id: tID, name: tName, description: tDescription);
-  final tStateCollection = UserStateCollection(states: <UserState>[tState]);
+  final tName = 'operator';
+  final tDescription = 'the one who does stuff';
+  final tRole = UserRole(id: tID, name: tName, description: tDescription);
+  final tRoleCollection = UserRoleCollection(roles: <UserRole>[tRole]);
 
   test(
-    'should return UserStateCollection',
+    'should return UserRoleCollection',
     () async {
       // arrange
-      when(mockInitializationRepository.getUserStates())
-          .thenAnswer((_) async => Right(tStateCollection));
+      when(mockInitializationRepository.getUserRoles())
+          .thenAnswer((_) async => Right(tRoleCollection));
       // act
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tStateCollection));
-      verify(mockInitializationRepository.getUserStates());
+      expect(result, Right(tRoleCollection));
+      verify(mockInitializationRepository.getUserRoles());
       verifyNoMoreInteractions(mockInitializationRepository);
     },
   );

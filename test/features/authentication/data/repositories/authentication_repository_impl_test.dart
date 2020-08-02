@@ -9,6 +9,7 @@ import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/remote_login_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
+import 'package:etrax_rescue_app/features/authentication/data/models/organizations_model.dart';
 import 'package:etrax_rescue_app/features/authentication/data/repositories/authentication_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -48,6 +49,30 @@ void main() {
   AuthenticationDataModel tAuthenticationDataModel =
       AuthenticationDataModel(username: tUsername, token: tToken);
 
+  final tID = 'DEV';
+  final tName = 'Rettungshunde';
+  final tOrganizationModel = OrganizationModel(id: tID, name: tName);
+  final tOrganizationCollectionModel = OrganizationCollectionModel(
+      organizations: <OrganizationModel>[tOrganizationModel]);
+
+  void testOnline(Function body) {
+    group('device is online', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+      body();
+    });
+  }
+
+  void testOffline(Function body) {
+    group('device is offline', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+      body();
+    });
+  }
+
   group('login', () {
     test(
       'should check if the device is online',
@@ -60,24 +85,6 @@ void main() {
         verify(mockNetworkInfo.isConnected);
       },
     );
-
-    void testOnline(Function body) {
-      group('device is online', () {
-        setUp(() {
-          when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-        });
-        body();
-      });
-    }
-
-    void testOffline(Function body) {
-      group('device is offline', () {
-        setUp(() {
-          when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-        });
-        body();
-      });
-    }
 
     testOffline(() {
       test(
@@ -124,6 +131,7 @@ void main() {
           verifyZeroInteractions(mockLocalDataSource);
         },
       );
+
       test(
         'should return ServerFailure when a TimeoutException occurs',
         () async {
@@ -273,5 +281,152 @@ void main() {
         verify(mockLocalDataSource.deleteAuthenticationData());
       },
     );
+  });
+
+  group('getOrganizations', () {
+    test(
+      'should check if the device is online',
+      () async {
+        // arrange
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+        // act
+        await repository.getOrganizations(tAppConnection);
+        // assert
+        verify(mockNetworkInfo.isConnected);
+      },
+    );
+
+    testOffline(() {
+      test(
+        'should return cached data when it is present',
+        () async {
+          // arrange
+          when(mockLocalDataSource.getCachedOrganizations())
+              .thenAnswer((_) async => tOrganizationCollectionModel);
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          expect(result, equals(Right(tOrganizationCollectionModel)));
+        },
+      );
+
+      test(
+        'should return CacheFailure when there is no cached data present',
+        () async {
+          // arrange
+          when(mockLocalDataSource.getCachedOrganizations())
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          verify(mockLocalDataSource.getCachedOrganizations());
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
+    });
+
+    testOnline(() {
+      test(
+        'should call the remote data source when the device is online',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenAnswer((_) async => tOrganizationCollectionModel);
+          // act
+          await repository.getOrganizations(tAppConnection);
+          // assert
+          verify(mockRemoteDataSource.getOrganizations(tAppConnection));
+          verifyNoMoreInteractions(mockRemoteDataSource);
+        },
+      );
+
+      test(
+        'should return ServerFailure when a ServerException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenThrow(ServerException());
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          verify(mockRemoteDataSource.getOrganizations(tAppConnection));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalDataSource);
+        },
+      );
+
+      test(
+        'should return ServerFailure when a TimeoutException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenThrow(TimeoutException(''));
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          verify(mockRemoteDataSource.getOrganizations(tAppConnection));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalDataSource);
+        },
+      );
+      test(
+        'should return ServerFailure when a SocketException occurs',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenThrow(SocketException(''));
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          verify(mockRemoteDataSource.getOrganizations(tAppConnection));
+          expect(result, equals(Left(ServerFailure())));
+          verifyZeroInteractions(mockLocalDataSource);
+        },
+      );
+
+      test(
+        'should cache the organizations when the device is online and fetching of the data succeeds',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenAnswer((_) async => tOrganizationCollectionModel);
+          // act
+          await repository.getOrganizations(tAppConnection);
+          // assert
+          verify(mockLocalDataSource
+              .cacheOrganizations(tOrganizationCollectionModel));
+          verifyNoMoreInteractions(mockLocalDataSource);
+        },
+      );
+
+      test(
+        'should return OrganizationCollectionModel when the device is online and login succeeds',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenAnswer((_) async => tOrganizationCollectionModel);
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          expect(result, equals(Right(tOrganizationCollectionModel)));
+        },
+      );
+
+      test(
+        'should return CacheFailure when caching fails',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenAnswer((_) async => tOrganizationCollectionModel);
+          when(mockLocalDataSource.cacheOrganizations(any))
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
+    });
   });
 }

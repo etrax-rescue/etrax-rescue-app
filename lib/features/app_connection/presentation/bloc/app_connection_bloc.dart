@@ -36,7 +36,7 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
       final appConnectionStatusEither = await markedForUpdate(NoParams());
 
       yield* appConnectionStatusEither.fold((failure) async* {
-        yield AppConnectionStateError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
+        yield AppConnectionStateReady(); //AppConnectionStateError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
       }, (updateRequired) async* {
         if (updateRequired) {
           yield AppConnectionStateReady();

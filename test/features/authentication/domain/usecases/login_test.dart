@@ -21,6 +21,7 @@ void main() {
   final tBasePath = 'appdata';
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
+
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
   final tLoginParams = LoginParams(

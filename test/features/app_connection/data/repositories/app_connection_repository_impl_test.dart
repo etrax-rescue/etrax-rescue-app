@@ -102,6 +102,7 @@ void main() {
           verifyNoMoreInteractions(mockRemoteEndpointVerification);
         },
       );
+
       test(
         'should return ServerFailure when the device is online and remote endpoint verification fails',
         () async {
@@ -135,6 +136,7 @@ void main() {
           verifyZeroInteractions(mockLocalDataSource);
         },
       );
+
       test(
         'should return ServerFailure when a SocketException occurs',
         () async {
@@ -170,7 +172,7 @@ void main() {
       );
 
       test(
-        'should cache the uri when the device is online and remote endpoint verification succeeds',
+        'should cache the uri and set the update status to false when the device is online and remote endpoint verification succeeds',
         () async {
           // arrange
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
@@ -183,6 +185,7 @@ void main() {
           verifyNoMoreInteractions(mockLocalDataSource);
         },
       );
+
       test(
         'should return None when the device is online and remote endpoint verification succeeds',
         () async {
@@ -196,6 +199,7 @@ void main() {
           expect(result, equals(Right(None())));
         },
       );
+
       test(
         'should return CacheFailure when caching fails',
         () async {

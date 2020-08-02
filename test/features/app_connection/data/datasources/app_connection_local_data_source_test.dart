@@ -69,7 +69,7 @@ void main() {
     );
   });
 
-  group('getShouldUpdateAppConnection', () {
+  group('getAppConnectionUpdateStatus', () {
     test(
       'should call Shared Preferences to store the data',
       () async {
@@ -79,6 +79,19 @@ void main() {
         verify(mockSharedPreferences.setString(
             SharedPreferencesKeys.appConnection,
             json.encode(tAppConnectionModel.toJson())));
+      },
+    );
+  });
+
+  group('setAppConnectionUpdateStatus', () {
+    test(
+      'should call Shared preferences to store the update status',
+      () async {
+        // act
+        dataSource.setAppConnectionUpdateStatus(true);
+        // assert
+        verify(mockSharedPreferences.setBool(
+            SharedPreferencesKeys.appConnectionUpdate, true));
       },
     );
   });

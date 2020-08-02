@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/features/authentication/data/models/organizations_model.dart';
+import 'package:etrax_rescue_app/features/authentication/domain/entities/organizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/exceptions.dart';
@@ -68,5 +70,35 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<Either<Failure, None>> deleteAuthenticationData() async {
     // TODO: implement this!
     await localAuthenticationDataSource.deleteAuthenticationData();
+  }
+
+  @override
+  Future<Either<Failure, OrganizationCollection>> getOrganizations(
+      AppConnection appConnection) async {
+    OrganizationCollectionModel model;
+    if (await networkInfo.isConnected) {
+      try {
+        model = await remoteLoginDataSource.getOrganizations(appConnection);
+      } on ServerException {
+        return Left(ServerFailure());
+      } on TimeoutException {
+        return Left(ServerFailure());
+      } on SocketException {
+        return Left(ServerFailure());
+      }
+      try {
+        await localAuthenticationDataSource.cacheOrganizations(model);
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+      return Right(model);
+    } else {
+      try {
+        model = await localAuthenticationDataSource.getCachedOrganizations();
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+      return Right(model);
+    }
   }
 }

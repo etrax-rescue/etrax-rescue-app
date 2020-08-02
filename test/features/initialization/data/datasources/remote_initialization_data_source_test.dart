@@ -39,9 +39,13 @@ void main() {
   final tToken = '0123456789ABCDEF';
 
   // AppSettings
-  final tLocationUpdateInterval = 60;
-  final tAppSettingsModel =
-      AppSettingsModel(locationUpdateInterval: tLocationUpdateInterval);
+  final tLocationUpdateInterval = 0;
+  final tLocationUpdateMinDistance = 50;
+  final tInfoUpdateInterval = 300;
+  final tAppSettingsModel = AppSettingsModel(
+      locationUpdateInterval: tLocationUpdateInterval,
+      locationUpdateMinDistance: tLocationUpdateMinDistance,
+      infoUpdateInterval: tInfoUpdateInterval);
 
   // MissionCollection
   final tMissionID = 42;

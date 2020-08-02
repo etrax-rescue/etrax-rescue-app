@@ -2,6 +2,7 @@ import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/features/authentication/data/datasources/local_authentication_data_source.dart';
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
+import 'package:etrax_rescue_app/features/authentication/data/models/organizations_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,12 @@ void main() {
   final String tToken = '0123456789ABCDEF';
   final AuthenticationDataModel tAuthenticationDataModel =
       AuthenticationDataModel(username: tUsername, token: tToken);
+
+  final tID = 'DEV';
+  final tName = 'Rettungshunde';
+  final tOrganizationModel = OrganizationModel(id: tID, name: tName);
+  final tOrganizationCollectionModel = OrganizationCollectionModel(
+      organizations: <OrganizationModel>[tOrganizationModel]);
 
   group('getCachedAuthenticationData', () {
     test(
@@ -77,6 +84,49 @@ void main() {
         // assert
         verify(mockSharedPreferences
             .remove(SharedPreferencesKeys.authenticationData));
+      },
+    );
+  });
+
+  group('getCachedOrganizations', () {
+    test(
+      'should return OrganizationCollectionModel from the Shared Preferences when one instance exists in the cache',
+      () async {
+        // arrange
+        when(mockSharedPreferences.getString(any))
+            .thenReturn(fixture('organization_collection/valid.json'));
+        // act
+        final result = await dataSource.getCachedOrganizations();
+        // assert
+        verify(mockSharedPreferences
+            .getString(SharedPreferencesKeys.organizations));
+        expect(result, equals(tOrganizationCollectionModel));
+      },
+    );
+
+    test(
+      'should throw CacheException when no OrganizationsCollectionModel exists in the shared preferences',
+      () async {
+        // arrange
+        when(mockSharedPreferences.getString(any)).thenReturn(null);
+        // act
+        final call = dataSource.getCachedOrganizations;
+        // assert
+        expect(() => call(), throwsA(TypeMatcher<CacheException>()));
+      },
+    );
+  });
+
+  group('cacheOrganizations', () {
+    test(
+      'should call Shared Preferences to store the data',
+      () async {
+        // act
+        dataSource.cacheOrganizations(tOrganizationCollectionModel);
+        // assert
+        verify(mockSharedPreferences.setString(
+            SharedPreferencesKeys.organizations,
+            json.encode(tOrganizationCollectionModel.toJson())));
       },
     );
   });
