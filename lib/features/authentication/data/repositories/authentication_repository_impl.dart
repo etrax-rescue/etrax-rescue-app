@@ -77,21 +77,31 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       AppConnection appConnection) async {
     OrganizationCollectionModel model;
     if (await networkInfo.isConnected) {
+      bool failed = false;
       try {
         model = await remoteLoginDataSource.getOrganizations(appConnection);
       } on ServerException {
-        return Left(ServerFailure());
+        failed = true;
       } on TimeoutException {
-        return Left(ServerFailure());
+        failed = true;
       } on SocketException {
-        return Left(ServerFailure());
+        failed = true;
       }
-      try {
-        await localAuthenticationDataSource.cacheOrganizations(model);
-      } on CacheException {
-        return Left(CacheFailure());
+      if (failed == true) {
+        try {
+          model = await localAuthenticationDataSource.getCachedOrganizations();
+        } on CacheException {
+          return Left(CacheFailure());
+        }
+        return Right(model);
+      } else {
+        try {
+          await localAuthenticationDataSource.cacheOrganizations(model);
+        } on CacheException {
+          return Left(CacheFailure());
+        }
+        return Right(model);
       }
-      return Right(model);
     } else {
       try {
         model = await localAuthenticationDataSource.getCachedOrganizations();

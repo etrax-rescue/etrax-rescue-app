@@ -342,46 +342,69 @@ void main() {
       );
 
       test(
-        'should return ServerFailure when a ServerException occurs',
+        'should return cached OrganizationCollectionModel when a ServerException occurs',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
               .thenThrow(ServerException());
+          when(mockLocalDataSource.getCachedOrganizations())
+              .thenAnswer((_) async => tOrganizationCollectionModel);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
           verify(mockRemoteDataSource.getOrganizations(tAppConnection));
-          expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalDataSource);
+          verify(mockLocalDataSource.getCachedOrganizations());
+          expect(result, equals(Right(tOrganizationCollectionModel)));
         },
       );
 
       test(
-        'should return ServerFailure when a TimeoutException occurs',
+        'should return cached OrganizationCollectionModel when a TimeoutException occurs',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
               .thenThrow(TimeoutException(''));
+          when(mockLocalDataSource.getCachedOrganizations())
+              .thenAnswer((_) async => tOrganizationCollectionModel);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
           verify(mockRemoteDataSource.getOrganizations(tAppConnection));
-          expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalDataSource);
+          verify(mockLocalDataSource.getCachedOrganizations());
+          expect(result, equals(Right(tOrganizationCollectionModel)));
         },
       );
       test(
-        'should return ServerFailure when a SocketException occurs',
+        'should return the cached OrganizationCollectionModel when a SocketException occurs',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
               .thenThrow(SocketException(''));
+          when(mockLocalDataSource.getCachedOrganizations())
+              .thenAnswer((_) async => tOrganizationCollectionModel);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
           verify(mockRemoteDataSource.getOrganizations(tAppConnection));
-          expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalDataSource);
+          verify(mockLocalDataSource.getCachedOrganizations());
+          expect(result, equals(Right(tOrganizationCollectionModel)));
+        },
+      );
+
+      test(
+        'should return CacheFailure when a Exception occurs during fetching of the remote data and a CacheException occurs when the cached content is accessed',
+        () async {
+          // arrange
+          when(mockRemoteDataSource.getOrganizations(any))
+              .thenThrow(ServerException());
+          when(mockLocalDataSource.getCachedOrganizations())
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.getOrganizations(tAppConnection);
+          // assert
+          verify(mockRemoteDataSource.getOrganizations(tAppConnection));
+          verify(mockLocalDataSource.getCachedOrganizations());
+          expect(result, equals(Left(CacheFailure())));
         },
       );
 

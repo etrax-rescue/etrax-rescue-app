@@ -48,6 +48,7 @@ void main() {
 
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
+  final tOrganizationID = 'DEV';
   final tAuthority = 'etrax.at';
   final tBasePath = 'appdata';
   final tAppConnection =
@@ -79,7 +80,10 @@ void main() {
         mockGetAppConnectionSuccess();
         when(mockLogin(any)).thenAnswer((_) async => Right(None()));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
         await untilCalled(mockGetAppConnection(any));
         // assert
         verify(mockGetAppConnection(NoParams()));
@@ -99,7 +103,10 @@ void main() {
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
       },
     );
 
@@ -110,7 +117,10 @@ void main() {
         mockGetAppConnectionSuccess();
         when(mockLogin(any)).thenAnswer((_) async => Right(None()));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
         await untilCalled(mockLogin(any));
         // assert
         verify(mockLogin(LoginParams(
@@ -133,7 +143,10 @@ void main() {
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
       },
     );
 
@@ -150,7 +163,10 @@ void main() {
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
       },
     );
     test(
@@ -166,7 +182,10 @@ void main() {
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
       },
     );
 
@@ -183,7 +202,10 @@ void main() {
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
-        bloc.add(SubmitLogin(username: tUsername, password: tPassword));
+        bloc.add(SubmitLogin(
+            username: tUsername,
+            password: tPassword,
+            organizationID: tOrganizationID));
       },
     );
   });

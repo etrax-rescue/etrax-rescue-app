@@ -11,11 +11,15 @@ class InitializeLogin extends LoginEvent {}
 class SubmitLogin extends LoginEvent {
   final String username;
   final String password;
+  final String organizationID;
 
-  SubmitLogin({@required this.username, @required this.password});
+  SubmitLogin(
+      {@required this.username,
+      @required this.password,
+      @required this.organizationID});
 
   @override
-  List<Object> get props => [username, password];
+  List<Object> get props => [username, password, organizationID];
 }
 
 class RequestAppConnectionUpdate extends LoginEvent {}

@@ -121,8 +121,10 @@ class _LoginFormState extends State<LoginForm> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      BlocProvider.of<LoginBloc>(context)
-          .add(SubmitLogin(username: _usernameStr, password: _passwordStr));
+      BlocProvider.of<LoginBloc>(context).add(SubmitLogin(
+          username: _usernameStr,
+          password: _passwordStr,
+          organizationID: _organizationID));
     }
   }
 }
