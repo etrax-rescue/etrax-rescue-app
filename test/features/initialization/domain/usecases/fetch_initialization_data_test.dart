@@ -1,7 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/core/types/authentication_data.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/app_settings.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/initialization_data.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/user_roles.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/user_states.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +38,16 @@ void main() {
     authenticationData: tAuthenticationData,
   );
 
+  // AppSettings
+  final tLocationUpdateInterval = 0;
+  final tLocationUpdateMinDistance = 50;
+  final tInfoUpdateInterval = 300;
+  final tAppSettings = AppSettings(
+      locationUpdateInterval: tLocationUpdateInterval,
+      locationUpdateMinDistance: tLocationUpdateMinDistance,
+      infoUpdateInterval: tInfoUpdateInterval);
+
+  // MissionCollection
   final tMissionID = 42;
   final tMissionName = 'TestMission';
   final tMissionStart = DateTime.utc(2020, 1, 1);
@@ -48,16 +62,43 @@ void main() {
   );
   final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
 
+  // UserStateCollection
+  final tUserStateID = 42;
+  final tUserStateName = 'approaching';
+  final tUserStateDescription = 'is on their way';
+  final tUserStateModel = UserState(
+      id: tUserStateID,
+      name: tUserStateName,
+      description: tUserStateDescription);
+  final tUserStateCollection =
+      UserStateCollection(states: <UserState>[tUserStateModel]);
+
+  // UserRoleCollection
+  final tUserRoleID = 42;
+  final tUserRoleName = 'operator';
+  final tUserRoleDescription = 'the one who does stuff';
+  final tUserRole = UserRole(
+      id: tUserRoleID, name: tUserRoleName, description: tUserRoleDescription);
+  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
+
+  // InitializationDataModel
+  final tInitializationData = InitializationData(
+    appSettings: tAppSettings,
+    missionCollection: tMissionCollection,
+    userStateCollection: tUserStateCollection,
+    userRoleCollection: tUserRoleCollection,
+  );
+
   test(
-    'should return MissionCollection when fetching data succeeds',
+    'should return InitializationData when fetching data succeeds',
     () async {
       // arrange
       when(mockInitializationRepository.fetchInitializationData(any, any))
-          .thenAnswer((_) async => Right(tMissionCollection));
+          .thenAnswer((_) async => Right(tInitializationData));
       // act
       final result = await usecase(tFetchInitializationDataParams);
       // assert
-      expect(result, Right(tMissionCollection));
+      expect(result, Right(tInitializationData));
       verify(mockInitializationRepository.fetchInitializationData(
           tAppConnection, tAuthenticationData));
       verifyNoMoreInteractions(mockInitializationRepository);

@@ -7,7 +7,11 @@ import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_authentication_data.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/app_settings.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/initialization_data.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/user_roles.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/user_states.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
 import 'package:etrax_rescue_app/features/initialization/presentation/bloc/initialization_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,12 +49,22 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
-  final String tOrganizationID = 'DEV';
-  final String tToken = '0123456789ABCDEF';
-  final String tUsername = 'JohnDoe';
-  final AuthenticationData tAuthenticationData = AuthenticationData(
+  final tOrganizationID = 'DEV';
+  final tToken = '0123456789ABCDEF';
+  final tUsername = 'JohnDoe';
+  final tAuthenticationData = AuthenticationData(
       organizationID: tOrganizationID, username: tUsername, token: tToken);
 
+  // AppSettings
+  final tLocationUpdateInterval = 0;
+  final tLocationUpdateMinDistance = 50;
+  final tInfoUpdateInterval = 300;
+  final tAppSettings = AppSettings(
+      locationUpdateInterval: tLocationUpdateInterval,
+      locationUpdateMinDistance: tLocationUpdateMinDistance,
+      infoUpdateInterval: tInfoUpdateInterval);
+
+  // MissionCollection
   final tMissionID = 42;
   final tMissionName = 'TestMission';
   final tMissionStart = DateTime.utc(2020, 1, 1);
@@ -64,6 +78,33 @@ void main() {
     longitude: tLongitude,
   );
   final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
+
+  // UserStateCollection
+  final tUserStateID = 42;
+  final tUserStateName = 'approaching';
+  final tUserStateDescription = 'is on their way';
+  final tUserStateModel = UserState(
+      id: tUserStateID,
+      name: tUserStateName,
+      description: tUserStateDescription);
+  final tUserStateCollection =
+      UserStateCollection(states: <UserState>[tUserStateModel]);
+
+  // UserRoleCollection
+  final tUserRoleID = 42;
+  final tUserRoleName = 'operator';
+  final tUserRoleDescription = 'the one who does stuff';
+  final tUserRole = UserRole(
+      id: tUserRoleID, name: tUserRoleName, description: tUserRoleDescription);
+  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
+
+  // InitializationDataModel
+  final tInitializationData = InitializationData(
+    appSettings: tAppSettings,
+    missionCollection: tMissionCollection,
+    userStateCollection: tUserStateCollection,
+    userRoleCollection: tUserRoleCollection,
+  );
 
   void mockGetAppConnectionSuccess() =>
       when(mockGetAppConnection(any)).thenAnswer((_) async =>
@@ -91,7 +132,7 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(tMissionCollection));
+          .thenAnswer((_) async => Right(tInitializationData));
       // act
       bloc.add(StartFetchingInitializationData());
       await untilCalled(mockGetAppConnection(any));
@@ -107,7 +148,7 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(tMissionCollection));
+          .thenAnswer((_) async => Right(tInitializationData));
       // act
       bloc.add(StartFetchingInitializationData());
       await untilCalled(mockGetAuthenticationData(any));
@@ -158,7 +199,7 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(tMissionCollection));
+          .thenAnswer((_) async => Right(tInitializationData));
       // act
       bloc.add(StartFetchingInitializationData());
       await untilCalled(mockFetchInitializationData(any));
@@ -176,11 +217,11 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(tMissionCollection));
+          .thenAnswer((_) async => Right(tInitializationData));
       // assert
       final expected = [
         InitializationInProgress(),
-        InitializationSuccess(tMissionCollection),
+        InitializationSuccess(tInitializationData),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -272,11 +313,11 @@ void main() {
       mockGetAppConnectionSuccess();
       mockGetAuthenticationDataSuccess();
       when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(tMissionCollection));
+          .thenAnswer((_) async => Right(tInitializationData));
       // assert
       final expected = [
         InitializationInProgress(),
-        InitializationSuccess(tMissionCollection),
+        InitializationSuccess(tInitializationData),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act

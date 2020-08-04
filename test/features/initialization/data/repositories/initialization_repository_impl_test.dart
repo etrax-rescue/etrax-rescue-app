@@ -345,7 +345,7 @@ void main() {
       );
 
       test(
-        'should return MissionCollection if all operations succeed',
+        'should return InitializationData if all operations succeed',
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
@@ -354,7 +354,7 @@ void main() {
           final result = await repository.fetchInitializationData(
               tAppConnection, tAuthenticationData);
           // assert
-          expect(result, equals(Right(tMissionCollectionModel)));
+          expect(result, equals(Right(tInitializationDataModel)));
         },
       );
     });

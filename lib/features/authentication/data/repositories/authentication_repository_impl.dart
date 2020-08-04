@@ -39,15 +39,15 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, None>> login(
-      AppConnection appConnection, String username, String password) async {
+  Future<Either<Failure, None>> login(AppConnection appConnection,
+      String organizationID, String username, String password) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
     AuthenticationDataModel authenticationDataModel;
     try {
-      authenticationDataModel =
-          await remoteLoginDataSource.login(appConnection, username, password);
+      authenticationDataModel = await remoteLoginDataSource.login(
+          appConnection, organizationID, username, password);
     } on ServerException {
       return Left(ServerFailure());
     } on TimeoutException {

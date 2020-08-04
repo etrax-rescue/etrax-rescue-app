@@ -13,22 +13,24 @@ class Login extends UseCase<None, LoginParams> {
 
   @override
   Future<Either<Failure, None>> call(LoginParams params) async {
-    return await repository.login(
-        params.appConnection, params.username, params.password);
+    return await repository.login(params.appConnection, params.organizationID,
+        params.username, params.password);
   }
 }
 
 class LoginParams extends Equatable {
   final AppConnection appConnection;
+  final String organizationID;
   final String username;
   final String password;
 
   LoginParams({
     @required this.appConnection,
+    @required this.organizationID,
     @required this.username,
     @required this.password,
   });
 
   @override
-  List<Object> get props => [appConnection, username, password];
+  List<Object> get props => [appConnection, organizationID, username, password];
 }

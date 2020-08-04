@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import '../features/app_connection/presentation/pages/app_connection_page.dart';
 import '../features/authentication/presentation/pages/login_page.dart';
 import '../features/initialization/domain/entities/missions.dart';
+import '../features/initialization/domain/entities/user_roles.dart';
+import '../features/initialization/domain/entities/user_states.dart';
 import '../features/initialization/presentation/pages/confirmation_page.dart';
 import '../features/initialization/presentation/pages/initialization_page.dart';
 
@@ -67,6 +69,8 @@ class Router extends RouterBase {
         builder: (context) => ConfirmationPage(
           key: args.key,
           mission: args.mission,
+          roles: args.roles,
+          states: args.states,
         ),
         settings: data,
       );
@@ -88,5 +92,11 @@ class MissionPageArguments {
 class ConfirmationPageArguments {
   final Key key;
   final Mission mission;
-  ConfirmationPageArguments({this.key, @required this.mission});
+  final UserRoleCollection roles;
+  final UserStateCollection states;
+  ConfirmationPageArguments(
+      {this.key,
+      @required this.mission,
+      @required this.roles,
+      @required this.states});
 }

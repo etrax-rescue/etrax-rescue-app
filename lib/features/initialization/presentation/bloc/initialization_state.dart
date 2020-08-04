@@ -11,11 +11,11 @@ class InitializationInitial extends InitializationState {}
 class InitializationInProgress extends InitializationState {}
 
 class InitializationSuccess extends InitializationState {
-  final MissionCollection missionCollection;
-  InitializationSuccess(this.missionCollection);
+  final InitializationData initializationData;
+  InitializationSuccess(this.initializationData);
 
   @override
-  List<Object> get props => [missionCollection];
+  List<Object> get props => [initializationData];
 }
 
 class InitializationRecoverableError extends InitializationState {

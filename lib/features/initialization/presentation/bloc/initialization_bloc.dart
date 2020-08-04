@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
@@ -10,6 +9,7 @@ import '../../../../core/types/usecase.dart';
 import '../../../../core/util/translate_error_messages.dart';
 import '../../../app_connection/domain/usecases/get_app_connection.dart';
 import '../../../authentication/domain/usecases/get_authentication_data.dart';
+import '../../domain/entities/initialization_data.dart';
 import '../../domain/usecases/fetch_initialization_data.dart';
 
 part 'initialization_event.dart';
@@ -56,8 +56,8 @@ class InitializationBloc
 
           yield* initializationEither.fold((failure) async* {
             yield _mapFailureToErrorState(failure);
-          }, (missionCollection) async* {
-            yield InitializationSuccess(missionCollection);
+          }, (initializationData) async* {
+            yield InitializationSuccess(initializationData);
           });
         });
       });

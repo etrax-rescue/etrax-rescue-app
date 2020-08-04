@@ -59,6 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }, (appConnection) async* {
         final loginEither = await login(LoginParams(
           appConnection: appConnection,
+          organizationID: event.organizationID,
           username: event.username,
           password: event.password,
         ));

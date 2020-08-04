@@ -27,7 +27,8 @@ void main() {
   final tBasePath = 'appdata';
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
-  final String tOrganizationID = 'DEV';
+
+  final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
   final tToken = '0123456789ABCDEF';
@@ -35,9 +36,9 @@ void main() {
       AuthenticationDataModel(
           organizationID: tOrganizationID, username: tUsername, token: tToken);
 
-  final tID = 'DEV';
   final tName = 'Rettungshunde';
-  final tOrganizationModel = OrganizationModel(id: tID, name: tName);
+  final tOrganizationModel =
+      OrganizationModel(id: tOrganizationID, name: tName);
   final tOrganizationCollectionModel = OrganizationCollectionModel(
       organizations: <OrganizationModel>[tOrganizationModel]);
 
@@ -49,7 +50,8 @@ void main() {
         when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
             (_) async => http.Response(fixture('login/valid.json'), 200));
         // act
-        await remoteDataSource.login(tAppConnection, tUsername, tPassword);
+        await remoteDataSource.login(
+            tAppConnection, tOrganizationID, tUsername, tPassword);
         // assert
         verify(mockedHttpClient.post(
             Uri.https(
@@ -66,7 +68,8 @@ void main() {
             .thenAnswer((_) async => http.Response('', 200));
         final call = remoteDataSource.login;
         // assert
-        expect(() => call(tAppConnection, tUsername, tPassword),
+        expect(
+            () => call(tAppConnection, tOrganizationID, tUsername, tPassword),
             throwsA(TypeMatcher<ServerException>()));
       },
     );
@@ -79,7 +82,8 @@ void main() {
             (_) async => http.Response(fixture('login/invalid.json'), 200));
         final call = remoteDataSource.login;
         // assert
-        expect(() => call(tAppConnection, tUsername, tPassword),
+        expect(
+            () => call(tAppConnection, tOrganizationID, tUsername, tPassword),
             throwsA(TypeMatcher<FormatException>()));
       },
     );
@@ -92,7 +96,8 @@ void main() {
             (_) async => http.Response(fixture('login/valid.json'), 401));
         final call = remoteDataSource.login;
         // assert
-        expect(() => call(tAppConnection, tUsername, tPassword),
+        expect(
+            () => call(tAppConnection, tOrganizationID, tUsername, tPassword),
             throwsA(TypeMatcher<LoginException>()));
       },
     );
@@ -105,7 +110,8 @@ void main() {
             (_) async => http.Response(fixture('login/valid.json'), 404));
         final call = remoteDataSource.login;
         // assert
-        expect(() => call(tAppConnection, tUsername, tPassword),
+        expect(
+            () => call(tAppConnection, tOrganizationID, tUsername, tPassword),
             throwsA(TypeMatcher<ServerException>()));
       },
     );
@@ -117,8 +123,8 @@ void main() {
         when(mockedHttpClient.post(any, body: anyNamed('body'))).thenAnswer(
             (_) async => http.Response(fixture('login/valid.json'), 200));
         // act
-        final result =
-            await remoteDataSource.login(tAppConnection, tUsername, tPassword);
+        final result = await remoteDataSource.login(
+            tAppConnection, tOrganizationID, tUsername, tPassword);
         // assert
         expect(result, tAuthenticationDataModel);
       },

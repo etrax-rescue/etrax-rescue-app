@@ -1,15 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/types/app_connection.dart';
+import '../../../../core/types/authentication_data.dart';
 import '../entities/app_settings.dart';
+import '../entities/initialization_data.dart';
 import '../entities/missions.dart';
 import '../entities/user_roles.dart';
 import '../entities/user_states.dart';
 
 abstract class InitializationRepository {
-  Future<Either<Failure, MissionCollection>> fetchInitializationData(
+  Future<Either<Failure, InitializationData>> fetchInitializationData(
       AppConnection appConnection, AuthenticationData authenticationData);
 
   Future<Either<Failure, MissionCollection>> getMissions();

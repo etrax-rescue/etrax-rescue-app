@@ -7,3 +7,5 @@ abstract class ConfirmationState extends Equatable {
 }
 
 class ConfirmationInitial extends ConfirmationState {}
+
+class ConfirmationSuccess extends ConfirmationState {}

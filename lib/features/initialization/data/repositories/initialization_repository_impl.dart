@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/authentication_data.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/initialization_data.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:flutter/material.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -42,7 +43,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
   });
 
   @override
-  Future<Either<Failure, MissionCollection>> fetchInitializationData(
+  Future<Either<Failure, InitializationData>> fetchInitializationData(
       AppConnection appConnection,
       AuthenticationData authenticationData) async {
     if (!(await networkInfo.isConnected)) {
@@ -84,7 +85,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
       return Left(CacheFailure());
     }
 
-    return Right(initializationData.missionCollectionModel);
+    return Right(initializationData);
   }
 
   @override

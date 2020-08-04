@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/features/initialization/domain/entities/initialization_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -93,9 +94,8 @@ class _MissionPageState extends State<MissionPage> {
                       _refreshCompleter?.complete();
                       _refreshCompleter = Completer();
                       if (state is InitializationSuccess) {
-                        _missionCollection = state.missionCollection;
                         return MissionList(
-                            missionCollection: _missionCollection);
+                            initializationData: state.initializationData);
                       } else if (state is InitializationRecoverableError) {
                         return _createInitialView();
                       } else if (state is InitializationUnrecoverableError) {
@@ -125,7 +125,12 @@ class _MissionPageState extends State<MissionPage> {
   }
 
   Widget _createInitialView() {
-    return MissionList(missionCollection: MissionCollection(missions: []));
+    return MissionList(
+        initializationData: InitializationData(
+            missionCollection: MissionCollection(missions: []),
+            userRoleCollection: null,
+            userStateCollection: null,
+            appSettings: null));
   }
 
   void goToAppConnection() {

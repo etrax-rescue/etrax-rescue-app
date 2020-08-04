@@ -12,8 +12,8 @@ abstract class RemoteLoginDataSource {
   Future<OrganizationCollectionModel> getOrganizations(
       AppConnection appConnection);
 
-  Future<AuthenticationDataModel> login(
-      AppConnection appConnection, String username, String password);
+  Future<AuthenticationDataModel> login(AppConnection appConnection,
+      String organizationID, String username, String password);
 }
 
 class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
@@ -21,8 +21,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   RemoteLoginDataSourceImpl(this.client);
 
   @override
-  Future<AuthenticationDataModel> login(
-      AppConnection appConnection, String username, String password) async {
+  Future<AuthenticationDataModel> login(AppConnection appConnection,
+      String organizationID, String username, String password) async {
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.login),
         body: {'username': username, 'password': password});
@@ -37,6 +37,7 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       }
       final jsonResponse = json.decode(response.body);
       jsonResponse['username'] = username;
+      jsonResponse['organizationID'] = organizationID;
       final data = AuthenticationDataModel.fromJson(jsonResponse);
       return data;
     } else if (response.statusCode == 401) {

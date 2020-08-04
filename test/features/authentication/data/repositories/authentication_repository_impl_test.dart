@@ -51,9 +51,9 @@ void main() {
   final tAuthenticationDataModel = AuthenticationDataModel(
       organizationID: tOrganizationID, username: tUsername, token: tToken);
 
-  final tID = 'DEV';
   final tName = 'Rettungshunde';
-  final tOrganizationModel = OrganizationModel(id: tID, name: tName);
+  final tOrganizationModel =
+      OrganizationModel(id: tOrganizationID, name: tName);
   final tOrganizationCollectionModel = OrganizationCollectionModel(
       organizations: <OrganizationModel>[tOrganizationModel]);
 
@@ -82,7 +82,8 @@ void main() {
         // arrange
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
         // act
-        await repository.login(tAppConnection, tUsername, tPassword);
+        await repository.login(
+            tAppConnection, tOrganizationID, tUsername, tPassword);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -93,8 +94,8 @@ void main() {
         'should return a NetworkFailure when the device is offline',
         () async {
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
           expect(result, equals(Left(NetworkFailure())));
         },
@@ -106,13 +107,14 @@ void main() {
         'should call the RemoteEndpointVerification when the device is online',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           // act
-          await repository.login(tAppConnection, tUsername, tPassword);
+          await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(
-              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
+          verify(mockRemoteDataSource.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword));
           verifyNoMoreInteractions(mockRemoteDataSource);
         },
       );
@@ -121,14 +123,14 @@ void main() {
         'should return ServerFailure when a ServerException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenThrow(ServerException());
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(
-              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
+          verify(mockRemoteDataSource.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -138,14 +140,14 @@ void main() {
         'should return ServerFailure when a TimeoutException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenThrow(TimeoutException(''));
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(
-              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
+          verify(mockRemoteDataSource.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -154,14 +156,14 @@ void main() {
         'should return ServerFailure when a SocketException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenThrow(SocketException(''));
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(
-              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
+          verify(mockRemoteDataSource.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -171,14 +173,14 @@ void main() {
         'should return LoginFailure when a LoginException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenThrow(LoginException());
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(
-              mockRemoteDataSource.login(tAppConnection, tUsername, tPassword));
+          verify(mockRemoteDataSource.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(LoginFailure())));
           verifyZeroInteractions(mockLocalDataSource);
         },
@@ -188,10 +190,11 @@ void main() {
         'should cache the token when the device is online and login succeeds',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           // act
-          await repository.login(tAppConnection, tUsername, tPassword);
+          await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
           verify(mockLocalDataSource
               .cacheAuthenticationData(tAuthenticationDataModel));
@@ -203,11 +206,11 @@ void main() {
         'should return None when the device is online and login succeeds',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
           expect(result, equals(Right(None())));
         },
@@ -217,13 +220,13 @@ void main() {
         'should return CacheFailure when caching fails',
         () async {
           // arrange
-          when(mockRemoteDataSource.login(any, any, any))
+          when(mockRemoteDataSource.login(any, any, any, any))
               .thenAnswer((_) async => tAuthenticationDataModel);
           when(mockLocalDataSource.cacheAuthenticationData(any))
               .thenThrow(CacheException());
           // act
-          final result =
-              await repository.login(tAppConnection, tUsername, tPassword);
+          final result = await repository.login(
+              tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -376,6 +379,7 @@ void main() {
           expect(result, equals(Right(tOrganizationCollectionModel)));
         },
       );
+
       test(
         'should return the cached OrganizationCollectionModel when a SocketException occurs',
         () async {

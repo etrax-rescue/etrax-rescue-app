@@ -22,10 +22,12 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
+  final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
   final tLoginParams = LoginParams(
     appConnection: tAppConnection,
+    organizationID: tOrganizationID,
     username: tUsername,
     password: tPassword,
   );
@@ -33,14 +35,14 @@ void main() {
     'should return None when valid credentials are given',
     () async {
       // arrange
-      when(mockAuthenticationRepository.login(any, any, any))
+      when(mockAuthenticationRepository.login(any, any, any, any))
           .thenAnswer((_) async => Right(None()));
       // act
       final result = await usecase(tLoginParams);
       // assert
       expect(result, Right(None()));
       verify(mockAuthenticationRepository.login(
-          tAppConnection, tUsername, tPassword));
+          tAppConnection, tOrganizationID, tUsername, tPassword));
       verifyNoMoreInteractions(mockAuthenticationRepository);
     },
   );

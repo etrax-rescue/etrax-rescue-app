@@ -5,3 +5,12 @@ abstract class ConfirmationEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class SubmitConfirmation extends ConfirmationEvent {
+  final int userRoleID;
+  final int userStateID;
+  SubmitConfirmation({@required this.userRoleID, @required this.userStateID});
+
+  @override
+  List<Object> get props => [userRoleID, userStateID];
+}

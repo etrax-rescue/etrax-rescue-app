@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../domain/entities/missions.dart';
+import '../../domain/entities/user_roles.dart';
+import '../../domain/entities/user_states.dart';
 import '../widgets/confirmation_form.dart';
 
 class ConfirmationPage extends StatelessWidget {
   final Mission mission;
-  ConfirmationPage({Key key, @required this.mission}) : super(key: key);
+  final UserRoleCollection roles;
+  final UserStateCollection states;
+  ConfirmationPage(
+      {Key key,
+      @required this.mission,
+      @required this.roles,
+      @required this.states})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +28,8 @@ class ConfirmationPage extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: 450),
             child: ConfirmationForm(
               mission: this.mission,
+              roles: roles,
+              states: states,
             ),
           ),
         ),
