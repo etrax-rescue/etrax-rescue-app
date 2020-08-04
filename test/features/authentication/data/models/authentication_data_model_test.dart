@@ -1,17 +1,19 @@
 import 'dart:convert';
 
 import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/entities/authentication_data.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
+  final String tOrganizationID = 'DEV';
   final String tUsername = 'JohnDoe';
   final String tToken = '0123456789ABCDEF';
   final AuthenticationDataModel tAuthenticationDataModel =
-      AuthenticationDataModel(username: tUsername, token: tToken);
+      AuthenticationDataModel(
+          organizationID: tOrganizationID, username: tUsername, token: tToken);
   test(
     'should be a subclass of LoginData entity',
     () async {
@@ -22,7 +24,7 @@ void main() {
 
   group('fromJson', () {
     test(
-      'should throw a FormatException when the json map is missing one of the required fields',
+      'should throw a FormatException when the json map is missing the token field',
       () async {
         // arrange
         final Map<String, dynamic> jsonMap =
@@ -32,6 +34,19 @@ void main() {
             throwsA(TypeMatcher<FormatException>()));
       },
     );
+
+    test(
+      'should throw a FormatException when the json map is missing the organization id field',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap = json.decode(
+            fixture('authentication_data/organization_id_missing.json'));
+        // assert
+        expect(() => AuthenticationDataModel.fromJson(jsonMap),
+            throwsA(TypeMatcher<FormatException>()));
+      },
+    );
+
     test(
       'should return a valid model when only the required fields are provided in the JSON resonse',
       () async {
@@ -54,6 +69,7 @@ void main() {
         final result = tAuthenticationDataModel.toJson();
         // assert
         final expectedMap = {
+          'organizationID': tOrganizationID,
           'username': tUsername,
           'token': tToken,
         };

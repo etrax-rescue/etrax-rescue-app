@@ -5,7 +5,7 @@ import 'package:etrax_rescue_app/features/app_connection/domain/usecases/get_app
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/features/authentication/domain/entities/authentication_data.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:etrax_rescue_app/features/authentication/domain/usecases/get_authentication_data.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
@@ -45,8 +45,11 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
-  final tUsername = 'JohnDoe';
-  final tToken = '0123456789ABCDEF';
+  final String tOrganizationID = 'DEV';
+  final String tToken = '0123456789ABCDEF';
+  final String tUsername = 'JohnDoe';
+  final AuthenticationData tAuthenticationData = AuthenticationData(
+      organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tMissionID = 42;
   final tMissionName = 'TestMission';
@@ -67,8 +70,11 @@ void main() {
           Right(AppConnection(authority: tAuthority, basePath: tBasePath)));
 
   void mockGetAuthenticationDataSuccess() =>
-      when(mockGetAuthenticationData(any)).thenAnswer((_) async =>
-          Right(AuthenticationData(username: tUsername, token: tToken)));
+      when(mockGetAuthenticationData(any)).thenAnswer((_) async => Right(
+          AuthenticationData(
+              organizationID: tOrganizationID,
+              username: tUsername,
+              token: tToken)));
 
   test(
     'should contain proper initial state',
@@ -158,7 +164,8 @@ void main() {
       await untilCalled(mockFetchInitializationData(any));
       // assert
       verify(mockFetchInitializationData(FetchInitializationDataParams(
-          appConnection: tAppConnection, username: tUsername, token: tToken)));
+          appConnection: tAppConnection,
+          authenticationData: tAuthenticationData)));
     },
   );
 

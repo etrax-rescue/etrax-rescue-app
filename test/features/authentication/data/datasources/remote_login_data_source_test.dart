@@ -27,11 +27,13 @@ void main() {
   final tBasePath = 'appdata';
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
+  final String tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
   final tToken = '0123456789ABCDEF';
   final AuthenticationDataModel tAuthenticationDataModel =
-      AuthenticationDataModel(username: tUsername, token: tToken);
+      AuthenticationDataModel(
+          organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tID = 'DEV';
   final tName = 'Rettungshunde';

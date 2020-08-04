@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -14,7 +16,7 @@ import '../models/user_states_model.dart';
 
 abstract class RemoteInitializationDataSource {
   Future<InitializationDataModel> fetchInitialization(
-      AppConnection appConnection, String username, String token);
+      AppConnection appConnection, AuthenticationData authenticationData);
 }
 
 class RemoteInitializationDataSourceImpl
@@ -24,11 +26,11 @@ class RemoteInitializationDataSourceImpl
 
   @override
   Future<InitializationDataModel> fetchInitialization(
-      AppConnection appConnection, String username, String token) async {
-    final authString = base64.encode(utf8.encode('$username:$token'));
+      AppConnection appConnection,
+      AuthenticationData authenticationData) async {
     final request = client.get(
         appConnection.generateUri(subPath: EtraxServerEndpoints.initialization),
-        headers: {HttpHeaders.authorizationHeader: 'Basic $authString'});
+        headers: authenticationData.generateAuthHeader());
 
     final response = await request.timeout(const Duration(seconds: 2));
 

@@ -21,10 +21,11 @@ void main() {
     dataSource = LocalAuthenticationDataSourceImpl(mockSharedPreferences);
   });
 
-  final String tUsername = 'JohnDoe';
-  final String tToken = '0123456789ABCDEF';
-  final AuthenticationDataModel tAuthenticationDataModel =
-      AuthenticationDataModel(username: tUsername, token: tToken);
+  final tOrganizationID = 'DEV';
+  final tUsername = 'JohnDoe';
+  final tToken = '0123456789ABCDEF';
+  final tAuthenticationDataModel = AuthenticationDataModel(
+      organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tID = 'DEV';
   final tName = 'Rettungshunde';

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/usecases/fetch_initialization_data.dart';
@@ -23,12 +24,14 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
+  final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
+  final tAuthenticationData = AuthenticationData(
+      organizationID: tOrganizationID, username: tUsername, token: tToken);
   final tFetchInitializationDataParams = FetchInitializationDataParams(
     appConnection: tAppConnection,
-    username: tUsername,
-    token: tToken,
+    authenticationData: tAuthenticationData,
   );
 
   final tMissionID = 42;
@@ -49,14 +52,14 @@ void main() {
     'should return MissionCollection when fetching data succeeds',
     () async {
       // arrange
-      when(mockInitializationRepository.fetchInitializationData(any, any, any))
+      when(mockInitializationRepository.fetchInitializationData(any, any))
           .thenAnswer((_) async => Right(tMissionCollection));
       // act
       final result = await usecase(tFetchInitializationDataParams);
       // assert
       expect(result, Right(tMissionCollection));
       verify(mockInitializationRepository.fetchInitializationData(
-          tAppConnection, tUsername, tToken));
+          tAppConnection, tAuthenticationData));
       verifyNoMoreInteractions(mockInitializationRepository);
     },
   );

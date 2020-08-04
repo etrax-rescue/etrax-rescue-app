@@ -10,7 +10,7 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/types/app_connection.dart';
-import '../../domain/entities/authentication_data.dart';
+import '../../../../core/types/authentication_data.dart';
 import '../../domain/repositories/authentication_repository.dart';
 import '../datasources/local_authentication_data_source.dart';
 import '../datasources/remote_login_data_source.dart';

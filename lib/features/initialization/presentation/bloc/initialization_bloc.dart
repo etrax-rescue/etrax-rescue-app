@@ -52,8 +52,7 @@ class InitializationBloc
           final initializationEither = await fetchInitializationData(
               FetchInitializationDataParams(
                   appConnection: appConnection,
-                  username: authenticationData.username,
-                  token: authenticationData.token));
+                  authenticationData: authenticationData));
 
           yield* initializationEither.fold((failure) async* {
             yield _mapFailureToErrorState(failure);

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:etrax_rescue_app/features/initialization/domain/entities/missions.dart';
 import 'package:flutter/material.dart';
 
@@ -17,21 +18,19 @@ class FetchInitializationData
   Future<Either<Failure, MissionCollection>> call(
       FetchInitializationDataParams params) async {
     return await repository.fetchInitializationData(
-        params.appConnection, params.username, params.token);
+        params.appConnection, params.authenticationData);
   }
 }
 
 class FetchInitializationDataParams extends Equatable {
   final AppConnection appConnection;
-  final String username;
-  final String token;
+  final AuthenticationData authenticationData;
 
   FetchInitializationDataParams({
     @required this.appConnection,
-    @required this.username,
-    @required this.token,
+    @required this.authenticationData,
   });
 
   @override
-  List<Object> get props => [appConnection, username, token];
+  List<Object> get props => [appConnection, authenticationData];
 }

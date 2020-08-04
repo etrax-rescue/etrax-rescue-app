@@ -6,6 +6,7 @@ import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/remote_initialization_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_states_data_source.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/local_user_roles_data_source.dart';
@@ -68,8 +69,11 @@ void main() {
   final tAppConnection =
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
+  final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
+  final tAuthenticationData = AuthenticationData(
+      organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tLocationUpdateInterval = 0;
   final tLocationUpdateMinDistance = 50;
@@ -122,7 +126,7 @@ void main() {
         when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
         // act
         await repository.fetchInitializationData(
-            tAppConnection, tUsername, tToken);
+            tAppConnection, tAuthenticationData);
         // assert
         verify(mockNetworkInfo.isConnected);
       },
@@ -152,7 +156,7 @@ void main() {
         () async {
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           expect(result, equals(Left(NetworkFailure())));
         },
@@ -164,14 +168,14 @@ void main() {
         'should call the RemoteInitializationDataSource when the device is online',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           // act
           await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tAppConnection, tUsername, tToken));
+              tAppConnection, tAuthenticationData));
           verifyNoMoreInteractions(mockRemoteDataSource);
         },
       );
@@ -180,14 +184,14 @@ void main() {
         'should return ServerFailure when a ServerException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenThrow(ServerException());
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tAppConnection, tUsername, tToken));
+              tAppConnection, tAuthenticationData));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -200,14 +204,14 @@ void main() {
         'should return ServerFailure when a TimeoutException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenThrow(TimeoutException(''));
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tAppConnection, tUsername, tToken));
+              tAppConnection, tAuthenticationData));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -220,14 +224,14 @@ void main() {
         'should return ServerFailure when a SocketException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenThrow(SocketException(''));
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tAppConnection, tUsername, tToken));
+              tAppConnection, tAuthenticationData));
           expect(result, equals(Left(ServerFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -239,14 +243,14 @@ void main() {
         'should return AuthenticationFailure when a AuthenticationException occurs',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenThrow(AuthenticationException());
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           verify(mockRemoteDataSource.fetchInitialization(
-              tAppConnection, tUsername, tToken));
+              tAppConnection, tAuthenticationData));
           expect(result, equals(Left(AuthenticationFailure())));
           verifyZeroInteractions(mockLocalAppSettingsDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
@@ -259,11 +263,11 @@ void main() {
         'should cache the initialization data',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           // act
           await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           verify(mockLocalAppSettingsDataSource
               .storeAppSettings(tInitializationDataModel.appSettingsModel));
@@ -280,13 +284,13 @@ void main() {
         'should return CacheFailure when caching AppSettings fails',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           when(mockLocalAppSettingsDataSource.storeAppSettings(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -296,13 +300,13 @@ void main() {
         'should return CacheFailure when caching UserStates fails',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           when(mockLocalUserStatesDataSource.storeUserStates(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -312,13 +316,13 @@ void main() {
         'should return CacheFailure when caching UserRoles fails',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           when(mockLocalUserRolesDataSource.storeUserRoles(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -328,13 +332,13 @@ void main() {
         'should return CacheFailure when caching Missions fails',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           when(mockLocalMissionsDataSource.insertMissions(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           expect(result, equals(Left(CacheFailure())));
         },
@@ -344,11 +348,11 @@ void main() {
         'should return MissionCollection if all operations succeed',
         () async {
           // arrange
-          when(mockRemoteDataSource.fetchInitialization(any, any, any))
+          when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationDataModel);
           // act
           final result = await repository.fetchInitializationData(
-              tAppConnection, tUsername, tToken);
+              tAppConnection, tAuthenticationData);
           // assert
           expect(result, equals(Right(tMissionCollectionModel)));
         },

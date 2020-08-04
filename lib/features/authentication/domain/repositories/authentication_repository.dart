@@ -3,7 +3,7 @@ import 'package:etrax_rescue_app/features/authentication/domain/entities/organiz
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/types/app_connection.dart';
-import '../entities/authentication_data.dart';
+import '../../../../core/types/authentication_data.dart';
 
 abstract class AuthenticationRepository {
   Future<Either<Failure, None>> login(

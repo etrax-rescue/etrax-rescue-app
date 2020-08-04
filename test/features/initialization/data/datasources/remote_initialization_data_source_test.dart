@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
 import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:etrax_rescue_app/features/initialization/data/datasources/remote_initialization_data_source.dart';
@@ -35,8 +36,11 @@ void main() {
       AppConnection(authority: tAuthority, basePath: tBasePath);
 
   // Authorization
+  final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
+  final tAuthenticationDataModel = AuthenticationData(
+      organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   // AppSettings
   final tLocationUpdateInterval = 0;
@@ -92,7 +96,7 @@ void main() {
   );
 
   test(
-    'should perform a GET request on the /initialization.php endpoint',
+    'should perform a GET request on the initialization endpoint',
     () async {
       // arrange
       when(mockedHttpClient.get(any, headers: anyNamed('headers'))).thenAnswer(
@@ -100,13 +104,12 @@ void main() {
               http.Response(fixture('initialization/valid.json'), 200));
       final uri = tAppConnection.generateUri(
           subPath: EtraxServerEndpoints.initialization);
-      final authString = base64.encode(utf8.encode('$tUsername:$tToken'));
       // act
       await remoteDataSource.fetchInitialization(
-          tAppConnection, tUsername, tToken);
+          tAppConnection, tAuthenticationDataModel);
       // assert
       verify(mockedHttpClient.get(uri,
-          headers: {HttpHeaders.authorizationHeader: 'Basic $authString'}));
+          headers: tAuthenticationDataModel.generateAuthHeader()));
     },
   );
 
@@ -118,7 +121,7 @@ void main() {
           .thenAnswer((_) async => http.Response('', 200));
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tUsername, tToken),
+      expect(() => call(tAppConnection, tAuthenticationDataModel),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -131,7 +134,7 @@ void main() {
           .thenAnswer((_) async => http.Response('', 403));
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tUsername, tToken),
+      expect(() => call(tAppConnection, tAuthenticationDataModel),
           throwsA(TypeMatcher<AuthenticationException>()));
     },
   );
@@ -146,7 +149,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tUsername, tToken),
+      expect(() => call(tAppConnection, tAuthenticationDataModel),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -161,7 +164,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tUsername, tToken),
+      expect(() => call(tAppConnection, tAuthenticationDataModel),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -176,7 +179,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tUsername, tToken),
+      expect(() => call(tAppConnection, tAuthenticationDataModel),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -191,7 +194,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tUsername, tToken),
+      expect(() => call(tAppConnection, tAuthenticationDataModel),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -205,7 +208,7 @@ void main() {
               http.Response(fixture('initialization/valid.json'), 200));
       // act
       final result = await remoteDataSource.fetchInitialization(
-          tAppConnection, tUsername, tToken);
+          tAppConnection, tAuthenticationDataModel);
       // assert
       expect(result, equals(tInitializationDataModel));
     },
