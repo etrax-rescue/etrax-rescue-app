@@ -89,10 +89,10 @@ void main() {
 
   // InitializationDataModel
   final tInitializationDataModel = InitializationDataModel(
-    appSettingsModel: tAppSettingsModel,
-    missionCollectionModel: tMissionCollectionModel,
-    userStateCollectionModel: tUserStateCollectionModel,
-    userRoleCollectionModel: tUserRoleCollectionModel,
+    appSettings: tAppSettingsModel,
+    missionCollection: tMissionCollectionModel,
+    userStateCollection: tUserStateCollectionModel,
+    userRoleCollection: tUserRoleCollectionModel,
   );
 
   test(

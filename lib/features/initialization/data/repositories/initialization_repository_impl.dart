@@ -71,16 +71,16 @@ class InitializationRepositoryImpl implements InitializationRepository {
 
     try {
       localAppSettingsDataSource
-          .storeAppSettings(initializationData.appSettingsModel);
+          .storeAppSettings(initializationData.appSettings);
 
       localUserRolesDataSource
-          .storeUserRoles(initializationData.userRoleCollectionModel);
+          .storeUserRoles(initializationData.userRoleCollection);
 
       localUserStatesDataSource
-          .storeUserStates(initializationData.userStateCollectionModel);
+          .storeUserStates(initializationData.userStateCollection);
 
       localMissionsDataSource
-          .insertMissions(initializationData.missionCollectionModel);
+          .insertMissions(initializationData.missionCollection);
     } on CacheException {
       return Left(CacheFailure());
     }

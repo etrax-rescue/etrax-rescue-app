@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:etrax_rescue_app/features/authentication/data/models/authentication_data_model.dart';
-import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/types/app_connection.dart';
+import '../../../../core/types/authentication_data.dart';
 import '../../../../core/types/etrax_server_endpoints.dart';
 import '../models/app_settings_model.dart';
 import '../models/initialization_data_model.dart';
@@ -42,6 +40,7 @@ class RemoteInitializationDataSourceImpl
       throw ServerException();
     }
     final body = json.decode(response.body);
+
     AppSettingsModel appSettingsModel;
     UserRoleCollectionModel userRoleCollectionModel;
     UserStateCollectionModel userStateCollectionModel;
@@ -57,10 +56,11 @@ class RemoteInitializationDataSourceImpl
     } on FormatException {
       throw ServerException();
     }
+
     return InitializationDataModel(
-        appSettingsModel: appSettingsModel,
-        missionCollectionModel: missionCollectionModel,
-        userStateCollectionModel: userStateCollectionModel,
-        userRoleCollectionModel: userRoleCollectionModel);
+        appSettings: appSettingsModel,
+        missionCollection: missionCollectionModel,
+        userStateCollection: userStateCollectionModel,
+        userRoleCollection: userRoleCollectionModel);
   }
 }

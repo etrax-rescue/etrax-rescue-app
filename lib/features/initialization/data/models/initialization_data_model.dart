@@ -8,23 +8,22 @@ import 'user_roles_model.dart';
 import 'user_states_model.dart';
 
 class InitializationDataModel extends InitializationData {
-  final AppSettingsModel appSettingsModel;
-  final MissionCollectionModel missionCollectionModel;
-  final UserStateCollectionModel userStateCollectionModel;
-  final UserRoleCollectionModel userRoleCollectionModel;
-
   InitializationDataModel({
-    @required this.appSettingsModel,
-    @required this.missionCollectionModel,
-    @required this.userStateCollectionModel,
-    @required this.userRoleCollectionModel,
-  });
+    @required AppSettingsModel appSettings,
+    @required MissionCollectionModel missionCollection,
+    @required UserStateCollectionModel userStateCollection,
+    @required UserRoleCollectionModel userRoleCollection,
+  }) : super(
+            appSettings: appSettings,
+            missionCollection: missionCollection,
+            userStateCollection: userStateCollection,
+            userRoleCollection: userRoleCollection);
 
   @override
   List<Object> get props => [
-        appSettingsModel,
-        missionCollectionModel,
-        userStateCollectionModel,
-        userRoleCollectionModel
+        appSettings,
+        missionCollection,
+        userStateCollection,
+        userRoleCollection,
       ];
 }

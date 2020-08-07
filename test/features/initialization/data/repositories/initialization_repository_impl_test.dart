@@ -112,10 +112,10 @@ void main() {
       UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
 
   final tInitializationDataModel = InitializationDataModel(
-    appSettingsModel: tAppSettingsModel,
-    missionCollectionModel: tMissionCollectionModel,
-    userStateCollectionModel: tUserStateCollectionModel,
-    userRoleCollectionModel: tUserRoleCollectionModel,
+    appSettings: tAppSettingsModel,
+    missionCollection: tMissionCollectionModel,
+    userStateCollection: tUserStateCollectionModel,
+    userRoleCollection: tUserRoleCollectionModel,
   );
 
   group('fetchInitializationData', () {
@@ -270,13 +270,13 @@ void main() {
               tAppConnection, tAuthenticationData);
           // assert
           verify(mockLocalAppSettingsDataSource
-              .storeAppSettings(tInitializationDataModel.appSettingsModel));
-          verify(mockLocalUserStatesDataSource.storeUserStates(
-              tInitializationDataModel.userStateCollectionModel));
-          verify(mockLocalUserRolesDataSource.storeUserRoles(
-              tInitializationDataModel.userRoleCollectionModel));
+              .storeAppSettings(tInitializationDataModel.appSettings));
+          verify(mockLocalUserStatesDataSource
+              .storeUserStates(tInitializationDataModel.userStateCollection));
+          verify(mockLocalUserRolesDataSource
+              .storeUserRoles(tInitializationDataModel.userRoleCollection));
           verify(mockLocalMissionsDataSource
-              .insertMissions(tInitializationDataModel.missionCollectionModel));
+              .insertMissions(tInitializationDataModel.missionCollection));
         },
       );
 
