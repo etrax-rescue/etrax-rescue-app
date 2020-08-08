@@ -43,7 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "MISSIONS" : MessageLookupByLibrary.simpleMessage("Einsätze"),
     "MISSION_LOCATION" : MessageLookupByLibrary.simpleMessage("Einsatzort"),
     "MISSION_NAME" : MessageLookupByLibrary.simpleMessage("Einsatzbezeichnung"),
-    "MISSION_START" : MessageLookupByLibrary.simpleMessage("Alarmierung"),
+    "MISSION_START" : MessageLookupByLibrary.simpleMessage("Alarmierungsdatum"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ihr Gerät ist offline."),
     "ORGANIZATION" : MessageLookupByLibrary.simpleMessage("Organisation"),
     "PASSWORD" : MessageLookupByLibrary.simpleMessage("Passwort"),

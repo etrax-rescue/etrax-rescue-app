@@ -16,7 +16,10 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (_) => sl<LoginBloc>(), child: LoginScreen());
+    return BlocProvider(
+      create: (_) => sl<LoginBloc>()..add(InitializeLogin()),
+      child: LoginScreen(),
+    );
   }
 }
 
@@ -48,14 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ExtendedNavigator.of(context).popAndPush('/mission-page');
             } else if (state is RequestedAppConnectionUpdate) {
               ExtendedNavigator.of(context).popAndPush('/');
-            }
-          },
-          builder: (context, state) {
-            if (state is LoginInitial) {
-              BlocProvider.of<LoginBloc>(context).add(InitializeLogin());
             } else if (state is LoginReady) {
               _organizations = state.organizationCollection;
             }
+          },
+          builder: (context, state) {
             if (_organizations != null) {
               return Center(
                 child: SingleChildScrollView(

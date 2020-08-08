@@ -25,7 +25,7 @@
     "LONGITUDE": "Longitude",
     "SHOW_ON_MAP": "Auf Karte anzeigen",
     "MISSION_LOCATION": "Einsatzort",
-    "MISSION_START": "Alarmierung",
+    "MISSION_START": "Alarmierungsdatum",
     "FUNCTION": "Funktion",
 
     "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",
