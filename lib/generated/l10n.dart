@@ -283,6 +283,16 @@ class S {
     );
   }
 
+  /// `Settings`
+  String get SETTINGS {
+    return Intl.message(
+      'Settings',
+      name: 'SETTINGS',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `A unexpected error occured.`
   String get UNEXPECTED_FAILURE_MESSAGE {
     return Intl.message(

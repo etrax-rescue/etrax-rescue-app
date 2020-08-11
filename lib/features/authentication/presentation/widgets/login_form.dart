@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/util/translate_error_messages.dart';
 import '../../../../generated/l10n.dart';
 import '../bloc/login_bloc.dart';
-import '../../../../common/widgets/popup_menu.dart';
 
 class LoginForm extends StatefulWidget {
   final OrganizationCollection organizationCollection;

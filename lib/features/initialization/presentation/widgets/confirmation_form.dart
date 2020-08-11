@@ -117,7 +117,7 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      Navigator.of(context).pop('/confirmation-page');
+      Navigator.of(context).pop();
       Navigator.of(context).pushReplacementNamed('/home-page');
     }
   }

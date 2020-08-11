@@ -77,8 +77,11 @@ class Router extends RouterBase {
       );
     },
     HomePage: (data) {
+      var args = data.getArgs<HomePageArguments>(
+        orElse: () => HomePageArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const HomePage(),
+        builder: (context) => HomePage(key: args.key),
         settings: data,
       );
     },
@@ -100,4 +103,10 @@ class ConfirmationPageArguments {
       @required this.mission,
       @required this.roles,
       @required this.states});
+}
+
+/// HomePage arguments holder class
+class HomePageArguments {
+  final Key key;
+  HomePageArguments({this.key});
 }

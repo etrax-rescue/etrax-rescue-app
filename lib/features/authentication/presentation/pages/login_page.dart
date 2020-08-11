@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/widgets/background.dart';
 import '../../../../common/widgets/centered_card_view.dart';
-import '../../../../common/widgets/popup_menu.dart';
+import '../widgets/relink_popup_menu.dart';
 import '../../../../generated/l10n.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/organizations.dart';

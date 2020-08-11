@@ -11,8 +11,12 @@ void main() {
   final tID = 42;
   final tName = 'approaching';
   final tDescription = 'is on their way';
-  final tUserStateModel =
-      UserStateModel(id: tID, name: tName, description: tDescription);
+  final tLocationAccuracy = 2;
+  final tUserStateModel = UserStateModel(
+      id: tID,
+      name: tName,
+      description: tDescription,
+      locationAccuracy: tLocationAccuracy);
   final tUserStateCollectionModel =
       UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
 
@@ -50,12 +54,28 @@ void main() {
       );
 
       test(
+        'should throw a FormatException when the UserStateModel has no locationAccuracy field',
+        () async {
+          // arrange
+          final Map<String, dynamic> jsonMap =
+              json.decode(fixture('user_state/no_location_accuracy.json'));
+          // act & assert
+          expect(() => UserStateModel.fromJson(jsonMap),
+              throwsA(TypeMatcher<FormatException>()));
+        },
+      );
+
+      test(
         'should return a valid model when the UserStateModel has no description field',
         () async {
           // arrange
           final Map<String, dynamic> jsonMap =
               json.decode(fixture('user_state/no_description.json'));
-          final tModel = UserStateModel(id: tID, name: tName, description: '');
+          final tModel = UserStateModel(
+              id: tID,
+              name: tName,
+              description: '',
+              locationAccuracy: tLocationAccuracy);
           // act
           final result = UserStateModel.fromJson(jsonMap);
           // assert
@@ -88,6 +108,7 @@ void main() {
             'id': tID,
             'name': tName,
             'description': tDescription,
+            'locationAccuracy': tLocationAccuracy,
           };
           expect(result, expectedJsonMap);
         },
@@ -168,6 +189,7 @@ void main() {
                 'id': tID,
                 'name': tName,
                 'description': tDescription,
+                'locationAccuracy': tLocationAccuracy,
               },
             ],
           };

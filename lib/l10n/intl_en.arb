@@ -28,6 +28,8 @@
     "MISSION_START": "Begin",
     "FUNCTION": "Function",
 
+    "SETTINGS": "Settings",
+
     "UNEXPECTED_FAILURE_MESSAGE": "A unexpected error occured.",
     "NETWORK_FAILURE_MESSAGE": "Your device is offline.",
     "SERVER_URL_FAILURE_MESSAGE": "Either the provided URI doesn't point to a valid eTrax|rescue Server,\n or the server is not reachable at the moment.",

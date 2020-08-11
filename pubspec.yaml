@@ -40,6 +40,7 @@ dependencies:
   path: ^1.7.0
   maps_launcher: ^1.2.1
   flutter_speed_dial: ^1.2.5
+  flutter_map: ^0.10.1+1
 
 dev_dependencies:
   flutter_test:

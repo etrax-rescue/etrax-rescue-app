@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../generated/l10n.dart';
+import '../../../../generated/l10n.dart';
 
 enum PopupChoices {
   relink,

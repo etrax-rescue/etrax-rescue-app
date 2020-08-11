@@ -16,13 +16,15 @@ class UserState extends Equatable {
   final int id;
   final String name;
   final String description;
+  final int locationAccuracy;
 
   UserState({
     @required this.id,
     @required this.name,
     @required this.description,
+    @required this.locationAccuracy,
   });
 
   @override
-  List<Object> get props => [id, name, description];
+  List<Object> get props => [id, name, description, locationAccuracy];
 }

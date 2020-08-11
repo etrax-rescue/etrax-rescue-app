@@ -8,7 +8,8 @@
     {
         "id": 42,
         "name": "approaching",
-        "description": "is on their way"
+        "description": "is on their way",
+        "locationAccuracy": 2
     }
   ],
   "missions": [

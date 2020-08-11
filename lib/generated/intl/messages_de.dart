@@ -51,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "RETRY" : MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
     "SERVER_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der Server ist derzeit nicht erreichbar."),
     "SERVER_URL_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der angegebene URL zeigt zu keinem eTrax|rescue Server, bzw. dieser ist derzeit nicht erreichbar."),
+    "SETTINGS" : MessageLookupByLibrary.simpleMessage("Einstellungen"),
     "SHOW_ON_MAP" : MessageLookupByLibrary.simpleMessage("Auf Karte anzeigen"),
     "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ein unerwarteter Fehler ist aufgetreten."),
     "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername")

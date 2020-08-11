@@ -33,14 +33,24 @@ class UserStateCollectionModel extends UserStateCollection {
 
 class UserStateModel extends UserState {
   UserStateModel(
-      {@required int id, @required String name, @required String description})
-      : super(id: id, name: name, description: description);
+      {@required int id,
+      @required String name,
+      @required String description,
+      @required int locationAccuracy})
+      : super(
+            id: id,
+            name: name,
+            description: description,
+            locationAccuracy: locationAccuracy);
 
   factory UserStateModel.fromJson(Map<String, dynamic> json) {
     return UserStateModel(
         id: json['id'] == null ? throw FormatException() : json['id'],
         name: json['name'] == null ? throw FormatException() : json['name'],
-        description: json['description'] == null ? '' : json['description']);
+        description: json['description'] == null ? '' : json['description'],
+        locationAccuracy: json['locationAccuracy'] == null
+            ? throw FormatException()
+            : json['locationAccuracy']);
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +58,7 @@ class UserStateModel extends UserState {
       'id': this.id,
       'name': this.name,
       'description': this.description,
+      'locationAccuracy': this.locationAccuracy,
     };
   }
 }

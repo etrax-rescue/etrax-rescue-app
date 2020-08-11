@@ -21,7 +21,12 @@ void main() {
   final tID = 42;
   final tName = 'TestMission';
   final tDescription = 'asdf';
-  final tState = UserState(id: tID, name: tName, description: tDescription);
+  final tLocationAccuracy = 2;
+  final tState = UserState(
+      id: tID,
+      name: tName,
+      description: tDescription,
+      locationAccuracy: tLocationAccuracy);
   final tStateCollection = UserStateCollection(states: <UserState>[tState]);
 
   test(

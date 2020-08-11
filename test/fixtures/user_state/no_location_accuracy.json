@@ -1,6 +1,5 @@
-
 {
     "id": 42,
     "name": "approaching",
-    "locationAccuracy": 2
+    "description": "is on their way"
 }

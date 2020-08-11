@@ -101,8 +101,12 @@ void main() {
   final tID = 42;
   final tName = 'approaching';
   final tDescription = 'is on its way';
-  final tUserStateModel =
-      UserStateModel(id: tID, name: tName, description: tDescription);
+  final tLocationAccuracy = 2;
+  final tUserStateModel = UserStateModel(
+      id: tID,
+      name: tName,
+      description: tDescription,
+      locationAccuracy: tLocationAccuracy);
   final tUserStateCollectionModel =
       UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
 
