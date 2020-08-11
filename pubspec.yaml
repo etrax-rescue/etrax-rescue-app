@@ -39,6 +39,7 @@ dependencies:
   moor_flutter: ^3.1.0
   path: ^1.7.0
   maps_launcher: ^1.2.1
+  flutter_speed_dial: ^1.2.5
 
 dev_dependencies:
   flutter_test:
@@ -51,11 +52,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   fonts:
-  - family:  CustomMaterialIcons
-    fonts:
-     - asset: fonts/CustomMaterialIcons.ttf
+    - family: CustomMaterialIcons
+      fonts:
+        - asset: fonts/CustomMaterialIcons.ttf
   assets:
     - assets/images/background.jpg
 
 flutter_intl:
   enabled: true
+

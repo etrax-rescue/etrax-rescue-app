@@ -57,9 +57,8 @@ class _MissionListState extends State<MissionList> {
       },
       child: BlocListener<InitializationBloc, InitializationState>(
         listener: (context, state) {
-          if (state is InitializationInitial) {
-            return;
-          } else if (state is InitializationInProgress) {
+          if (state is InitializationInitial ||
+              state is InitializationInProgress) {
             return;
           }
           _refreshCompleter?.complete();
@@ -101,19 +100,23 @@ class _MissionListState extends State<MissionList> {
             return Card(
               child: InkWell(
                 onTap: () {
-                  ExtendedNavigator.of(context).push('/confirmation-page',
-                      arguments: ConfirmationPageArguments(
-                          mission: initializationData
-                              .missionCollection.missions[index],
-                          states: initializationData.userStateCollection,
-                          roles: initializationData.userRoleCollection));
+                  ExtendedNavigator.of(context).push(
+                    '/confirmation-page',
+                    arguments: ConfirmationPageArguments(
+                      mission:
+                          initializationData.missionCollection.missions[index],
+                      states: initializationData.userStateCollection,
+                      roles: initializationData.userRoleCollection,
+                    ),
+                  );
                 },
                 child: ListTile(
                   title: Text(initializationData
                       .missionCollection.missions[index].name),
-                  subtitle: Text(DateFormat('dd.MM.yyyy - HH:mm').format(
-                      initializationData
-                          .missionCollection.missions[index].start)),
+                  subtitle: Text(
+                    DateFormat('dd.MM.yyyy - HH:mm').format(initializationData
+                        .missionCollection.missions[index].start),
+                  ),
                   trailing: Icon(Icons.chevron_right),
                 ),
               ),

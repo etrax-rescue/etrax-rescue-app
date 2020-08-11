@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -116,7 +117,8 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      print(selectedRoleID);
+      Navigator.of(context).pop('/confirmation-page');
+      Navigator.of(context).pushReplacementNamed('/home-page');
     }
   }
 }

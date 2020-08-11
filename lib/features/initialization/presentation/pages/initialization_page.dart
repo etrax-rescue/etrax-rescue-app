@@ -23,7 +23,14 @@ class MissionPage extends StatelessWidget {
           title: Text(S.of(context).MISSIONS),
         ),
         backgroundColor: Theme.of(context).backgroundColor,
-        floatingActionButton: _createLogoutFab(context),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            ExtendedNavigator.of(context).popAndPush('/login-page');
+          },
+          label: Text(S.of(context).LOGOUT),
+          icon: Icon(CustomMaterialIcons.logout_24px),
+          backgroundColor: Theme.of(context).accentColor,
+        ),
         body: Background(
           child: Container(
             alignment: Alignment.center,
@@ -31,17 +38,6 @@ class MissionPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _createLogoutFab(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        ExtendedNavigator.of(context).popAndPush('/login-page');
-      },
-      label: Text(S.of(context).LOGOUT),
-      icon: Icon(CustomMaterialIcons.logout_24px),
-      backgroundColor: Theme.of(context).accentColor,
     );
   }
 }

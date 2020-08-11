@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 
 import '../features/app_connection/presentation/pages/app_connection_page.dart';
 import '../features/authentication/presentation/pages/login_page.dart';
+import '../features/home/presentation/pages/home_page.dart';
 import '../features/initialization/domain/entities/missions.dart';
 import '../features/initialization/domain/entities/user_roles.dart';
 import '../features/initialization/domain/entities/user_states.dart';
@@ -22,11 +23,13 @@ class Routes {
   static const String loginPage = '/login-page';
   static const String missionPage = '/mission-page';
   static const String confirmationPage = '/confirmation-page';
+  static const String homePage = '/home-page';
   static const all = <String>{
     appConnectionPage,
     loginPage,
     missionPage,
     confirmationPage,
+    homePage,
   };
 }
 
@@ -38,6 +41,7 @@ class Router extends RouterBase {
     RouteDef(Routes.loginPage, page: LoginPage),
     RouteDef(Routes.missionPage, page: MissionPage),
     RouteDef(Routes.confirmationPage, page: ConfirmationPage),
+    RouteDef(Routes.homePage, page: HomePage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -55,11 +59,8 @@ class Router extends RouterBase {
       );
     },
     MissionPage: (data) {
-      var args = data.getArgs<MissionPageArguments>(
-        orElse: () => MissionPageArguments(),
-      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => MissionPage(key: args.key),
+        builder: (context) => const MissionPage(),
         settings: data,
       );
     },
@@ -75,18 +76,18 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    HomePage: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const HomePage(),
+        settings: data,
+      );
+    },
   };
 }
 
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
-
-/// MissionPage arguments holder class
-class MissionPageArguments {
-  final Key key;
-  MissionPageArguments({this.key});
-}
 
 /// ConfirmationPage arguments holder class
 class ConfirmationPageArguments {
