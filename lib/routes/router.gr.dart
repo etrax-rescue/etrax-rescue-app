@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../features/app_connection/presentation/pages/app_connection_page.dart';
 import '../features/authentication/presentation/pages/login_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
+import '../features/home/presentation/pages/photo_page.dart';
 import '../features/initialization/domain/entities/missions.dart';
 import '../features/initialization/domain/entities/user_roles.dart';
 import '../features/initialization/domain/entities/user_states.dart';
@@ -24,12 +25,14 @@ class Routes {
   static const String missionPage = '/mission-page';
   static const String confirmationPage = '/confirmation-page';
   static const String homePage = '/home-page';
+  static const String submitImagePage = '/submit-image-page';
   static const all = <String>{
     appConnectionPage,
     loginPage,
     missionPage,
     confirmationPage,
     homePage,
+    submitImagePage,
   };
 }
 
@@ -42,6 +45,7 @@ class Router extends RouterBase {
     RouteDef(Routes.missionPage, page: MissionPage),
     RouteDef(Routes.confirmationPage, page: ConfirmationPage),
     RouteDef(Routes.homePage, page: HomePage),
+    RouteDef(Routes.submitImagePage, page: SubmitImagePage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -85,6 +89,15 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    SubmitImagePage: (data) {
+      var args = data.getArgs<SubmitImagePageArguments>(
+        orElse: () => SubmitImagePageArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => SubmitImagePage(key: args.key),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -109,4 +122,10 @@ class ConfirmationPageArguments {
 class HomePageArguments {
   final Key key;
   HomePageArguments({this.key});
+}
+
+/// SubmitImagePage arguments holder class
+class SubmitImagePageArguments {
+  final Key key;
+  SubmitImagePageArguments({this.key});
 }

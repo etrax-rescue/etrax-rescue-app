@@ -33,6 +33,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `eTrax|rescue`
+  String get APP_NAME {
+    return Intl.message(
+      'eTrax|rescue',
+      name: 'APP_NAME',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `required`
   String get FIELD_REQUIRED {
     return Intl.message(
@@ -288,6 +298,186 @@ class S {
     return Intl.message(
       'Settings',
       name: 'SETTINGS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a photo`
+  String get TAKE_PHOTO {
+    return Intl.message(
+      'Take a photo',
+      name: 'TAKE_PHOTO',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change status`
+  String get CHANGE_STATUS {
+    return Intl.message(
+      'Change status',
+      name: 'CHANGE_STATUS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leave`
+  String get LEAVE_MISSION {
+    return Intl.message(
+      'Leave',
+      name: 'LEAVE_MISSION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Informationen`
+  String get HEADING_INFO {
+    return Intl.message(
+      'Informationen',
+      name: 'HEADING_INFO',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GPS Details`
+  String get HEADING_GPS {
+    return Intl.message(
+      'GPS Details',
+      name: 'HEADING_GPS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map View`
+  String get HEADING_MAP {
+    return Intl.message(
+      'Map View',
+      name: 'HEADING_MAP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Info`
+  String get HEADING_INFO_SHORT {
+    return Intl.message(
+      'Info',
+      name: 'HEADING_INFO_SHORT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GPS`
+  String get HEADING_GPS_SHORT {
+    return Intl.message(
+      'GPS',
+      name: 'HEADING_GPS_SHORT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map`
+  String get HEADING_MAP_SHORT {
+    return Intl.message(
+      'Map',
+      name: 'HEADING_MAP_SHORT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `State: `
+  String get STATUS_DISPLAY {
+    return Intl.message(
+      'State: ',
+      name: 'STATUS_DISPLAY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit POI`
+  String get SUBMIT_POI {
+    return Intl.message(
+      'Submit POI',
+      name: 'SUBMIT_POI',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `POI Description`
+  String get POI_DESCRIPTION {
+    return Intl.message(
+      'POI Description',
+      name: 'POI_DESCRIPTION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Datetime`
+  String get DATETIME {
+    return Intl.message(
+      'Datetime',
+      name: 'DATETIME',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Altitude`
+  String get ALTITUDE {
+    return Intl.message(
+      'Altitude',
+      name: 'ALTITUDE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Accuracy`
+  String get ACCURACY {
+    return Intl.message(
+      'Accuracy',
+      name: 'ACCURACY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speed`
+  String get SPEED {
+    return Intl.message(
+      'Speed',
+      name: 'SPEED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speed accuracy`
+  String get SPEED_ACCURACY {
+    return Intl.message(
+      'Speed accuracy',
+      name: 'SPEED_ACCURACY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Heading`
+  String get HEADING {
+    return Intl.message(
+      'Heading',
+      name: 'HEADING',
       desc: '',
       args: [],
     );

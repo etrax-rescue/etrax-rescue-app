@@ -1,4 +1,5 @@
 {
+    "APP_NAME": "eTrax|rescue",
     "FIELD_REQUIRED": "Pflichtfeld",
     "BACK": "Zurück",
     "RETRY": "Erneut versuchen",
@@ -29,6 +30,26 @@
     "FUNCTION": "Funktion",
 
     "SETTINGS": "Einstellungen",
+    "TAKE_PHOTO": "Foto aufnehmen",
+    "CHANGE_STATUS": "Status ändern",
+    "LEAVE_MISSION": "Einsatz verlassen",
+    "HEADING_INFO": "Informationen",
+    "HEADING_GPS": "GPS Details",
+    "HEADING_MAP": "Kartenansicht",
+    "HEADING_INFO_SHORT": "Info",
+    "HEADING_GPS_SHORT": "GPS",
+    "HEADING_MAP_SHORT": "Karte",
+    "STATUS_DISPLAY": "Status: ",
+
+    "SUBMIT_POI": "POI Hochladen",
+    "POI_DESCRIPTION": "POI Beschreibung",
+
+    "DATETIME": "Zeitpunkt",
+    "ALTITUDE": "Altitude",
+    "ACCURACY": "Genauigkeit",
+    "SPEED": "Geschwindigkeit",
+    "SPEED_ACCURACY": "Geschwindigkeits-Genauigkeit",
+    "HEADING": "Richtung",
 
     "UNEXPECTED_FAILURE_MESSAGE": "Ein unerwarteter Fehler ist aufgetreten.",
     "NETWORK_FAILURE_MESSAGE": "Ihr Gerät ist offline.",
