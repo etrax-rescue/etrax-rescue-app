@@ -33,7 +33,7 @@ dependencies:
   # Location data Source
   background_location:
     git:
-      url: git@github.com:yozoon/flutter_background_location.git
+      url: git@github.com:yozoon/background_location.git
   auto_route: ^0.6.6
   flutter_i18n: ^0.18.0
   moor_flutter: ^3.1.0

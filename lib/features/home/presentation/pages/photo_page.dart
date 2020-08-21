@@ -26,8 +26,8 @@ class _SubmitImagePageState extends State<SubmitImagePage> {
   }
 
   void pickImage() async {
-    PickedFile pickedFile =
-        await _imagePicker.getImage(source: ImageSource.camera, maxWidth: 1920);
+    PickedFile pickedFile = await _imagePicker.getImage(
+        source: ImageSource.camera, maxWidth: 1920, imageQuality: 92);
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
       if (imageFile == null) {
@@ -74,11 +74,14 @@ class _SubmitImagePageState extends State<SubmitImagePage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return FullScreenImagePreview(
-                                  image: snapshot.data);
-                            }));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return FullScreenImagePreview(
+                                      image: snapshot.data);
+                                },
+                              ),
+                            );
                           },
                           child: Hero(
                             tag: 'preview',
