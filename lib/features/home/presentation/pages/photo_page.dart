@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
 
 import '../../../../generated/l10n.dart';
 
@@ -16,7 +17,7 @@ class _SubmitImagePageState extends State<SubmitImagePage> {
   final _imagePicker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   final Color _alphaColor = const Color.fromARGB(128, 0, 0, 0);
-  Completer<File> _imageCompleter = Completer<File>();
+  Completer<FileImage> _imageCompleter = Completer<FileImage>();
 
   @override
   void initState() {
@@ -26,13 +27,14 @@ class _SubmitImagePageState extends State<SubmitImagePage> {
 
   void pickImage() async {
     PickedFile pickedFile =
-        await _imagePicker.getImage(source: ImageSource.camera);
+        await _imagePicker.getImage(source: ImageSource.camera, maxWidth: 1920);
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
       if (imageFile == null) {
         Navigator.of(context).pop();
       }
-      _imageCompleter.complete(imageFile);
+      print(imageFile.path);
+      _imageCompleter.complete(FileImage(imageFile));
     } else {
       Navigator.of(context).pop();
     }
@@ -58,15 +60,30 @@ class _SubmitImagePageState extends State<SubmitImagePage> {
         children: [
           Center(
             child: SingleChildScrollView(
-              child: FutureBuilder<File>(
+              child: FutureBuilder<FileImage>(
                 future: _imageCompleter.future,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return Stack(
                       children: <Widget>[
-                        Center(child: CircularProgressIndicator()),
-                        Image.file(
-                          snapshot.data,
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return FullScreenImagePreview(
+                                  image: snapshot.data);
+                            }));
+                          },
+                          child: Hero(
+                            tag: 'preview',
+                            child: Image(image: snapshot.data),
+                          ),
                         ),
                       ],
                     );
@@ -112,6 +129,30 @@ class _SubmitImagePageState extends State<SubmitImagePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class FullScreenImagePreview extends StatelessWidget {
+  final FileImage image;
+  const FullScreenImagePreview({Key key, @required this.image})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: PhotoView(
+            imageProvider: image,
+            heroAttributes: PhotoViewHeroAttributes(tag: 'preview'),
+          ),
+        ),
       ),
     );
   }

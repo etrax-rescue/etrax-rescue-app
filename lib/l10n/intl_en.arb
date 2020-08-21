@@ -29,6 +29,10 @@
     "MISSION_START": "Begin",
     "FUNCTION": "Function",
 
+    "STATE_HEADING": "Update State",
+    "STATE": "State",
+    "UPDATE_STATE": "Update",
+
     "SETTINGS": "Settings",
     "TAKE_PHOTO": "Take a photo",
     "CHANGE_STATUS": "Change status",

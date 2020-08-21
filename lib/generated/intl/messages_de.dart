@@ -69,10 +69,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "SHOW_ON_MAP" : MessageLookupByLibrary.simpleMessage("Auf Karte anzeigen"),
     "SPEED" : MessageLookupByLibrary.simpleMessage("Geschwindigkeit"),
     "SPEED_ACCURACY" : MessageLookupByLibrary.simpleMessage("Geschwindigkeits-Genauigkeit"),
+    "STATE" : MessageLookupByLibrary.simpleMessage("Status"),
+    "STATE_HEADING" : MessageLookupByLibrary.simpleMessage("Status Aktualisieren"),
     "STATUS_DISPLAY" : MessageLookupByLibrary.simpleMessage("Status: "),
     "SUBMIT_POI" : MessageLookupByLibrary.simpleMessage("POI Hochladen"),
     "TAKE_PHOTO" : MessageLookupByLibrary.simpleMessage("Foto aufnehmen"),
     "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ein unerwarteter Fehler ist aufgetreten."),
+    "UPDATE_STATE" : MessageLookupByLibrary.simpleMessage("Aktualisieren"),
     "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername")
   };
 }

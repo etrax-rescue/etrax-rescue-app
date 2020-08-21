@@ -293,6 +293,36 @@ class S {
     );
   }
 
+  /// `Update State`
+  String get STATE_HEADING {
+    return Intl.message(
+      'Update State',
+      name: 'STATE_HEADING',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `State`
+  String get STATE {
+    return Intl.message(
+      'State',
+      name: 'STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update`
+  String get UPDATE_STATE {
+    return Intl.message(
+      'Update',
+      name: 'UPDATE_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get SETTINGS {
     return Intl.message(

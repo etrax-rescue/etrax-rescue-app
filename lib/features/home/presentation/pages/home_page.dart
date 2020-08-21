@@ -151,6 +151,7 @@ class _HomePageState extends State<HomePage>
 
   void _updateState() {
     print('update state');
+    ExtendedNavigator.of(context).push('/update-state-page');
   }
 
   void _takePhoto() async {

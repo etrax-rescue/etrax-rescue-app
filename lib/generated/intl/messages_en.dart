@@ -69,10 +69,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "SHOW_ON_MAP" : MessageLookupByLibrary.simpleMessage("Show on map"),
     "SPEED" : MessageLookupByLibrary.simpleMessage("Speed"),
     "SPEED_ACCURACY" : MessageLookupByLibrary.simpleMessage("Speed accuracy"),
+    "STATE" : MessageLookupByLibrary.simpleMessage("State"),
+    "STATE_HEADING" : MessageLookupByLibrary.simpleMessage("Update State"),
     "STATUS_DISPLAY" : MessageLookupByLibrary.simpleMessage("State: "),
     "SUBMIT_POI" : MessageLookupByLibrary.simpleMessage("Submit POI"),
     "TAKE_PHOTO" : MessageLookupByLibrary.simpleMessage("Take a photo"),
     "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("A unexpected error occured."),
+    "UPDATE_STATE" : MessageLookupByLibrary.simpleMessage("Update"),
     "USERNAME" : MessageLookupByLibrary.simpleMessage("Username")
   };
 }

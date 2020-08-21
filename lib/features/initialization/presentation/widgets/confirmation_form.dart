@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/routes/router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -20,19 +21,12 @@ class ConfirmationForm extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ConfirmationFormState createState() =>
-      _ConfirmationFormState(mission: mission, roles: roles, states: states);
+  _ConfirmationFormState createState() => _ConfirmationFormState();
 }
 
 class _ConfirmationFormState extends State<ConfirmationForm> {
-  final Mission mission;
-  final UserRoleCollection roles;
-  final UserStateCollection states;
   final _formKey = GlobalKey<FormState>();
   int selectedRoleID;
-
-  _ConfirmationFormState(
-      {@required this.mission, @required this.roles, @required this.states});
 
   @override
   Widget build(BuildContext context) {
@@ -52,14 +46,14 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
             title: Text(
               S.of(context).MISSION_NAME,
             ),
-            subtitle: Text(mission.name + '\n'),
+            subtitle: Text(widget.mission.name + '\n'),
           ),
           ListTile(
             title: Text(
               S.of(context).MISSION_START,
             ),
-            subtitle:
-                Text(DateFormat('dd.MM.yyyy - HH:mm\n').format(mission.start)),
+            subtitle: Text(DateFormat('dd.MM.yyyy - HH:mm\n')
+                .format(widget.mission.start)),
           ),
           ListTile(
             title: Text(
@@ -69,14 +63,14 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('${S.of(context).LATITUDE}: ${mission.latitude}'),
-                Text('${S.of(context).LONGITUDE}: ${mission.longitude}'),
+                Text('${S.of(context).LATITUDE}: ${widget.mission.latitude}'),
+                Text('${S.of(context).LONGITUDE}: ${widget.mission.longitude}'),
               ],
             ),
             trailing: InkWell(
               child: Icon(Icons.launch),
               onTap: () => MapsLauncher.launchCoordinates(
-                  mission.latitude, mission.longitude),
+                  widget.mission.latitude, widget.mission.longitude),
             ),
           ),
           ListTile(
@@ -85,7 +79,7 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
               decoration: InputDecoration(
                 labelText: S.of(context).FUNCTION,
               ),
-              items: roles.roles.map((UserRole role) {
+              items: widget.roles.roles.map((UserRole role) {
                 return DropdownMenuItem<int>(
                   value: role.id,
                   child: Text(role.name),
@@ -118,7 +112,8 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
   void submit() {
     if (_formKey.currentState.validate()) {
       Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed('/home-page');
+      Navigator.of(context).pushReplacementNamed('/update-state-page',
+          arguments: UpdateStatePageArguments(initial: true));
     }
   }
 }

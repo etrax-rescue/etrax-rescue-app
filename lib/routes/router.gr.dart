@@ -18,6 +18,7 @@ import '../features/initialization/domain/entities/user_roles.dart';
 import '../features/initialization/domain/entities/user_states.dart';
 import '../features/initialization/presentation/pages/confirmation_page.dart';
 import '../features/initialization/presentation/pages/initialization_page.dart';
+import '../features/update_state/presentation/pages/update_state_page.dart';
 
 class Routes {
   static const String appConnectionPage = '/';
@@ -26,6 +27,7 @@ class Routes {
   static const String confirmationPage = '/confirmation-page';
   static const String homePage = '/home-page';
   static const String submitImagePage = '/submit-image-page';
+  static const String updateStatePage = '/update-state-page';
   static const all = <String>{
     appConnectionPage,
     loginPage,
@@ -33,6 +35,7 @@ class Routes {
     confirmationPage,
     homePage,
     submitImagePage,
+    updateStatePage,
   };
 }
 
@@ -46,6 +49,7 @@ class Router extends RouterBase {
     RouteDef(Routes.confirmationPage, page: ConfirmationPage),
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.submitImagePage, page: SubmitImagePage),
+    RouteDef(Routes.updateStatePage, page: UpdateStatePage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -98,6 +102,18 @@ class Router extends RouterBase {
         settings: data,
       );
     },
+    UpdateStatePage: (data) {
+      var args = data.getArgs<UpdateStatePageArguments>(
+        orElse: () => UpdateStatePageArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => UpdateStatePage(
+          key: args.key,
+          initial: args.initial,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -128,4 +144,11 @@ class HomePageArguments {
 class SubmitImagePageArguments {
   final Key key;
   SubmitImagePageArguments({this.key});
+}
+
+/// UpdateStatePage arguments holder class
+class UpdateStatePageArguments {
+  final Key key;
+  final bool initial;
+  UpdateStatePageArguments({this.key, this.initial = false});
 }

@@ -29,6 +29,10 @@
     "MISSION_START": "Alarmierungsdatum",
     "FUNCTION": "Funktion",
 
+    "STATE_HEADING": "Status Aktualisieren",
+    "STATE": "Status",
+    "UPDATE_STATE": "Aktualisieren",
+
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",
     "CHANGE_STATUS": "Status ändern",
