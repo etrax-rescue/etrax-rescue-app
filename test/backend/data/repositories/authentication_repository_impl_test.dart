@@ -2,17 +2,18 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/network/network_info.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/local_authentication_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/remote_login_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/models/authentication_data_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/organizations_model.dart';
-import 'package:etrax_rescue_app/backend/data/repositories/authentication_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/error/exceptions.dart';
+import '../../../../lib/core/error/failures.dart';
+import '../../../../lib/core/network/network_info.dart';
+import '../../../../lib/backend/data/datasources/local_authentication_data_source.dart';
+import '../../../../lib/backend/data/datasources/remote_login_data_source.dart';
+import '../../../../lib/backend/data/models/authentication_data_model.dart';
+import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/data/repositories/authentication_repository_impl.dart';
 
 class MockLocalAuthenticationDataSource extends Mock
     implements LocalAuthenticationDataSource {}

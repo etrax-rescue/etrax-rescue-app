@@ -1,8 +1,9 @@
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../lib/core/util/translate_error_messages.dart';
+import '../../../lib/generated/l10n.dart';
 
 Widget createTestableAppEnvironment(Widget child) {
   return MediaQuery(

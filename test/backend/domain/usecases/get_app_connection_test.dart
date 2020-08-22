@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/domain/repositories/app_connection_repository.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/backend/domain/repositories/app_connection_repository.dart';
+import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/types/usecase.dart';
 
 class MockAppConnectionRepository extends Mock
     implements AppConnectionRepository {}

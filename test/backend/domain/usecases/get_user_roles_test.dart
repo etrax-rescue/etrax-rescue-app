@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/user_roles.dart';
-import 'package:etrax_rescue_app/backend/domain/repositories/initialization_repository.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_user_roles.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/backend/domain/entities/user_roles.dart';
+import '../../../../lib/backend/domain/repositories/initialization_repository.dart';
+import '../../../../lib/backend/domain/usecases/get_user_roles.dart';
 
 class MockInitializationRepository extends Mock
     implements InitializationRepository {}

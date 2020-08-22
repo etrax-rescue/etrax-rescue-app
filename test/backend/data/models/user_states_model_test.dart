@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/backend/data/models/user_states_model.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/user_states.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
+
+import '../../../../lib/backend/data/models/user_states_model.dart';
+import '../../../../lib/backend/domain/entities/user_states.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 

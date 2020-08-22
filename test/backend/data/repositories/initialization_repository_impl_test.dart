@@ -2,25 +2,26 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/network/network_info.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/remote_initialization_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/local_user_states_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/local_user_roles_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/local_missions_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/local_app_settings_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/models/initialization_data_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/user_roles_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/user_states_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/app_settings_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/missions_model.dart';
-import 'package:etrax_rescue_app/backend/data/repositories/initialization_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+
+import '../../../../lib/core/error/exceptions.dart';
+import '../../../../lib/core/error/failures.dart';
+import '../../../../lib/core/network/network_info.dart';
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/types/authentication_data.dart';
+import '../../../../lib/backend/data/datasources/remote_initialization_data_source.dart';
+import '../../../../lib/backend/data/datasources/local_user_states_data_source.dart';
+import '../../../../lib/backend/data/datasources/local_user_roles_data_source.dart';
+import '../../../../lib/backend/data/datasources/local_missions_data_source.dart';
+import '../../../../lib/backend/data/datasources/local_app_settings_data_source.dart';
+import '../../../../lib/backend/data/models/initialization_data_model.dart';
+import '../../../../lib/backend/data/models/user_roles_model.dart';
+import '../../../../lib/backend/data/models/user_states_model.dart';
+import '../../../../lib/backend/data/models/app_settings_model.dart';
+import '../../../../lib/backend/data/models/missions_model.dart';
+import '../../../../lib/backend/data/repositories/initialization_repository_impl.dart';
 
 class MockRemoteInitializationDataSource extends Mock
     implements RemoteInitializationDataSource {}

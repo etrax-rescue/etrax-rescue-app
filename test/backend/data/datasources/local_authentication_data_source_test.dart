@@ -1,13 +1,14 @@
-import 'package:etrax_rescue_app/core/types/shared_preferences_keys.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/local_authentication_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/models/authentication_data_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/organizations_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 import 'dart:convert';
+
+import '../../../../lib/core/types/shared_preferences_keys.dart';
+import '../../../../lib/core/error/exceptions.dart';
+import '../../../../lib/backend/data/datasources/local_authentication_data_source.dart';
+import '../../../../lib/backend/data/models/authentication_data_model.dart';
+import '../../../../lib/backend/data/models/organizations_model.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 

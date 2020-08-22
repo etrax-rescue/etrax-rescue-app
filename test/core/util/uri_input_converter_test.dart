@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../lib/core/error/failures.dart';
+import '../../../lib/core/util/uri_input_converter.dart';
 
 void main() {
   UriInputConverter inputConverter;

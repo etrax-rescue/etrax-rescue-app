@@ -1,21 +1,22 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/core/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_authentication_data.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/app_settings.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/initialization_data.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/missions.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/user_roles.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/user_states.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/fetch_initialization_data.dart';
-import 'package:etrax_rescue_app/frontend/initialization/bloc/initialization_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
+import '../../../../lib/core/error/failures.dart';
+import '../../../../lib/core/util/translate_error_messages.dart';
+import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/core/types/authentication_data.dart';
+import '../../../../lib/backend/domain/usecases/get_authentication_data.dart';
+import '../../../../lib/backend/domain/entities/app_settings.dart';
+import '../../../../lib/backend/domain/entities/initialization_data.dart';
+import '../../../../lib/backend/domain/entities/missions.dart';
+import '../../../../lib/backend/domain/entities/user_roles.dart';
+import '../../../../lib/backend/domain/entities/user_states.dart';
+import '../../../../lib/backend/domain/usecases/fetch_initialization_data.dart';
+import '../../../../lib/frontend/initialization/bloc/initialization_bloc.dart';
 
 class MockFetchInitializationData extends Mock
     implements FetchInitializationData {}

@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:etrax_rescue_app/backend/data/models/organizations_model.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/organizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
+
+import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/domain/entities/organizations.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 

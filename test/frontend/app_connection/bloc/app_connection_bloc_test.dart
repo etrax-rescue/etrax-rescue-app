@@ -1,15 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/core/util/uri_input_converter.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_app_connection_marked_for_update.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/verify_and_store_app_connection.dart';
-import 'package:etrax_rescue_app/frontend/app_connection/bloc/app_connection_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/error/failures.dart';
+import '../../../../lib/core/types/etrax_server_endpoints.dart';
+import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/core/util/translate_error_messages.dart';
+import '../../../../lib/core/util/uri_input_converter.dart';
+import '../../../../lib/backend/domain/usecases/get_app_connection_marked_for_update.dart';
+import '../../../../lib/backend/domain/usecases/verify_and_store_app_connection.dart';
+import '../../../../lib/frontend/app_connection/bloc/app_connection_bloc.dart';
 
 class MockVerifyAndStoreAppConnection extends Mock
     implements VerifyAndStoreAppConnection {}

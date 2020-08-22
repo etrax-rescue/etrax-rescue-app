@@ -1,17 +1,17 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/data/models/organizations_model.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_organizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
-import 'package:etrax_rescue_app/core/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/login.dart';
-import 'package:etrax_rescue_app/frontend/authentication/bloc/login_bloc.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/mark_app_connection_for_update.dart';
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
+import '../../../../lib/core/error/failures.dart';
+import '../../../../lib/core/util/translate_error_messages.dart';
+import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/backend/domain/usecases/login.dart';
+import '../../../../lib/frontend/authentication/bloc/login_bloc.dart';
+import '../../../../lib/backend/domain/usecases/mark_app_connection_for_update.dart';
+import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/domain/usecases/get_organizations.dart';
 
 class MockLogin extends Mock implements Login {}
 

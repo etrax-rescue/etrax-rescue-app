@@ -1,6 +1,7 @@
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
+
+import '../../../lib/core/types/app_connection.dart';
 
 void main() {
   final tAuthority = 'etrax.at';

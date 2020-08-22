@@ -1,14 +1,15 @@
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/remote_login_data_source.dart';
-import 'package:etrax_rescue_app/backend/data/models/authentication_data_model.dart';
-import 'package:etrax_rescue_app/backend/data/models/organizations_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:matcher/matcher.dart';
+
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/error/exceptions.dart';
+import '../../../../lib/core/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/data/datasources/remote_login_data_source.dart';
+import '../../../../lib/backend/data/models/authentication_data_model.dart';
+import '../../../../lib/backend/data/models/organizations_model.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 

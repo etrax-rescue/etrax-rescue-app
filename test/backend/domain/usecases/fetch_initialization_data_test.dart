@@ -1,15 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
-import 'package:etrax_rescue_app/core/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/app_settings.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/initialization_data.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/missions.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/user_roles.dart';
-import 'package:etrax_rescue_app/backend/domain/entities/user_states.dart';
-import 'package:etrax_rescue_app/backend/domain/repositories/initialization_repository.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/fetch_initialization_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/core/types/authentication_data.dart';
+import '../../../../lib/backend/domain/entities/app_settings.dart';
+import '../../../../lib/backend/domain/entities/initialization_data.dart';
+import '../../../../lib/backend/domain/entities/missions.dart';
+import '../../../../lib/backend/domain/entities/user_roles.dart';
+import '../../../../lib/backend/domain/entities/user_states.dart';
+import '../../../../lib/backend/domain/repositories/initialization_repository.dart';
+import '../../../../lib/backend/domain/usecases/fetch_initialization_data.dart';
 
 class MockInitializationRepository extends Mock
     implements InitializationRepository {}

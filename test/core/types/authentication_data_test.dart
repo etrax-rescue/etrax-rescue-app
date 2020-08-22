@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:etrax_rescue_app/core/types/authentication_data.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../lib/core/types/authentication_data.dart';
 
 void main() {
   final String tOrganizationID = 'DEV';

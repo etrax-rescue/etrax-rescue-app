@@ -1,8 +1,8 @@
 import 'dart:convert';
-
-import 'package:etrax_rescue_app/backend/data/models/app_connection_model.dart';
-import 'package:etrax_rescue_app/core/types/app_connection.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../../lib/backend/data/models/app_connection_model.dart';
+import '../../../../lib/core/types/app_connection.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 

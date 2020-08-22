@@ -1,12 +1,13 @@
-import 'package:etrax_rescue_app/core/types/etrax_server_endpoints.dart';
-import 'package:etrax_rescue_app/backend/data/models/app_connection_model.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/backend/data/datasources/app_connection_remote_endpoint_verification.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
 import 'package:path/path.dart' as p;
+
+import '../../../../lib/core/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/data/models/app_connection_model.dart';
+import '../../../../lib/core/error/exceptions.dart';
+import '../../../../lib/backend/data/datasources/app_connection_remote_endpoint_verification.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 

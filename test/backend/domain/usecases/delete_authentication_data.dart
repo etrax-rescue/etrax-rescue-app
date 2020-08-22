@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/core/types/usecase.dart';
-import 'package:etrax_rescue_app/backend/domain/repositories/authentication_repository.dart';
-import 'package:etrax_rescue_app/backend/domain/usecases/delete_authentication_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/backend/domain/repositories/authentication_repository.dart';
+import '../../../../lib/backend/domain/usecases/delete_authentication_data.dart';
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
