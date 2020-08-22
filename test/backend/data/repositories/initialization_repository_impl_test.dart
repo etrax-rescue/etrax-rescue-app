@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:moor_flutter/moor_flutter.dart';
 
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/core/error/failures.dart';
@@ -610,19 +609,6 @@ void main() {
         // arrange
         when(mockLocalMissionsDataSource.getMissions())
             .thenThrow(CacheException());
-        // act
-        final result = await repository.getMissions();
-        // assert
-        expect(result, Left(CacheFailure()));
-      },
-    );
-
-    test(
-      'should return CacheFailure when a InvalidDataException occurs',
-      () async {
-        // arrange
-        when(mockLocalMissionsDataSource.getMissions())
-            .thenThrow(InvalidDataException(''));
         // act
         final result = await repository.getMissions();
         // assert

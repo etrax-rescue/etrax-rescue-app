@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:moor_flutter/moor_flutter.dart';
 
 import '../../../core/error/exceptions.dart';
 import '../../../core/error/failures.dart';
@@ -112,8 +111,6 @@ class InitializationRepositoryImpl implements InitializationRepository {
     try {
       data = await localMissionsDataSource.getMissions();
     } on CacheException {
-      return Left(CacheFailure());
-    } on InvalidDataException {
       return Left(CacheFailure());
     }
     return Right(data);

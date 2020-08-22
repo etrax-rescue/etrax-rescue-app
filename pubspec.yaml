@@ -1,5 +1,5 @@
 name: etrax_rescue_app
-description: The official App of the eTrax|rescue project.
+description: The official app of the eTrax|rescue project.
 
 version: 1.0.0+1
 
@@ -30,20 +30,29 @@ dependencies:
   intl: ^0.16.1
   # Making requests to the API
   http: ^0.12.2
-  # Location data Source
+  # For advanced routing features
+  auto_route: ^0.6.6
+  # Internationalization
+  flutter_i18n: ^0.18.0
+  # Paths and corresponding convenience functions
+  path: ^1.7.0
+  path_provider: ^1.6.14
+  # Launching Maps app from coordinates
+  maps_launcher: ^1.2.1
+  # FAB menu for home screen
+  flutter_speed_dial: ^1.2.5
+  # Keeping pages loaded on home screen
+  preload_page_view: ^0.1.4
+  # Displaying a map widget
+  flutter_map: ^0.10.1+1
+  # Launching system camera to take pictures
+  image_picker: ^0.6.7+4
+  # Zoomable photo view
+  photo_view: ^0.10.1
+  # Getting location data
   background_location:
     git:
       url: git@github.com:yozoon/background_location.git
-  auto_route: ^0.6.6
-  flutter_i18n: ^0.18.0
-  moor_flutter: ^3.1.0
-  path: ^1.7.0
-  maps_launcher: ^1.2.1
-  flutter_speed_dial: ^1.2.5
-  preload_page_view: ^0.1.4
-  flutter_map: ^0.10.1+1
-  image_picker: ^0.6.7+4
-  photo_view: ^0.10.1
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +65,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   fonts:
+    # Custom logout icon
     - family: CustomMaterialIcons
       fonts:
         - asset: fonts/CustomMaterialIcons.ttf
