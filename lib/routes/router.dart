@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route_annotations.dart';
 
-import '../features/app_connection/presentation/pages/app_connection_page.dart';
-import '../features/authentication/presentation/pages/login_page.dart';
-import '../features/home/presentation/pages/home_page.dart';
-import '../features/home/presentation/pages/photo_page.dart';
-import '../features/initialization/presentation/pages/confirmation_page.dart';
-import '../features/initialization/presentation/pages/initialization_page.dart';
-import '../features/update_state/presentation/pages/update_state_page.dart';
+import '../frontend/app_connection/pages/app_connection_page.dart';
+import '../frontend/authentication/pages/login_page.dart';
+import '../frontend/home/presentation/pages/home_page.dart';
+import '../frontend/home/presentation/pages/photo_page.dart';
+import '../frontend/initialization/pages/confirmation_page.dart';
+import '../frontend/initialization/pages/initialization_page.dart';
+import '../frontend/update_state/pages/update_state_page.dart';
 
 @MaterialAutoRouter(
   routes: <AutoRoute>[

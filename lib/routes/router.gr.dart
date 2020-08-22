@@ -9,16 +9,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../features/app_connection/presentation/pages/app_connection_page.dart';
-import '../features/authentication/presentation/pages/login_page.dart';
-import '../features/home/presentation/pages/home_page.dart';
-import '../features/home/presentation/pages/photo_page.dart';
-import '../features/initialization/domain/entities/missions.dart';
-import '../features/initialization/domain/entities/user_roles.dart';
-import '../features/initialization/domain/entities/user_states.dart';
-import '../features/initialization/presentation/pages/confirmation_page.dart';
-import '../features/initialization/presentation/pages/initialization_page.dart';
-import '../features/update_state/presentation/pages/update_state_page.dart';
+import '../backend/domain/entities/missions.dart';
+import '../backend/domain/entities/user_roles.dart';
+import '../backend/domain/entities/user_states.dart';
+import '../frontend/app_connection/pages/app_connection_page.dart';
+import '../frontend/authentication/pages/login_page.dart';
+import '../frontend/home/presentation/pages/home_page.dart';
+import '../frontend/home/presentation/pages/photo_page.dart';
+import '../frontend/initialization/pages/confirmation_page.dart';
+import '../frontend/initialization/pages/initialization_page.dart';
+import '../frontend/update_state/pages/update_state_page.dart';
 
 class Routes {
   static const String appConnectionPage = '/';
