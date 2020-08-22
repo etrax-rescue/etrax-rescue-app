@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/core/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/types/etrax_server_endpoints.dart';
 import '../../../../lib/backend/data/datasources/remote_login_data_source.dart';
-import '../../../../lib/backend/data/models/authentication_data_model.dart';
-import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/types/authentication_data.dart';
+import '../../../../lib/backend/types/organizations.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -33,15 +33,13 @@ void main() {
   final tUsername = 'JohnDoe';
   final tPassword = '0123456789ABCDEF';
   final tToken = '0123456789ABCDEF';
-  final AuthenticationDataModel tAuthenticationDataModel =
-      AuthenticationDataModel(
-          organizationID: tOrganizationID, username: tUsername, token: tToken);
+  final AuthenticationData tAuthenticationData = AuthenticationData(
+      organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tName = 'Rettungshunde';
-  final tOrganizationModel =
-      OrganizationModel(id: tOrganizationID, name: tName);
-  final tOrganizationCollectionModel = OrganizationCollectionModel(
-      organizations: <OrganizationModel>[tOrganizationModel]);
+  final tOrganization = Organization(id: tOrganizationID, name: tName);
+  final tOrganizationCollection =
+      OrganizationCollection(organizations: <Organization>[tOrganization]);
 
   group('login', () {
     test(
@@ -127,7 +125,7 @@ void main() {
         final result = await remoteDataSource.login(
             tAppConnection, tOrganizationID, tUsername, tPassword);
         // assert
-        expect(result, tAuthenticationDataModel);
+        expect(result, tAuthenticationData);
       },
     );
   });
@@ -176,7 +174,7 @@ void main() {
     );
 
     test(
-      'should return a OrganizationCollectionModel',
+      'should return a OrganizationCollection',
       () async {
         // arrange
         when(mockedHttpClient.get(any)).thenAnswer((_) async =>
@@ -184,7 +182,7 @@ void main() {
         // act
         final result = await remoteDataSource.getOrganizations(tAppConnection);
         // assert
-        expect(result, equals(tOrganizationCollectionModel));
+        expect(result, equals(tOrganizationCollection));
       },
     );
   });

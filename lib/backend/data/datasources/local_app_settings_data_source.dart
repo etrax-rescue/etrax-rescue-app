@@ -3,40 +3,88 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
-import '../../../core/types/shared_preferences_keys.dart';
-import '../models/app_settings_model.dart';
+import '../../types/shared_preferences_keys.dart';
+import '../../types/app_configuration.dart';
+import '../../types/app_connection.dart';
 
 abstract class LocalAppSettingsDataSource {
-  Future<void> storeAppSettings(AppSettingsModel settings);
+  // App Connection
+  Future<AppConnection> getCachedAppConnection();
 
-  Future<AppSettingsModel> getAppSettings();
+  Future<void> cacheAppConnection(AppConnection model);
 
-  Future<void> clearAppSettings();
+  Future<bool> getAppConnectionUpdateStatus();
+
+  Future<void> setAppConnectionUpdateStatus(bool update);
+
+  // App Configuration
+  Future<void> storeAppConfiguration(AppConfiguration configuration);
+
+  Future<AppConfiguration> getAppConfiguration();
+
+  Future<void> clearAppConfiguration();
 }
 
 class LocalAppSettingsDataSourceImpl implements LocalAppSettingsDataSource {
   final SharedPreferences sharedPreferences;
   LocalAppSettingsDataSourceImpl(this.sharedPreferences);
 
+  // App Connection
   @override
-  Future<void> clearAppSettings() async {
-    // TODO: implement clearAppSettings
-    throw UnimplementedError();
+  Future<void> cacheAppConnection(AppConnection model) async {
+    sharedPreferences.setString(
+        SharedPreferencesKeys.appConnection, json.encode(model.toJson()));
   }
 
   @override
-  Future<AppSettingsModel> getAppSettings() async {
-    final data = sharedPreferences.getString(SharedPreferencesKeys.appSettings);
+  Future<AppConnection> getCachedAppConnection() async {
+    final data =
+        sharedPreferences.getString(SharedPreferencesKeys.appConnection);
     if (data != null) {
-      return AppSettingsModel.fromJson(json.decode(data));
+      return AppConnection.fromJson(json.decode(data));
     } else {
       throw CacheException();
     }
   }
 
   @override
-  Future<void> storeAppSettings(AppSettingsModel settings) async {
-    sharedPreferences.setString(
-        SharedPreferencesKeys.appSettings, json.encode(settings.toJson()));
+  Future<bool> getAppConnectionUpdateStatus() async {
+    final data =
+        sharedPreferences.getBool(SharedPreferencesKeys.appConnectionUpdate);
+    if (data != null) {
+      return data;
+    } else {
+      return true;
+    }
+  }
+
+  @override
+  Future<void> setAppConnectionUpdateStatus(bool update) async {
+    sharedPreferences.setBool(
+        SharedPreferencesKeys.appConnectionUpdate, update);
+  }
+
+  // App Configuration
+  @override
+  Future<AppConfiguration> getAppConfiguration() async {
+    final data =
+        sharedPreferences.getString(SharedPreferencesKeys.appConfiguration);
+    if (data != null) {
+      return AppConfiguration.fromJson(json.decode(data));
+    } else {
+      throw CacheException();
+    }
+  }
+
+  @override
+  Future<void> storeAppConfiguration(AppConfiguration configuration) async {
+    sharedPreferences.setString(SharedPreferencesKeys.appConfiguration,
+        json.encode(configuration.toJson()));
+  }
+
+  @override
+  Future<void> clearAppConfiguration() async {
+    // TODO: implement clearAppSettings
+    throw UnimplementedError();
   }
 }

@@ -9,18 +9,18 @@ import 'package:moor_flutter/moor_flutter.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/core/error/failures.dart';
 import '../../../../lib/core/network/network_info.dart';
-import '../../../../lib/core/types/app_connection.dart';
-import '../../../../lib/core/types/authentication_data.dart';
+import '../../../../lib/backend/types/app_connection.dart';
+import '../../../../lib/backend/types/authentication_data.dart';
 import '../../../../lib/backend/data/datasources/remote_initialization_data_source.dart';
 import '../../../../lib/backend/data/datasources/local_user_states_data_source.dart';
 import '../../../../lib/backend/data/datasources/local_user_roles_data_source.dart';
 import '../../../../lib/backend/data/datasources/local_missions_data_source.dart';
 import '../../../../lib/backend/data/datasources/local_app_settings_data_source.dart';
-import '../../../../lib/backend/data/models/initialization_data_model.dart';
-import '../../../../lib/backend/data/models/user_roles_model.dart';
-import '../../../../lib/backend/data/models/user_states_model.dart';
-import '../../../../lib/backend/data/models/app_settings_model.dart';
-import '../../../../lib/backend/data/models/missions_model.dart';
+import '../../../../lib/backend/types/initialization_data.dart';
+import '../../../../lib/backend/types/user_roles.dart';
+import '../../../../lib/backend/types/user_states.dart';
+import '../../../../lib/backend/types/app_configuration.dart';
+import '../../../../lib/backend/types/missions.dart';
 import '../../../../lib/backend/data/repositories/initialization_repository_impl.dart';
 
 class MockRemoteInitializationDataSource extends Mock
@@ -79,7 +79,7 @@ void main() {
   final tLocationUpdateInterval = 0;
   final tLocationUpdateMinDistance = 50;
   final tInfoUpdateInterval = 300;
-  final tAppSettingsModel = AppSettingsModel(
+  final tAppConfiguration = AppConfiguration(
       locationUpdateInterval: tLocationUpdateInterval,
       locationUpdateMinDistance: tLocationUpdateMinDistance,
       infoUpdateInterval: tInfoUpdateInterval);
@@ -89,38 +89,35 @@ void main() {
   final tMissionStart = DateTime.utc(2020, 1, 1);
   final tLatitude = 48.2206635;
   final tLongitude = 16.309849;
-  final tMissionModel = MissionModel(
+  final tMission = Mission(
     id: tMissionID,
     name: tMissionName,
     start: tMissionStart,
     latitude: tLatitude,
     longitude: tLongitude,
   );
-  final tMissionCollectionModel =
-      MissionCollectionModel(missions: <MissionModel>[tMissionModel]);
+  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
 
   final tID = 42;
   final tName = 'approaching';
   final tDescription = 'is on its way';
   final tLocationAccuracy = 2;
-  final tUserStateModel = UserStateModel(
+  final tUserState = UserState(
       id: tID,
       name: tName,
       description: tDescription,
       locationAccuracy: tLocationAccuracy);
-  final tUserStateCollectionModel =
-      UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
+  final tUserStateCollection =
+      UserStateCollection(states: <UserState>[tUserState]);
 
-  final tUserRoleModel =
-      UserRoleModel(id: tID, name: tName, description: tDescription);
-  final tUserRoleCollectionModel =
-      UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
+  final tUserRole = UserRole(id: tID, name: tName, description: tDescription);
+  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
 
-  final tInitializationDataModel = InitializationDataModel(
-    appSettings: tAppSettingsModel,
-    missionCollection: tMissionCollectionModel,
-    userStateCollection: tUserStateCollectionModel,
-    userRoleCollection: tUserRoleCollectionModel,
+  final tInitializationData = InitializationData(
+    appConfiguration: tAppConfiguration,
+    missionCollection: tMissionCollection,
+    userStateCollection: tUserStateCollection,
+    userRoleCollection: tUserRoleCollection,
   );
 
   group('fetchInitializationData', () {
@@ -174,7 +171,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
+              .thenAnswer((_) async => tInitializationData);
           // act
           await repository.fetchInitializationData(
               tAppConnection, tAuthenticationData);
@@ -269,19 +266,19 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
+              .thenAnswer((_) async => tInitializationData);
           // act
           await repository.fetchInitializationData(
               tAppConnection, tAuthenticationData);
           // assert
           verify(mockLocalAppSettingsDataSource
-              .storeAppSettings(tInitializationDataModel.appSettings));
+              .storeAppConfiguration(tInitializationData.appConfiguration));
           verify(mockLocalUserStatesDataSource
-              .storeUserStates(tInitializationDataModel.userStateCollection));
+              .storeUserStates(tInitializationData.userStateCollection));
           verify(mockLocalUserRolesDataSource
-              .storeUserRoles(tInitializationDataModel.userRoleCollection));
+              .storeUserRoles(tInitializationData.userRoleCollection));
           verify(mockLocalMissionsDataSource
-              .insertMissions(tInitializationDataModel.missionCollection));
+              .insertMissions(tInitializationData.missionCollection));
         },
       );
 
@@ -290,8 +287,8 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
-          when(mockLocalAppSettingsDataSource.storeAppSettings(any))
+              .thenAnswer((_) async => tInitializationData);
+          when(mockLocalAppSettingsDataSource.storeAppConfiguration(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
@@ -306,7 +303,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
+              .thenAnswer((_) async => tInitializationData);
           when(mockLocalUserStatesDataSource.storeUserStates(any))
               .thenThrow(CacheException());
           // act
@@ -322,7 +319,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
+              .thenAnswer((_) async => tInitializationData);
           when(mockLocalUserRolesDataSource.storeUserRoles(any))
               .thenThrow(CacheException());
           // act
@@ -338,7 +335,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
+              .thenAnswer((_) async => tInitializationData);
           when(mockLocalMissionsDataSource.insertMissions(any))
               .thenThrow(CacheException());
           // act
@@ -354,28 +351,28 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
-              .thenAnswer((_) async => tInitializationDataModel);
+              .thenAnswer((_) async => tInitializationData);
           // act
           final result = await repository.fetchInitializationData(
               tAppConnection, tAuthenticationData);
           // assert
-          expect(result, equals(Right(tInitializationDataModel)));
+          expect(result, equals(Right(tInitializationData)));
         },
       );
     });
   });
 
-  group('getAppSettings', () {
+  group('getAppConfiguration', () {
     test(
       'should ask local data source for cached data',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.getAppSettings())
-            .thenAnswer((_) async => tAppSettingsModel);
+        when(mockLocalAppSettingsDataSource.getAppConfiguration())
+            .thenAnswer((_) async => tAppConfiguration);
         // act
-        await repository.getAppSettings();
+        await repository.getAppConfiguration();
         // assert
-        verify(mockLocalAppSettingsDataSource.getAppSettings());
+        verify(mockLocalAppSettingsDataSource.getAppConfiguration());
       },
     );
 
@@ -383,25 +380,25 @@ void main() {
       'should return CacheFailure when retrieving cached data fails',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.getAppSettings())
+        when(mockLocalAppSettingsDataSource.getAppConfiguration())
             .thenThrow(CacheException());
         // act
-        final result = await repository.getAppSettings();
+        final result = await repository.getAppConfiguration();
         // assert
         expect(result, Left(CacheFailure()));
       },
     );
 
     test(
-      'should return cached AppSettingsModel',
+      'should return cached AppSettings',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.getAppSettings())
-            .thenAnswer((_) async => tAppSettingsModel);
+        when(mockLocalAppSettingsDataSource.getAppConfiguration())
+            .thenAnswer((_) async => tAppConfiguration);
         // act
-        final result = await repository.getAppSettings();
+        final result = await repository.getAppConfiguration();
         // assert
-        expect(result, equals(Right(tAppSettingsModel)));
+        expect(result, equals(Right(tAppConfiguration)));
       },
     );
   });
@@ -411,9 +408,9 @@ void main() {
       'should ask local data source to clear data',
       () async {
         // act
-        await repository.clearAppSettings();
+        await repository.clearAppConfiguration();
         // assert
-        verify(mockLocalAppSettingsDataSource.clearAppSettings());
+        verify(mockLocalAppSettingsDataSource.clearAppConfiguration());
       },
     );
 
@@ -421,10 +418,10 @@ void main() {
       'should return CacheFailure when clearing cached data fails',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.clearAppSettings())
+        when(mockLocalAppSettingsDataSource.clearAppConfiguration())
             .thenThrow(CacheException());
         // act
-        final result = await repository.clearAppSettings();
+        final result = await repository.clearAppConfiguration();
         // assert
         expect(result, Left(CacheFailure()));
       },
@@ -434,7 +431,7 @@ void main() {
       'should return None when data was cleared successfully',
       () async {
         // act
-        final result = await repository.clearAppSettings();
+        final result = await repository.clearAppConfiguration();
         // assert
         expect(result, equals(Right(None())));
       },
@@ -447,7 +444,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalUserStatesDataSource.getUserStates())
-            .thenAnswer((_) async => tUserStateCollectionModel);
+            .thenAnswer((_) async => tUserStateCollection);
         // act
         await repository.getUserStates();
         // assert
@@ -469,15 +466,15 @@ void main() {
     );
 
     test(
-      'should return cached UserStatesModel',
+      'should return cached UserStates',
       () async {
         // arrange
         when(mockLocalUserStatesDataSource.getUserStates())
-            .thenAnswer((_) async => tUserStateCollectionModel);
+            .thenAnswer((_) async => tUserStateCollection);
         // act
         final result = await repository.getUserStates();
         // assert
-        expect(result, equals(Right(tUserStateCollectionModel)));
+        expect(result, equals(Right(tUserStateCollection)));
       },
     );
   });
@@ -523,7 +520,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalUserRolesDataSource.getUserRoles())
-            .thenAnswer((_) async => tUserRoleCollectionModel);
+            .thenAnswer((_) async => tUserRoleCollection);
         // act
         await repository.getUserRoles();
         // assert
@@ -545,15 +542,15 @@ void main() {
     );
 
     test(
-      'should return cached UserRolesModel',
+      'should return cached UserRoles',
       () async {
         // arrange
         when(mockLocalUserRolesDataSource.getUserRoles())
-            .thenAnswer((_) async => tUserRoleCollectionModel);
+            .thenAnswer((_) async => tUserRoleCollection);
         // act
         final result = await repository.getUserRoles();
         // assert
-        expect(result, equals(Right(tUserRoleCollectionModel)));
+        expect(result, equals(Right(tUserRoleCollection)));
       },
     );
   });
@@ -599,7 +596,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalMissionsDataSource.getMissions())
-            .thenAnswer((_) async => tMissionCollectionModel);
+            .thenAnswer((_) async => tMissionCollection);
         // act
         await repository.getMissions();
         // assert
@@ -634,15 +631,15 @@ void main() {
     );
 
     test(
-      'should return cached MissionsModel',
+      'should return cached Missions',
       () async {
         // arrange
         when(mockLocalMissionsDataSource.getMissions())
-            .thenAnswer((_) async => tMissionCollectionModel);
+            .thenAnswer((_) async => tMissionCollection);
         // act
         final result = await repository.getMissions();
         // assert
-        expect(result, equals(Right(tMissionCollectionModel)));
+        expect(result, equals(Right(tMissionCollection)));
       },
     );
   });

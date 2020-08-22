@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/types/usecase.dart';
-import '../../../../lib/backend/domain/entities/user_roles.dart';
+import '../../../../lib/backend/types/usecase.dart';
+import '../../../../lib/backend/types/user_roles.dart';
 import '../../../../lib/backend/domain/repositories/initialization_repository.dart';
 import '../../../../lib/backend/domain/usecases/get_user_roles.dart';
 

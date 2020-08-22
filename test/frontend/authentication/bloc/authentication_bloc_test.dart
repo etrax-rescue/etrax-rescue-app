@@ -2,15 +2,15 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
 import '../../../../lib/core/error/failures.dart';
-import '../../../../lib/core/util/translate_error_messages.dart';
-import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/frontend/util/translate_error_messages.dart';
+import '../../../../lib/backend/types/usecase.dart';
 import '../../../../lib/backend/domain/usecases/login.dart';
 import '../../../../lib/frontend/authentication/bloc/login_bloc.dart';
 import '../../../../lib/backend/domain/usecases/mark_app_connection_for_update.dart';
-import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/types/organizations.dart';
 import '../../../../lib/backend/domain/usecases/get_organizations.dart';
 
 class MockLogin extends Mock implements Login {}
@@ -56,9 +56,9 @@ void main() {
 
   final tID = 'DEV';
   final tName = 'Rettungshunde';
-  final tOrganizationModel = OrganizationModel(id: tID, name: tName);
-  final tOrganizationCollectionModel = OrganizationCollectionModel(
-      organizations: <OrganizationModel>[tOrganizationModel]);
+  final tOrganization = Organization(id: tID, name: tName);
+  final tOrganizationCollection =
+      OrganizationCollection(organizations: <Organization>[tOrganization]);
 
   void mockGetAppConnectionSuccess() =>
       when(mockGetAppConnection(any)).thenAnswer((_) async =>
@@ -218,7 +218,7 @@ void main() {
         // arrange
         mockGetAppConnectionSuccess();
         when(mockGetOrganizations(any))
-            .thenAnswer((_) async => Right(tOrganizationCollectionModel));
+            .thenAnswer((_) async => Right(tOrganizationCollection));
         // act
         bloc.add(InitializeLogin());
         await untilCalled(mockGetAppConnection(any));
@@ -233,7 +233,7 @@ void main() {
         // arrange
         mockGetAppConnectionSuccess();
         when(mockGetOrganizations(any))
-            .thenAnswer((_) async => Right(tOrganizationCollectionModel));
+            .thenAnswer((_) async => Right(tOrganizationCollection));
         // act
         bloc.add(InitializeLogin());
         await untilCalled(mockGetOrganizations(any));
@@ -249,10 +249,10 @@ void main() {
         // arrange
         mockGetAppConnectionSuccess();
         when(mockGetOrganizations(any))
-            .thenAnswer((_) async => Right(tOrganizationCollectionModel));
+            .thenAnswer((_) async => Right(tOrganizationCollection));
         // assert
         final expected = [
-          LoginReady(organizationCollection: tOrganizationCollectionModel),
+          LoginReady(organizationCollection: tOrganizationCollection),
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act

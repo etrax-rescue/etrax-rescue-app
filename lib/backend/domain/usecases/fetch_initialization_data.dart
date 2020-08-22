@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/error/failures.dart';
-import '../../../core/types/app_connection.dart';
-import '../../../core/types/authentication_data.dart';
-import '../../../core/types/usecase.dart';
-import '../entities/initialization_data.dart';
+import '../../types/app_connection.dart';
+import '../../types/authentication_data.dart';
+import '../../types/usecase.dart';
+import '../../types/initialization_data.dart';
 import '../repositories/initialization_repository.dart';
 
 class FetchInitializationData

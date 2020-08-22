@@ -9,13 +9,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../backend/domain/entities/missions.dart';
-import '../backend/domain/entities/user_roles.dart';
-import '../backend/domain/entities/user_states.dart';
+import '../backend/types/missions.dart';
+import '../backend/types/user_roles.dart';
+import '../backend/types/user_states.dart';
 import '../frontend/app_connection/pages/app_connection_page.dart';
 import '../frontend/authentication/pages/login_page.dart';
-import '../frontend/home/presentation/pages/home_page.dart';
-import '../frontend/home/presentation/pages/photo_page.dart';
+import '../frontend/home/pages/home_page.dart';
+import '../frontend/home/pages/photo_page.dart';
 import '../frontend/initialization/pages/confirmation_page.dart';
 import '../frontend/initialization/pages/initialization_page.dart';
 import '../frontend/update_state/pages/update_state_page.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../lib/backend/domain/repositories/app_connection_repository.dart';
-import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/backend/types/usecase.dart';
 import '../../../../lib/backend/domain/usecases/get_app_connection_marked_for_update.dart';
 
 class MockAppConnectionRepository extends Mock

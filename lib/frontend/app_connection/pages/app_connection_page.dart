@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/widgets/background.dart';
-import '../../../common/widgets/centered_card_view.dart';
 import '../../../injection_container.dart';
+import '../../widgets/background.dart';
+import '../../widgets/centered_card_view.dart';
 import '../bloc/app_connection_bloc.dart';
 import '../widgets/app_connection_form.dart';
 

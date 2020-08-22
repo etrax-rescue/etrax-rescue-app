@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/error/failures.dart';
-import '../../../core/types/app_connection.dart';
-import '../../../core/types/usecase.dart';
-import '../entities/organizations.dart';
+import '../../types/app_connection.dart';
+import '../../types/usecase.dart';
+import '../../types/organizations.dart';
 import '../repositories/authentication_repository.dart';
 
 class GetOrganizations

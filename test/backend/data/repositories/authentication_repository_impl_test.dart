@@ -5,14 +5,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/core/error/failures.dart';
 import '../../../../lib/core/network/network_info.dart';
 import '../../../../lib/backend/data/datasources/local_authentication_data_source.dart';
 import '../../../../lib/backend/data/datasources/remote_login_data_source.dart';
-import '../../../../lib/backend/data/models/authentication_data_model.dart';
-import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/types/authentication_data.dart';
+import '../../../../lib/backend/types/organizations.dart';
 import '../../../../lib/backend/data/repositories/authentication_repository_impl.dart';
 
 class MockLocalAuthenticationDataSource extends Mock
@@ -49,14 +49,13 @@ void main() {
   final tPassword = '0123456789ABCDEF';
   final tToken = tPassword;
 
-  final tAuthenticationDataModel = AuthenticationDataModel(
+  final tAuthenticationData = AuthenticationData(
       organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tName = 'Rettungshunde';
-  final tOrganizationModel =
-      OrganizationModel(id: tOrganizationID, name: tName);
-  final tOrganizationCollectionModel = OrganizationCollectionModel(
-      organizations: <OrganizationModel>[tOrganizationModel]);
+  final tOrganization = Organization(id: tOrganizationID, name: tName);
+  final tOrganizationCollection =
+      OrganizationCollection(organizations: <Organization>[tOrganization]);
 
   void testOnline(Function body) {
     group('device is online', () {
@@ -109,7 +108,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.login(any, any, any, any))
-              .thenAnswer((_) async => tAuthenticationDataModel);
+              .thenAnswer((_) async => tAuthenticationData);
           // act
           await repository.login(
               tAppConnection, tOrganizationID, tUsername, tPassword);
@@ -192,13 +191,13 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.login(any, any, any, any))
-              .thenAnswer((_) async => tAuthenticationDataModel);
+              .thenAnswer((_) async => tAuthenticationData);
           // act
           await repository.login(
               tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(mockLocalDataSource
-              .cacheAuthenticationData(tAuthenticationDataModel));
+          verify(
+              mockLocalDataSource.cacheAuthenticationData(tAuthenticationData));
           verifyNoMoreInteractions(mockLocalDataSource);
         },
       );
@@ -208,7 +207,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.login(any, any, any, any))
-              .thenAnswer((_) async => tAuthenticationDataModel);
+              .thenAnswer((_) async => tAuthenticationData);
           // act
           final result = await repository.login(
               tAppConnection, tOrganizationID, tUsername, tPassword);
@@ -222,7 +221,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.login(any, any, any, any))
-              .thenAnswer((_) async => tAuthenticationDataModel);
+              .thenAnswer((_) async => tAuthenticationData);
           when(mockLocalDataSource.cacheAuthenticationData(any))
               .thenThrow(CacheException());
           // act
@@ -241,7 +240,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAuthenticationData())
-            .thenAnswer((_) async => tAuthenticationDataModel);
+            .thenAnswer((_) async => tAuthenticationData);
         // act
         await repository.getAuthenticationData();
         // assert
@@ -249,15 +248,15 @@ void main() {
       },
     );
     test(
-      'should return cached AuthenticationDataModel',
+      'should return cached AuthenticationData',
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAuthenticationData())
-            .thenAnswer((_) async => tAuthenticationDataModel);
+            .thenAnswer((_) async => tAuthenticationData);
         // act
         final result = await repository.getAuthenticationData();
         // assert
-        expect(result, equals(Right(tAuthenticationDataModel)));
+        expect(result, equals(Right(tAuthenticationData)));
       },
     );
     test(
@@ -308,11 +307,11 @@ void main() {
         () async {
           // arrange
           when(mockLocalDataSource.getCachedOrganizations())
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
-          expect(result, equals(Right(tOrganizationCollectionModel)));
+          expect(result, equals(Right(tOrganizationCollection)));
         },
       );
 
@@ -338,7 +337,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           await repository.getOrganizations(tAppConnection);
           // assert
@@ -348,53 +347,53 @@ void main() {
       );
 
       test(
-        'should return cached OrganizationCollectionModel when a ServerException occurs',
+        'should return cached OrganizationCollection when a ServerException occurs',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
               .thenThrow(ServerException());
           when(mockLocalDataSource.getCachedOrganizations())
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
           verify(mockRemoteDataSource.getOrganizations(tAppConnection));
           verify(mockLocalDataSource.getCachedOrganizations());
-          expect(result, equals(Right(tOrganizationCollectionModel)));
+          expect(result, equals(Right(tOrganizationCollection)));
         },
       );
 
       test(
-        'should return cached OrganizationCollectionModel when a TimeoutException occurs',
+        'should return cached OrganizationCollection when a TimeoutException occurs',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
               .thenThrow(TimeoutException(''));
           when(mockLocalDataSource.getCachedOrganizations())
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
           verify(mockRemoteDataSource.getOrganizations(tAppConnection));
           verify(mockLocalDataSource.getCachedOrganizations());
-          expect(result, equals(Right(tOrganizationCollectionModel)));
+          expect(result, equals(Right(tOrganizationCollection)));
         },
       );
 
       test(
-        'should return the cached OrganizationCollectionModel when a SocketException occurs',
+        'should return the cached OrganizationCollection when a SocketException occurs',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
               .thenThrow(SocketException(''));
           when(mockLocalDataSource.getCachedOrganizations())
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
           verify(mockRemoteDataSource.getOrganizations(tAppConnection));
           verify(mockLocalDataSource.getCachedOrganizations());
-          expect(result, equals(Right(tOrganizationCollectionModel)));
+          expect(result, equals(Right(tOrganizationCollection)));
         },
       );
 
@@ -420,26 +419,26 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           await repository.getOrganizations(tAppConnection);
           // assert
-          verify(mockLocalDataSource
-              .cacheOrganizations(tOrganizationCollectionModel));
+          verify(
+              mockLocalDataSource.cacheOrganizations(tOrganizationCollection));
           verifyNoMoreInteractions(mockLocalDataSource);
         },
       );
 
       test(
-        'should return OrganizationCollectionModel when the device is online and login succeeds',
+        'should return OrganizationCollection when the device is online and login succeeds',
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           // act
           final result = await repository.getOrganizations(tAppConnection);
           // assert
-          expect(result, equals(Right(tOrganizationCollectionModel)));
+          expect(result, equals(Right(tOrganizationCollection)));
         },
       );
 
@@ -448,7 +447,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteDataSource.getOrganizations(any))
-              .thenAnswer((_) async => tOrganizationCollectionModel);
+              .thenAnswer((_) async => tOrganizationCollection);
           when(mockLocalDataSource.cacheOrganizations(any))
               .thenThrow(CacheException());
           // act

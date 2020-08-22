@@ -9,7 +9,7 @@ abstract class LoginState extends Equatable {
 class LoginInitial extends LoginState {}
 
 class LoginReady extends LoginState {
-  final OrganizationCollectionModel organizationCollection;
+  final OrganizationCollection organizationCollection;
 
   LoginReady({@required this.organizationCollection});
 

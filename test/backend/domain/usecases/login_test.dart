@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/backend/domain/repositories/authentication_repository.dart';
 import '../../../../lib/backend/domain/usecases/login.dart';
 

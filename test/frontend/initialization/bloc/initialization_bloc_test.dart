@@ -2,19 +2,19 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/types/app_connection.dart';
-import '../../../../lib/core/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/types/app_connection.dart';
+import '../../../../lib/backend/types/etrax_server_endpoints.dart';
 import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
 import '../../../../lib/core/error/failures.dart';
-import '../../../../lib/core/util/translate_error_messages.dart';
-import '../../../../lib/core/types/usecase.dart';
-import '../../../../lib/core/types/authentication_data.dart';
+import '../../../../lib/frontend/util/translate_error_messages.dart';
+import '../../../../lib/backend/types/usecase.dart';
+import '../../../../lib/backend/types/authentication_data.dart';
 import '../../../../lib/backend/domain/usecases/get_authentication_data.dart';
-import '../../../../lib/backend/domain/entities/app_settings.dart';
-import '../../../../lib/backend/domain/entities/initialization_data.dart';
-import '../../../../lib/backend/domain/entities/missions.dart';
-import '../../../../lib/backend/domain/entities/user_roles.dart';
-import '../../../../lib/backend/domain/entities/user_states.dart';
+import '../../../../lib/backend/types/app_configuration.dart';
+import '../../../../lib/backend/types/initialization_data.dart';
+import '../../../../lib/backend/types/missions.dart';
+import '../../../../lib/backend/types/user_roles.dart';
+import '../../../../lib/backend/types/user_states.dart';
 import '../../../../lib/backend/domain/usecases/fetch_initialization_data.dart';
 import '../../../../lib/frontend/initialization/bloc/initialization_bloc.dart';
 
@@ -60,7 +60,7 @@ void main() {
   final tLocationUpdateInterval = 0;
   final tLocationUpdateMinDistance = 50;
   final tInfoUpdateInterval = 300;
-  final tAppSettings = AppSettings(
+  final tAppConfiguration = AppConfiguration(
       locationUpdateInterval: tLocationUpdateInterval,
       locationUpdateMinDistance: tLocationUpdateMinDistance,
       infoUpdateInterval: tInfoUpdateInterval);
@@ -103,7 +103,7 @@ void main() {
 
   // InitializationDataModel
   final tInitializationData = InitializationData(
-    appSettings: tAppSettings,
+    appConfiguration: tAppConfiguration,
     missionCollection: tMissionCollection,
     userStateCollection: tUserStateCollection,
     userRoleCollection: tUserRoleCollection,

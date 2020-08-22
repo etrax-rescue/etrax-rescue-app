@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failures.dart';
-import '../../../core/types/usecase.dart';
-import '../../domain/entities/user_roles.dart';
+import '../../types/usecase.dart';
+import '../../types/user_roles.dart';
 import '../repositories/initialization_repository.dart';
 
 class GetUserRoles extends UseCase<UserRoleCollection, NoParams> {

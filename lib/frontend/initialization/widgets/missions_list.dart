@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../backend/domain/entities/initialization_data.dart';
-import '../../../backend/domain/entities/missions.dart';
-import '../../../backend/domain/entities/user_roles.dart';
-import '../../../backend/domain/entities/user_states.dart';
-import '../../../core/util/translate_error_messages.dart';
+import '../../../backend/types/initialization_data.dart';
+import '../../../backend/types/missions.dart';
+import '../../../backend/types/user_roles.dart';
+import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/router.gr.dart';
+import '../../util/translate_error_messages.dart';
 import '../bloc/initialization_bloc.dart';
 
 class MissionList extends StatefulWidget {
@@ -35,7 +35,7 @@ class _MissionListState extends State<MissionList> {
     final userStateCollection = UserStateCollection(states: []);
     final userRoleCollection = UserRoleCollection(roles: []);
     initializationData = InitializationData(
-        appSettings: null,
+        appConfiguration: null,
         missionCollection: missionCollection,
         userStateCollection: userStateCollection,
         userRoleCollection: userRoleCollection);

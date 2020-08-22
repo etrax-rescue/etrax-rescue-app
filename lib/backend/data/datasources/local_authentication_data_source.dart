@@ -3,20 +3,20 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
-import '../../../core/types/shared_preferences_keys.dart';
-import '../models/authentication_data_model.dart';
-import '../models/organizations_model.dart';
+import '../../types/shared_preferences_keys.dart';
+import '../../types/authentication_data.dart';
+import '../../types/organizations.dart';
 
 abstract class LocalAuthenticationDataSource {
-  Future<void> cacheAuthenticationData(AuthenticationDataModel model);
+  Future<void> cacheAuthenticationData(AuthenticationData model);
 
-  Future<AuthenticationDataModel> getCachedAuthenticationData();
+  Future<AuthenticationData> getCachedAuthenticationData();
 
   Future<void> deleteAuthenticationData();
 
-  Future<void> cacheOrganizations(OrganizationCollectionModel model);
+  Future<void> cacheOrganizations(OrganizationCollection model);
 
-  Future<OrganizationCollectionModel> getCachedOrganizations();
+  Future<OrganizationCollection> getCachedOrganizations();
 }
 
 class LocalAuthenticationDataSourceImpl
@@ -25,19 +25,19 @@ class LocalAuthenticationDataSourceImpl
   LocalAuthenticationDataSourceImpl(this.sharedPreferences);
 
   @override
-  Future<void> cacheAuthenticationData(AuthenticationDataModel model) async {
+  Future<void> cacheAuthenticationData(AuthenticationData model) async {
     sharedPreferences.setString(
         SharedPreferencesKeys.authenticationData, json.encode(model.toJson()));
   }
 
   @override
-  Future<AuthenticationDataModel> getCachedAuthenticationData() async {
+  Future<AuthenticationData> getCachedAuthenticationData() async {
     final data =
         sharedPreferences.getString(SharedPreferencesKeys.authenticationData);
     if (data == null) {
       throw CacheException();
     }
-    return AuthenticationDataModel.fromJson(json.decode(data));
+    return AuthenticationData.fromJson(json.decode(data));
   }
 
   @override
@@ -46,18 +46,18 @@ class LocalAuthenticationDataSourceImpl
   }
 
   @override
-  Future<void> cacheOrganizations(OrganizationCollectionModel model) async {
+  Future<void> cacheOrganizations(OrganizationCollection model) async {
     sharedPreferences.setString(
         SharedPreferencesKeys.organizations, json.encode(model.toJson()));
   }
 
   @override
-  Future<OrganizationCollectionModel> getCachedOrganizations() async {
+  Future<OrganizationCollection> getCachedOrganizations() async {
     final data =
         sharedPreferences.getString(SharedPreferencesKeys.organizations);
     if (data == null) {
       throw CacheException();
     }
-    return OrganizationCollectionModel.fromJson(json.decode(data));
+    return OrganizationCollection.fromJson(json.decode(data));
   }
 }

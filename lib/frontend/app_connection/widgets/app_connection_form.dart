@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/util/translate_error_messages.dart';
+import '../../util/translate_error_messages.dart';
 import '../../../generated/l10n.dart';
 import '../bloc/app_connection_bloc.dart';
 

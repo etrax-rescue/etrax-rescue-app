@@ -7,15 +7,14 @@ import 'package:flutter/material.dart';
 import '../../../core/error/exceptions.dart';
 import '../../../core/error/failures.dart';
 import '../../../core/network/network_info.dart';
-import '../../../core/types/app_connection.dart';
+import '../../types/app_connection.dart';
 import '../../domain/repositories/app_connection_repository.dart';
-import '../datasources/app_connection_local_datasource.dart';
-import '../datasources/app_connection_remote_endpoint_verification.dart';
-import '../models/app_connection_model.dart';
+import '../datasources/local_app_settings_data_source.dart';
+import '../datasources/remote_app_connection_endpoint_verification.dart';
 
 class AppConnectionRepositoryImpl implements AppConnectionRepository {
-  final AppConnectionRemoteEndpointVerification remoteEndpointVerification;
-  final AppConnectionLocalDataSource localDataSource;
+  final RemoteAppConnectionEndpointVerification remoteEndpointVerification;
+  final LocalAppSettingsDataSource localDataSource;
   final NetworkInfo networkInfo;
 
   AppConnectionRepositoryImpl({
@@ -41,7 +40,7 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
-    AppConnectionModel model;
+    AppConnection model;
     try {
       model = await remoteEndpointVerification.verifyRemoteEndpoint(
           authority, basePath);

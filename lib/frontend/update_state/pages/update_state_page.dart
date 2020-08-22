@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
-import '../../../backend/domain/entities/user_states.dart';
 
 class UpdateStatePage extends StatefulWidget {
   final bool initial;

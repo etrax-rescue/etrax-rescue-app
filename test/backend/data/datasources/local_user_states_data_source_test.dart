@@ -5,10 +5,10 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/core/types/shared_preferences_keys.dart';
+import '../../../../lib/backend/types/shared_preferences_keys.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/backend/data/datasources/local_user_states_data_source.dart';
-import '../../../../lib/backend/data/models/user_states_model.dart';
+import '../../../../lib/backend/types/user_states.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -26,17 +26,17 @@ void main() {
   final tName = 'approaching';
   final tDescription = 'is on their way';
   final tLocationAccuracy = 2;
-  final tUserStateModel = UserStateModel(
+  final tUserState = UserState(
       id: tID,
       name: tName,
       description: tDescription,
       locationAccuracy: tLocationAccuracy);
-  final tUserStateCollectionModel =
-      UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
+  final tUserStateCollection =
+      UserStateCollection(states: <UserState>[tUserState]);
 
   group('getUserStates', () {
     test(
-      'should return UserStateCollectionModel from the Shared Preferences when one instance exists in the cache',
+      'should return UserStateCollection from the Shared Preferences when one instance exists in the cache',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
@@ -46,12 +46,12 @@ void main() {
         // assert
         verify(
             mockSharedPreferences.getString(SharedPreferencesKeys.userStates));
-        expect(result, equals(tUserStateCollectionModel));
+        expect(result, equals(tUserStateCollection));
       },
     );
 
     test(
-      'should throw CacheException when no UserStateCollectionModel exists in the shared preferences',
+      'should throw CacheException when no UserStateCollection exists in the shared preferences',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any)).thenReturn(null);
@@ -68,10 +68,10 @@ void main() {
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.storeUserStates(tUserStateCollectionModel);
+        dataSource.storeUserStates(tUserStateCollection);
         // assert
         verify(mockSharedPreferences.setString(SharedPreferencesKeys.userStates,
-            json.encode(tUserStateCollectionModel.toJson())));
+            json.encode(tUserStateCollection.toJson())));
       },
     );
   });

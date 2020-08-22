@@ -4,11 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 import 'dart:convert';
 
-import '../../../../lib/core/types/shared_preferences_keys.dart';
+import '../../../../lib/backend/types/shared_preferences_keys.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/backend/data/datasources/local_authentication_data_source.dart';
-import '../../../../lib/backend/data/models/authentication_data_model.dart';
-import '../../../../lib/backend/data/models/organizations_model.dart';
+import '../../../../lib/backend/types/authentication_data.dart';
+import '../../../../lib/backend/types/organizations.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -25,14 +25,14 @@ void main() {
   final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
-  final tAuthenticationDataModel = AuthenticationDataModel(
+  final tAuthenticationData = AuthenticationData(
       organizationID: tOrganizationID, username: tUsername, token: tToken);
 
   final tID = 'DEV';
   final tName = 'Rettungshunde';
-  final tOrganizationModel = OrganizationModel(id: tID, name: tName);
-  final tOrganizationCollectionModel = OrganizationCollectionModel(
-      organizations: <OrganizationModel>[tOrganizationModel]);
+  final tOrganization = Organization(id: tID, name: tName);
+  final tOrganizationCollection =
+      OrganizationCollection(organizations: <Organization>[tOrganization]);
 
   group('getCachedAuthenticationData', () {
     test(
@@ -46,7 +46,7 @@ void main() {
         // assert
         verify(mockSharedPreferences
             .getString(SharedPreferencesKeys.authenticationData));
-        expect(result, equals(tAuthenticationDataModel));
+        expect(result, equals(tAuthenticationData));
       },
     );
     test(
@@ -67,10 +67,9 @@ void main() {
       'should call SharedPreferences to store the data',
       () async {
         // act
-        dataSource.cacheAuthenticationData(tAuthenticationDataModel);
+        dataSource.cacheAuthenticationData(tAuthenticationData);
         // assert
-        final expectedJsonString =
-            json.encode(tAuthenticationDataModel.toJson());
+        final expectedJsonString = json.encode(tAuthenticationData.toJson());
         verify(mockSharedPreferences.setString(
             SharedPreferencesKeys.authenticationData, expectedJsonString));
       },
@@ -92,7 +91,7 @@ void main() {
 
   group('getCachedOrganizations', () {
     test(
-      'should return OrganizationCollectionModel from the Shared Preferences when one instance exists in the cache',
+      'should return OrganizationCollection from the Shared Preferences when one instance exists in the cache',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
@@ -102,12 +101,12 @@ void main() {
         // assert
         verify(mockSharedPreferences
             .getString(SharedPreferencesKeys.organizations));
-        expect(result, equals(tOrganizationCollectionModel));
+        expect(result, equals(tOrganizationCollection));
       },
     );
 
     test(
-      'should throw CacheException when no OrganizationsCollectionModel exists in the shared preferences',
+      'should throw CacheException when no OrganizationsCollection exists in the shared preferences',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any)).thenReturn(null);
@@ -124,11 +123,11 @@ void main() {
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.cacheOrganizations(tOrganizationCollectionModel);
+        dataSource.cacheOrganizations(tOrganizationCollection);
         // assert
         verify(mockSharedPreferences.setString(
             SharedPreferencesKeys.organizations,
-            json.encode(tOrganizationCollectionModel.toJson())));
+            json.encode(tOrganizationCollection.toJson())));
       },
     );
   });

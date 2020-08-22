@@ -4,12 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../backend/domain/entities/initialization_data.dart';
+import '../../../backend/types/initialization_data.dart';
 import '../../../backend/domain/usecases/fetch_initialization_data.dart';
 import '../../../backend/domain/usecases/get_authentication_data.dart';
 import '../../../core/error/failures.dart';
-import '../../../core/types/usecase.dart';
-import '../../../core/util/translate_error_messages.dart';
+import '../../../backend/types/usecase.dart';
+import '../../util/translate_error_messages.dart';
 import '../../../backend/domain/usecases/get_app_connection.dart';
 
 part 'initialization_event.dart';

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failures.dart';
-import '../../../core/types/usecase.dart';
+import '../../types/usecase.dart';
 import '../repositories/authentication_repository.dart';
 
 class DeleteAuthenticationData extends UseCase<None, NoParams> {

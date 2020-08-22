@@ -4,29 +4,29 @@ import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../../lib/core/types/etrax_server_endpoints.dart';
-import '../../../../lib/backend/data/models/app_connection_model.dart';
+import '../../../../lib/backend/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/backend/data/datasources/app_connection_remote_endpoint_verification.dart';
+import '../../../../lib/backend/data/datasources/remote_app_connection_endpoint_verification.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
 class MockedHttpClient extends Mock implements http.Client {}
 
 void main() {
-  AppConnectionRemoteEndpointVerificationImpl endpointVerification;
+  RemoteAppConnectionEndpointVerificationImpl endpointVerification;
   MockedHttpClient mockedHttpClient;
 
   setUp(() {
     mockedHttpClient = MockedHttpClient();
     endpointVerification =
-        AppConnectionRemoteEndpointVerificationImpl(mockedHttpClient);
+        RemoteAppConnectionEndpointVerificationImpl(mockedHttpClient);
   });
 
   final tAuthority = 'etrax.at';
   final tBasePath = 'appdata';
   final tAppConnectionModel =
-      AppConnectionModel(authority: tAuthority, basePath: tBasePath);
+      AppConnection(authority: tAuthority, basePath: tBasePath);
 
   test(
     'should perform GET request on the /appdata/version_info.json endpoint',

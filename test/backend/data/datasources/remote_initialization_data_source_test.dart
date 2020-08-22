@@ -4,15 +4,15 @@ import 'package:mockito/mockito.dart';
 import 'package:matcher/matcher.dart';
 
 import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/core/types/authentication_data.dart';
-import '../../../../lib/core/types/etrax_server_endpoints.dart';
-import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/types/authentication_data.dart';
+import '../../../../lib/backend/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/backend/data/datasources/remote_initialization_data_source.dart';
-import '../../../../lib/backend/data/models/app_settings_model.dart';
-import '../../../../lib/backend/data/models/initialization_data_model.dart';
-import '../../../../lib/backend/data/models/missions_model.dart';
-import '../../../../lib/backend/data/models/user_roles_model.dart';
-import '../../../../lib/backend/data/models/user_states_model.dart';
+import '../../../../lib/backend/types/app_configuration.dart';
+import '../../../../lib/backend/types/initialization_data.dart';
+import '../../../../lib/backend/types/missions.dart';
+import '../../../../lib/backend/types/user_roles.dart';
+import '../../../../lib/backend/types/user_states.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -37,14 +37,14 @@ void main() {
   final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
-  final tAuthenticationDataModel = AuthenticationData(
+  final tAuthenticationData = AuthenticationData(
       organizationID: tOrganizationID, username: tUsername, token: tToken);
 
-  // AppSettings
+  // AppConfiguration
   final tLocationUpdateInterval = 0;
   final tLocationUpdateMinDistance = 50;
   final tInfoUpdateInterval = 300;
-  final tAppSettingsModel = AppSettingsModel(
+  final tAppConfiguration = AppConfiguration(
       locationUpdateInterval: tLocationUpdateInterval,
       locationUpdateMinDistance: tLocationUpdateMinDistance,
       infoUpdateInterval: tInfoUpdateInterval);
@@ -55,44 +55,42 @@ void main() {
   final tMissionStart = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
   final tLatitude = 48.2084114;
   final tLongitude = 16.3712767;
-  final tMissionModel = MissionModel(
+  final tMission = Mission(
     id: tMissionID,
     name: tMissionName,
     start: tMissionStart,
     latitude: tLatitude,
     longitude: tLongitude,
   );
-  final tMissionCollectionModel =
-      MissionCollectionModel(missions: <MissionModel>[tMissionModel]);
+  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
 
   // UserStateCollection
   final tUserStateID = 42;
   final tUserStateName = 'approaching';
   final tUserStateDescription = 'is on their way';
   final tUserStateLocationAccuracy = 2;
-  final tUserStateModel = UserStateModel(
+  final tUserState = UserState(
       id: tUserStateID,
       name: tUserStateName,
       description: tUserStateDescription,
       locationAccuracy: tUserStateLocationAccuracy);
-  final tUserStateCollectionModel =
-      UserStateCollectionModel(states: <UserStateModel>[tUserStateModel]);
+  final tUserStateCollection =
+      UserStateCollection(states: <UserState>[tUserState]);
 
   // UserRoleCollection
   final tUserRoleID = 42;
   final tUserRoleName = 'operator';
   final tUserRoleDescription = 'the one who does stuff';
-  final tUserRoleModel = UserRoleModel(
+  final tUserRole = UserRole(
       id: tUserRoleID, name: tUserRoleName, description: tUserRoleDescription);
-  final tUserRoleCollectionModel =
-      UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
+  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
 
-  // InitializationDataModel
-  final tInitializationDataModel = InitializationDataModel(
-    appSettings: tAppSettingsModel,
-    missionCollection: tMissionCollectionModel,
-    userStateCollection: tUserStateCollectionModel,
-    userRoleCollection: tUserRoleCollectionModel,
+  // InitializationData
+  final tInitializationData = InitializationData(
+    appConfiguration: tAppConfiguration,
+    missionCollection: tMissionCollection,
+    userStateCollection: tUserStateCollection,
+    userRoleCollection: tUserRoleCollection,
   );
 
   test(
@@ -106,10 +104,10 @@ void main() {
           subPath: EtraxServerEndpoints.initialization);
       // act
       await remoteDataSource.fetchInitialization(
-          tAppConnection, tAuthenticationDataModel);
+          tAppConnection, tAuthenticationData);
       // assert
       verify(mockedHttpClient.get(uri,
-          headers: tAuthenticationDataModel.generateAuthHeader()));
+          headers: tAuthenticationData.generateAuthHeader()));
     },
   );
 
@@ -121,7 +119,7 @@ void main() {
           .thenAnswer((_) async => http.Response('', 200));
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tAuthenticationDataModel),
+      expect(() => call(tAppConnection, tAuthenticationData),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -134,13 +132,13 @@ void main() {
           .thenAnswer((_) async => http.Response('', 403));
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tAuthenticationDataModel),
+      expect(() => call(tAppConnection, tAuthenticationData),
           throwsA(TypeMatcher<AuthenticationException>()));
     },
   );
 
   test(
-    'should throw a ServerException when the JSON response is missing the appSettings field',
+    'should throw a ServerException when the JSON response is missing the appConfiguration field',
     () async {
       // arrange
       when(mockedHttpClient.get(any, headers: anyNamed('headers'))).thenAnswer(
@@ -149,7 +147,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tAuthenticationDataModel),
+      expect(() => call(tAppConnection, tAuthenticationData),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -164,7 +162,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tAuthenticationDataModel),
+      expect(() => call(tAppConnection, tAuthenticationData),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -179,7 +177,7 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tAuthenticationDataModel),
+      expect(() => call(tAppConnection, tAuthenticationData),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
@@ -194,13 +192,13 @@ void main() {
       // act
       final call = remoteDataSource.fetchInitialization;
       // assert
-      expect(() => call(tAppConnection, tAuthenticationDataModel),
+      expect(() => call(tAppConnection, tAuthenticationData),
           throwsA(TypeMatcher<ServerException>()));
     },
   );
 
   test(
-    'should return a InitializationDataModel',
+    'should return a InitializationData',
     () async {
       // arrange
       when(mockedHttpClient.get(any, headers: anyNamed('headers'))).thenAnswer(
@@ -208,9 +206,9 @@ void main() {
               http.Response(fixture('initialization/valid.json'), 200));
       // act
       final result = await remoteDataSource.fetchInitialization(
-          tAppConnection, tAuthenticationDataModel);
+          tAppConnection, tAuthenticationData);
       // assert
-      expect(result, equals(tInitializationDataModel));
+      expect(result, equals(tInitializationData));
     },
   );
 }

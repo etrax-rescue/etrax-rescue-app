@@ -4,14 +4,14 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../backend/data/models/organizations_model.dart';
+import '../../../backend/domain/usecases/get_app_connection.dart';
 import '../../../backend/domain/usecases/get_organizations.dart';
 import '../../../backend/domain/usecases/login.dart';
 import '../../../backend/domain/usecases/mark_app_connection_for_update.dart';
+import '../../../backend/types/organizations.dart';
 import '../../../core/error/failures.dart';
-import '../../../core/types/usecase.dart';
-import '../../../core/util/translate_error_messages.dart';
-import '../../../backend/domain/usecases/get_app_connection.dart';
+import '../../../backend/types/usecase.dart';
+import '../../util/translate_error_messages.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';

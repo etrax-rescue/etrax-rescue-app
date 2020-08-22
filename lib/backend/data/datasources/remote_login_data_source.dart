@@ -3,16 +3,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../../core/error/exceptions.dart';
-import '../../../core/types/app_connection.dart';
-import '../../../core/types/etrax_server_endpoints.dart';
-import '../models/authentication_data_model.dart';
-import '../models/organizations_model.dart';
+import '../../types/etrax_server_endpoints.dart';
+import '../../types/app_connection.dart';
+import '../../types/authentication_data.dart';
+import '../../types/organizations.dart';
 
 abstract class RemoteLoginDataSource {
-  Future<OrganizationCollectionModel> getOrganizations(
-      AppConnection appConnection);
+  Future<OrganizationCollection> getOrganizations(AppConnection appConnection);
 
-  Future<AuthenticationDataModel> login(AppConnection appConnection,
+  Future<AuthenticationData> login(AppConnection appConnection,
       String organizationID, String username, String password);
 }
 
@@ -21,7 +20,7 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   RemoteLoginDataSourceImpl(this.client);
 
   @override
-  Future<AuthenticationDataModel> login(AppConnection appConnection,
+  Future<AuthenticationData> login(AppConnection appConnection,
       String organizationID, String username, String password) async {
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.login),
@@ -38,7 +37,7 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       final jsonResponse = json.decode(response.body);
       jsonResponse['username'] = username;
       jsonResponse['organizationID'] = organizationID;
-      final data = AuthenticationDataModel.fromJson(jsonResponse);
+      final data = AuthenticationData.fromJson(jsonResponse);
       return data;
     } else if (response.statusCode == 401) {
       throw LoginException();
@@ -48,7 +47,7 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   }
 
   @override
-  Future<OrganizationCollectionModel> getOrganizations(
+  Future<OrganizationCollection> getOrganizations(
       AppConnection appConnection) async {
     final request = client.get(
         appConnection.generateUri(subPath: EtraxServerEndpoints.organizations));
@@ -59,9 +58,9 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       throw ServerException();
     }
     final body = json.decode(response.body);
-    OrganizationCollectionModel organizationCollectionModel;
+    OrganizationCollection organizationCollection;
     try {
-      organizationCollectionModel = OrganizationCollectionModel.fromJson(body);
+      organizationCollection = OrganizationCollection.fromJson(body);
     } on NoSuchMethodError {
       throw ServerException();
     } on FormatException {
@@ -69,6 +68,6 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
     } on TypeError {
       throw ServerException();
     }
-    return organizationCollectionModel;
+    return organizationCollection;
   }
 }

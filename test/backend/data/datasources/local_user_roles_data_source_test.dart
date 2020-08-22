@@ -5,10 +5,10 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/core/types/shared_preferences_keys.dart';
+import '../../../../lib/backend/types/shared_preferences_keys.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/backend/data/datasources/local_user_roles_data_source.dart';
-import '../../../../lib/backend/data/models/user_roles_model.dart';
+import '../../../../lib/backend/types/user_roles.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -25,14 +25,12 @@ void main() {
   final tID = 42;
   final tName = 'operator';
   final tDescription = 'the one who does stuff';
-  final tUserRoleModel =
-      UserRoleModel(id: tID, name: tName, description: tDescription);
-  final tUserRoleCollectionModel =
-      UserRoleCollectionModel(roles: <UserRoleModel>[tUserRoleModel]);
+  final tUserRole = UserRole(id: tID, name: tName, description: tDescription);
+  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
 
   group('getUserRoles', () {
     test(
-      'should return UserRoleCollectionModel from the Shared Preferences when one instance exists in the cache',
+      'should return UserRoleCollection from the Shared Preferences when one instance exists in the cache',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
@@ -42,12 +40,12 @@ void main() {
         // assert
         verify(
             mockSharedPreferences.getString(SharedPreferencesKeys.userRoles));
-        expect(result, equals(tUserRoleCollectionModel));
+        expect(result, equals(tUserRoleCollection));
       },
     );
 
     test(
-      'should throw CacheException when no UserRoleCollectionModel exists in the shared preferences',
+      'should throw CacheException when no UserRoleCollection exists in the shared preferences',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any)).thenReturn(null);
@@ -64,10 +62,10 @@ void main() {
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.storeUserRoles(tUserRoleCollectionModel);
+        dataSource.storeUserRoles(tUserRoleCollection);
         // assert
         verify(mockSharedPreferences.setString(SharedPreferencesKeys.userRoles,
-            json.encode(tUserRoleCollectionModel.toJson())));
+            json.encode(tUserRoleCollection.toJson())));
       },
     );
   });

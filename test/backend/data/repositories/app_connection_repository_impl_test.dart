@@ -7,17 +7,16 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../lib/core/error/failures.dart';
 import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/backend/data/models/app_connection_model.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/backend/data/repositories/app_connection_repository_impl.dart';
-import '../../../../lib/backend/data/datasources/app_connection_local_datasource.dart';
-import '../../../../lib/backend/data/datasources/app_connection_remote_endpoint_verification.dart';
+import '../../../../lib/backend/data/datasources/local_app_settings_data_source.dart';
+import '../../../../lib/backend/data/datasources/remote_app_connection_endpoint_verification.dart';
 import '../../../../lib/core/network/network_info.dart';
 
 class MockRemoteEndpointVerification extends Mock
-    implements AppConnectionRemoteEndpointVerification {}
+    implements RemoteAppConnectionEndpointVerification {}
 
-class MockLocalDataSource extends Mock implements AppConnectionLocalDataSource {
-}
+class MockLocalDataSource extends Mock implements LocalAppSettingsDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
@@ -41,8 +40,8 @@ void main() {
 
   final tAuthority = 'etrax.at';
   final tBasePath = 'appdata';
-  final tAppConnectionModel =
-      AppConnectionModel(authority: tAuthority, basePath: tBasePath);
+  final tAppConnection =
+      AppConnection(authority: tAuthority, basePath: tBasePath);
 
   group('verifyAndStoreBaseUri', () {
     test(
@@ -94,7 +93,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
-              .thenAnswer((_) async => tAppConnectionModel);
+              .thenAnswer((_) async => tAppConnection);
           // act
           await repository.verifyAndStoreAppConnection(tAuthority, tBasePath);
           // assert
@@ -177,11 +176,11 @@ void main() {
         () async {
           // arrange
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
-              .thenAnswer((_) async => tAppConnectionModel);
+              .thenAnswer((_) async => tAppConnection);
           // act
           await repository.verifyAndStoreAppConnection(tAuthority, tBasePath);
           // assert
-          verify(mockLocalDataSource.cacheAppConnection(tAppConnectionModel));
+          verify(mockLocalDataSource.cacheAppConnection(tAppConnection));
           verify(mockLocalDataSource.setAppConnectionUpdateStatus(false));
           verifyNoMoreInteractions(mockLocalDataSource);
         },
@@ -192,7 +191,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
-              .thenAnswer((_) async => tAppConnectionModel);
+              .thenAnswer((_) async => tAppConnection);
           // act
           final result = await repository.verifyAndStoreAppConnection(
               tAuthority, tBasePath);
@@ -206,7 +205,7 @@ void main() {
         () async {
           // arrange
           when(mockRemoteEndpointVerification.verifyRemoteEndpoint(any, any))
-              .thenAnswer((_) async => tAppConnectionModel);
+              .thenAnswer((_) async => tAppConnection);
           when(mockLocalDataSource.cacheAppConnection(any))
               .thenThrow(CacheException());
           // act
@@ -220,14 +219,14 @@ void main() {
   });
 
   group('getAppConnection', () {
-    final tAppConnectionModel =
-        AppConnectionModel(authority: tAuthority, basePath: tBasePath);
+    final tAppConnection =
+        AppConnection(authority: tAuthority, basePath: tBasePath);
     test(
       'should ask local datasource for cached data',
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAppConnection())
-            .thenAnswer((_) async => tAppConnectionModel);
+            .thenAnswer((_) async => tAppConnection);
         // act
         await repository.getAppConnection();
         // assert
@@ -239,11 +238,11 @@ void main() {
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAppConnection())
-            .thenAnswer((_) async => tAppConnectionModel);
+            .thenAnswer((_) async => tAppConnection);
         // act
         final result = await repository.getAppConnection();
         // assert
-        expect(result, Right(tAppConnectionModel));
+        expect(result, Right(tAppConnection));
       },
     );
     test(
@@ -266,7 +265,7 @@ void main() {
       () async {
         // arrange
         when(mockLocalDataSource.getCachedAppConnection())
-            .thenAnswer((_) async => tAppConnectionModel);
+            .thenAnswer((_) async => tAppConnection);
         // act
         await repository.getAppConnection();
         // assert

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../backend/domain/entities/organizations.dart';
-import '../../../core/util/translate_error_messages.dart';
+import '../../../backend/types/organizations.dart';
+import '../../util/translate_error_messages.dart';
 import '../../../generated/l10n.dart';
 import '../bloc/login_bloc.dart';
 

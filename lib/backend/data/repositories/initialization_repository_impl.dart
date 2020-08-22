@@ -5,24 +5,22 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
-import '../../../backend/domain/entities/app_settings.dart';
 import '../../../core/error/exceptions.dart';
 import '../../../core/error/failures.dart';
 import '../../../core/network/network_info.dart';
-import '../../../core/types/app_connection.dart';
-import '../../../core/types/authentication_data.dart';
-import '../../domain/entities/initialization_data.dart';
 import '../../domain/repositories/initialization_repository.dart';
+import '../../types/app_configuration.dart';
+import '../../types/app_connection.dart';
+import '../../types/authentication_data.dart';
+import '../../types/initialization_data.dart';
+import '../../types/missions.dart';
+import '../../types/user_roles.dart';
+import '../../types/user_states.dart';
 import '../datasources/local_app_settings_data_source.dart';
 import '../datasources/local_missions_data_source.dart';
 import '../datasources/local_user_roles_data_source.dart';
 import '../datasources/local_user_states_data_source.dart';
 import '../datasources/remote_initialization_data_source.dart';
-import '../models/app_settings_model.dart';
-import '../models/initialization_data_model.dart';
-import '../models/missions_model.dart';
-import '../models/user_roles_model.dart';
-import '../models/user_states_model.dart';
 
 class InitializationRepositoryImpl implements InitializationRepository {
   final RemoteInitializationDataSource remoteInitializationDataSource;
@@ -48,7 +46,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
-    InitializationDataModel initializationData;
+    InitializationData initializationData;
     try {
       initializationData = await remoteInitializationDataSource
           .fetchInitialization(appConnection, authenticationData);
@@ -70,7 +68,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
 
     try {
       localAppSettingsDataSource
-          .storeAppSettings(initializationData.appSettings);
+          .storeAppConfiguration(initializationData.appConfiguration);
 
       localUserRolesDataSource
           .storeUserRoles(initializationData.userRoleCollection);
@@ -88,10 +86,10 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, AppSettings>> getAppSettings() async {
-    AppSettingsModel data;
+  Future<Either<Failure, AppConfiguration>> getAppConfiguration() async {
+    AppConfiguration data;
     try {
-      data = await localAppSettingsDataSource.getAppSettings();
+      data = await localAppSettingsDataSource.getAppConfiguration();
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -99,9 +97,9 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, None>> clearAppSettings() async {
+  Future<Either<Failure, None>> clearAppConfiguration() async {
     try {
-      await localAppSettingsDataSource.clearAppSettings();
+      await localAppSettingsDataSource.clearAppConfiguration();
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -109,8 +107,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, MissionCollectionModel>> getMissions() async {
-    MissionCollectionModel data;
+  Future<Either<Failure, MissionCollection>> getMissions() async {
+    MissionCollection data;
     try {
       data = await localMissionsDataSource.getMissions();
     } on CacheException {
@@ -132,8 +130,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, UserStateCollectionModel>> getUserStates() async {
-    UserStateCollectionModel data;
+  Future<Either<Failure, UserStateCollection>> getUserStates() async {
+    UserStateCollection data;
     try {
       data = await localUserStatesDataSource.getUserStates();
     } on CacheException {
@@ -163,8 +161,8 @@ class InitializationRepositoryImpl implements InitializationRepository {
   }
 
   @override
-  Future<Either<Failure, UserRoleCollectionModel>> getUserRoles() async {
-    UserRoleCollectionModel data;
+  Future<Either<Failure, UserRoleCollection>> getUserRoles() async {
+    UserRoleCollection data;
     try {
       data = await localUserRolesDataSource.getUserRoles();
     } on CacheException {

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../core/error/failures.dart';
-import '../../../core/types/usecase.dart';
-import '../../domain/entities/missions.dart';
+import '../../types/usecase.dart';
+import '../../types/missions.dart';
 import '../repositories/initialization_repository.dart';
 
 class GetMissions extends UseCase<MissionCollection, NoParams> {

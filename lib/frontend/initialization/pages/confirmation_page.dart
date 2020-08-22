@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../backend/domain/entities/missions.dart';
-import '../../../backend/domain/entities/user_roles.dart';
-import '../../../backend/domain/entities/user_states.dart';
+import '../../../backend/types/missions.dart';
+import '../../../backend/types/user_roles.dart';
+import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../widgets/confirmation_form.dart';
 

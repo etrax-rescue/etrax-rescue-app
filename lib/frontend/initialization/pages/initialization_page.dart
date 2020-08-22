@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/widgets/background.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
+import '../../widgets/background.dart';
 import '../bloc/initialization_bloc.dart';
 import '../widgets/missions_list.dart';
 import 'custom_material_icons_icons.dart';

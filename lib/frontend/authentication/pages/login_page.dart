@@ -2,11 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../backend/domain/entities/organizations.dart';
-import '../../../common/widgets/background.dart';
-import '../../../common/widgets/centered_card_view.dart';
+import '../../../backend/types/organizations.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
+import '../../widgets/background.dart';
+import '../../widgets/centered_card_view.dart';
 import '../bloc/login_bloc.dart';
 import '../widgets/login_form.dart';
 import '../widgets/relink_popup_menu.dart';

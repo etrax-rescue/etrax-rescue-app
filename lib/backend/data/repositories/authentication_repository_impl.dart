@@ -7,14 +7,12 @@ import 'package:flutter/material.dart';
 import '../../../core/error/exceptions.dart';
 import '../../../core/error/failures.dart';
 import '../../../core/network/network_info.dart';
-import '../../../core/types/app_connection.dart';
-import '../../../core/types/authentication_data.dart';
-import '../../domain/entities/organizations.dart';
+import '../../types/app_connection.dart';
+import '../../types/authentication_data.dart';
+import '../../types/organizations.dart';
 import '../../domain/repositories/authentication_repository.dart';
 import '../datasources/local_authentication_data_source.dart';
 import '../datasources/remote_login_data_source.dart';
-import '../models/authentication_data_model.dart';
-import '../models/organizations_model.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final RemoteLoginDataSource remoteLoginDataSource;
@@ -29,7 +27,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<Either<Failure, AuthenticationData>> getAuthenticationData() async {
-    AuthenticationDataModel data;
+    AuthenticationData data;
     try {
       data = await localAuthenticationDataSource.getCachedAuthenticationData();
     } on CacheException {
@@ -44,7 +42,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
-    AuthenticationDataModel authenticationDataModel;
+    AuthenticationData authenticationDataModel;
     try {
       authenticationDataModel = await remoteLoginDataSource.login(
           appConnection, organizationID, username, password);
@@ -75,7 +73,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<Either<Failure, OrganizationCollection>> getOrganizations(
       AppConnection appConnection) async {
-    OrganizationCollectionModel model;
+    OrganizationCollection model;
     if (await networkInfo.isConnected) {
       bool failed = false;
       try {

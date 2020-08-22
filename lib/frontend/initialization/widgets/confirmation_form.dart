@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
-import '../../../backend/domain/entities/missions.dart';
-import '../../../backend/domain/entities/user_roles.dart';
-import '../../../backend/domain/entities/user_states.dart';
+import '../../../backend/types/missions.dart';
+import '../../../backend/types/user_roles.dart';
+import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/router.gr.dart';
 

@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
-import '../../../core/types/shared_preferences_keys.dart';
-import '../models/missions_model.dart';
+import '../../types/shared_preferences_keys.dart';
+import '../../types/missions.dart';
 
 abstract class LocalMissionsDataSource {
-  Future<void> insertMissions(MissionCollectionModel missions);
+  Future<void> insertMissions(MissionCollection missions);
 
-  Future<void> updateMission(MissionModel mission);
+  Future<void> updateMission(Mission mission);
 
-  Future<MissionCollectionModel> getMissions();
+  Future<MissionCollection> getMissions();
 
   Future<void> clearMissions();
 }
@@ -27,24 +27,24 @@ class LocalMissionsDataSourceImpl implements LocalMissionsDataSource {
   }
 
   @override
-  Future<MissionCollectionModel> getMissions() async {
+  Future<MissionCollection> getMissions() async {
     final data = sharedPreferences.getString(SharedPreferencesKeys.missions);
     if (data != null) {
-      return MissionCollectionModel.fromJson(json.decode(data));
+      return MissionCollection.fromJson(json.decode(data));
     } else {
       throw CacheException();
     }
   }
 
   @override
-  Future<void> insertMissions(MissionCollectionModel missions) async {
+  Future<void> insertMissions(MissionCollection missions) async {
     Map<String, dynamic> jsonMap = missions.toJson();
     sharedPreferences.setString(
         SharedPreferencesKeys.missions, json.encode(jsonMap));
   }
 
   @override
-  Future<void> updateMission(MissionModel mission) async {
+  Future<void> updateMission(Mission mission) async {
     // TODO: implement updateMission
     throw UnimplementedError();
   }

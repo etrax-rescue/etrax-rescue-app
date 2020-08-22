@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import '../../../backend/domain/usecases/get_app_connection_marked_for_update.dart';
 import '../../../backend/domain/usecases/verify_and_store_app_connection.dart';
 import '../../../core/error/failures.dart';
-import '../../../core/types/etrax_server_endpoints.dart';
-import '../../../core/types/usecase.dart';
-import '../../../core/util/translate_error_messages.dart';
-import '../../../core/util/uri_input_converter.dart';
+import '../../../backend/types/etrax_server_endpoints.dart';
+import '../../../backend/types/usecase.dart';
+import '../../util/translate_error_messages.dart';
+import '../../util/uri_input_converter.dart';
 
 part 'app_connection_event.dart';
 part 'app_connection_state.dart';

@@ -5,10 +5,10 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/core/types/shared_preferences_keys.dart';
+import '../../../../lib/backend/types/shared_preferences_keys.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/backend/data/datasources/local_app_settings_data_source.dart';
-import '../../../../lib/backend/data/models/app_settings_model.dart';
+import '../../../../lib/backend/types/app_configuration.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -25,50 +25,50 @@ void main() {
   final tLocationUpdateInterval = 0;
   final tLocationUpdateMinDistance = 50;
   final tInfoUpdateInterval = 300;
-  final tAppSettingsModel = AppSettingsModel(
+  final tAppConfiguration = AppConfiguration(
       locationUpdateInterval: tLocationUpdateInterval,
       locationUpdateMinDistance: tLocationUpdateMinDistance,
       infoUpdateInterval: tInfoUpdateInterval);
 
-  group('getAppSettings', () {
+  group('getAppConfiguration', () {
     test(
-      'should return AppSettingsModel from the Shared Preferences when one instance exists in the cache',
+      'should return AppConfiguration from the Shared Preferences when one instance exists in the cache',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
             .thenReturn(fixture('app_settings/valid.json'));
         // act
-        final result = await dataSource.getAppSettings();
+        final result = await dataSource.getAppConfiguration();
         // assert
-        verify(
-            mockSharedPreferences.getString(SharedPreferencesKeys.appSettings));
-        expect(result, equals(tAppSettingsModel));
+        verify(mockSharedPreferences
+            .getString(SharedPreferencesKeys.appConfiguration));
+        expect(result, equals(tAppConfiguration));
       },
     );
 
     test(
-      'should throw CacheException when no AppSettingsModel exists in the shared preferences',
+      'should throw CacheException when no AppConfiguration exists in the shared preferences',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any)).thenReturn(null);
         // act
-        final call = dataSource.getAppSettings;
+        final call = dataSource.getAppConfiguration;
         // assert
         expect(() => call(), throwsA(TypeMatcher<CacheException>()));
       },
     );
   });
 
-  group('storeAppSettings', () {
+  group('storeAppConfiguration', () {
     test(
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.storeAppSettings(tAppSettingsModel);
+        dataSource.storeAppConfiguration(tAppConfiguration);
         // assert
         verify(mockSharedPreferences.setString(
-            SharedPreferencesKeys.appSettings,
-            json.encode(tAppSettingsModel.toJson())));
+            SharedPreferencesKeys.appConfiguration,
+            json.encode(tAppConfiguration.toJson())));
       },
     );
   });

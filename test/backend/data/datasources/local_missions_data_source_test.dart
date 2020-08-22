@@ -5,10 +5,10 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/core/types/shared_preferences_keys.dart';
+import '../../../../lib/backend/types/shared_preferences_keys.dart';
 import '../../../../lib/core/error/exceptions.dart';
 import '../../../../lib/backend/data/datasources/local_missions_data_source.dart';
-import '../../../../lib/backend/data/models/missions_model.dart';
+import '../../../../lib/backend/types/missions.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 
@@ -27,19 +27,18 @@ void main() {
   final tMissionStart = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
   final tLatitude = 48.2084114;
   final tLongitude = 16.3712767;
-  final tMissionModel = MissionModel(
+  final tMission = Mission(
     id: tMissionID,
     name: tMissionName,
     start: tMissionStart,
     latitude: tLatitude,
     longitude: tLongitude,
   );
-  final tMissionCollectionModel =
-      MissionCollectionModel(missions: <MissionModel>[tMissionModel]);
+  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
 
   group('getMissions', () {
     test(
-      'should return MissionCollectionModel from the Shared Preferences when one instance exists in the cache',
+      'should return MissionCollection from the Shared Preferences when one instance exists in the cache',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any))
@@ -48,12 +47,12 @@ void main() {
         final result = await dataSource.getMissions();
         // assert
         verify(mockSharedPreferences.getString(SharedPreferencesKeys.missions));
-        expect(result, equals(tMissionCollectionModel));
+        expect(result, equals(tMissionCollection));
       },
     );
 
     test(
-      'should throw CacheException when no UserStateCollectionModel exists in the shared preferences',
+      'should throw CacheException when no UserStateCollection exists in the shared preferences',
       () async {
         // arrange
         when(mockSharedPreferences.getString(any)).thenReturn(null);
@@ -70,10 +69,10 @@ void main() {
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.insertMissions(tMissionCollectionModel);
+        dataSource.insertMissions(tMissionCollection);
         // assert
         verify(mockSharedPreferences.setString(SharedPreferencesKeys.missions,
-            json.encode(tMissionCollectionModel.toJson())));
+            json.encode(tMissionCollection.toJson())));
       },
     );
   });

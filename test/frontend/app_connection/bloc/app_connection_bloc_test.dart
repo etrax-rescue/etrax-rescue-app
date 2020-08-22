@@ -2,12 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/types/app_connection.dart';
+import '../../../../lib/backend/types/app_connection.dart';
 import '../../../../lib/core/error/failures.dart';
-import '../../../../lib/core/types/etrax_server_endpoints.dart';
-import '../../../../lib/core/types/usecase.dart';
-import '../../../../lib/core/util/translate_error_messages.dart';
-import '../../../../lib/core/util/uri_input_converter.dart';
+import '../../../../lib/backend/types/etrax_server_endpoints.dart';
+import '../../../../lib/backend/types/usecase.dart';
+import '../../../../lib/frontend/util/translate_error_messages.dart';
+import '../../../../lib/frontend/util/uri_input_converter.dart';
 import '../../../../lib/backend/domain/usecases/get_app_connection_marked_for_update.dart';
 import '../../../../lib/backend/domain/usecases/verify_and_store_app_connection.dart';
 import '../../../../lib/frontend/app_connection/bloc/app_connection_bloc.dart';

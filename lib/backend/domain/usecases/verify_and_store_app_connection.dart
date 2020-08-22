@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/error/failures.dart';
-import '../../../core/types/usecase.dart';
+import '../../types/usecase.dart';
 import '../repositories/app_connection_repository.dart';
 
 class VerifyAndStoreAppConnection extends UseCase<None, AppConnectionParams> {

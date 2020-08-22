@@ -4,8 +4,8 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../lib/backend/domain/repositories/app_connection_repository.dart';
 import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
-import '../../../../lib/core/types/app_connection.dart';
-import '../../../../lib/core/types/usecase.dart';
+import '../../../../lib/backend/types/app_connection.dart';
+import '../../../../lib/backend/types/usecase.dart';
 
 class MockAppConnectionRepository extends Mock
     implements AppConnectionRepository {}

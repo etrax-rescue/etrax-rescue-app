@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
-import '../../../core/types/shared_preferences_keys.dart';
-import '../models/user_states_model.dart';
+import '../../types/shared_preferences_keys.dart';
+import '../../types/user_states.dart';
 
 abstract class LocalUserStatesDataSource {
-  Future<void> storeUserStates(UserStateCollectionModel states);
+  Future<void> storeUserStates(UserStateCollection states);
 
-  Future<UserStateCollectionModel> getUserStates();
+  Future<UserStateCollection> getUserStates();
 
   Future<void> clearUserStates();
 }
@@ -25,17 +25,17 @@ class LocalUserStatesDataSourceImpl implements LocalUserStatesDataSource {
   }
 
   @override
-  Future<UserStateCollectionModel> getUserStates() async {
+  Future<UserStateCollection> getUserStates() async {
     final data = sharedPreferences.getString(SharedPreferencesKeys.userStates);
     if (data != null) {
-      return UserStateCollectionModel.fromJson(json.decode(data));
+      return UserStateCollection.fromJson(json.decode(data));
     } else {
       throw CacheException();
     }
   }
 
   @override
-  Future<void> storeUserStates(UserStateCollectionModel states) async {
+  Future<void> storeUserStates(UserStateCollection states) async {
     sharedPreferences.setString(
         SharedPreferencesKeys.userStates, json.encode(states.toJson()));
   }

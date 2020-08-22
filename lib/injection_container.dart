@@ -3,13 +3,12 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'backend/data/datasources/app_connection_local_datasource.dart';
-import 'backend/data/datasources/app_connection_remote_endpoint_verification.dart';
 import 'backend/data/datasources/local_app_settings_data_source.dart';
 import 'backend/data/datasources/local_authentication_data_source.dart';
 import 'backend/data/datasources/local_missions_data_source.dart';
 import 'backend/data/datasources/local_user_roles_data_source.dart';
 import 'backend/data/datasources/local_user_states_data_source.dart';
+import 'backend/data/datasources/remote_app_connection_endpoint_verification.dart';
 import 'backend/data/datasources/remote_initialization_data_source.dart';
 import 'backend/data/datasources/remote_login_data_source.dart';
 import 'backend/data/repositories/app_connection_repository_impl.dart';
@@ -28,10 +27,10 @@ import 'backend/domain/usecases/login.dart';
 import 'backend/domain/usecases/mark_app_connection_for_update.dart';
 import 'backend/domain/usecases/verify_and_store_app_connection.dart';
 import 'core/network/network_info.dart';
-import 'core/util/uri_input_converter.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
 import 'frontend/authentication/bloc/login_bloc.dart';
 import 'frontend/initialization/bloc/initialization_bloc.dart';
+import 'frontend/util/uri_input_converter.dart';
 
 final sl = GetIt.instance;
 
@@ -64,10 +63,10 @@ Future<void> init() async {
           networkInfo: sl()));
 
   // Data Sources
-  sl.registerLazySingleton<AppConnectionRemoteEndpointVerification>(
-      () => AppConnectionRemoteEndpointVerificationImpl(sl()));
-  sl.registerLazySingleton<AppConnectionLocalDataSource>(
-      () => AppConnectionLocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<RemoteAppConnectionEndpointVerification>(
+      () => RemoteAppConnectionEndpointVerificationImpl(sl()));
+  //sl.registerLazySingleton<LocalAppConnectionDataSource>(
+  //    () => LocalAppConnectionDataSourceImpl(sl()));
 
   //! Features - Authentication
   // BLoC
