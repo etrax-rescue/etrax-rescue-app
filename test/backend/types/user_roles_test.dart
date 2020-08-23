@@ -15,13 +15,6 @@ void main() {
   final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
 
   group('UserRole', () {
-    test(
-      'should be a subclass of UserRole entity',
-      () async {
-        // assert
-        expect(tUserRole, isA<UserRole>());
-      },
-    );
     group('fromJson', () {
       test(
         'should throw a FormatException when the UserRole has no name field',
@@ -94,14 +87,6 @@ void main() {
   });
 
   group('UserRoleCollection', () {
-    test(
-      'should be a subclass of UserRoles entity',
-      () async {
-        // assert
-        expect(tUserRoleCollection, isA<UserRoleCollection>());
-      },
-    );
-
     group('fromJson', () {
       test(
         'should throw a FormatException when the JSON is missing the roles field',

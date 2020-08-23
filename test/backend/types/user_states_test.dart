@@ -21,13 +21,6 @@ void main() {
       UserStateCollection(states: <UserState>[tUserState]);
 
   group('UserState', () {
-    test(
-      'should be a subclass of UserState entity',
-      () async {
-        // assert
-        expect(tUserState, isA<UserState>());
-      },
-    );
     group('fromJson', () {
       test(
         'should throw a FormatException when the UserState has no name field',
@@ -117,14 +110,6 @@ void main() {
   });
 
   group('UserStateCollection', () {
-    test(
-      'should be a subclass of UserStateCollection entity',
-      () async {
-        // assert
-        expect(tUserStateCollection, isA<UserStateCollection>());
-      },
-    );
-
     group('fromJson', () {
       test(
         'should throw a FormatException when the JSON is missing the states field',

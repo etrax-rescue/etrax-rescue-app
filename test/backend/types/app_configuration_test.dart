@@ -14,13 +14,6 @@ void main() {
       locationUpdateInterval: tLocationUpdateInterval,
       locationUpdateMinDistance: tLocationUpdateMinDistance,
       infoUpdateInterval: tInfoUpdateInterval);
-  test(
-    'should be a subclass of Missions entity',
-    () async {
-      // assert
-      expect(tAppConfiguration, isA<AppConfiguration>());
-    },
-  );
 
   group('fromJson', () {
     test(

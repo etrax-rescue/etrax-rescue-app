@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/routes/router.gr.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/user_states.dart';
@@ -102,7 +103,7 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
         Navigator.of(context).pop();
       }
     } else {
-      Navigator.of(context).pushReplacementNamed('/home-page');
+      Navigator.of(context).pushReplacementNamed(Routes.homePage);
     }
   }
 }

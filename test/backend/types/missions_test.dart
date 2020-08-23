@@ -22,14 +22,6 @@ void main() {
   );
   final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
   group('Mission', () {
-    test(
-      'should be a subclass of Mission entity',
-      () async {
-        // assert
-        expect(tMission, isA<Mission>());
-      },
-    );
-
     group('fromJson', () {
       test(
         'should throw a FormatException when the Mission has no id field',

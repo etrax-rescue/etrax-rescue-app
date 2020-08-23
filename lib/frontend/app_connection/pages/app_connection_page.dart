@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../injection_container.dart';
+import '../../../routes/router.gr.dart';
 import '../../widgets/background.dart';
 import '../../widgets/centered_card_view.dart';
 import '../bloc/app_connection_bloc.dart';
@@ -22,7 +23,7 @@ class AppConnectionPage extends StatelessWidget {
             listener: (context, state) {
               if (state is AppConnectionStateSuccess) {
                 // Go to next page when no update is required or when the update succeeded
-                ExtendedNavigator.root.popAndPush('/login-page');
+                ExtendedNavigator.root.popAndPush(Routes.loginPage);
               }
             },
             builder: (context, state) {
