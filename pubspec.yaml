@@ -71,6 +71,7 @@ flutter:
         - asset: fonts/CustomMaterialIcons.ttf
   assets:
     - assets/images/background.jpg
+    - assets/images/etrax_rescue_logo.svg
 
 flutter_intl:
   enabled: true

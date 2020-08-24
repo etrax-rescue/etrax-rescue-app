@@ -18,10 +18,12 @@ import '../frontend/home/pages/home_page.dart';
 import '../frontend/home/pages/photo_page.dart';
 import '../frontend/initialization/pages/confirmation_page.dart';
 import '../frontend/initialization/pages/initialization_page.dart';
+import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/update_state/pages/update_state_page.dart';
 
 class Routes {
-  static const String appConnectionPage = '/';
+  static const String launchPage = '/';
+  static const String appConnectionPage = '/app-connection-page';
   static const String loginPage = '/login-page';
   static const String missionPage = '/mission-page';
   static const String confirmationPage = '/confirmation-page';
@@ -29,6 +31,7 @@ class Routes {
   static const String submitImagePage = '/submit-image-page';
   static const String updateStatePage = '/update-state-page';
   static const all = <String>{
+    launchPage,
     appConnectionPage,
     loginPage,
     missionPage,
@@ -43,6 +46,7 @@ class Router extends RouterBase {
   @override
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
+    RouteDef(Routes.launchPage, page: LaunchPage),
     RouteDef(Routes.appConnectionPage, page: AppConnectionPage),
     RouteDef(Routes.loginPage, page: LoginPage),
     RouteDef(Routes.missionPage, page: MissionPage),
@@ -54,6 +58,15 @@ class Router extends RouterBase {
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
+    LaunchPage: (data) {
+      var args = data.getArgs<LaunchPageArguments>(
+        orElse: () => LaunchPageArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => LaunchPage(key: args.key),
+        settings: data,
+      );
+    },
     AppConnectionPage: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const AppConnectionPage(),
@@ -120,6 +133,12 @@ class Router extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// LaunchPage arguments holder class
+class LaunchPageArguments {
+  final Key key;
+  LaunchPageArguments({this.key});
+}
 
 /// ConfirmationPage arguments holder class
 class ConfirmationPageArguments {

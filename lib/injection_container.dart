@@ -3,20 +3,16 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'backend/data/datasources/local_app_settings_data_source.dart';
-import 'backend/data/datasources/local_authentication_data_source.dart';
-import 'backend/data/datasources/local_missions_data_source.dart';
-import 'backend/data/datasources/local_user_roles_data_source.dart';
-import 'backend/data/datasources/local_user_states_data_source.dart';
-import 'backend/data/datasources/remote_app_connection_endpoint_verification.dart';
-import 'backend/data/datasources/remote_initialization_data_source.dart';
-import 'backend/data/datasources/remote_login_data_source.dart';
-import 'backend/data/repositories/app_connection_repository_impl.dart';
-import 'backend/data/repositories/authentication_repository_impl.dart';
-import 'backend/data/repositories/initialization_repository_impl.dart';
-import 'backend/domain/repositories/app_connection_repository.dart';
-import 'backend/domain/repositories/authentication_repository.dart';
-import 'backend/domain/repositories/initialization_repository.dart';
+import 'backend/datasources/local/local_app_configuration_data_source.dart';
+import 'backend/datasources/local/local_authentication_data_source.dart';
+import 'backend/datasources/local/local_missions_data_source.dart';
+import 'backend/datasources/local/local_user_roles_data_source.dart';
+import 'backend/datasources/local/local_user_states_data_source.dart';
+import 'backend/datasources/remote/remote_app_connection_data_source.dart';
+import 'backend/datasources/remote/remote_initialization_data_source.dart';
+import 'backend/datasources/remote/remote_login_data_source.dart';
+import 'backend/repositories/app_state_repository.dart';
+import 'backend/repositories/initialization_repository.dart';
 import 'backend/domain/usecases/delete_authentication_data.dart';
 import 'backend/domain/usecases/fetch_initialization_data.dart';
 import 'backend/domain/usecases/get_app_connection.dart';
@@ -89,11 +85,10 @@ Future<void> init() async {
   sl.registerLazySingleton<GetOrganizations>(() => GetOrganizations(sl()));
 
   // Repository
-  sl.registerLazySingleton<AuthenticationRepository>(() =>
-      AuthenticationRepositoryImpl(
-          remoteLoginDataSource: sl(),
-          localAuthenticationDataSource: sl(),
-          networkInfo: sl()));
+  sl.registerLazySingleton<LoginRepository>(() => AuthenticationRepositoryImpl(
+      remoteLoginDataSource: sl(),
+      localAuthenticationDataSource: sl(),
+      networkInfo: sl()));
 
   // Data Sources
   sl.registerLazySingleton<RemoteLoginDataSource>(
