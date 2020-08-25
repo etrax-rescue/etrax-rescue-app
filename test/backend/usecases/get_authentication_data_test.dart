@@ -2,20 +2,20 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/backend/types/usecase.dart';
-import '../../../../lib/backend/types/authentication_data.dart';
-import '../../../../lib/backend/domain/repositories/login_repository.dart';
-import '../../../../lib/backend/domain/usecases/get_authentication_data.dart';
+import 'package:etrax_rescue_app/backend/types/usecase.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
+import 'package:etrax_rescue_app/backend/repositories/app_state_repository.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_authentication_data.dart';
 
-class MockLoginRepository extends Mock implements LoginRepository {}
+class MockAppStateRepository extends Mock implements AppStateRepository {}
 
 void main() {
   GetAuthenticationData usecase;
-  MockLoginRepository mockLoginRepository;
+  MockAppStateRepository mockAppStateRepository;
 
   setUp(() {
-    mockLoginRepository = MockLoginRepository();
-    usecase = GetAuthenticationData(mockLoginRepository);
+    mockAppStateRepository = MockAppStateRepository();
+    usecase = GetAuthenticationData(mockAppStateRepository);
   });
 
   final String tOrganizationID = 'DEV';
@@ -28,14 +28,14 @@ void main() {
     'should return AuthenticationData when they are available',
     () async {
       // arrange
-      when(mockLoginRepository.getAuthenticationData())
+      when(mockAppStateRepository.getAuthenticationData())
           .thenAnswer((_) async => Right(tAuthenticationData));
       // act
       final result = await usecase(NoParams());
       // assert
       expect(result, Right(tAuthenticationData));
-      verify(mockLoginRepository.getAuthenticationData());
-      verifyNoMoreInteractions(mockLoginRepository);
+      verify(mockAppStateRepository.getAuthenticationData());
+      verifyNoMoreInteractions(mockAppStateRepository);
     },
   );
 }

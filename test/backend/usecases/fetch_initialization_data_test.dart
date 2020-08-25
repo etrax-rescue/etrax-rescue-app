@@ -2,15 +2,15 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/backend/types/app_connection.dart';
-import '../../../../lib/backend/types/authentication_data.dart';
-import '../../../../lib/backend/types/app_configuration.dart';
-import '../../../../lib/backend/types/initialization_data.dart';
-import '../../../../lib/backend/types/missions.dart';
-import '../../../../lib/backend/types/user_roles.dart';
-import '../../../../lib/backend/types/user_states.dart';
-import '../../../../lib/backend/domain/repositories/initialization_repository.dart';
-import '../../../../lib/backend/domain/usecases/fetch_initialization_data.dart';
+import 'package:etrax_rescue_app/backend/types/app_connection.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
+import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
+import 'package:etrax_rescue_app/backend/types/initialization_data.dart';
+import 'package:etrax_rescue_app/backend/types/missions.dart';
+import 'package:etrax_rescue_app/backend/types/user_roles.dart';
+import 'package:etrax_rescue_app/backend/types/user_states.dart';
+import 'package:etrax_rescue_app/backend/repositories/initialization_repository.dart';
+import 'package:etrax_rescue_app/backend/usecases/fetch_initialization_data.dart';
 
 class MockInitializationRepository extends Mock
     implements InitializationRepository {}

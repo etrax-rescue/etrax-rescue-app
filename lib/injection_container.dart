@@ -1,6 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_app_configuration.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_mission_state.dart';
+import 'package:etrax_rescue_app/backend/usecases/logout.dart';
 import 'package:etrax_rescue_app/frontend/launch/bloc/launch_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -137,11 +138,13 @@ Future<void> init() async {
         getAppConnection: sl(),
         getAuthenticationData: sl(),
         fetchInitializationData: sl(),
+        logout: sl(),
       ));
 
   // Use Cases
   sl.registerLazySingleton<FetchInitializationData>(
       () => FetchInitializationData(sl()));
+  sl.registerLazySingleton<Logout>(() => Logout(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/logout.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/initialization_data.dart';
@@ -20,13 +21,16 @@ class InitializationBloc
   final FetchInitializationData fetchInitializationData;
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
-  InitializationBloc(
-      {@required this.fetchInitializationData,
-      @required this.getAppConnection,
-      @required this.getAuthenticationData})
-      : assert(fetchInitializationData != null),
+  final Logout logout;
+  InitializationBloc({
+    @required this.fetchInitializationData,
+    @required this.getAppConnection,
+    @required this.getAuthenticationData,
+    @required this.logout,
+  })  : assert(fetchInitializationData != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
+        assert(logout != null),
         super(InitializationInitial());
 
   @override
@@ -60,6 +64,14 @@ class InitializationBloc
             yield InitializationSuccess(initializationData);
           });
         });
+      });
+    } else if (event is LogoutEvent) {
+      final logoutEither = await logout(NoParams());
+
+      yield* logoutEither.fold((failure) async* {
+        yield _mapFailureToErrorState(failure);
+      }, (initializationData) async* {
+        yield InitializationLogoutSuccess();
       });
     }
   }

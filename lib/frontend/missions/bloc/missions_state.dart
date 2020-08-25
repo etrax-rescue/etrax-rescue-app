@@ -18,6 +18,8 @@ class InitializationSuccess extends InitializationState {
   List<Object> get props => [initializationData];
 }
 
+class InitializationLogoutSuccess extends InitializationState {}
+
 class InitializationRecoverableError extends InitializationState {
   final String messageKey;
 

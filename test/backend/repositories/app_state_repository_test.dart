@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_mission_state_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:etrax_rescue_app/backend/types/app_state.dart';
 import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
 import 'package:etrax_rescue_app/backend/types/organizations.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
@@ -14,15 +14,14 @@ import 'package:etrax_rescue_app/backend/types/app_connection.dart';
 import 'package:etrax_rescue_app/backend/repositories/app_state_repository.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_app_connection_data_source.dart';
 import 'package:etrax_rescue_app/backend/datasources/remote/remote_app_connection_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_app_state_data_source.dart';
 import 'package:etrax_rescue_app/backend/datasources/remote/remote_login_data_source.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_organizations_data_source.dart';
 import 'package:etrax_rescue_app/backend/datasources/remote/remote_organizations_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_authentication_data_source.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_login_data_source.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 
-class MockLocalAppStateDataSource extends Mock
-    implements LocalAppStateDataSource {}
+class MockLocalMissionStateDataSource extends Mock
+    implements LocalMissionStateDataSource {}
 
 class MockRemoteAppConnectionDataSource extends Mock
     implements RemoteAppConnectionDataSource {}
@@ -38,41 +37,40 @@ class MockLocalOrganizationsDataSource extends Mock
 
 class MockRemoteLoginDataSource extends Mock implements RemoteLoginDataSource {}
 
-class MockLocalAuthenticationDataSource extends Mock
-    implements LocalAuthenticationDataSource {}
+class MockLocalLoginDataSource extends Mock implements LocalLoginDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
   AppStateRepositoryImpl repository;
-  MockLocalAppStateDataSource mockLocalAppStateDataSource;
+  MockLocalMissionStateDataSource mockLocalMissionStateDataSource;
   MockRemoteAppConnectionDataSource mockRemoteAppConnectionDataSource;
   MockLocalAppConnectionDataSource mockLocalAppConnectionDataSource;
   MockRemoteOrganizationsDataSource mockRemoteOrganizationsDataSource;
   MockLocalOrganizationsDataSource mockLocalOrganizationsDataSource;
   MockRemoteLoginDataSource mockRemoteLoginDataSource;
-  MockLocalAuthenticationDataSource mockLocalAuthenticationDataSource;
+  MockLocalLoginDataSource mockLocalLoginDataSource;
   MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
-    mockLocalAppStateDataSource = MockLocalAppStateDataSource();
+    mockLocalMissionStateDataSource = MockLocalMissionStateDataSource();
     mockRemoteAppConnectionDataSource = MockRemoteAppConnectionDataSource();
     mockLocalAppConnectionDataSource = MockLocalAppConnectionDataSource();
     mockRemoteOrganizationsDataSource = MockRemoteOrganizationsDataSource();
     mockLocalOrganizationsDataSource = MockLocalOrganizationsDataSource();
     mockRemoteLoginDataSource = MockRemoteLoginDataSource();
-    mockLocalAuthenticationDataSource = MockLocalAuthenticationDataSource();
+    mockLocalLoginDataSource = MockLocalLoginDataSource();
     mockNetworkInfo = MockNetworkInfo();
 
     repository = AppStateRepositoryImpl(
       remoteAppConnectionDataSource: mockRemoteAppConnectionDataSource,
       localAppConnectionDataSource: mockLocalAppConnectionDataSource,
       networkInfo: mockNetworkInfo,
-      localAppStateDataSource: mockLocalAppStateDataSource,
-      localAuthenticationDataSource: mockLocalAuthenticationDataSource,
+      localLoginDataSource: mockLocalLoginDataSource,
       localOrganizationsDataSource: mockLocalOrganizationsDataSource,
       remoteLoginDataSource: mockRemoteLoginDataSource,
       remoteOrganizationsDataSource: mockRemoteOrganizationsDataSource,
+      localMissionStateDataSource: mockLocalMissionStateDataSource,
     );
   });
 
@@ -94,12 +92,6 @@ void main() {
   final tOrganizationCollection =
       OrganizationCollection(organizations: <Organization>[tOrganization]);
 
-  final tAppState = AppState(
-    appConnection: tAppConnection,
-    authenticationData: tAuthenticationData,
-    selectedOrganization: tOrganization,
-  );
-
   void testOnline(Function body) {
     group('device is online', () {
       setUp(() {
@@ -117,45 +109,6 @@ void main() {
       body();
     });
   }
-
-  group('getAppState', () {
-    test(
-      'should ask local datasource for cached data',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenAnswer((_) async => tAppState);
-        // act
-        await repository.getAppState();
-        // assert
-        verify(mockLocalAppStateDataSource.getCachedAppState());
-      },
-    );
-    test(
-      'should return CacheFailure when retrieving the AppState from the datasource failed',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenThrow(CacheException());
-        // act
-        final result = await repository.getAppState();
-        // assert
-        expect(result, Left(CacheFailure()));
-      },
-    );
-    test(
-      'should return a valid AppState when retrieving data succeeded',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenAnswer((_) async => tAppState);
-        // act
-        final result = await repository.getAppState();
-        // assert
-        expect(result, Right(tAppState));
-      },
-    );
-  });
 
   group('setAppConnection', () {
     test(
@@ -412,7 +365,7 @@ void main() {
           verify(mockRemoteLoginDataSource.login(
               tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalAuthenticationDataSource);
+          verifyZeroInteractions(mockLocalLoginDataSource);
         },
       );
 
@@ -429,7 +382,7 @@ void main() {
           verify(mockRemoteLoginDataSource.login(
               tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalAuthenticationDataSource);
+          verifyZeroInteractions(mockLocalLoginDataSource);
         },
       );
       test(
@@ -445,7 +398,7 @@ void main() {
           verify(mockRemoteLoginDataSource.login(
               tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalAuthenticationDataSource);
+          verifyZeroInteractions(mockLocalLoginDataSource);
         },
       );
 
@@ -462,7 +415,7 @@ void main() {
           verify(mockRemoteLoginDataSource.login(
               tAppConnection, tOrganizationID, tUsername, tPassword));
           expect(result, equals(Left(LoginFailure())));
-          verifyZeroInteractions(mockLocalAuthenticationDataSource);
+          verifyZeroInteractions(mockLocalLoginDataSource);
         },
       );
 
@@ -476,9 +429,9 @@ void main() {
           await repository.login(
               tAppConnection, tOrganizationID, tUsername, tPassword);
           // assert
-          verify(mockLocalAuthenticationDataSource
+          verify(mockLocalLoginDataSource
               .cacheAuthenticationData(tAuthenticationData));
-          verifyNoMoreInteractions(mockLocalAuthenticationDataSource);
+          verifyNoMoreInteractions(mockLocalLoginDataSource);
         },
       );
 
@@ -502,7 +455,7 @@ void main() {
           // arrange
           when(mockRemoteLoginDataSource.login(any, any, any, any))
               .thenAnswer((_) async => tAuthenticationData);
-          when(mockLocalAuthenticationDataSource.cacheAuthenticationData(any))
+          when(mockLocalLoginDataSource.cacheUsername(tUsername))
               .thenThrow(CacheException());
           // act
           final result = await repository.login(
@@ -512,109 +465,6 @@ void main() {
         },
       );
     });
-  });
-
-  group('logout', () {
-    test(
-      'should call the LocalAppStateDataSource',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenAnswer((_) async => tAppState);
-        when(mockLocalAppStateDataSource.cacheAppState(any))
-            .thenAnswer((_) async {});
-        final emptyAppState = AppState(appConnection: tAppConnection);
-        // act
-        await repository.logout();
-        // assert
-        verify(mockLocalAppStateDataSource.getCachedAppState());
-        verify(mockLocalAppStateDataSource.cacheAppState(emptyAppState));
-      },
-    );
-
-    test(
-      'should return CacheFailure when getting the current state failed',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenThrow(CacheException());
-        when(mockLocalAppStateDataSource.cacheAppState(any))
-            .thenThrow((_) async {});
-        // act
-        final result = await repository.logout();
-        // assert
-        expect(result, Left(CacheFailure()));
-      },
-    );
-
-    test(
-      'should return CacheFailure when updating of the state failed',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenAnswer((_) async => tAppState);
-        when(mockLocalAppStateDataSource.cacheAppState(any))
-            .thenThrow(CacheException());
-        // act
-        final result = await repository.logout();
-        // assert
-        expect(result, Left(CacheFailure()));
-      },
-    );
-
-    test(
-      'should return None when resetting of the state succeeded',
-      () async {
-        // arrange
-        when(mockLocalAppStateDataSource.getCachedAppState())
-            .thenAnswer((_) async => tAppState);
-        when(mockLocalAppStateDataSource.cacheAppState(any))
-            .thenAnswer((_) async {});
-        // act
-        final result = await repository.logout();
-        // assert
-        expect(result, Right(None()));
-      },
-    );
-  });
-
-  group('getAuthenticationData', () {
-    test(
-      'should ask local data source for cached data',
-      () async {
-        // arrange
-        when(mockLocalAuthenticationDataSource.getCachedAuthenticationData())
-            .thenAnswer((_) async => tAuthenticationData);
-        // act
-        await repository.getAuthenticationData();
-        // assert
-        verify(mockLocalAuthenticationDataSource.getCachedAuthenticationData());
-      },
-    );
-    test(
-      'should return cached AuthenticationData',
-      () async {
-        // arrange
-        when(mockLocalAuthenticationDataSource.getCachedAuthenticationData())
-            .thenAnswer((_) async => tAuthenticationData);
-        // act
-        final result = await repository.getAuthenticationData();
-        // assert
-        expect(result, equals(Right(tAuthenticationData)));
-      },
-    );
-    test(
-      'should return CacheFailure when retrieving cached data fails',
-      () async {
-        // arrange
-        when(mockLocalAuthenticationDataSource.getCachedAuthenticationData())
-            .thenThrow(CacheException());
-        // act
-        final result = await repository.getAuthenticationData();
-        // assert
-        expect(result, Left(CacheFailure()));
-      },
-    );
   });
 
   group('getOrganizations', () {

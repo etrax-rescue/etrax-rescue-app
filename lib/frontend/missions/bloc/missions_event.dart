@@ -9,3 +9,5 @@ abstract class InitializationEvent extends Equatable {
 class StartFetchingInitializationData extends InitializationEvent {}
 
 class GetAllMissions extends InitializationEvent {}
+
+class LogoutEvent extends InitializationEvent {}

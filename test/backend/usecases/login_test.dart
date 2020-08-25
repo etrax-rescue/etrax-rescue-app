@@ -2,19 +2,19 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/backend/types/app_connection.dart';
-import '../../../../lib/backend/domain/repositories/login_repository.dart';
-import '../../../../lib/backend/domain/usecases/login.dart';
+import 'package:etrax_rescue_app/backend/types/app_connection.dart';
+import 'package:etrax_rescue_app/backend/repositories/app_state_repository.dart';
+import 'package:etrax_rescue_app/backend/usecases/login.dart';
 
-class MockAuthenticationRepository extends Mock implements LoginRepository {}
+class MockAppStateRepository extends Mock implements AppStateRepository {}
 
 void main() {
   Login usecase;
-  MockAuthenticationRepository mockLoginRepository;
+  MockAppStateRepository mockAppStateRepository;
 
   setUp(() {
-    mockLoginRepository = MockAuthenticationRepository();
-    usecase = Login(mockLoginRepository);
+    mockAppStateRepository = MockAppStateRepository();
+    usecase = Login(mockAppStateRepository);
   });
 
   final tAuthority = 'etrax.at';
@@ -35,15 +35,15 @@ void main() {
     'should return None when valid credentials are given',
     () async {
       // arrange
-      when(mockLoginRepository.login(any, any, any, any))
+      when(mockAppStateRepository.login(any, any, any, any))
           .thenAnswer((_) async => Right(None()));
       // act
       final result = await usecase(tLoginParams);
       // assert
       expect(result, Right(None()));
-      verify(mockLoginRepository.login(
+      verify(mockAppStateRepository.login(
           tAppConnection, tOrganizationID, tUsername, tPassword));
-      verifyNoMoreInteractions(mockLoginRepository);
+      verifyNoMoreInteractions(mockAppStateRepository);
     },
   );
 }

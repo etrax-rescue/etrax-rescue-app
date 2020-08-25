@@ -34,6 +34,7 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
     if (widget.initial) {
       // If this is the initial time this dialog is called, automatically select the first state
       selectedStateID = states.states[0].id;
+      WidgetsBinding.instance.addPostFrameCallback((_) => submit());
     }
   }
 

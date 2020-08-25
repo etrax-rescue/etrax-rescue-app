@@ -14,7 +14,7 @@ class AppConnectionForm extends StatefulWidget {
 
 class _AppConnectionFormState extends State<AppConnectionForm> {
   final _formKey = GlobalKey<FormState>();
-  String inputStr;
+  String _inputStr;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class _AppConnectionFormState extends State<AppConnectionForm> {
               hintText: 'etrax.at',
             ),
             onChanged: (value) {
-              inputStr = value;
+              _inputStr = value;
             },
             validator: (val) =>
                 val.length < 1 ? S.of(context).FIELD_REQUIRED : null,
@@ -79,7 +79,7 @@ class _AppConnectionFormState extends State<AppConnectionForm> {
   void submit() {
     if (_formKey.currentState.validate()) {
       BlocProvider.of<AppConnectionBloc>(context)
-          .add((SubmitAppConnection(authority: inputStr)));
+          .add((SubmitAppConnection(authority: _inputStr)));
     }
   }
 }

@@ -61,13 +61,13 @@ class Router extends RouterBase {
   final _pagesMap = <Type, AutoRouteFactory>{
     LaunchPage: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const LaunchPage(),
+        builder: (context) => const LaunchPage().wrappedRoute(context),
         settings: data,
       );
     },
     AppConnectionPage: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const AppConnectionPage(),
+        builder: (context) => const AppConnectionPage().wrappedRoute(context),
         settings: data,
       );
     },
@@ -79,13 +79,13 @@ class Router extends RouterBase {
           organizations: args.organizations,
           username: args.username,
           organizationID: args.organizationID,
-        ),
+        ).wrappedRoute(context),
         settings: data,
       );
     },
     MissionPage: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MissionPage(),
+        builder: (context) => const MissionPage().wrappedRoute(context),
         settings: data,
       );
     },

@@ -72,8 +72,8 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
                 // If there is no mission state, there is probably no mission as well
                 yield LaunchLoginPage(
                   organizations: organizations,
-                  username: null,
-                  organizationID: null,
+                  username: authenticationData.username,
+                  organizationID: authenticationData.organizationID,
                 );
               }, (missionState) async* {
                 final appConfigurationEither =
