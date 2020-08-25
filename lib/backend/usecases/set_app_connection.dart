@@ -6,9 +6,9 @@ import '../../core/error/failures.dart';
 import '../types/usecase.dart';
 import '../repositories/app_state_repository.dart';
 
-class VerifyAndStoreAppConnection extends UseCase<None, AppConnectionParams> {
+class SetAppConnection extends UseCase<None, AppConnectionParams> {
   final AppStateRepository repository;
-  VerifyAndStoreAppConnection(this.repository);
+  SetAppConnection(this.repository);
 
   @override
   Future<Either<Failure, None>> call(AppConnectionParams param) async {

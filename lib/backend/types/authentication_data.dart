@@ -8,11 +8,13 @@ class AuthenticationData extends Equatable {
   final String organizationID;
   final String username;
   final String token;
+  final DateTime issuingDate;
 
   AuthenticationData({
     @required this.organizationID,
     @required this.username,
     @required this.token,
+    @required this.issuingDate,
   });
 
   Map<String, String> generateAuthHeader() {
@@ -25,21 +27,22 @@ class AuthenticationData extends Equatable {
     final organizationID = json['organizationID'];
     final username = json['username'];
     final token = json['token'];
-    if (username == null || token == null || organizationID == null) {
+    final issuingDate =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(json['issuingDate']));
+    if (username == null ||
+        token == null ||
+        organizationID == null ||
+        issuingDate == null) {
       throw FormatException();
     }
     return AuthenticationData(
-        organizationID: organizationID, username: username, token: token);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'organizationID': this.organizationID,
-      'username': this.username,
-      'token': this.token,
-    };
+      organizationID: organizationID,
+      username: username,
+      token: token,
+      issuingDate: issuingDate,
+    );
   }
 
   @override
-  List<Object> get props => [username, token];
+  List<Object> get props => [username, token, organizationID, issuingDate];
 }

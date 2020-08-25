@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../lib/backend/types/organizations.dart';
+import 'package:etrax_rescue_app/backend/types/organizations.dart';
 
 import '../../fixtures/fixture_reader.dart';
 

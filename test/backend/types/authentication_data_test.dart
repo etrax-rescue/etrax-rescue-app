@@ -4,15 +4,19 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../lib/backend/types/authentication_data.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
 import '../../fixtures/fixture_reader.dart';
 
 void main() {
   final String tOrganizationID = 'DEV';
   final String tUsername = 'JohnDoe';
   final String tToken = '0123456789ABCDEF';
+  final DateTime tIssuingDate = DateTime.parse('2020-02-02T20:20:02');
   final AuthenticationData tAuthenticationData = AuthenticationData(
-      organizationID: tOrganizationID, username: tUsername, token: tToken);
+      organizationID: tOrganizationID,
+      username: tUsername,
+      token: tToken,
+      issuingDate: tIssuingDate);
 
   group('generateAuthHeader', () {
     test(
@@ -65,23 +69,6 @@ void main() {
         final result = AuthenticationData.fromJson(jsonMap);
         // assert
         expect(result, tAuthenticationData);
-      },
-    );
-  });
-
-  group('toJson', () {
-    test(
-      'should return a JSON map containing the proper data',
-      () async {
-        // act
-        final result = tAuthenticationData.toJson();
-        // assert
-        final expectedMap = {
-          'organizationID': tOrganizationID,
-          'username': tUsername,
-          'token': tToken,
-        };
-        expect(result, equals(expectedMap));
       },
     );
   });

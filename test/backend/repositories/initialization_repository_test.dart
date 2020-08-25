@@ -5,22 +5,22 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/core/error/failures.dart';
-import '../../../../lib/core/network/network_info.dart';
-import '../../../../lib/backend/types/app_connection.dart';
-import '../../../../lib/backend/types/authentication_data.dart';
-import '../../../../lib/backend/data/datasources/remote_initialization_data_source.dart';
-import '../../../../lib/backend/data/datasources/local_user_states_data_source.dart';
-import '../../../../lib/backend/data/datasources/local_user_roles_data_source.dart';
-import '../../../../lib/backend/data/datasources/local_missions_data_source.dart';
-import '../../../../lib/backend/data/datasources/local_app_settings_data_source.dart';
-import '../../../../lib/backend/types/initialization_data.dart';
-import '../../../../lib/backend/types/user_roles.dart';
-import '../../../../lib/backend/types/user_states.dart';
-import '../../../../lib/backend/types/app_configuration.dart';
-import '../../../../lib/backend/types/missions.dart';
-import '../../../../lib/backend/data/repositories/initialization_repository_impl.dart';
+import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/core/error/failures.dart';
+import 'package:etrax_rescue_app/core/network/network_info.dart';
+import 'package:etrax_rescue_app/backend/types/app_connection.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
+import 'package:etrax_rescue_app/backend/datasources/remote/remote_initialization_data_source.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_user_states_data_source.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_user_roles_data_source.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_missions_data_source.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_app_configuration_data_source.dart';
+import 'package:etrax_rescue_app/backend/types/initialization_data.dart';
+import 'package:etrax_rescue_app/backend/types/user_roles.dart';
+import 'package:etrax_rescue_app/backend/types/user_states.dart';
+import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
+import 'package:etrax_rescue_app/backend/types/missions.dart';
+import 'package:etrax_rescue_app/backend/repositories/initialization_repository.dart';
 
 class MockRemoteInitializationDataSource extends Mock
     implements RemoteInitializationDataSource {}
@@ -34,8 +34,8 @@ class MockLocalUserRolesDataSource extends Mock
 class MockLocalMissionsDataSource extends Mock
     implements LocalMissionsDataSource {}
 
-class MockLocalAppSettingsDataSource extends Mock
-    implements LocalAppSettingsDataSource {}
+class MockLocalAppConfigurationDataSource extends Mock
+    implements LocalAppConfigurationDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
@@ -44,7 +44,7 @@ void main() {
   MockLocalUserStatesDataSource mockLocalUserStatesDataSource;
   MockLocalUserRolesDataSource mockLocalUserRolesDataSource;
   MockLocalMissionsDataSource mockLocalMissionsDataSource;
-  MockLocalAppSettingsDataSource mockLocalAppSettingsDataSource;
+  MockLocalAppConfigurationDataSource mockLocalAppConfigurationDataSource;
   MockNetworkInfo mockNetworkInfo;
   InitializationRepositoryImpl repository;
 
@@ -53,12 +53,12 @@ void main() {
     mockLocalUserStatesDataSource = MockLocalUserStatesDataSource();
     mockLocalUserRolesDataSource = MockLocalUserRolesDataSource();
     mockLocalMissionsDataSource = MockLocalMissionsDataSource();
-    mockLocalAppSettingsDataSource = MockLocalAppSettingsDataSource();
+    mockLocalAppConfigurationDataSource = MockLocalAppConfigurationDataSource();
     mockNetworkInfo = MockNetworkInfo();
     repository = InitializationRepositoryImpl(
         remoteInitializationDataSource: mockRemoteDataSource,
         localUserStatesDataSource: mockLocalUserStatesDataSource,
-        localAppSettingsDataSource: mockLocalAppSettingsDataSource,
+        localAppConfigurationDataSource: mockLocalAppConfigurationDataSource,
         localMissionsDataSource: mockLocalMissionsDataSource,
         localUserRolesDataSource: mockLocalUserRolesDataSource,
         networkInfo: mockNetworkInfo);
@@ -194,7 +194,7 @@ void main() {
           verify(mockRemoteDataSource.fetchInitialization(
               tAppConnection, tAuthenticationData));
           expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalAppConfigurationDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
           verifyZeroInteractions(mockLocalUserRolesDataSource);
           verifyZeroInteractions(mockLocalUserStatesDataSource);
@@ -214,7 +214,7 @@ void main() {
           verify(mockRemoteDataSource.fetchInitialization(
               tAppConnection, tAuthenticationData));
           expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalAppConfigurationDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
           verifyZeroInteractions(mockLocalUserRolesDataSource);
           verifyZeroInteractions(mockLocalUserStatesDataSource);
@@ -234,7 +234,7 @@ void main() {
           verify(mockRemoteDataSource.fetchInitialization(
               tAppConnection, tAuthenticationData));
           expect(result, equals(Left(ServerFailure())));
-          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalAppConfigurationDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
           verifyZeroInteractions(mockLocalUserRolesDataSource);
           verifyZeroInteractions(mockLocalUserStatesDataSource);
@@ -253,7 +253,7 @@ void main() {
           verify(mockRemoteDataSource.fetchInitialization(
               tAppConnection, tAuthenticationData));
           expect(result, equals(Left(AuthenticationFailure())));
-          verifyZeroInteractions(mockLocalAppSettingsDataSource);
+          verifyZeroInteractions(mockLocalAppConfigurationDataSource);
           verifyZeroInteractions(mockLocalMissionsDataSource);
           verifyZeroInteractions(mockLocalUserRolesDataSource);
           verifyZeroInteractions(mockLocalUserStatesDataSource);
@@ -270,8 +270,8 @@ void main() {
           await repository.fetchInitializationData(
               tAppConnection, tAuthenticationData);
           // assert
-          verify(mockLocalAppSettingsDataSource
-              .storeAppConfiguration(tInitializationData.appConfiguration));
+          verify(mockLocalAppConfigurationDataSource
+              .setAppConfiguration(tInitializationData.appConfiguration));
           verify(mockLocalUserStatesDataSource
               .storeUserStates(tInitializationData.userStateCollection));
           verify(mockLocalUserRolesDataSource
@@ -287,7 +287,7 @@ void main() {
           // arrange
           when(mockRemoteDataSource.fetchInitialization(any, any))
               .thenAnswer((_) async => tInitializationData);
-          when(mockLocalAppSettingsDataSource.storeAppConfiguration(any))
+          when(mockLocalAppConfigurationDataSource.setAppConfiguration(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.fetchInitializationData(
@@ -366,12 +366,12 @@ void main() {
       'should ask local data source for cached data',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.getAppConfiguration())
+        when(mockLocalAppConfigurationDataSource.getAppConfiguration())
             .thenAnswer((_) async => tAppConfiguration);
         // act
         await repository.getAppConfiguration();
         // assert
-        verify(mockLocalAppSettingsDataSource.getAppConfiguration());
+        verify(mockLocalAppConfigurationDataSource.getAppConfiguration());
       },
     );
 
@@ -379,7 +379,7 @@ void main() {
       'should return CacheFailure when retrieving cached data fails',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.getAppConfiguration())
+        when(mockLocalAppConfigurationDataSource.getAppConfiguration())
             .thenThrow(CacheException());
         // act
         final result = await repository.getAppConfiguration();
@@ -392,7 +392,7 @@ void main() {
       'should return cached AppSettings',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.getAppConfiguration())
+        when(mockLocalAppConfigurationDataSource.getAppConfiguration())
             .thenAnswer((_) async => tAppConfiguration);
         // act
         final result = await repository.getAppConfiguration();
@@ -409,7 +409,7 @@ void main() {
         // act
         await repository.clearAppConfiguration();
         // assert
-        verify(mockLocalAppSettingsDataSource.clearAppConfiguration());
+        verify(mockLocalAppConfigurationDataSource.deleteAppConfiguration());
       },
     );
 
@@ -417,7 +417,7 @@ void main() {
       'should return CacheFailure when clearing cached data fails',
       () async {
         // arrange
-        when(mockLocalAppSettingsDataSource.clearAppConfiguration())
+        when(mockLocalAppConfigurationDataSource.deleteAppConfiguration())
             .thenThrow(CacheException());
         // act
         final result = await repository.clearAppConfiguration();

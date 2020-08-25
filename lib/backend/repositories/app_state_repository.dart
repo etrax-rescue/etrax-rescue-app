@@ -2,20 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/types/mission_state.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../datasources/local/local_app_connection_data_source.dart';
-import '../datasources/local/local_app_state_data_source.dart';
-import '../datasources/local/local_authentication_data_source.dart';
+import '../datasources/local/local_login_data_source.dart';
+import '../datasources/local/local_mission_state_data_source.dart';
 import '../datasources/local/local_organizations_data_source.dart';
 import '../datasources/remote/remote_app_connection_data_source.dart';
 import '../datasources/remote/remote_login_data_source.dart';
 import '../datasources/remote/remote_organizations_data_source.dart';
 import '../types/app_connection.dart';
-import '../types/app_state.dart';
 import '../types/authentication_data.dart';
 import '../types/missions.dart';
 import '../types/organizations.dart';
@@ -23,21 +23,19 @@ import '../types/user_roles.dart';
 import '../types/user_states.dart';
 
 abstract class AppStateRepository {
-  Future<Either<Failure, AppState>> getAppState();
-
   // AppConnection
   Future<Either<Failure, None>> setAppConnection(
       String authority, String basePath);
   Future<Either<Failure, AppConnection>> getAppConnection();
   Future<Either<Failure, None>> deleteAppConnection();
 
-  // Login
+  // Login and logout
   Future<Either<Failure, None>> login(AppConnection appConnection,
       String organizationID, String username, String password);
+  Future<Either<Failure, None>> logout();
 
   // Authentication
   Future<Either<Failure, AuthenticationData>> getAuthenticationData();
-  Future<Either<Failure, None>> deleteAuthenticationData();
 
   // Organizations
   Future<Either<Failure, OrganizationCollection>> getOrganizations(
@@ -45,54 +43,40 @@ abstract class AppStateRepository {
 
   // Selected Mission
   Future<Either<Failure, None>> setSelectedMission(Mission mission);
-  Future<Either<Failure, Mission>> getSelectedMission();
 
   // Selected UserState
   Future<Either<Failure, None>> setSelectedUserState(UserState state);
-  Future<Either<Failure, UserState>> getSelectedUserState();
 
   // Selected UserRole
   Future<Either<Failure, None>> setSelectedUserRole(UserRole role);
-  Future<Either<Failure, UserRole>> getSelectedUserRole();
 
-  // Clean Selected Mission, UserState and UserRole
-  Future<Either<Failure, None>> clearMissionData();
-
-  // Username
-  Future<Either<Failure, None>> setUsername();
-  Future<Either<Failure, None>> getUsername();
-
-  // Last Login Time
-  Future<Either<Failure, None>> setLastLogin(DateTime lastLogin);
-  Future<Either<Failure, DateTime>> getLastLogin();
+  Future<Either<Failure, MissionState>> getMissionState();
 }
 
 class AppStateRepositoryImpl implements AppStateRepository {
-  final LocalAppStateDataSource localAppStateDataSource;
   final RemoteAppConnectionDataSource remoteAppConnectionDataSource;
   final LocalAppConnectionDataSource localAppConnectionDataSource;
+
   final RemoteOrganizationsDataSource remoteOrganizationsDataSource;
   final LocalOrganizationsDataSource localOrganizationsDataSource;
+
   final RemoteLoginDataSource remoteLoginDataSource;
-  final LocalAuthenticationDataSource localAuthenticationDataSource;
+  final LocalLoginDataSource localLoginDataSource;
+
+  final LocalMissionStateDataSource localMissionStateDataSource;
+
   final NetworkInfo networkInfo;
 
   AppStateRepositoryImpl({
-    @required this.localAppStateDataSource,
     @required this.remoteAppConnectionDataSource,
+    @required this.localAppConnectionDataSource,
     @required this.remoteOrganizationsDataSource,
     @required this.localOrganizationsDataSource,
-    @required this.localAppConnectionDataSource,
     @required this.remoteLoginDataSource,
-    @required this.localAuthenticationDataSource,
+    @required this.localLoginDataSource,
+    @required this.localMissionStateDataSource,
     @required this.networkInfo,
   });
-
-  @override
-  Future<Either<Failure, AppState>> getAppState() {
-    // TODO: implement getAppState
-    throw UnimplementedError();
-  }
 
   @override
   Future<Either<Failure, AppConnection>> getAppConnection() async {
@@ -128,7 +112,7 @@ class AppStateRepositoryImpl implements AppStateRepository {
       return Left(ServerFailure());
     }
     try {
-      localAppConnectionDataSource.cacheAppConnection(model);
+      await localAppConnectionDataSource.cacheAppConnection(model);
       return Right(None());
     } on CacheException {
       return Left(CacheFailure());
@@ -136,9 +120,13 @@ class AppStateRepositoryImpl implements AppStateRepository {
   }
 
   @override
-  Future<Either<Failure, None>> deleteAppConnection() {
-    // TODO: implement deleteAppConnection
-    throw UnimplementedError();
+  Future<Either<Failure, None>> deleteAppConnection() async {
+    try {
+      localAppConnectionDataSource.deleteAppConnection();
+      return Right(None());
+    } on CacheException {
+      return Left(CacheFailure());
+    }
   }
 
   @override
@@ -202,8 +190,24 @@ class AppStateRepositoryImpl implements AppStateRepository {
       return Left(LoginFailure());
     }
     try {
-      localAuthenticationDataSource
-          .cacheAuthenticationData(authenticationDataModel);
+      await localLoginDataSource
+          .cacheSelectedOrganizationID(authenticationDataModel.organizationID);
+      await localLoginDataSource
+          .cacheUsername(authenticationDataModel.username);
+      await localLoginDataSource.cacheToken(authenticationDataModel.token);
+      await localLoginDataSource
+          .cacheIssuingDate(authenticationDataModel.issuingDate);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
+  }
+
+  @override
+  Future<Either<Failure, None>> logout() async {
+    try {
+      await localLoginDataSource.deleteToken();
+      await localMissionStateDataSource.clear();
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -213,83 +217,70 @@ class AppStateRepositoryImpl implements AppStateRepository {
   @override
   Future<Either<Failure, AuthenticationData>> getAuthenticationData() async {
     AuthenticationData data;
+    String username;
+    String organizationID;
+    String token;
+    DateTime issuingDate;
     try {
-      data = await localAuthenticationDataSource.getCachedAuthenticationData();
+      username = await localLoginDataSource.getCachedUsername();
+      organizationID =
+          await localLoginDataSource.getCachedSelectedOrganizationID();
+      token = await localLoginDataSource.getCachedUsername();
+      issuingDate = await localLoginDataSource.getCachedIssuingDate();
     } on CacheException {
       return Left(CacheFailure());
     }
+    data = AuthenticationData(
+      organizationID: organizationID,
+      username: username,
+      token: token,
+      issuingDate: issuingDate,
+    );
     return Right(data);
   }
 
   @override
-  Future<Either<Failure, None>> deleteAuthenticationData() {
-    // TODO: implement deleteAuthenticationData
-    throw UnimplementedError();
+  Future<Either<Failure, None>> setSelectedUserRole(UserRole role) async {
+    try {
+      await localMissionStateDataSource.cacheSelectedUserRole(role);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, None>> clearMissionData() {
-    // TODO: implement clearMissionData
-    throw UnimplementedError();
+  Future<Either<Failure, None>> setSelectedUserState(UserState state) async {
+    try {
+      await localMissionStateDataSource.cacheSelectedUserState(state);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, DateTime>> getLastLogin() {
-    // TODO: implement getLastLogin
-    throw UnimplementedError();
+  Future<Either<Failure, None>> setSelectedMission(Mission mission) async {
+    try {
+      await localMissionStateDataSource.cacheSelectedMission(mission);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 
   @override
-  Future<Either<Failure, Mission>> getSelectedMission() {
-    // TODO: implement getSelectedMission
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, UserRole>> getSelectedUserRole() {
-    // TODO: implement getSelectedUserRole
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, UserState>> getSelectedUserState() {
-    // TODO: implement getSelectedUserState
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, None>> getUsername() {
-    // TODO: implement getUsername
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, None>> setLastLogin(DateTime lastLogin) {
-    // TODO: implement setLastLogin
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, None>> setSelectedMission(Mission mission) {
-    // TODO: implement setSelectedMission
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, None>> setSelectedUserRole(UserRole role) {
-    // TODO: implement setSelectedUserRole
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, None>> setSelectedUserState(UserState state) {
-    // TODO: implement setSelectedUserState
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, None>> setUsername() {
-    // TODO: implement setUsername
-    throw UnimplementedError();
+  Future<Either<Failure, MissionState>> getMissionState() async {
+    Mission mission;
+    UserState state;
+    UserRole role;
+    try {
+      mission = await localMissionStateDataSource.getCachedSelectedMission();
+      state = await localMissionStateDataSource.getCachedSelectedUserState();
+      role = await localMissionStateDataSource.getCachedSelectedUserRole();
+      return Right(MissionState(mission: mission, state: state, role: role));
+    } on CacheException {
+      return Left(CacheFailure());
+    }
   }
 }

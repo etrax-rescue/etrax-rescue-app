@@ -24,6 +24,8 @@ abstract class InitializationRepository {
   Future<Either<Failure, InitializationData>> fetchInitializationData(
       AppConnection appConnection, AuthenticationData authenticationData);
 
+  Future<Either<Failure, InitializationData>> getInitializationData();
+
   Future<Either<Failure, MissionCollection>> getMissions();
   Future<Either<Failure, None>> clearMissions();
 
@@ -182,5 +184,30 @@ class InitializationRepositoryImpl implements InitializationRepository {
       return Left(CacheFailure());
     }
     return Right(data);
+  }
+
+  @override
+  Future<Either<Failure, InitializationData>> getInitializationData() async {
+    InitializationData initializationData;
+    AppConfiguration configuration;
+    MissionCollection missions;
+    UserRoleCollection roles;
+    UserStateCollection states;
+    try {
+      configuration =
+          await localAppConfigurationDataSource.getAppConfiguration();
+      missions = await localMissionsDataSource.getMissions();
+      roles = await localUserRolesDataSource.getUserRoles();
+      states = await localUserStatesDataSource.getUserStates();
+      initializationData = InitializationData(
+        appConfiguration: configuration,
+        missionCollection: missions,
+        userStateCollection: states,
+        userRoleCollection: roles,
+      );
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(initializationData);
   }
 }

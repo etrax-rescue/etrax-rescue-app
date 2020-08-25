@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../lib/backend/types/app_configuration.dart';
+import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
 
 import '../../fixtures/fixture_reader.dart';
 
