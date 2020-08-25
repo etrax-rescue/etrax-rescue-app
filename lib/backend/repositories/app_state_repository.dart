@@ -225,7 +225,7 @@ class AppStateRepositoryImpl implements AppStateRepository {
       username = await localLoginDataSource.getCachedUsername();
       organizationID =
           await localLoginDataSource.getCachedSelectedOrganizationID();
-      token = await localLoginDataSource.getCachedUsername();
+      token = await localLoginDataSource.getCachedToken();
       issuingDate = await localLoginDataSource.getCachedIssuingDate();
     } on CacheException {
       return Left(CacheFailure());

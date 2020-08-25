@@ -34,7 +34,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       final jsonResponse = json.decode(response.body);
       jsonResponse['username'] = username;
       jsonResponse['organizationID'] = organizationID;
-      jsonResponse['issuingDate'] = DateTime.now().millisecondsSinceEpoch;
+      jsonResponse['issuingDate'] =
+          DateTime.now().millisecondsSinceEpoch.toString();
       final data = AuthenticationData.fromJson(jsonResponse);
       return data;
     } else if (response.statusCode == 401) {

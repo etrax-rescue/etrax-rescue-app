@@ -25,6 +25,7 @@ class MissionPage extends StatelessWidget {
         backgroundColor: Theme.of(context).backgroundColor,
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
+            // TODO: change to logout bloc action
             ExtendedNavigator.of(context).popAndPush('/login-page');
           },
           label: Text(S.of(context).LOGOUT),

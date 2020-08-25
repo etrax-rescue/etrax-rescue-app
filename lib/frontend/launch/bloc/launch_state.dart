@@ -16,14 +16,14 @@ class LaunchAppConnectionPage extends LaunchState {}
 class LaunchLoginPage extends LaunchState {
   final OrganizationCollection organizations;
   final String username;
-  final String missionID;
+  final String organizationID;
   LaunchLoginPage(
       {@required this.organizations,
       @required this.username,
-      @required this.missionID});
+      @required this.organizationID});
 
   @override
-  List<Object> get props => [organizations, username, missionID];
+  List<Object> get props => [organizations, username, organizationID];
 }
 
 class LaunchMissionPage extends LaunchState {}

@@ -14,24 +14,33 @@ class LaunchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<LaunchBloc>()..add(Launch()),
-      child: Scaffold(
-        body: Background(
-          child: BlocConsumer(
-            builder: (context, state) {
-              return Center(child: CircularProgressIndicator());
-            },
-            listener: (context, state) {
-              if (state is LaunchAppConnectionPage) {
-                ExtendedNavigator.of(context)
-                    .popAndPush(Routes.appConnectionPage);
-              } else if (state is LaunchLoginPage) {
-                ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
-              } else if (state is LaunchHomePage) {
-                ExtendedNavigator.of(context).popAndPush(Routes.homePage);
-              }
-            },
-          ),
-        ),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: Background(
+              child: BlocConsumer<LaunchBloc, LaunchState>(
+                listener: (context, state) {
+                  print(state);
+                  if (state is LaunchAppConnectionPage) {
+                    ExtendedNavigator.of(context)
+                        .popAndPush(Routes.appConnectionPage);
+                  } else if (state is LaunchLoginPage) {
+                    ExtendedNavigator.of(context).popAndPush(Routes.loginPage,
+                        arguments: LoginPageArguments(
+                            organizations: state.organizations,
+                            username: state.username,
+                            organizationID: state.organizationID));
+                  } else if (state is LaunchHomePage) {
+                    ExtendedNavigator.of(context).popAndPush(Routes.homePage);
+                  }
+                },
+                builder: (context, state) {
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }

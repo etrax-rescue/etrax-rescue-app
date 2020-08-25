@@ -42,7 +42,7 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
   Stream<LaunchState> mapEventToState(
     LaunchEvent event,
   ) async* {
-    if (state is Launch) {
+    if (event is Launch) {
       yield LaunchInProgress();
       final appConnectionEither = await getAppConnection(NoParams());
       yield* appConnectionEither.fold((failure) async* {
@@ -59,15 +59,22 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
               await getAuthenticationData(NoParams());
 
           yield* authenticationDataEither.fold((failure) async* {
-            yield LaunchRecoverableError(
-                messageKey: _mapFailureToMessage(failure));
+            yield LaunchLoginPage(
+              organizations: organizations,
+              username: null,
+              organizationID: null,
+            );
           }, (authenticationData) async* {
             if (authenticationData.token != null) {
               // TODO: add logic for checking if mission is active
               final missionStateEither = await getMissionState(NoParams());
               yield* missionStateEither.fold((failure) async* {
-                yield LaunchRecoverableError(
-                    messageKey: _mapFailureToMessage(failure));
+                // If there is no mission state, there is probably no mission as well
+                yield LaunchLoginPage(
+                  organizations: organizations,
+                  username: null,
+                  organizationID: null,
+                );
               }, (missionState) async* {
                 final appConfigurationEither =
                     await getAppConfiguration(NoParams());
@@ -84,7 +91,7 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
               yield LaunchLoginPage(
                 organizations: organizations,
                 username: authenticationData.username,
-                missionID: authenticationData.organizationID,
+                organizationID: authenticationData.organizationID,
               );
             }
           });

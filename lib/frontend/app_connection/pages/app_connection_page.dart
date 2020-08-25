@@ -27,10 +27,7 @@ class AppConnectionPage extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              if (state is AppConnectionInitial) {
-                BlocProvider.of<AppConnectionBloc>(context);
-                return Container();
-              } else if (state is AppConnectionStateSuccess) {
+              if (state is AppConnectionStateSuccess) {
                 return Container();
               }
               return Center(
