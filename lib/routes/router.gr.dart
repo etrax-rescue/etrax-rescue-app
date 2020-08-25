@@ -10,15 +10,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../backend/types/missions.dart';
+import '../backend/types/organizations.dart';
 import '../backend/types/user_roles.dart';
 import '../backend/types/user_states.dart';
 import '../frontend/app_connection/pages/app_connection_page.dart';
-import '../frontend/authentication/pages/login_page.dart';
+import '../frontend/confirmation/pages/confirmation_page.dart';
 import '../frontend/home/pages/home_page.dart';
-import '../frontend/home/pages/photo_page.dart';
-import '../frontend/initialization/pages/confirmation_page.dart';
-import '../frontend/initialization/pages/initialization_page.dart';
 import '../frontend/launch/pages/launch_page.dart';
+import '../frontend/login/pages/login_page.dart';
+import '../frontend/missions/pages/mission_page.dart';
+import '../frontend/submit_image/pages/submit_image_page.dart';
 import '../frontend/update_state/pages/update_state_page.dart';
 
 class Routes {
@@ -59,11 +60,8 @@ class Router extends RouterBase {
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
   final _pagesMap = <Type, AutoRouteFactory>{
     LaunchPage: (data) {
-      var args = data.getArgs<LaunchPageArguments>(
-        orElse: () => LaunchPageArguments(),
-      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LaunchPage(key: args.key),
+        builder: (context) => const LaunchPage(),
         settings: data,
       );
     },
@@ -74,8 +72,14 @@ class Router extends RouterBase {
       );
     },
     LoginPage: (data) {
+      var args = data.getArgs<LoginPageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const LoginPage(),
+        builder: (context) => LoginPage(
+          key: args.key,
+          organizations: args.organizations,
+          username: args.username,
+          organizationID: args.organizationID,
+        ),
         settings: data,
       );
     },
@@ -134,10 +138,17 @@ class Router extends RouterBase {
 /// Arguments holder classes
 /// *************************************************************************
 
-/// LaunchPage arguments holder class
-class LaunchPageArguments {
+/// LoginPage arguments holder class
+class LoginPageArguments {
   final Key key;
-  LaunchPageArguments({this.key});
+  final OrganizationCollection organizations;
+  final String username;
+  final String organizationID;
+  LoginPageArguments(
+      {this.key,
+      @required this.organizations,
+      @required this.username,
+      @required this.organizationID});
 }
 
 /// ConfirmationPage arguments holder class

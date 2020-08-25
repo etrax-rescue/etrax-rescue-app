@@ -5,12 +5,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/initialization_data.dart';
-import '../../../backend/domain/usecases/fetch_initialization_data.dart';
-import '../../../backend/domain/usecases/get_authentication_data.dart';
-import '../../../core/error/failures.dart';
 import '../../../backend/types/usecase.dart';
+import '../../../backend/usecases/fetch_initialization_data.dart';
+import '../../../backend/usecases/get_app_connection.dart';
+import '../../../backend/usecases/get_authentication_data.dart';
+import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
-import '../../../backend/domain/usecases/get_app_connection.dart';
 
 part 'missions_event.dart';
 part 'missions_state.dart';

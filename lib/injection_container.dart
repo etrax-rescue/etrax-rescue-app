@@ -4,28 +4,30 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/datasources/local/local_app_configuration_data_source.dart';
-import 'backend/datasources/local/local_authentication_data_source.dart';
+import 'backend/datasources/local/local_app_connection_data_source.dart';
+import 'backend/datasources/local/local_login_data_source.dart';
+import 'backend/datasources/local/local_mission_state_data_source.dart';
 import 'backend/datasources/local/local_missions_data_source.dart';
+import 'backend/datasources/local/local_organizations_data_source.dart';
 import 'backend/datasources/local/local_user_roles_data_source.dart';
 import 'backend/datasources/local/local_user_states_data_source.dart';
 import 'backend/datasources/remote/remote_app_connection_data_source.dart';
 import 'backend/datasources/remote/remote_initialization_data_source.dart';
 import 'backend/datasources/remote/remote_login_data_source.dart';
+import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
-import 'backend/domain/usecases/delete_authentication_data.dart';
-import 'backend/domain/usecases/fetch_initialization_data.dart';
-import 'backend/domain/usecases/get_app_connection.dart';
-import 'backend/domain/usecases/get_app_connection_marked_for_update.dart';
-import 'backend/domain/usecases/get_authentication_data.dart';
-import 'backend/domain/usecases/get_organizations.dart';
-import 'backend/domain/usecases/login.dart';
-import 'backend/domain/usecases/mark_app_connection_for_update.dart';
-import 'backend/domain/usecases/verify_and_store_app_connection.dart';
+import 'backend/usecases/delete_app_connection.dart';
+import 'backend/usecases/fetch_initialization_data.dart';
+import 'backend/usecases/get_app_connection.dart';
+import 'backend/usecases/get_authentication_data.dart';
+import 'backend/usecases/get_organizations.dart';
+import 'backend/usecases/login.dart';
+import 'backend/usecases/set_app_connection.dart';
 import 'core/network/network_info.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
-import 'frontend/authentication/bloc/login_bloc.dart';
-import 'frontend/initialization/bloc/initialization_bloc.dart';
+import 'frontend/login/bloc/login_bloc.dart';
+import 'frontend/missions/bloc/missions_bloc.dart';
 import 'frontend/util/uri_input_converter.dart';
 
 final sl = GetIt.instance;
@@ -34,35 +36,45 @@ Future<void> init() async {
   //! Features - App Connection
   // BLoC
   sl.registerFactory<AppConnectionBloc>(() => AppConnectionBloc(
-        markedForUpdate: sl(),
         inputConverter: sl(),
-        verifyAndStore: sl(),
+        setAppConnection: sl(),
       ));
 
   // Use Cases
-  sl.registerLazySingleton<GetAppConnectionMarkedForUpdate>(
-      () => GetAppConnectionMarkedForUpdate(sl()));
-
-  sl.registerLazySingleton<MarkAppConnectionForUpdate>(
-      () => MarkAppConnectionForUpdate(sl()));
-
-  sl.registerLazySingleton<VerifyAndStoreAppConnection>(
-      () => VerifyAndStoreAppConnection(sl()));
+  sl.registerLazySingleton<SetAppConnection>(() => SetAppConnection(sl()));
 
   sl.registerLazySingleton<GetAppConnection>(() => GetAppConnection(sl()));
 
   // Repository
-  sl.registerLazySingleton<AppConnectionRepository>(() =>
-      AppConnectionRepositoryImpl(
-          remoteEndpointVerification: sl(),
-          localDataSource: sl(),
-          networkInfo: sl()));
+  sl.registerLazySingleton<AppStateRepository>(() => AppStateRepositoryImpl(
+        remoteAppConnectionDataSource: sl(),
+        localAppConnectionDataSource: sl(),
+        remoteOrganizationsDataSource: sl(),
+        localOrganizationsDataSource: sl(),
+        remoteLoginDataSource: sl(),
+        localLoginDataSource: sl(),
+        localMissionStateDataSource: sl(),
+        networkInfo: sl(),
+      ));
 
   // Data Sources
-  sl.registerLazySingleton<RemoteAppConnectionEndpointVerification>(
-      () => RemoteAppConnectionEndpointVerificationImpl(sl()));
-  //sl.registerLazySingleton<LocalAppConnectionDataSource>(
-  //    () => LocalAppConnectionDataSourceImpl(sl()));
+  sl.registerLazySingleton<RemoteAppConnectionDataSource>(
+      () => RemoteAppConnectionDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalAppConnectionDataSource>(
+      () => LocalAppConnectionDataSourceImpl(sl()));
+
+  sl.registerLazySingleton<RemoteOrganizationsDataSource>(
+      () => RemoteOrganizationsDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalOrganizationsDataSource>(
+      () => LocalOrganizationsDataSourceImpl(sl()));
+
+  sl.registerLazySingleton<RemoteLoginDataSource>(
+      () => RemoteLoginDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalLoginDataSource>(
+      () => LocalLoginDataSourceImpl(sl()));
+
+  sl.registerLazySingleton<LocalMissionStateDataSource>(
+      () => LocalMissionStateDataSourceImpl(sl()));
 
   //! Features - Authentication
   // BLoC
@@ -70,7 +82,7 @@ Future<void> init() async {
         login: sl(),
         getAppConnection: sl(),
         getOrganizations: sl(),
-        markAppConnectionForUpdate: sl(),
+        deleteAppConnection: sl(),
       ));
 
   // Use Cases
@@ -79,22 +91,10 @@ Future<void> init() async {
   sl.registerLazySingleton<GetAuthenticationData>(
       () => GetAuthenticationData(sl()));
 
-  sl.registerLazySingleton<DeleteAuthenticationData>(
-      () => DeleteAuthenticationData(sl()));
-
   sl.registerLazySingleton<GetOrganizations>(() => GetOrganizations(sl()));
 
-  // Repository
-  sl.registerLazySingleton<LoginRepository>(() => AuthenticationRepositoryImpl(
-      remoteLoginDataSource: sl(),
-      localAuthenticationDataSource: sl(),
-      networkInfo: sl()));
-
-  // Data Sources
-  sl.registerLazySingleton<RemoteLoginDataSource>(
-      () => RemoteLoginDataSourceImpl(sl()));
-  sl.registerLazySingleton<LocalAuthenticationDataSource>(
-      () => LocalAuthenticationDataSourceImpl(sl()));
+  sl.registerLazySingleton<DeleteAppConnection>(
+      () => DeleteAppConnection(sl()));
 
   //! Features - Initialization
   // BLoC
@@ -112,17 +112,17 @@ Future<void> init() async {
   sl.registerLazySingleton<InitializationRepository>(() =>
       InitializationRepositoryImpl(
           remoteInitializationDataSource: sl(),
-          localAppSettingsDataSource: sl(),
           localMissionsDataSource: sl(),
           localUserRolesDataSource: sl(),
           localUserStatesDataSource: sl(),
-          networkInfo: sl()));
+          networkInfo: sl(),
+          localAppConfigurationDataSource: sl()));
 
   // Data Sources
   sl.registerLazySingleton<RemoteInitializationDataSource>(
       () => RemoteInitializationDataSourceImpl(sl()));
-  sl.registerLazySingleton<LocalAppSettingsDataSource>(
-      () => LocalAppSettingsDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalAppConfigurationDataSource>(
+      () => LocalAppConfigurationDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalUserRolesDataSource>(
       () => LocalUserRolesDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalUserStatesDataSource>(

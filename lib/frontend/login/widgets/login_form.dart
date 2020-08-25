@@ -8,23 +8,42 @@ import '../bloc/login_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   final OrganizationCollection organizationCollection;
-  LoginForm({Key key, @required this.organizationCollection}) : super(key: key);
+  final String username;
+  final String organizationID;
+  LoginForm({
+    Key key,
+    @required this.organizationCollection,
+    @required this.username,
+    @required this.organizationID,
+  }) : super(key: key);
 
   @override
-  _LoginFormState createState() => _LoginFormState(this.organizationCollection);
+  _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  String _usernameStr;
-  String _passwordStr;
-  OrganizationCollection organizationCollection;
+  String _usernameStr = '';
+  String _passwordStr = '';
   String _organizationID;
-  _LoginFormState(this.organizationCollection);
+  List<DropdownMenuItem<String>> _dropdownItems;
 
   @override
   void initState() {
     super.initState();
+    _usernameStr = widget.username != null ? widget.username : '';
+
+    _dropdownItems = widget.organizationCollection.organizations
+        .map((Organization organization) {
+      return DropdownMenuItem<String>(
+        value: organization.id,
+        child: Text(organization.name),
+      );
+    }).toList();
+
+    _organizationID = widget.organizationID != null
+        ? widget.organizationID
+        : _dropdownItems[0].value;
   }
 
   @override
@@ -40,23 +59,19 @@ class _LoginFormState extends State<LoginForm> {
               decoration: InputDecoration(
                 labelText: S.of(context).ORGANIZATION,
               ),
-              items: organizationCollection.organizations
-                  .map((Organization organization) {
-                return DropdownMenuItem<String>(
-                  value: organization.id,
-                  child: Text(organization.name),
-                );
-              }).toList(),
+              items: _dropdownItems,
+              value: _organizationID,
               onChanged: (val) {
                 _organizationID = val;
               },
               validator: (val) =>
                   val == null ? S.of(context).FIELD_REQUIRED : null,
             ),
-            visible: organizationCollection.organizations.length > 1,
+            visible: widget.organizationCollection.organizations.length > 1,
           ),
           TextFormField(
             autofocus: true,
+            initialValue: _usernameStr,
             decoration: InputDecoration(
               labelText: S.of(context).USERNAME,
             ),

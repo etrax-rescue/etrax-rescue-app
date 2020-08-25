@@ -4,11 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../backend/domain/usecases/get_app_connection_marked_for_update.dart';
-import '../../../backend/domain/usecases/verify_and_store_app_connection.dart';
-import '../../../core/error/failures.dart';
 import '../../../backend/types/etrax_server_endpoints.dart';
-import '../../../backend/types/usecase.dart';
+import '../../../backend/usecases/set_app_connection.dart';
+import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 import '../../util/uri_input_converter.dart';
 
@@ -16,15 +14,12 @@ part 'app_connection_event.dart';
 part 'app_connection_state.dart';
 
 class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
-  final GetAppConnectionMarkedForUpdate markedForUpdate;
-  final VerifyAndStoreAppConnection verifyAndStore;
+  final SetAppConnection setAppConnection;
   final UriInputConverter inputConverter;
   AppConnectionBloc({
-    @required this.markedForUpdate,
-    @required this.verifyAndStore,
+    @required this.setAppConnection,
     @required this.inputConverter,
-  })  : assert(markedForUpdate != null),
-        assert(verifyAndStore != null),
+  })  : assert(setAppConnection != null),
         assert(inputConverter != null),
         super(AppConnectionInitial());
 
@@ -32,19 +27,7 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
   Stream<AppConnectionState> mapEventToState(
     AppConnectionEvent event,
   ) async* {
-    if (event is AppConnectionEventCheck) {
-      final appConnectionStatusEither = await markedForUpdate(NoParams());
-
-      yield* appConnectionStatusEither.fold((failure) async* {
-        yield AppConnectionStateReady(); //AppConnectionStateError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
-      }, (updateRequired) async* {
-        if (updateRequired) {
-          yield AppConnectionStateReady();
-        } else {
-          yield AppConnectionStateSuccess();
-        }
-      });
-    } else if (event is AppConnectionEventConnect) {
+    if (event is SubmitAppConnection) {
       final inputEither = inputConverter.convert(event.authority);
 
       yield* inputEither.fold((failure) async* {
@@ -53,7 +36,7 @@ class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
       }, (authority) async* {
         yield AppConnectionStateInProgress();
 
-        final failureOrOk = await verifyAndStore(AppConnectionParams(
+        final failureOrOk = await setAppConnection(AppConnectionParams(
             authority: authority, basePath: SERVER_API_BASE_PATH));
 
         yield failureOrOk.fold(

@@ -79,7 +79,7 @@ class _AppConnectionFormState extends State<AppConnectionForm> {
   void submit() {
     if (_formKey.currentState.validate()) {
       BlocProvider.of<AppConnectionBloc>(context)
-          .add((AppConnectionEventConnect(authority: inputStr)));
+          .add((SubmitAppConnection(authority: inputStr)));
     }
   }
 }

@@ -6,3 +6,5 @@ abstract class LaunchEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class Launch extends LaunchEvent {}

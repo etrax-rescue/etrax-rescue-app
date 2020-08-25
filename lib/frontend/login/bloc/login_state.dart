@@ -8,15 +8,6 @@ abstract class LoginState extends Equatable {
 
 class LoginInitial extends LoginState {}
 
-class LoginReady extends LoginState {
-  final OrganizationCollection organizationCollection;
-
-  LoginReady({@required this.organizationCollection});
-
-  @override
-  List<Object> get props => [organizationCollection];
-}
-
 class LoginInProgress extends LoginState {}
 
 class LoginSuccess extends LoginState {}

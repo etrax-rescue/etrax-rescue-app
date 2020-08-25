@@ -4,10 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../backend/domain/usecases/get_app_connection.dart';
-import '../../../backend/domain/usecases/get_organizations.dart';
-import '../../../backend/domain/usecases/login.dart';
-import '../../../backend/domain/usecases/mark_app_connection_for_update.dart';
+import '../../../backend/usecases/get_app_connection.dart';
+import '../../../backend/usecases/get_organizations.dart';
+import '../../../backend/usecases/login.dart';
+import '../../../backend/usecases/delete_app_connection.dart';
 import '../../../backend/types/organizations.dart';
 import '../../../core/error/failures.dart';
 import '../../../backend/types/usecase.dart';
@@ -20,37 +20,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final Login login;
   final GetAppConnection getAppConnection;
   final GetOrganizations getOrganizations;
-  final MarkAppConnectionForUpdate markAppConnectionForUpdate;
+  final DeleteAppConnection deleteAppConnection;
   LoginBloc(
       {@required this.login,
       @required this.getAppConnection,
       @required this.getOrganizations,
-      @required this.markAppConnectionForUpdate})
+      @required this.deleteAppConnection})
       : assert(login != null),
         assert(getAppConnection != null),
         assert(getOrganizations != null),
-        assert(markAppConnectionForUpdate != null),
+        assert(deleteAppConnection != null),
         super(LoginInitial());
 
   @override
   Stream<LoginState> mapEventToState(
     LoginEvent event,
   ) async* {
-    if (event is InitializeLogin) {
-      final appConnectionEither = await getAppConnection(NoParams());
-
-      yield* appConnectionEither.fold((failure) async* {
-        yield LoginError(messageKey: CACHE_FAILURE_MESSAGE_KEY);
-      }, (appConnection) async* {
-        final organizationsEither = await getOrganizations(
-            GetOrganizationsParams(appConnection: appConnection));
-
-        yield* organizationsEither.fold((failure) async* {},
-            (organizations) async* {
-          yield LoginReady(organizationCollection: organizations);
-        });
-      });
-    } else if (event is SubmitLogin) {
+    if (event is SubmitLogin) {
       yield LoginInProgress();
       final appConnectionEither = await getAppConnection(NoParams());
 
@@ -70,7 +56,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         });
       });
     } else if (event is RequestAppConnectionUpdate) {
-      final markEither = await markAppConnectionForUpdate(NoParams());
+      final markEither = await deleteAppConnection(NoParams());
       yield* markEither.fold((failure) async* {
         yield LoginError(messageKey: _mapFailureToMessage(failure));
       }, (_) async* {

@@ -23,13 +23,12 @@ class AppConnectionPage extends StatelessWidget {
             listener: (context, state) {
               if (state is AppConnectionStateSuccess) {
                 // Go to next page when no update is required or when the update succeeded
-                ExtendedNavigator.root.popAndPush(Routes.loginPage);
+                ExtendedNavigator.root.popAndPush(Routes.launchPage);
               }
             },
             builder: (context, state) {
               if (state is AppConnectionInitial) {
-                BlocProvider.of<AppConnectionBloc>(context)
-                    .add(AppConnectionEventCheck());
+                BlocProvider.of<AppConnectionBloc>(context);
                 return Container();
               } else if (state is AppConnectionStateSuccess) {
                 return Container();

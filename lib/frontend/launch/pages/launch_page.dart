@@ -1,29 +1,37 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/widgets/background.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../widgets/background.dart';
+import '../bloc/launch_bloc.dart';
 
-class LaunchPage extends StatefulWidget {
-  LaunchPage({Key key}) : super(key: key);
-
-  @override
-  _LaunchPageState createState() => _LaunchPageState();
-}
-
-class _LaunchPageState extends State<LaunchPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) =>
-        ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage));
-  }
+class LaunchPage extends StatelessWidget {
+  const LaunchPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Background(
-        child: CircularProgressIndicator(),
+    return BlocProvider(
+      create: (_) => sl<LaunchBloc>()..add(Launch()),
+      child: Scaffold(
+        body: Background(
+          child: BlocConsumer(
+            builder: (context, state) {
+              return Center(child: CircularProgressIndicator());
+            },
+            listener: (context, state) {
+              if (state is LaunchAppConnectionPage) {
+                ExtendedNavigator.of(context)
+                    .popAndPush(Routes.appConnectionPage);
+              } else if (state is LaunchLoginPage) {
+                ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
+              } else if (state is LaunchHomePage) {
+                ExtendedNavigator.of(context).popAndPush(Routes.homePage);
+              }
+            },
+          ),
+        ),
       ),
     );
   }
