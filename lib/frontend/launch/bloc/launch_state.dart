@@ -30,13 +30,11 @@ class LaunchMissionPage extends LaunchState {}
 
 class LaunchHomePage extends LaunchState {
   final MissionState missionState;
-  final AppConfiguration appConfiguration;
 
-  LaunchHomePage(
-      {@required this.missionState, @required this.appConfiguration});
+  LaunchHomePage({@required this.missionState});
 
   @override
-  List<Object> get props => [missionState, appConfiguration];
+  List<Object> get props => [missionState];
 }
 
 class LaunchRecoverableError extends LaunchState {

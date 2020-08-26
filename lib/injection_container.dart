@@ -14,6 +14,7 @@ import 'backend/datasources/local/local_user_states_data_source.dart';
 import 'backend/datasources/remote/remote_app_connection_data_source.dart';
 import 'backend/datasources/remote/remote_initialization_data_source.dart';
 import 'backend/datasources/remote/remote_login_data_source.dart';
+import 'backend/datasources/remote/remote_mission_state_data_source.dart';
 import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
@@ -30,6 +31,7 @@ import 'backend/usecases/logout.dart';
 import 'backend/usecases/set_app_connection.dart';
 import 'backend/usecases/set_selected_mission.dart';
 import 'backend/usecases/set_selected_user_role.dart';
+import 'backend/usecases/set_selected_user_state.dart';
 import 'core/network/network_info.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
 import 'frontend/confirmation/bloc/confirmation_bloc.dart';
@@ -72,6 +74,7 @@ Future<void> init() async {
         localLoginDataSource: sl(),
         localMissionStateDataSource: sl(),
         networkInfo: sl(),
+        remoteMissionStateDataSource: sl(),
       ));
 
   sl.registerLazySingleton<InitializationRepository>(() =>
@@ -101,6 +104,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton<LocalMissionStateDataSource>(
       () => LocalMissionStateDataSourceImpl(sl()));
+  sl.registerLazySingleton<RemoteMissionStateDataSource>(
+      () => RemoteMissionStateDataSourceImpl(sl()));
 
   sl.registerLazySingleton<RemoteInitializationDataSource>(
       () => RemoteInitializationDataSourceImpl(sl()));
@@ -154,8 +159,12 @@ Future<void> init() async {
 
   //! Features - Confirmation
   // BLoC
-  sl.registerFactory<ConfirmationBloc>(() =>
-      ConfirmationBloc(setSelectedMission: sl(), setSelectedUserRole: sl()));
+  sl.registerFactory<ConfirmationBloc>(() => ConfirmationBloc(
+        setSelectedMission: sl(),
+        setSelectedUserRole: sl(),
+        getAppConnection: sl(),
+        getAuthenticationData: sl(),
+      ));
 
   // Use Cases
   sl.registerLazySingleton<SetSelectedMission>(() => SetSelectedMission(sl()));
@@ -164,7 +173,15 @@ Future<void> init() async {
 
   //! Features - Update State
   // BLoC
-  sl.registerFactory<UpdateStateBloc>(() => UpdateStateBloc());
+  sl.registerFactory<UpdateStateBloc>(() => UpdateStateBloc(
+      getAppConfiguration: sl(),
+      getAppConnection: sl(),
+      getAuthenticationData: sl(),
+      setSelectedUserState: sl()));
+
+  // Use Cases
+  sl.registerLazySingleton<SetSelectedUserState>(
+      () => SetSelectedUserState(sl()));
 
   //! Features - Home
   // BLoC

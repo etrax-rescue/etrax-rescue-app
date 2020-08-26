@@ -353,6 +353,16 @@ class S {
     );
   }
 
+  /// `Resolve`
+  String get RESOLVE {
+    return Intl.message(
+      'Resolve',
+      name: 'RESOLVE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get SETTINGS {
     return Intl.message(

@@ -5,7 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/missions.dart';
+import '../../../backend/types/usecase.dart';
 import '../../../backend/types/user_roles.dart';
+import '../../../backend/usecases/get_app_connection.dart';
+import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/set_selected_mission.dart';
 import '../../../backend/usecases/set_selected_user_role.dart';
 import '../../../core/error/failures.dart';
@@ -15,11 +18,16 @@ part 'confirmation_event.dart';
 part 'confirmation_state.dart';
 
 class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
+  final GetAppConnection getAppConnection;
+  final GetAuthenticationData getAuthenticationData;
   final SetSelectedMission setSelectedMission;
   final SetSelectedUserRole setSelectedUserRole;
-  ConfirmationBloc(
-      {@required this.setSelectedMission, @required this.setSelectedUserRole})
-      : assert(setSelectedMission != null),
+  ConfirmationBloc({
+    @required this.getAppConnection,
+    @required this.getAuthenticationData,
+    @required this.setSelectedMission,
+    @required this.setSelectedUserRole,
+  })  : assert(setSelectedMission != null),
         assert(setSelectedUserRole != null),
         super(ConfirmationInitial());
 
@@ -29,17 +37,38 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
   ) async* {
     if (event is SubmitConfirmation) {
       yield ConfirmationInProgress();
-      final setMissionEither = await setSelectedMission(
-          SetSelectedMissionParams(mission: event.mission));
-      yield* setMissionEither.fold((failure) async* {
+
+      final appConnectionEither = await getAppConnection(NoParams());
+
+      yield* appConnectionEither.fold((failure) async* {
         yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
-      }, (_) async* {
-        final setUserRoleEither = await setSelectedUserRole(
-            SetSelectedUserRoleParams(role: event.role));
-        yield* setUserRoleEither.fold((failure) async* {
+      }, (appConnection) async* {
+        final authenticationDataEither =
+            await getAuthenticationData(NoParams());
+
+        yield* authenticationDataEither.fold((failure) async* {
           yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
-        }, (_) async* {
-          yield ConfirmationSuccess();
+        }, (authenticationData) async* {
+          final setMissionEither = await setSelectedMission(
+              SetSelectedMissionParams(
+                  appConnection: appConnection,
+                  authenticationData: authenticationData,
+                  mission: event.mission));
+          yield* setMissionEither.fold((failure) async* {
+            yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
+          }, (_) async* {
+            final setUserRoleEither = await setSelectedUserRole(
+                SetSelectedUserRoleParams(
+                    appConnection: appConnection,
+                    authenticationData: authenticationData,
+                    role: event.role));
+            yield* setUserRoleEither.fold((failure) async* {
+              yield ConfirmationError(
+                  messageKey: _mapFailureToMessage(failure));
+            }, (_) async* {
+              yield ConfirmationSuccess();
+            });
+          });
         });
       });
     }

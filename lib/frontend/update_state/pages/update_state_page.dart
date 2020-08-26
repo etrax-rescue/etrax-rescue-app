@@ -26,7 +26,7 @@ class UpdateStatePage extends StatefulWidget implements AutoRouteWrapper {
 class _UpdateStatePageState extends State<UpdateStatePage> {
   final _formKey = GlobalKey<FormState>();
   UserStateCollection states;
-  int selectedStateID;
+  UserState _selectedState;
 
   @override
   void initState() {
@@ -63,19 +63,19 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
                 ),
               ),
               ListTile(
-                title: DropdownButtonFormField<int>(
+                title: DropdownButtonFormField<UserState>(
                   isExpanded: true,
                   decoration: InputDecoration(
                     labelText: S.of(context).STATE,
                   ),
                   items: states.states.map((UserState state) {
-                    return DropdownMenuItem<int>(
-                      value: state.id,
+                    return DropdownMenuItem<UserState>(
+                      value: state,
                       child: Text(state.name),
                     );
                   }).toList(),
                   onChanged: (val) {
-                    selectedStateID = val;
+                    _selectedState = val;
                   },
                   validator: (val) =>
                       val == null ? S.of(context).FIELD_REQUIRED : null,
@@ -103,7 +103,8 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
   void submit() {
     // TODO: implement logic to update mission data
     if (_formKey.currentState.validate()) {
-      ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage);
+      ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage,
+          arguments: CheckRequirementsPageArguments(state: _selectedState));
     }
   }
 }

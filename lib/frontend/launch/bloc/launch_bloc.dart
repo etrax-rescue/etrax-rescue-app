@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../backend/types/app_configuration.dart';
 import '../../../backend/types/mission_state.dart';
 import '../../../backend/types/organizations.dart';
 import '../../../backend/types/usecase.dart';
@@ -69,6 +68,7 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
               // TODO: add logic for checking if mission is active
               final missionStateEither = await getMissionState(NoParams());
               yield* missionStateEither.fold((failure) async* {
+                print('mission state error');
                 // If there is no mission state, there is probably no mission as well
                 yield LaunchLoginPage(
                   organizations: organizations,
@@ -76,16 +76,7 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
                   organizationID: authenticationData.organizationID,
                 );
               }, (missionState) async* {
-                final appConfigurationEither =
-                    await getAppConfiguration(NoParams());
-                yield* appConfigurationEither.fold((failure) async* {
-                  yield LaunchRecoverableError(
-                      messageKey: _mapFailureToMessage(failure));
-                }, (appConfiguration) async* {
-                  yield LaunchHomePage(
-                      missionState: missionState,
-                      appConfiguration: appConfiguration);
-                });
+                yield LaunchHomePage(missionState: missionState);
               });
             } else {
               yield LaunchLoginPage(

@@ -106,21 +106,22 @@ class Router extends RouterBase {
       );
     },
     CheckRequirementsPage: (data) {
-      var args = data.getArgs<CheckRequirementsPageArguments>(
-        orElse: () => CheckRequirementsPageArguments(),
-      );
+      var args = data.getArgs<CheckRequirementsPageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            CheckRequirementsPage(key: args.key).wrappedRoute(context),
+        builder: (context) => CheckRequirementsPage(
+          key: args.key,
+          state: args.state,
+        ).wrappedRoute(context),
         settings: data,
       );
     },
     HomePage: (data) {
-      var args = data.getArgs<HomePageArguments>(
-        orElse: () => HomePageArguments(),
-      );
+      var args = data.getArgs<HomePageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => HomePage(key: args.key).wrappedRoute(context),
+        builder: (context) => HomePage(
+          key: args.key,
+          state: args.state,
+        ).wrappedRoute(context),
         settings: data,
       );
     },
@@ -179,13 +180,15 @@ class ConfirmationPageArguments {
 /// CheckRequirementsPage arguments holder class
 class CheckRequirementsPageArguments {
   final Key key;
-  CheckRequirementsPageArguments({this.key});
+  final UserState state;
+  CheckRequirementsPageArguments({this.key, @required this.state});
 }
 
 /// HomePage arguments holder class
 class HomePageArguments {
   final Key key;
-  HomePageArguments({this.key});
+  final UserState state;
+  HomePageArguments({this.key, @required this.state});
 }
 
 /// SubmitImagePage arguments holder class

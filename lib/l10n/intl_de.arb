@@ -35,6 +35,7 @@
     "CHECKING_PERMISSIONS": "Berechtigungen werden überprüft...",
     "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
     "UPDATING_STATE": "Staus wird aktualisiert...",
+    "RESOLVE": "Beheben",
 
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",

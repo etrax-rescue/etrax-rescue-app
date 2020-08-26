@@ -9,8 +9,6 @@ import '../../types/shared_preferences_keys.dart';
 abstract class LocalMissionsDataSource {
   Future<void> insertMissions(MissionCollection missions);
 
-  Future<void> updateMission(Mission mission);
-
   Future<MissionCollection> getMissions();
 
   Future<void> clearMissions();
@@ -22,8 +20,7 @@ class LocalMissionsDataSourceImpl implements LocalMissionsDataSource {
 
   @override
   Future<void> clearMissions() async {
-    // TODO: implement clearMissions
-    throw UnimplementedError();
+    await sharedPreferences.remove(SharedPreferencesKeys.missions);
   }
 
   @override
@@ -41,11 +38,5 @@ class LocalMissionsDataSourceImpl implements LocalMissionsDataSource {
     Map<String, dynamic> jsonMap = missions.toJson();
     sharedPreferences.setString(
         SharedPreferencesKeys.missions, json.encode(jsonMap));
-  }
-
-  @override
-  Future<void> updateMission(Mission mission) async {
-    // TODO: implement updateMission
-    throw UnimplementedError();
   }
 }

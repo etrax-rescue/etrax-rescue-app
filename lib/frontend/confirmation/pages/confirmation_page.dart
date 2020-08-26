@@ -36,8 +36,10 @@ class ConfirmationPage extends StatelessWidget implements AutoRouteWrapper {
         listener: (context, state) {
           if (state is ConfirmationSuccess) {
             Navigator.of(context).pop();
-            Navigator.of(context)
-                .pushReplacementNamed(Routes.checkRequirementsPage);
+            Navigator.of(context).pushReplacementNamed(
+                Routes.checkRequirementsPage,
+                arguments:
+                    CheckRequirementsPageArguments(state: states.states[0]));
           } else if (state is ConfirmationError) {
             Scaffold.of(context).showSnackBar(
               SnackBar(

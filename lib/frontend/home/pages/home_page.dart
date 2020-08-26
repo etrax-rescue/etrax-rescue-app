@@ -6,6 +6,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:latlong/latlong.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
+import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
@@ -13,7 +14,9 @@ import '../bloc/home_bloc.dart';
 import '../widgets/popup_menu.dart';
 
 class HomePage extends StatefulWidget implements AutoRouteWrapper {
-  HomePage({Key key}) : super(key: key);
+  final UserState state;
+
+  HomePage({Key key, @required this.state}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -69,7 +72,7 @@ class _HomePageState extends State<HomePage>
               child: Padding(
                 padding: EdgeInsets.all(2),
                 child: Text(
-                  S.of(context).STATUS_DISPLAY + 'Anreise',
+                  S.of(context).STATUS_DISPLAY + widget.state.name,
                   style: TextStyle(color: Colors.white),
                 ),
               ),

@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "PASSWORD" : MessageLookupByLibrary.simpleMessage("Passwort"),
     "POI_DESCRIPTION" : MessageLookupByLibrary.simpleMessage("POI Beschreibung"),
     "RECONNECT" : MessageLookupByLibrary.simpleMessage("App neu verbinden"),
+    "RESOLVE" : MessageLookupByLibrary.simpleMessage("Beheben"),
     "RETRY" : MessageLookupByLibrary.simpleMessage("Erneut versuchen"),
     "SERVER_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der Server ist derzeit nicht erreichbar."),
     "SERVER_URL_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der angegebene URL zeigt zu keinem eTrax|rescue Server, bzw. dieser ist derzeit nicht erreichbar."),

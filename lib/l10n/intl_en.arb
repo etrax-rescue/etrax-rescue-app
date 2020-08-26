@@ -35,6 +35,7 @@
     "CHECKING_PERMISSIONS": "Checking permissions...",
     "CHECKING_SERVICES": "Checking services...",
     "UPDATING_STATE": "Updating status...",
+    "RESOLVE": "Resolve",
 
     "SETTINGS": "Settings",
     "TAKE_PHOTO": "Take a photo",

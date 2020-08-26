@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/types/mission_state.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/exceptions.dart';
@@ -14,9 +13,11 @@ import '../datasources/local/local_mission_state_data_source.dart';
 import '../datasources/local/local_organizations_data_source.dart';
 import '../datasources/remote/remote_app_connection_data_source.dart';
 import '../datasources/remote/remote_login_data_source.dart';
+import '../datasources/remote/remote_mission_state_data_source.dart';
 import '../datasources/remote/remote_organizations_data_source.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
+import '../types/mission_state.dart';
 import '../types/missions.dart';
 import '../types/organizations.dart';
 import '../types/user_roles.dart';
@@ -42,13 +43,18 @@ abstract class AppStateRepository {
       AppConnection appConnection);
 
   // Selected Mission
-  Future<Either<Failure, None>> setSelectedMission(Mission mission);
+  Future<Either<Failure, None>> setSelectedMission(AppConnection appConnection,
+      AuthenticationData authenticationData, Mission mission);
 
   // Selected UserState
-  Future<Either<Failure, None>> setSelectedUserState(UserState state);
+  Future<Either<Failure, None>> setSelectedUserState(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState state);
 
   // Selected UserRole
-  Future<Either<Failure, None>> setSelectedUserRole(UserRole role);
+  Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
+      AuthenticationData authenticationData, UserRole role);
 
   Future<Either<Failure, MissionState>> getMissionState();
 
@@ -66,6 +72,7 @@ class AppStateRepositoryImpl implements AppStateRepository {
   final LocalLoginDataSource localLoginDataSource;
 
   final LocalMissionStateDataSource localMissionStateDataSource;
+  final RemoteMissionStateDataSource remoteMissionStateDataSource;
 
   final NetworkInfo networkInfo;
 
@@ -77,6 +84,7 @@ class AppStateRepositoryImpl implements AppStateRepository {
     @required this.remoteLoginDataSource,
     @required this.localLoginDataSource,
     @required this.localMissionStateDataSource,
+    @required this.remoteMissionStateDataSource,
     @required this.networkInfo,
   });
 
@@ -242,7 +250,20 @@ class AppStateRepositoryImpl implements AppStateRepository {
   }
 
   @override
-  Future<Either<Failure, None>> setSelectedUserRole(UserRole role) async {
+  Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
+      AuthenticationData authenticationData, UserRole role) async {
+    try {
+      await remoteMissionStateDataSource.selectUserRole(
+          appConnection, authenticationData, role);
+    } on ServerException {
+      return Left(ServerFailure());
+    } on TimeoutException {
+      return Left(ServerFailure());
+    } on SocketException {
+      return Left(ServerFailure());
+    } on AuthenticationException {
+      return Left(AuthenticationFailure());
+    }
     try {
       await localMissionStateDataSource.cacheSelectedUserRole(role);
     } on CacheException {
@@ -252,7 +273,22 @@ class AppStateRepositoryImpl implements AppStateRepository {
   }
 
   @override
-  Future<Either<Failure, None>> setSelectedUserState(UserState state) async {
+  Future<Either<Failure, None>> setSelectedUserState(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState state) async {
+    try {
+      await remoteMissionStateDataSource.selectUserState(
+          appConnection, authenticationData, state);
+    } on ServerException {
+      return Left(ServerFailure());
+    } on TimeoutException {
+      return Left(ServerFailure());
+    } on SocketException {
+      return Left(ServerFailure());
+    } on AuthenticationException {
+      return Left(AuthenticationFailure());
+    }
     try {
       await localMissionStateDataSource.cacheSelectedUserState(state);
     } on CacheException {
@@ -262,7 +298,20 @@ class AppStateRepositoryImpl implements AppStateRepository {
   }
 
   @override
-  Future<Either<Failure, None>> setSelectedMission(Mission mission) async {
+  Future<Either<Failure, None>> setSelectedMission(AppConnection appConnection,
+      AuthenticationData authenticationData, Mission mission) async {
+    try {
+      await remoteMissionStateDataSource.selectMission(
+          appConnection, authenticationData, mission);
+    } on ServerException {
+      return Left(ServerFailure());
+    } on TimeoutException {
+      return Left(ServerFailure());
+    } on SocketException {
+      return Left(ServerFailure());
+    } on AuthenticationException {
+      return Left(AuthenticationFailure());
+    }
     try {
       await localMissionStateDataSource.cacheSelectedMission(mission);
     } on CacheException {

@@ -6,3 +6,11 @@ abstract class UpdateStateEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class SubmitState extends UpdateStateEvent {
+  final UserState state;
+  SubmitState({@required this.state});
+
+  @override
+  List<Object> get props => [state];
+}
