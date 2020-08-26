@@ -323,6 +323,36 @@ class S {
     );
   }
 
+  /// `Checking permissions...`
+  String get CHECKING_PERMISSIONS {
+    return Intl.message(
+      'Checking permissions...',
+      name: 'CHECKING_PERMISSIONS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Checking services...`
+  String get CHECKING_SERVICES {
+    return Intl.message(
+      'Checking services...',
+      name: 'CHECKING_SERVICES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updating status...`
+  String get UPDATING_STATE {
+    return Intl.message(
+      'Updating status...',
+      name: 'UPDATING_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Settings`
   String get SETTINGS {
     return Intl.message(

@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
@@ -7,7 +9,7 @@ import '../../../backend/types/missions.dart';
 import '../../../backend/types/user_roles.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
-import '../../../routes/router.gr.dart';
+import '../bloc/confirmation_bloc.dart';
 
 class ConfirmationForm extends StatefulWidget {
   final Mission mission;
@@ -26,7 +28,7 @@ class ConfirmationForm extends StatefulWidget {
 
 class _ConfirmationFormState extends State<ConfirmationForm> {
   final _formKey = GlobalKey<FormState>();
-  int selectedRoleID;
+  UserRole _selectedRole;
 
   @override
   Widget build(BuildContext context) {
@@ -74,35 +76,47 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
             ),
           ),
           ListTile(
-            title: DropdownButtonFormField<int>(
+            title: DropdownButtonFormField<UserRole>(
               isExpanded: true,
               decoration: InputDecoration(
                 labelText: S.of(context).FUNCTION,
               ),
               items: widget.roles.roles.map((UserRole role) {
-                return DropdownMenuItem<int>(
-                  value: role.id,
+                return DropdownMenuItem<UserRole>(
+                  value: role,
                   child: Text(role.name),
                 );
               }).toList(),
               onChanged: (val) {
-                selectedRoleID = val;
+                _selectedRole = val;
               },
               validator: (val) =>
                   val == null ? S.of(context).FIELD_REQUIRED : null,
             ),
           ),
           SizedBox(height: 16),
-          ListTile(
-            title: ButtonTheme(
-              minWidth: double.infinity,
-              child: RaisedButton(
-                onPressed: submit,
-                textTheme: ButtonTextTheme.primary,
-                child: Text(S.of(context).ACCEPT_MISSION),
-                color: Theme.of(context).accentColor,
-              ),
-            ),
+          BlocBuilder<ConfirmationBloc, ConfirmationState>(
+              builder: (context, state) {
+            if (state is ConfirmationInProgress) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return Container();
+          }),
+          BlocBuilder<ConfirmationBloc, ConfirmationState>(
+            builder: (context, state) {
+              if (!(state is ConfirmationInProgress)) {
+                return ButtonTheme(
+                  minWidth: double.infinity,
+                  child: RaisedButton(
+                    onPressed: submit,
+                    textTheme: ButtonTextTheme.primary,
+                    child: Text(S.of(context).ACCEPT_MISSION),
+                    color: Theme.of(context).accentColor,
+                  ),
+                );
+              }
+              return Container();
+            },
           ),
         ],
       ),
@@ -111,9 +125,8 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed(Routes.updateStatePage,
-          arguments: UpdateStatePageArguments(initial: true));
+      BlocProvider.of<ConfirmationBloc>(context).add(
+          SubmitConfirmation(mission: widget.mission, role: _selectedRole));
     }
   }
 }

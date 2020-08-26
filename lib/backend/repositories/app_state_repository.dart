@@ -51,6 +51,8 @@ abstract class AppStateRepository {
   Future<Either<Failure, None>> setSelectedUserRole(UserRole role);
 
   Future<Either<Failure, MissionState>> getMissionState();
+
+  Future<Either<Failure, None>> clearMissionState();
 }
 
 class AppStateRepositoryImpl implements AppStateRepository {
@@ -282,5 +284,15 @@ class AppStateRepositoryImpl implements AppStateRepository {
     } on CacheException {
       return Left(CacheFailure());
     }
+  }
+
+  @override
+  Future<Either<Failure, None>> clearMissionState() async {
+    try {
+      await localMissionStateDataSource.clear();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 }

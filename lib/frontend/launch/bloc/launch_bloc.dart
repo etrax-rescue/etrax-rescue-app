@@ -65,7 +65,7 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
               organizationID: null,
             );
           }, (authenticationData) async* {
-            if (authenticationData.token != null) {
+            if (authenticationData.token != '') {
               // TODO: add logic for checking if mission is active
               final missionStateEither = await getMissionState(NoParams());
               yield* missionStateEither.fold((failure) async* {

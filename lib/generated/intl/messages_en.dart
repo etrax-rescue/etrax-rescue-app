@@ -31,6 +31,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "BACK" : MessageLookupByLibrary.simpleMessage("Go back"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("An error occured during the URI storage process."),
     "CHANGE_STATUS" : MessageLookupByLibrary.simpleMessage("Change status"),
+    "CHECKING_PERMISSIONS" : MessageLookupByLibrary.simpleMessage("Checking permissions..."),
+    "CHECKING_SERVICES" : MessageLookupByLibrary.simpleMessage("Checking services..."),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Confirmation"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Connect"),
     "DATETIME" : MessageLookupByLibrary.simpleMessage("Datetime"),
@@ -76,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "TAKE_PHOTO" : MessageLookupByLibrary.simpleMessage("Take a photo"),
     "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("A unexpected error occured."),
     "UPDATE_STATE" : MessageLookupByLibrary.simpleMessage("Update"),
+    "UPDATING_STATE" : MessageLookupByLibrary.simpleMessage("Updating status..."),
     "USERNAME" : MessageLookupByLibrary.simpleMessage("Username")
   };
 }

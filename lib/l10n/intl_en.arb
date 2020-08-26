@@ -32,6 +32,9 @@
     "STATE_HEADING": "Update State",
     "STATE": "State",
     "UPDATE_STATE": "Update",
+    "CHECKING_PERMISSIONS": "Checking permissions...",
+    "CHECKING_SERVICES": "Checking services...",
+    "UPDATING_STATE": "Updating status...",
 
     "SETTINGS": "Settings",
     "TAKE_PHOTO": "Take a photo",

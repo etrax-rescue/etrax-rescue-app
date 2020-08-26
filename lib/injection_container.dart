@@ -1,8 +1,4 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_app_configuration.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_mission_state.dart';
-import 'package:etrax_rescue_app/backend/usecases/logout.dart';
-import 'package:etrax_rescue_app/frontend/launch/bloc/launch_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,17 +17,27 @@ import 'backend/datasources/remote/remote_login_data_source.dart';
 import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
+import 'backend/usecases/clear_mission_state.dart';
 import 'backend/usecases/delete_app_connection.dart';
 import 'backend/usecases/fetch_initialization_data.dart';
+import 'backend/usecases/get_app_configuration.dart';
 import 'backend/usecases/get_app_connection.dart';
 import 'backend/usecases/get_authentication_data.dart';
+import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
 import 'backend/usecases/login.dart';
+import 'backend/usecases/logout.dart';
 import 'backend/usecases/set_app_connection.dart';
+import 'backend/usecases/set_selected_mission.dart';
+import 'backend/usecases/set_selected_user_role.dart';
 import 'core/network/network_info.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
+import 'frontend/confirmation/bloc/confirmation_bloc.dart';
+import 'frontend/home/bloc/home_bloc.dart';
+import 'frontend/launch/bloc/launch_bloc.dart';
 import 'frontend/login/bloc/login_bloc.dart';
 import 'frontend/missions/bloc/missions_bloc.dart';
+import 'frontend/update_state/bloc/update_state_bloc.dart';
 import 'frontend/util/uri_input_converter.dart';
 
 final sl = GetIt.instance;
@@ -145,6 +151,27 @@ Future<void> init() async {
   sl.registerLazySingleton<FetchInitializationData>(
       () => FetchInitializationData(sl()));
   sl.registerLazySingleton<Logout>(() => Logout(sl()));
+
+  //! Features - Confirmation
+  // BLoC
+  sl.registerFactory<ConfirmationBloc>(() =>
+      ConfirmationBloc(setSelectedMission: sl(), setSelectedUserRole: sl()));
+
+  // Use Cases
+  sl.registerLazySingleton<SetSelectedMission>(() => SetSelectedMission(sl()));
+  sl.registerLazySingleton<SetSelectedUserRole>(
+      () => SetSelectedUserRole(sl()));
+
+  //! Features - Update State
+  // BLoC
+  sl.registerFactory<UpdateStateBloc>(() => UpdateStateBloc());
+
+  //! Features - Home
+  // BLoC
+  sl.registerFactory<HomeBloc>(() => HomeBloc(clearMissionState: sl()));
+
+  // Use Cases
+  sl.registerLazySingleton<ClearMissionState>(() => ClearMissionState(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

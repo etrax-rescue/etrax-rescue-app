@@ -32,6 +32,9 @@
     "STATE_HEADING": "Status Aktualisieren",
     "STATE": "Status",
     "UPDATE_STATE": "Aktualisieren",
+    "CHECKING_PERMISSIONS": "Berechtigungen werden überprüft...",
+    "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
+    "UPDATING_STATE": "Staus wird aktualisiert...",
 
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",

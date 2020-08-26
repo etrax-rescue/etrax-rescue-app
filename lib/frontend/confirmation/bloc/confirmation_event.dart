@@ -7,10 +7,10 @@ abstract class ConfirmationEvent extends Equatable {
 }
 
 class SubmitConfirmation extends ConfirmationEvent {
-  final int userRoleID;
-  final int userStateID;
-  SubmitConfirmation({@required this.userRoleID, @required this.userStateID});
+  final Mission mission;
+  final UserRole role;
+  SubmitConfirmation({@required this.mission, @required this.role});
 
   @override
-  List<Object> get props => [userRoleID, userStateID];
+  List<Object> get props => [mission, role];
 }

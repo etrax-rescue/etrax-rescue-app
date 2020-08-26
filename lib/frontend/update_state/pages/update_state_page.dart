@@ -1,13 +1,23 @@
-import 'package:etrax_rescue_app/routes/router.gr.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
+import '../../../injection_container.dart';
+import '../../../routes/router.gr.dart';
+import '../bloc/update_state_bloc.dart';
 
-class UpdateStatePage extends StatefulWidget {
-  final bool initial;
+class UpdateStatePage extends StatefulWidget implements AutoRouteWrapper {
+  UpdateStatePage({Key key}) : super(key: key);
 
-  UpdateStatePage({Key key, this.initial = false}) : super(key: key);
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<UpdateStateBloc>(),
+      child: this,
+    );
+  }
 
   @override
   _UpdateStatePageState createState() => _UpdateStatePageState();
@@ -31,11 +41,6 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
         )
       ],
     );
-    if (widget.initial) {
-      // If this is the initial time this dialog is called, automatically select the first state
-      selectedStateID = states.states[0].id;
-      WidgetsBinding.instance.addPostFrameCallback((_) => submit());
-    }
   }
 
   @override
@@ -57,27 +62,24 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
               ),
-              Visibility(
-                child: ListTile(
-                  title: DropdownButtonFormField<int>(
-                    isExpanded: true,
-                    decoration: InputDecoration(
-                      labelText: S.of(context).STATE,
-                    ),
-                    items: states.states.map((UserState state) {
-                      return DropdownMenuItem<int>(
-                        value: state.id,
-                        child: Text(state.name),
-                      );
-                    }).toList(),
-                    onChanged: (val) {
-                      selectedStateID = val;
-                    },
-                    validator: (val) =>
-                        val == null ? S.of(context).FIELD_REQUIRED : null,
+              ListTile(
+                title: DropdownButtonFormField<int>(
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: S.of(context).STATE,
                   ),
+                  items: states.states.map((UserState state) {
+                    return DropdownMenuItem<int>(
+                      value: state.id,
+                      child: Text(state.name),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    selectedStateID = val;
+                  },
+                  validator: (val) =>
+                      val == null ? S.of(context).FIELD_REQUIRED : null,
                 ),
-                visible: !widget.initial,
               ),
               SizedBox(height: 16),
               ListTile(
@@ -100,12 +102,8 @@ class _UpdateStatePageState extends State<UpdateStatePage> {
 
   void submit() {
     // TODO: implement logic to update mission data
-    if (!widget.initial) {
-      if (_formKey.currentState.validate()) {
-        Navigator.of(context).pop();
-      }
-    } else {
-      Navigator.of(context).pushReplacementNamed(Routes.homePage);
+    if (_formKey.currentState.validate()) {
+      ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage);
     }
   }
 }

@@ -86,7 +86,7 @@ class LocalLoginDataSourceImpl implements LocalLoginDataSource {
     if (data != null) {
       return data;
     } else {
-      throw CacheException();
+      return '';
     }
   }
 }

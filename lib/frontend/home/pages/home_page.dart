@@ -1,18 +1,27 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:latlong/latlong.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import '../../../generated/l10n.dart';
+import '../../../injection_container.dart';
+import '../../../routes/router.gr.dart';
+import '../bloc/home_bloc.dart';
 import '../widgets/popup_menu.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget implements AutoRouteWrapper {
   HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider<HomeBloc>(create: (_) => sl(), child: this);
+  }
 }
 
 class _HomePageState extends State<HomePage>
@@ -39,95 +48,102 @@ class _HomePageState extends State<HomePage>
     // localization needs a complete build context which is not available at
     // that point in time. That's the reason why it's done here.
     _title = _mapIndexToTitle(_pageIndex);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-        bottom: PreferredSize(
-          preferredSize: Size(
-            double.infinity,
-            Theme.of(context).textTheme.bodyText2.fontSize + 4,
-          ),
-          child: Container(
-            color: Theme.of(context).accentColor,
-            height: Theme.of(context).textTheme.bodyText2.fontSize + 4,
-            width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.all(2),
-              child: Text(
-                S.of(context).STATUS_DISPLAY + 'Anreise',
-                style: TextStyle(color: Colors.white),
+    return BlocListener<HomeBloc, HomeState>(
+      listener: (context, state) {
+        if (state is LeftMission) {
+          ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_title),
+          bottom: PreferredSize(
+            preferredSize: Size(
+              double.infinity,
+              Theme.of(context).textTheme.bodyText2.fontSize + 4,
+            ),
+            child: Container(
+              color: Theme.of(context).accentColor,
+              height: Theme.of(context).textTheme.bodyText2.fontSize + 4,
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.all(2),
+                child: Text(
+                  S.of(context).STATUS_DISPLAY + 'Anreise',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ),
+          actions: <Widget>[
+            HomePopupMenu(callback: () {
+              print('Opening settings');
+            }),
+          ],
         ),
-        actions: <Widget>[
-          HomePopupMenu(callback: () {
-            print('Opening settings');
-          }),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              title: Text(S.of(context).HEADING_INFO_SHORT)),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.place),
-              title: Text(S.of(context).HEADING_GPS_SHORT)),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              title: Text(S.of(context).HEADING_MAP_SHORT)),
-        ],
-        onTap: (index) {
-          _pageController.jumpToPage(index);
-          setState(() {
-            _pageIndex = index;
-          });
-        },
-        currentIndex: _pageIndex,
-      ),
-      body: PreloadPageView.builder(
-        controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
-        preloadPagesCount: 3,
-        itemBuilder: (BuildContext context, int position) {
-          switch (position) {
-            case 0:
-              return Container(child: Icon(Icons.account_circle));
-            case 1:
-              return GPSScreen();
-            case 2:
-              return MapScreen();
-          }
-          return Container();
-        },
-      ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: Theme.of(context).accentColor,
-        children: [
-          SpeedDialChild(
-            child: Icon(Icons.exit_to_app),
-            backgroundColor: Colors.red,
-            label: S.of(context).LEAVE_MISSION,
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: _leaveMission,
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.update),
-            backgroundColor: Colors.blue,
-            label: S.of(context).CHANGE_STATUS,
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: _updateState,
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.add_a_photo),
-            backgroundColor: Colors.green,
-            label: S.of(context).TAKE_PHOTO,
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: _takePhoto,
-          ),
-        ],
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle),
+                title: Text(S.of(context).HEADING_INFO_SHORT)),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.place),
+                title: Text(S.of(context).HEADING_GPS_SHORT)),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                title: Text(S.of(context).HEADING_MAP_SHORT)),
+          ],
+          onTap: (index) {
+            _pageController.jumpToPage(index);
+            setState(() {
+              _pageIndex = index;
+            });
+          },
+          currentIndex: _pageIndex,
+        ),
+        body: PreloadPageView.builder(
+          controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
+          preloadPagesCount: 3,
+          itemBuilder: (BuildContext context, int position) {
+            switch (position) {
+              case 0:
+                return Container(child: Icon(Icons.account_circle));
+              case 1:
+                return GPSScreen();
+              case 2:
+                return MapScreen();
+            }
+            return Container();
+          },
+        ),
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          backgroundColor: Theme.of(context).accentColor,
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.exit_to_app),
+              backgroundColor: Colors.red,
+              label: S.of(context).LEAVE_MISSION,
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: _leaveMission,
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.update),
+              backgroundColor: Colors.blue,
+              label: S.of(context).CHANGE_STATUS,
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: _updateState,
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.add_a_photo),
+              backgroundColor: Colors.green,
+              label: S.of(context).TAKE_PHOTO,
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: _takePhoto,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -146,16 +162,16 @@ class _HomePageState extends State<HomePage>
   }
 
   void _leaveMission() {
-    ExtendedNavigator.of(context).popAndPush('/mission-page');
+    BlocProvider.of<HomeBloc>(context).add(LeaveMission());
   }
 
   void _updateState() {
     print('update state');
-    ExtendedNavigator.of(context).push('/update-state-page');
+    ExtendedNavigator.of(context).push(Routes.updateStatePage);
   }
 
   void _takePhoto() async {
-    ExtendedNavigator.of(context).push('/submit-image-page');
+    ExtendedNavigator.of(context).push(Routes.submitImagePage);
   }
 }
 

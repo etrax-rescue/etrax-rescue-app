@@ -20,6 +20,7 @@ import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/login/pages/login_page.dart';
 import '../frontend/missions/pages/mission_page.dart';
 import '../frontend/submit_image/pages/submit_image_page.dart';
+import '../frontend/update_state/pages/check_requirements_page.dart';
 import '../frontend/update_state/pages/update_state_page.dart';
 
 class Routes {
@@ -28,6 +29,7 @@ class Routes {
   static const String loginPage = '/login-page';
   static const String missionPage = '/mission-page';
   static const String confirmationPage = '/confirmation-page';
+  static const String checkRequirementsPage = '/check-requirements-page';
   static const String homePage = '/home-page';
   static const String submitImagePage = '/submit-image-page';
   static const String updateStatePage = '/update-state-page';
@@ -37,6 +39,7 @@ class Routes {
     loginPage,
     missionPage,
     confirmationPage,
+    checkRequirementsPage,
     homePage,
     submitImagePage,
     updateStatePage,
@@ -52,6 +55,7 @@ class Router extends RouterBase {
     RouteDef(Routes.loginPage, page: LoginPage),
     RouteDef(Routes.missionPage, page: MissionPage),
     RouteDef(Routes.confirmationPage, page: ConfirmationPage),
+    RouteDef(Routes.checkRequirementsPage, page: CheckRequirementsPage),
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.submitImagePage, page: SubmitImagePage),
     RouteDef(Routes.updateStatePage, page: UpdateStatePage),
@@ -97,7 +101,17 @@ class Router extends RouterBase {
           mission: args.mission,
           roles: args.roles,
           states: args.states,
-        ),
+        ).wrappedRoute(context),
+        settings: data,
+      );
+    },
+    CheckRequirementsPage: (data) {
+      var args = data.getArgs<CheckRequirementsPageArguments>(
+        orElse: () => CheckRequirementsPageArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            CheckRequirementsPage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
@@ -106,7 +120,7 @@ class Router extends RouterBase {
         orElse: () => HomePageArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => HomePage(key: args.key),
+        builder: (context) => HomePage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
@@ -124,10 +138,8 @@ class Router extends RouterBase {
         orElse: () => UpdateStatePageArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => UpdateStatePage(
-          key: args.key,
-          initial: args.initial,
-        ),
+        builder: (context) =>
+            UpdateStatePage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
@@ -164,6 +176,12 @@ class ConfirmationPageArguments {
       @required this.states});
 }
 
+/// CheckRequirementsPage arguments holder class
+class CheckRequirementsPageArguments {
+  final Key key;
+  CheckRequirementsPageArguments({this.key});
+}
+
 /// HomePage arguments holder class
 class HomePageArguments {
   final Key key;
@@ -179,6 +197,5 @@ class SubmitImagePageArguments {
 /// UpdateStatePage arguments holder class
 class UpdateStatePageArguments {
   final Key key;
-  final bool initial;
-  UpdateStatePageArguments({this.key, this.initial = false});
+  UpdateStatePageArguments({this.key});
 }

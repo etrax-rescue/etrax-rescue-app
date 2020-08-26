@@ -31,6 +31,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "BACK" : MessageLookupByLibrary.simpleMessage("Zurück"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Beim Speichern des Links ist ein Fehler aufgetreten."),
     "CHANGE_STATUS" : MessageLookupByLibrary.simpleMessage("Status ändern"),
+    "CHECKING_PERMISSIONS" : MessageLookupByLibrary.simpleMessage("Berechtigungen werden überprüft..."),
+    "CHECKING_SERVICES" : MessageLookupByLibrary.simpleMessage("Ortungsdienste werden überprüft..."),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Rückmelden"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Verbinden"),
     "DATETIME" : MessageLookupByLibrary.simpleMessage("Zeitpunkt"),
@@ -76,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "TAKE_PHOTO" : MessageLookupByLibrary.simpleMessage("Foto aufnehmen"),
     "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ein unerwarteter Fehler ist aufgetreten."),
     "UPDATE_STATE" : MessageLookupByLibrary.simpleMessage("Aktualisieren"),
+    "UPDATING_STATE" : MessageLookupByLibrary.simpleMessage("Staus wird aktualisiert..."),
     "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername")
   };
 }

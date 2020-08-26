@@ -7,6 +7,7 @@ import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/login/pages/login_page.dart';
 import '../frontend/missions/pages/mission_page.dart';
 import '../frontend/submit_image/pages/submit_image_page.dart';
+import '../frontend/update_state/pages/check_requirements_page.dart';
 import '../frontend/update_state/pages/update_state_page.dart';
 
 @MaterialAutoRouter(
@@ -16,6 +17,7 @@ import '../frontend/update_state/pages/update_state_page.dart';
     MaterialRoute(page: LoginPage),
     MaterialRoute(page: MissionPage),
     MaterialRoute(page: ConfirmationPage),
+    MaterialRoute(page: CheckRequirementsPage),
     MaterialRoute(page: HomePage),
     MaterialRoute(page: SubmitImagePage),
     MaterialRoute(page: UpdateStatePage),
