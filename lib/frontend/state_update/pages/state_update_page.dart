@@ -5,14 +5,14 @@ import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/router.gr.dart';
 
-class UpdateStatePage extends StatefulWidget {
-  UpdateStatePage({Key key}) : super(key: key);
+class StateUpdatePage extends StatefulWidget {
+  StateUpdatePage({Key key}) : super(key: key);
 
   @override
-  _UpdateStatePageState createState() => _UpdateStatePageState();
+  _StateUpdatePageState createState() => _StateUpdatePageState();
 }
 
-class _UpdateStatePageState extends State<UpdateStatePage> {
+class _StateUpdatePageState extends State<StateUpdatePage> {
   final _formKey = GlobalKey<FormState>();
   UserStateCollection states;
   UserState _selectedState;

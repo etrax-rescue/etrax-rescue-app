@@ -1,6 +1,5 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/backend/usecases/request_location_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,22 +29,23 @@ import 'backend/usecases/get_app_connection.dart';
 import 'backend/usecases/get_authentication_data.dart';
 import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
-import 'backend/usecases/has_location_permission.dart';
+import 'backend/usecases/get_user_states.dart';
 import 'backend/usecases/login.dart';
 import 'backend/usecases/logout.dart';
 import 'backend/usecases/request_location_permission.dart';
+import 'backend/usecases/request_location_service.dart';
 import 'backend/usecases/set_app_connection.dart';
 import 'backend/usecases/set_selected_mission.dart';
 import 'backend/usecases/set_selected_user_role.dart';
 import 'backend/usecases/set_selected_user_state.dart';
 import 'core/network/network_info.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
+import 'frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'frontend/confirmation/bloc/confirmation_bloc.dart';
 import 'frontend/home/bloc/home_bloc.dart';
 import 'frontend/launch/bloc/launch_bloc.dart';
 import 'frontend/login/bloc/login_bloc.dart';
 import 'frontend/missions/bloc/missions_bloc.dart';
-import 'frontend/update_state/cubit/update_state_cubit.dart';
 import 'frontend/util/uri_input_converter.dart';
 
 final sl = GetIt.instance;
@@ -179,16 +179,19 @@ Future<void> init() async {
 
   //! Features - Update State
   // BLoC
-  sl.registerFactory<UpdateStateCubit>(() => UpdateStateCubit(
+  sl.registerFactory<CheckRequirementsCubit>(() => CheckRequirementsCubit(
         getAppConfiguration: sl(),
         getAppConnection: sl(),
         getAuthenticationData: sl(),
         setSelectedUserState: sl(),
         requestLocationPermission: sl(),
         requestLocationService: sl(),
+        getUserStates: sl(),
       ));
 
   // Use Cases
+  sl.registerLazySingleton<GetUserStates>(() => GetUserStates(sl()));
+
   sl.registerLazySingleton<SetSelectedUserState>(
       () => SetSelectedUserState(sl()));
 

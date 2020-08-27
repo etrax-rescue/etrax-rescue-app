@@ -14,14 +14,14 @@ import '../backend/types/organizations.dart';
 import '../backend/types/user_roles.dart';
 import '../backend/types/user_states.dart';
 import '../frontend/app_connection/pages/app_connection_page.dart';
+import '../frontend/check_requirements/pages/check_requirements_page.dart';
 import '../frontend/confirmation/pages/confirmation_page.dart';
 import '../frontend/home/pages/home_page.dart';
 import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/login/pages/login_page.dart';
 import '../frontend/missions/pages/mission_page.dart';
+import '../frontend/state_update/pages/state_update_page.dart';
 import '../frontend/submit_image/pages/submit_image_page.dart';
-import '../frontend/update_state/pages/check_requirements_page.dart';
-import '../frontend/update_state/pages/update_state_page.dart';
 
 class Routes {
   static const String launchPage = '/';
@@ -32,7 +32,7 @@ class Routes {
   static const String checkRequirementsPage = '/check-requirements-page';
   static const String homePage = '/home-page';
   static const String submitImagePage = '/submit-image-page';
-  static const String updateStatePage = '/update-state-page';
+  static const String stateUpdatePage = '/state-update-page';
   static const all = <String>{
     launchPage,
     appConnectionPage,
@@ -42,7 +42,7 @@ class Routes {
     checkRequirementsPage,
     homePage,
     submitImagePage,
-    updateStatePage,
+    stateUpdatePage,
   };
 }
 
@@ -58,7 +58,7 @@ class Router extends RouterBase {
     RouteDef(Routes.checkRequirementsPage, page: CheckRequirementsPage),
     RouteDef(Routes.homePage, page: HomePage),
     RouteDef(Routes.submitImagePage, page: SubmitImagePage),
-    RouteDef(Routes.updateStatePage, page: UpdateStatePage),
+    RouteDef(Routes.stateUpdatePage, page: StateUpdatePage),
   ];
   @override
   Map<Type, AutoRouteFactory> get pagesMap => _pagesMap;
@@ -134,12 +134,12 @@ class Router extends RouterBase {
         settings: data,
       );
     },
-    UpdateStatePage: (data) {
-      var args = data.getArgs<UpdateStatePageArguments>(
-        orElse: () => UpdateStatePageArguments(),
+    StateUpdatePage: (data) {
+      var args = data.getArgs<StateUpdatePageArguments>(
+        orElse: () => StateUpdatePageArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => UpdateStatePage(key: args.key),
+        builder: (context) => StateUpdatePage(key: args.key),
         settings: data,
       );
     },
@@ -196,8 +196,8 @@ class SubmitImagePageArguments {
   SubmitImagePageArguments({this.key});
 }
 
-/// UpdateStatePage arguments holder class
-class UpdateStatePageArguments {
+/// StateUpdatePage arguments holder class
+class StateUpdatePageArguments {
   final Key key;
-  UpdateStatePageArguments({this.key});
+  StateUpdatePageArguments({this.key});
 }

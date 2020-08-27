@@ -7,8 +7,8 @@ import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/login/pages/login_page.dart';
 import '../frontend/missions/pages/mission_page.dart';
 import '../frontend/submit_image/pages/submit_image_page.dart';
-import '../frontend/update_state/pages/check_requirements_page.dart';
-import '../frontend/update_state/pages/update_state_page.dart';
+import '../frontend/check_requirements/pages/check_requirements_page.dart';
+import '../frontend/state_update/pages/state_update_page.dart';
 
 @MaterialAutoRouter(
   routes: <AutoRoute>[
@@ -20,7 +20,7 @@ import '../frontend/update_state/pages/update_state_page.dart';
     MaterialRoute(page: CheckRequirementsPage),
     MaterialRoute(page: HomePage),
     MaterialRoute(page: SubmitImagePage),
-    MaterialRoute(page: UpdateStatePage),
+    MaterialRoute(page: StateUpdatePage),
   ],
 )
 class $Router {}

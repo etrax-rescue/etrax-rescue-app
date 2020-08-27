@@ -1,4 +1,3 @@
-import 'package:app_settings/app_settings.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:background_location/background_location.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
-import '../cubit/update_state_cubit.dart';
+import '../cubit/check_requirements_cubit.dart';
 
 class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
   CheckRequirementsPage({Key key, @required this.state}) : super(key: key);
@@ -18,7 +17,7 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<UpdateStateCubit>(),
+      create: (_) => sl<CheckRequirementsCubit>(),
       child: this,
     );
   }
@@ -32,14 +31,15 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
     FetchSettingsWidget(),
     CheckLocationPermissionWidget(),
     CheckLocationServicesWidget(),
+    SetStateWidget(),
   ];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.bloc<UpdateStateCubit>().userState = widget.state;
-      context.bloc<UpdateStateCubit>().retrieveSettings();
+      context.bloc<CheckRequirementsCubit>().userState = widget.state;
+      context.bloc<CheckRequirementsCubit>().retrieveSettings();
     });
   }
 
@@ -49,10 +49,10 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
       appBar: AppBar(
         title: Text(S.of(context).STATE_HEADING),
       ),
-      body: BlocListener<UpdateStateCubit, UpdateStateState>(
+      body: BlocListener<CheckRequirementsCubit, CheckRequirementsState>(
         listener: (context, state) {
           print(state);
-          if (state is UpdateStateSuccess) {
+          if (state is SetStateSuccess) {
             ExtendedNavigator.of(context).pushAndRemoveUntil(
               Routes.homePage,
               (route) => false,
@@ -77,7 +77,7 @@ class FetchSettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UpdateStateCubit, UpdateStateState>(
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
       WidgetState widgetState;
       if (state < RetrievingSettingsState()) {
@@ -102,7 +102,7 @@ class CheckLocationPermissionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UpdateStateCubit, UpdateStateState>(
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
       WidgetState widgetState;
       if (state < LocationPermissionState()) {
@@ -123,7 +123,9 @@ class CheckLocationPermissionWidget extends StatelessWidget {
               buttonLabel: S.of(context).RESOLVE,
               onPressed: () {
                 print('resolving');
-                context.bloc<UpdateStateCubit>().locationPermissionCheck();
+                context
+                    .bloc<CheckRequirementsCubit>()
+                    .locationPermissionCheck();
               },
             );
             break;
@@ -131,11 +133,11 @@ class CheckLocationPermissionWidget extends StatelessWidget {
             return SequenceItem(
               title: S.of(context).LOCATION_PERMISSION_DENIED_FOREVER,
               widgetState: WidgetState.error,
-              buttonLabel: S.of(context).OPEN_LOCATION_SETTINGS,
+              buttonLabel: S.of(context).RETRY,
               onPressed: () {
-                print('opening settings');
-                context.bloc<UpdateStateCubit>().locationPermissionCheck();
-                AppSettings.openAppSettings();
+                context
+                    .bloc<CheckRequirementsCubit>()
+                    .locationPermissionCheck();
               },
             );
             break;
@@ -154,7 +156,7 @@ class CheckLocationServicesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UpdateStateCubit, UpdateStateState>(
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
       WidgetState widgetState;
       if (state < LocationServicesState()) {
@@ -173,10 +175,35 @@ class CheckLocationServicesWidget extends StatelessWidget {
             widgetState: WidgetState.error,
             buttonLabel: S.of(context).RESOLVE,
             onPressed: () {
-              context.bloc<UpdateStateCubit>().locationServicesCheck();
+              context.bloc<CheckRequirementsCubit>().locationServicesCheck();
             },
           );
         }
+      }
+      return SequenceItem(
+        title: S.of(context).CHECKING_SERVICES,
+        widgetState: widgetState,
+      );
+    });
+  }
+}
+
+class SetStateWidget extends StatelessWidget {
+  const SetStateWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+        builder: (context, state) {
+      WidgetState widgetState;
+      if (state < SetStateState()) {
+        widgetState = WidgetState.inactive;
+      } else if (state > SetStateState()) {
+        widgetState = WidgetState.success;
+      } else if (state is SetStateInProgress) {
+        widgetState = WidgetState.loading;
+      } else if (state is SetStateSuccess) {
+        widgetState = WidgetState.success;
       }
       return SequenceItem(
         title: S.of(context).CHECKING_SERVICES,
@@ -199,6 +226,104 @@ class CircularProgressIndicatorIcon extends StatelessWidget {
   }
 }
 
+/*
+class SequenceItem extends StatefulWidget {
+  SequenceItem(
+      {Key key,
+      @required this.widgetState,
+      @required this.title,
+      this.buttonLabel,
+      this.onPressed})
+      : super(key: key);
+
+  final String title;
+  final WidgetState widgetState;
+  final String buttonLabel;
+  final VoidCallback onPressed;
+
+  @override
+  _SequenceItemState createState() => _SequenceItemState();
+}
+
+class _SequenceItemState extends State<SequenceItem>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _controller.forward();
+    return FadeTransition(
+      opacity: _animation,
+      child: Opacity(
+        opacity: widget.widgetState == WidgetState.inactive ? 0.4 : 1.0,
+        child: ListTile(
+          title: Text(
+            widget.title,
+            style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
+          ),
+          leading: Builder(
+            builder: (context) {
+              switch (widget.widgetState) {
+                case WidgetState.inactive:
+                  return SizedBox(
+                    height: Theme.of(context).textTheme.bodyText1.fontSize,
+                  );
+                  break;
+                case WidgetState.loading:
+                  return CircularProgressIndicatorIcon();
+                  break;
+                case WidgetState.error:
+                  return Icon(Icons.warning, color: Colors.yellow[700]);
+                  break;
+                case WidgetState.success:
+                  return Icon(Icons.check, color: Colors.green);
+                  break;
+              }
+              return SizedBox(
+                height: Theme.of(context).textTheme.bodyText1.fontSize,
+              );
+            },
+          ),
+          trailing: Builder(
+            builder: (context) {
+              if (widget.widgetState == WidgetState.error) {
+                return MaterialButton(
+                  onPressed: widget.onPressed ?? emptyCallback,
+                  child: Text(widget.buttonLabel ?? '',
+                      style: TextStyle(color: Colors.yellow[700])),
+                );
+              }
+              return SizedBox();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void emptyCallback() {}
+}
+*/
+
 class SequenceItem extends StatelessWidget {
   const SequenceItem(
       {Key key,
@@ -220,8 +345,12 @@ class SequenceItem extends StatelessWidget {
     return Opacity(
       opacity: widgetState == WidgetState.inactive ? 0.4 : 1.0,
       child: ListTile(
-        title: Text(title),
-        trailing: Builder(
+        title: Text(
+          title,
+          style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
+        ),
+        leading: Builder(
           builder: (context) {
             switch (widgetState) {
               case WidgetState.inactive:
@@ -233,12 +362,7 @@ class SequenceItem extends StatelessWidget {
                 return CircularProgressIndicatorIcon();
                 break;
               case WidgetState.error:
-                return MaterialButton(
-                  onPressed: onPressed ?? emptyCallback,
-                  child: Text(buttonLabel ?? '',
-                      style: TextStyle(color: Colors.yellow[700])),
-                  //color: Colors.yellow[700],
-                );
+                return Icon(Icons.warning, color: Colors.yellow[700]);
                 break;
               case WidgetState.success:
                 return Icon(Icons.check, color: Colors.green);
@@ -247,6 +371,18 @@ class SequenceItem extends StatelessWidget {
             return SizedBox(
               height: Theme.of(context).textTheme.bodyText1.fontSize,
             );
+          },
+        ),
+        trailing: Builder(
+          builder: (context) {
+            if (widgetState == WidgetState.error) {
+              return MaterialButton(
+                onPressed: onPressed ?? emptyCallback,
+                child: Text(buttonLabel ?? '',
+                    style: TextStyle(color: Colors.yellow[700])),
+              );
+            }
+            return SizedBox();
           },
         ),
       ),

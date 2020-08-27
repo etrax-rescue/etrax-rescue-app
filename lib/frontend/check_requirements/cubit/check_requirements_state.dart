@@ -1,4 +1,4 @@
-part of 'update_state_cubit.dart';
+part of 'check_requirements_cubit.dart';
 
 enum SequencePosition {
   initial,
@@ -8,15 +8,15 @@ enum SequencePosition {
   setState,
 }
 
-abstract class UpdateStateState extends Equatable {
+abstract class CheckRequirementsState extends Equatable {
   final SequencePosition sequencePosition;
-  const UpdateStateState(this.sequencePosition);
+  const CheckRequirementsState(this.sequencePosition);
 
-  bool operator <(UpdateStateState other) {
+  bool operator <(CheckRequirementsState other) {
     return sequencePosition.index < other.sequencePosition.index;
   }
 
-  bool operator >(UpdateStateState other) {
+  bool operator >(CheckRequirementsState other) {
     return sequencePosition.index > other.sequencePosition.index;
   }
 
@@ -24,12 +24,12 @@ abstract class UpdateStateState extends Equatable {
   List<Object> get props => [sequencePosition.index];
 }
 
-class UpdateStateInitial extends UpdateStateState {
+class UpdateStateInitial extends CheckRequirementsState {
   UpdateStateInitial() : super(SequencePosition.initial);
 }
 
 // Settings
-class RetrievingSettingsState extends UpdateStateState {
+class RetrievingSettingsState extends CheckRequirementsState {
   RetrievingSettingsState() : super(SequencePosition.settings);
 }
 
@@ -38,7 +38,7 @@ class RetrievingSettingsInProgress extends RetrievingSettingsState {}
 class RetrievingSettingsSuccess extends RetrievingSettingsState {}
 
 // Location Permission States
-class LocationPermissionState extends UpdateStateState {
+class LocationPermissionState extends CheckRequirementsState {
   LocationPermissionState() : super(SequencePosition.locationPermission);
 }
 
@@ -50,7 +50,7 @@ class LocationPermissionResult extends LocationPermissionState {
 }
 
 // Location Services States
-class LocationServicesState extends UpdateStateState {
+class LocationServicesState extends CheckRequirementsState {
   LocationServicesState() : super(SequencePosition.locationServices);
 }
 
@@ -62,13 +62,21 @@ class LocationServicesResult extends LocationServicesState {
 }
 
 // Update State States
-class SetStateState extends UpdateStateState {
+class SetStateState extends CheckRequirementsState {
   SetStateState() : super(SequencePosition.setState);
 }
 
-class UpdateStateInProgress extends SetStateState {}
+class SetStateInProgress extends SetStateState {}
 
-class UpdateStateSuccess extends SetStateState {}
+class SetStateSuccess extends SetStateState {}
+
+class SetStateError extends SetStateState {
+  final String messageKey;
+  SetStateError({@required this.messageKey}) : super();
+
+  @override
+  List<Object> get props => [messageKey];
+}
 
 class UpdateStateError extends SetStateState {
   final String messageKey;

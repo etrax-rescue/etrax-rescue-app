@@ -1,7 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/request_location_service.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_user_states.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -12,15 +12,16 @@ import '../../../backend/types/user_states.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
-import '../../../backend/usecases/has_location_permission.dart';
 import '../../../backend/usecases/request_location_permission.dart';
+import '../../../backend/usecases/request_location_service.dart';
 import '../../../backend/usecases/set_selected_user_state.dart';
 import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
-part 'update_state_state.dart';
+part 'check_requirements_state.dart';
 
-class UpdateStateCubit extends Cubit<UpdateStateState> {
+class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
+  final GetUserStates getUserStates;
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final GetAppConfiguration getAppConfiguration;
@@ -28,14 +29,16 @@ class UpdateStateCubit extends Cubit<UpdateStateState> {
   final RequestLocationPermission requestLocationPermission;
   final RequestLocationService requestLocationService;
 
-  UpdateStateCubit({
+  CheckRequirementsCubit({
+    @required this.getUserStates,
     @required this.setSelectedUserState,
     @required this.getAppConnection,
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
     @required this.requestLocationPermission,
     @required this.requestLocationService,
-  })  : assert(setSelectedUserState != null),
+  })  : assert(getUserStates != null),
+        assert(setSelectedUserState != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
         assert(getAppConfiguration != null),
@@ -126,7 +129,7 @@ class UpdateStateCubit extends Cubit<UpdateStateState> {
       emit(UpdateStateError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
     }
 
-    emit(UpdateStateInProgress());
+    emit(SetStateInProgress());
 
     final setStateEither =
         await setSelectedUserState(SetSelectedUserStateParams(
@@ -135,10 +138,10 @@ class UpdateStateCubit extends Cubit<UpdateStateState> {
       state: this._userState,
     ));
 
-    setStateEither.fold((failure) async* {
+    setStateEither.fold((failure) async {
       emit(UpdateStateError(messageKey: _mapFailureToMessage(failure)));
-    }, (_) async* {
-      emit(UpdateStateSuccess());
+    }, (_) async {
+      emit(SetStateSuccess());
     });
   }
 
