@@ -53,6 +53,8 @@ dependencies:
   background_location:
     git:
       url: git@github.com:yozoon/background_location.git
+  # For opening the system settings page corresponding to the app
+  app_settings: ^4.0.3
 
 dev_dependencies:
   flutter_test:

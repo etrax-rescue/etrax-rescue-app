@@ -9,6 +9,7 @@ import 'routes/router.gr.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(EtraxApp());
 }
 

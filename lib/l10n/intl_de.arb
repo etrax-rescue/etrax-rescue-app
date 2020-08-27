@@ -32,10 +32,16 @@
     "STATE_HEADING": "Status Aktualisieren",
     "STATE": "Status",
     "UPDATE_STATE": "Aktualisieren",
+    "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",
     "CHECKING_PERMISSIONS": "Berechtigungen werden überprüft...",
     "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
     "UPDATING_STATE": "Staus wird aktualisiert...",
     "RESOLVE": "Beheben",
+    "LOCATION_PERMISSION_DENIED": "Standortberechtigung verweigert",
+    "LOCATION_PERMISSION_DENIED_FOREVER": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
+    "OPEN_LOCATION_SETTINGS": "Öffnen",
+    "SERVICES_DISABLED": "Ortungsdienste sind deaktiviert",
+    
 
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",

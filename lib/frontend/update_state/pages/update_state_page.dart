@@ -1,23 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
-import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
-import '../bloc/update_state_bloc.dart';
 
-class UpdateStatePage extends StatefulWidget implements AutoRouteWrapper {
+class UpdateStatePage extends StatefulWidget {
   UpdateStatePage({Key key}) : super(key: key);
-
-  @override
-  Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<UpdateStateBloc>(),
-      child: this,
-    );
-  }
 
   @override
   _UpdateStatePageState createState() => _UpdateStatePageState();

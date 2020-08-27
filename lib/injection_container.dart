@@ -1,10 +1,13 @@
+import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/backend/usecases/request_location_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/datasources/local/local_app_configuration_data_source.dart';
 import 'backend/datasources/local/local_app_connection_data_source.dart';
+import 'backend/datasources/local/local_location_data_source.dart';
 import 'backend/datasources/local/local_login_data_source.dart';
 import 'backend/datasources/local/local_mission_state_data_source.dart';
 import 'backend/datasources/local/local_missions_data_source.dart';
@@ -18,6 +21,7 @@ import 'backend/datasources/remote/remote_mission_state_data_source.dart';
 import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
+import 'backend/repositories/location_repository.dart';
 import 'backend/usecases/clear_mission_state.dart';
 import 'backend/usecases/delete_app_connection.dart';
 import 'backend/usecases/fetch_initialization_data.dart';
@@ -26,8 +30,10 @@ import 'backend/usecases/get_app_connection.dart';
 import 'backend/usecases/get_authentication_data.dart';
 import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
+import 'backend/usecases/has_location_permission.dart';
 import 'backend/usecases/login.dart';
 import 'backend/usecases/logout.dart';
+import 'backend/usecases/request_location_permission.dart';
 import 'backend/usecases/set_app_connection.dart';
 import 'backend/usecases/set_selected_mission.dart';
 import 'backend/usecases/set_selected_user_role.dart';
@@ -39,7 +45,7 @@ import 'frontend/home/bloc/home_bloc.dart';
 import 'frontend/launch/bloc/launch_bloc.dart';
 import 'frontend/login/bloc/login_bloc.dart';
 import 'frontend/missions/bloc/missions_bloc.dart';
-import 'frontend/update_state/bloc/update_state_bloc.dart';
+import 'frontend/update_state/cubit/update_state_cubit.dart';
 import 'frontend/util/uri_input_converter.dart';
 
 final sl = GetIt.instance;
@@ -173,15 +179,33 @@ Future<void> init() async {
 
   //! Features - Update State
   // BLoC
-  sl.registerFactory<UpdateStateBloc>(() => UpdateStateBloc(
-      getAppConfiguration: sl(),
-      getAppConnection: sl(),
-      getAuthenticationData: sl(),
-      setSelectedUserState: sl()));
+  sl.registerFactory<UpdateStateCubit>(() => UpdateStateCubit(
+        getAppConfiguration: sl(),
+        getAppConnection: sl(),
+        getAuthenticationData: sl(),
+        setSelectedUserState: sl(),
+        requestLocationPermission: sl(),
+        requestLocationService: sl(),
+      ));
 
   // Use Cases
   sl.registerLazySingleton<SetSelectedUserState>(
       () => SetSelectedUserState(sl()));
+
+  sl.registerLazySingleton<RequestLocationPermission>(
+      () => RequestLocationPermission(sl()));
+
+  sl.registerLazySingleton<RequestLocationService>(
+      () => RequestLocationService(sl()));
+
+  // Repositories
+  sl.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
+        localLocationDataSource: sl(),
+      ));
+
+  // Data Sources
+  sl.registerLazySingleton<LocalLocationDataSource>(
+      () => LocalLocationDataSourceImpl(sl()));
 
   //! Features - Home
   // BLoC
@@ -199,4 +223,5 @@ Future<void> init() async {
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());
+  sl.registerLazySingleton<BackgroundLocation>(() => BackgroundLocation());
 }

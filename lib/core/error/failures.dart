@@ -21,4 +21,6 @@ class LoginFailure extends Failure {}
 
 class AuthenticationFailure extends Failure {}
 
+class PlatformFailure extends Failure {}
+
 class UnknownFailure extends Failure {}

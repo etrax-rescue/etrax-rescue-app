@@ -323,6 +323,16 @@ class S {
     );
   }
 
+  /// `Loading app settings...`
+  String get RETRIEVING_SETTINGS {
+    return Intl.message(
+      'Loading app settings...',
+      name: 'RETRIEVING_SETTINGS',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Checking permissions...`
   String get CHECKING_PERMISSIONS {
     return Intl.message(
@@ -358,6 +368,46 @@ class S {
     return Intl.message(
       'Resolve',
       name: 'RESOLVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission denied`
+  String get LOCATION_PERMISSION_DENIED {
+    return Intl.message(
+      'Location permission denied',
+      name: 'LOCATION_PERMISSION_DENIED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission permanently denied. Open settings to resolve this.`
+  String get LOCATION_PERMISSION_DENIED_FOREVER {
+    return Intl.message(
+      'Location permission permanently denied. Open settings to resolve this.',
+      name: 'LOCATION_PERMISSION_DENIED_FOREVER',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open`
+  String get OPEN_LOCATION_SETTINGS {
+    return Intl.message(
+      'Open',
+      name: 'OPEN_LOCATION_SETTINGS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location services are disabled`
+  String get SERVICES_DISABLED {
+    return Intl.message(
+      'Location services are disabled',
+      name: 'SERVICES_DISABLED',
       desc: '',
       args: [],
     );

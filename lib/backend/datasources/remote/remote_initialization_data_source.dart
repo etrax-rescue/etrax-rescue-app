@@ -39,6 +39,7 @@ class RemoteInitializationDataSourceImpl
       throw ServerException();
     }
     final body = json.decode(response.body);
+    print(body);
 
     AppConfiguration appConfiguration;
     UserRoleCollection userRoleCollection;
@@ -46,7 +47,7 @@ class RemoteInitializationDataSourceImpl
     MissionCollection missionCollection;
 
     try {
-      appConfiguration = AppConfiguration.fromJson(body['appSettings']);
+      appConfiguration = AppConfiguration.fromJson(body['appConfiguration']);
       userRoleCollection = UserRoleCollection.fromJson(body);
       userStateCollection = UserStateCollection.fromJson(body);
       missionCollection = MissionCollection.fromJson(body);

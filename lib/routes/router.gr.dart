@@ -139,8 +139,7 @@ class Router extends RouterBase {
         orElse: () => UpdateStatePageArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            UpdateStatePage(key: args.key).wrappedRoute(context),
+        builder: (context) => UpdateStatePage(key: args.key),
         settings: data,
       );
     },
