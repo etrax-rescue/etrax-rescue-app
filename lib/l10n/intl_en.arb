@@ -33,7 +33,9 @@
 
     "STATE_HEADING": "Update State",
     "STATE": "State",
+    "ACTIVE_STATE": "Currently active state", 
     "UPDATE_STATE": "Update",
+    "SAME_STATE": "The same state cannot be submitted twice",
 
     "RETRIEVING_SETTINGS": "Loading app settings...",
     "RETRIEVING_SETTINGS_DONE": "App settings loaded.",
@@ -55,8 +57,14 @@
     "STARTING_UPDATES": "Starting location updates...",
     "STARTING_UPDATES_DONE": "Location updates started successfully",
 
+    "STOPPING_UPDATES": "Stopping location updates...",
+    "STOPPING_UPDATES_DONE": "Location updates stopped successfully",
+
     "RESOLVE": "Resolve",
     "OPEN_LOCATION_SETTINGS": "Open",
+
+    "LOCATION_UPDATES_ACTIVE": "Location updates active",
+    "ETRAX_LOCATION_NOTIFICATION":"eTrax|rescue is currently collection location data for the active mission",
 
     "SETTINGS": "Settings",
     "TAKE_PHOTO": "Take a photo",

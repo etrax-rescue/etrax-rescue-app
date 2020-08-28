@@ -135,11 +135,12 @@ class Router extends RouterBase {
       );
     },
     StateUpdatePage: (data) {
-      var args = data.getArgs<StateUpdatePageArguments>(
-        orElse: () => StateUpdatePageArguments(),
-      );
+      var args = data.getArgs<StateUpdatePageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => StateUpdatePage(key: args.key),
+        builder: (context) => StateUpdatePage(
+          key: args.key,
+          currentState: args.currentState,
+        ).wrappedRoute(context),
         settings: data,
       );
     },
@@ -199,5 +200,6 @@ class SubmitImagePageArguments {
 /// StateUpdatePage arguments holder class
 class StateUpdatePageArguments {
   final Key key;
-  StateUpdatePageArguments({this.key});
+  final UserState currentState;
+  StateUpdatePageArguments({this.key, @required this.currentState});
 }

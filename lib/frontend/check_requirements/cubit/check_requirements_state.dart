@@ -6,6 +6,7 @@ enum SequencePosition {
   locationPermission,
   locationServices,
   setState,
+  stopUpdates,
   startUpdates,
   success,
 }
@@ -84,6 +85,15 @@ class SetStateError extends SetStateState {
   @override
   List<Object> get props => [messageKey];
 }
+
+// Stop Updates States
+class StopUpdatesState extends CheckRequirementsState {
+  StopUpdatesState() : super(SequencePosition.stopUpdates);
+}
+
+class StopUpdatesInProgress extends StopUpdatesState {}
+
+class StopUpdatesSuccess extends StopUpdatesState {}
 
 // Start Updates States
 class StartUpdatesState extends CheckRequirementsState {

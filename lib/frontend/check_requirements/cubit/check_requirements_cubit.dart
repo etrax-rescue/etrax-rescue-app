@@ -1,7 +1,6 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_user_states.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -15,35 +14,40 @@ import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/request_location_permission.dart';
 import '../../../backend/usecases/request_location_service.dart';
 import '../../../backend/usecases/set_selected_user_state.dart';
+import '../../../backend/usecases/start_location_updates.dart';
+import '../../../backend/usecases/stop_location_updates.dart';
 import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'check_requirements_state.dart';
 
 class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
-  final GetUserStates getUserStates;
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final GetAppConfiguration getAppConfiguration;
   final SetSelectedUserState setSelectedUserState;
   final RequestLocationPermission requestLocationPermission;
   final RequestLocationService requestLocationService;
+  final StopLocationUpdates stopLocationUpdates;
+  final StartLocationUpdates startLocationUpdates;
 
   CheckRequirementsCubit({
-    @required this.getUserStates,
     @required this.setSelectedUserState,
     @required this.getAppConnection,
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
     @required this.requestLocationPermission,
     @required this.requestLocationService,
-  })  : assert(getUserStates != null),
-        assert(setSelectedUserState != null),
+    @required this.stopLocationUpdates,
+    @required this.startLocationUpdates,
+  })  : assert(setSelectedUserState != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
         assert(getAppConfiguration != null),
         assert(requestLocationPermission != null),
         assert(requestLocationService != null),
+        assert(stopLocationUpdates != null),
+        assert(startLocationUpdates != null),
         super(UpdateStateInitial());
 
   //! Should we keep the state here in the Cubit, or in the widget's state?
@@ -52,8 +56,18 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   AuthenticationData _authenticationData;
   AppConfiguration _appConfiguration;
 
-  set userState(UserState state) {
-    this._userState = state;
+  String _notificationTitle;
+  String _notificationBody;
+  String _label;
+
+  void start(UserState desiredState, String notificationTitle,
+      String notificationBody) async {
+    this._userState = desiredState;
+    this._notificationTitle = notificationTitle;
+    this._notificationBody = notificationBody;
+    this._label = desiredState.name;
+
+    retrieveSettings();
   }
 
   void retrieveSettings() async {
@@ -77,7 +91,11 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         }, (appConfiguration) async {
           this._appConfiguration = appConfiguration;
           emit(RetrievingSettingsSuccess());
-          locationPermissionCheck();
+          if (this._userState.locationAccuracy == 0) {
+            updateState();
+          } else {
+            locationPermissionCheck();
+          }
         });
       });
     });
@@ -142,12 +160,43 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(SetStateError(messageKey: _mapFailureToMessage(failure)));
     }, (_) async {
       emit(SetStateSuccess());
-      startUpdates();
+      stopUpdates();
+    });
+  }
+
+  void stopUpdates() async {
+    emit(StopUpdatesInProgress());
+    final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
+    stopLocationUpdatesEither.fold((failure) async {
+      // TODO: handle failure
+    }, (stopped) async {
+      if (stopped == true) {
+        emit(StopUpdatesSuccess());
+        if (this._userState.locationAccuracy == 0) {
+          emit(CheckRequirementsSuccess());
+        } else {
+          startUpdates();
+        }
+      } else {
+        // TODO: what should we do when this returns false?
+      }
     });
   }
 
   void startUpdates() async {
     emit(StartUpdatesInProgress());
+    final startLocationUpdatesEither = await startLocationUpdates(
+      StartLocationUpdatesParams(
+        accuracy:
+            _mapUserStateLocationAccuracy(this._userState.locationAccuracy),
+        appConfiguration: this._appConfiguration,
+        notificationTitle: this._notificationTitle,
+        notificationBody: this._notificationBody,
+        appConnection: this._appConnection,
+        authenticationData: this._authenticationData,
+        label: this._label,
+      ),
+    );
     await Future.delayed(const Duration(seconds: 1));
     emit(StartUpdatesSuccess());
     emit(CheckRequirementsSuccess());

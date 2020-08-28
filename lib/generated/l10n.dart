@@ -333,11 +333,31 @@ class S {
     );
   }
 
+  /// `Currently active state`
+  String get ACTIVE_STATE {
+    return Intl.message(
+      'Currently active state',
+      name: 'ACTIVE_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Update`
   String get UPDATE_STATE {
     return Intl.message(
       'Update',
       name: 'UPDATE_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The same state cannot be submitted twice`
+  String get SAME_STATE {
+    return Intl.message(
+      'The same state cannot be submitted twice',
+      name: 'SAME_STATE',
       desc: '',
       args: [],
     );
@@ -493,6 +513,26 @@ class S {
     );
   }
 
+  /// `Stopping location updates...`
+  String get STOPPING_UPDATES {
+    return Intl.message(
+      'Stopping location updates...',
+      name: 'STOPPING_UPDATES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location updates stopped successfully`
+  String get STOPPING_UPDATES_DONE {
+    return Intl.message(
+      'Location updates stopped successfully',
+      name: 'STOPPING_UPDATES_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Resolve`
   String get RESOLVE {
     return Intl.message(
@@ -508,6 +548,26 @@ class S {
     return Intl.message(
       'Open',
       name: 'OPEN_LOCATION_SETTINGS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location updates active`
+  String get LOCATION_UPDATES_ACTIVE {
+    return Intl.message(
+      'Location updates active',
+      name: 'LOCATION_UPDATES_ACTIVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `eTrax|rescue is currently collection location data for the active mission`
+  String get ETRAX_LOCATION_NOTIFICATION {
+    return Intl.message(
+      'eTrax|rescue is currently collection location data for the active mission',
+      name: 'ETRAX_LOCATION_NOTIFICATION',
       desc: '',
       args: [],
     );

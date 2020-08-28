@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/stop_location_updates.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/usecase.dart';
@@ -12,8 +13,11 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ClearMissionState clearMissionState;
-  HomeBloc({@required this.clearMissionState})
+  final StopLocationUpdates stopLocationUpdates;
+  HomeBloc(
+      {@required this.clearMissionState, @required this.stopLocationUpdates})
       : assert(clearMissionState != null),
+        assert(stopLocationUpdates != null),
         super(HomeInitial());
 
   @override
@@ -22,9 +26,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async* {
     if (event is LeaveMission) {
       final clearMissionStateEither = await clearMissionState(NoParams());
-      yield* clearMissionStateEither.fold((failure) async* {},
-          (authority) async* {
-        yield LeftMission();
+      yield* clearMissionStateEither.fold((failure) async* {
+        // TODO: handle failure
+      }, (_) async* {
+        final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
+
+        yield* stopLocationUpdatesEither.fold((failure) async* {
+          // TODO: handle failure
+        }, (stopped) async* {
+          yield LeftMission();
+        });
       });
     }
   }

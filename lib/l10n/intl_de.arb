@@ -33,7 +33,9 @@
 
     "STATE_HEADING": "Status Aktualisieren",
     "STATE": "Status",
+    "ACTIVE_STATE": "Derzeit aktiver Status", 
     "UPDATE_STATE": "Aktualisieren",
+    "SAME_STATE": "Der selbe Status kann nicht doppelt gemeldet werden",
     
     "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",
     "RETRIEVING_SETTINGS_DONE": "Einstellungen geladen",
@@ -55,9 +57,15 @@
     "STARTING_UPDATES": "Standortdienst wird gestartet...",
     "STARTING_UPDATES_DONE": "Standortdienst erfolgreich gestartet",
 
+    "STOPPING_UPDATES": "Standortdienst wird gestoppt...",
+    "STOPPING_UPDATES_DONE": "Standortdienst erfolgreich gestoppt",
+
     "RESOLVE": "Beheben",
     "OPEN_LOCATION_SETTINGS": "Öffnen",
 
+    "LOCATION_UPDATES_ACTIVE": "Standortdienst aktiv",
+    "ETRAX_LOCATION_NOTIFICATION":"eTrax|rescue sammelt gerade für den aktiven Einsatz Standortdaten",
+    
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",
     "CHANGE_STATUS": "Status ändern",

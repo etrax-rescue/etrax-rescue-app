@@ -23,8 +23,7 @@ abstract class LocationRepository {
 
   Future<Either<Failure, bool>> startUpdates(
     LocationAccuracy accuracy,
-    int interval,
-    double distanceFilter,
+    AppConfiguration appConfiguration,
     String notificationTitle,
     String notificationBody,
     AppConnection appConnection,
@@ -100,21 +99,37 @@ class LocationRepositoryImpl implements LocationRepository {
   @override
   Future<Either<Failure, bool>> startUpdates(
       LocationAccuracy accuracy,
-      int interval,
-      double distanceFilter,
+      AppConfiguration appConfiguration,
       String notificationTitle,
       String notificationBody,
       AppConnection appConnection,
       AuthenticationData authenticationData,
-      String label) {
-    // TODO: implement startUpdates
-    throw UnimplementedError();
+      String label) async {
+    try {
+      final result = await localLocationDataSource.startUpdates(
+        accuracy,
+        appConfiguration.locationUpdateInterval,
+        appConfiguration.locationUpdateMinDistance.toDouble(),
+        notificationTitle,
+        notificationBody,
+        appConnection,
+        authenticationData,
+        label,
+      );
+      return Right(result);
+    } on PlatformException {
+      return Left(PlatformFailure());
+    }
   }
 
   @override
-  Future<Either<Failure, bool>> stopUpdates() {
-    // TODO: implement stopUpdates
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> stopUpdates() async {
+    try {
+      final result = await localLocationDataSource.stopUpdates();
+      return Right(result);
+    } on PlatformException {
+      return Left(PlatformFailure());
+    }
   }
 
   @override

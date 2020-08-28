@@ -38,6 +38,8 @@ import 'backend/usecases/set_app_connection.dart';
 import 'backend/usecases/set_selected_mission.dart';
 import 'backend/usecases/set_selected_user_role.dart';
 import 'backend/usecases/set_selected_user_state.dart';
+import 'backend/usecases/start_location_updates.dart';
+import 'backend/usecases/stop_location_updates.dart';
 import 'core/network/network_info.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
 import 'frontend/check_requirements/cubit/check_requirements_cubit.dart';
@@ -46,6 +48,7 @@ import 'frontend/home/bloc/home_bloc.dart';
 import 'frontend/launch/bloc/launch_bloc.dart';
 import 'frontend/login/bloc/login_bloc.dart';
 import 'frontend/missions/bloc/missions_bloc.dart';
+import 'frontend/state_update/bloc/state_update_bloc.dart';
 import 'frontend/util/uri_input_converter.dart';
 
 final sl = GetIt.instance;
@@ -177,7 +180,7 @@ Future<void> init() async {
   sl.registerLazySingleton<SetSelectedUserRole>(
       () => SetSelectedUserRole(sl()));
 
-  //! Features - Update State
+  //! Features - Check Requirements
   // BLoC
   sl.registerFactory<CheckRequirementsCubit>(() => CheckRequirementsCubit(
         getAppConfiguration: sl(),
@@ -186,12 +189,11 @@ Future<void> init() async {
         setSelectedUserState: sl(),
         requestLocationPermission: sl(),
         requestLocationService: sl(),
-        getUserStates: sl(),
+        stopLocationUpdates: sl(),
+        startLocationUpdates: sl(),
       ));
 
   // Use Cases
-  sl.registerLazySingleton<GetUserStates>(() => GetUserStates(sl()));
-
   sl.registerLazySingleton<SetSelectedUserState>(
       () => SetSelectedUserState(sl()));
 
@@ -200,6 +202,12 @@ Future<void> init() async {
 
   sl.registerLazySingleton<RequestLocationService>(
       () => RequestLocationService(sl()));
+
+  sl.registerLazySingleton<StopLocationUpdates>(
+      () => StopLocationUpdates(sl()));
+
+  sl.registerLazySingleton<StartLocationUpdates>(
+      () => StartLocationUpdates(sl()));
 
   // Repositories
   sl.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
@@ -210,9 +218,19 @@ Future<void> init() async {
   sl.registerLazySingleton<LocalLocationDataSource>(
       () => LocalLocationDataSourceImpl(sl()));
 
+  //! Features - Update State
+  // BLoC
+  sl.registerFactory<StateUpdateBloc>(() => StateUpdateBloc(
+        getUserStates: sl(),
+      ));
+
+  // Use Cases
+  sl.registerLazySingleton<GetUserStates>(() => GetUserStates(sl()));
+
   //! Features - Home
   // BLoC
-  sl.registerFactory<HomeBloc>(() => HomeBloc(clearMissionState: sl()));
+  sl.registerFactory<HomeBloc>(
+      () => HomeBloc(clearMissionState: sl(), stopLocationUpdates: sl()));
 
   // Use Cases
   sl.registerLazySingleton<ClearMissionState>(() => ClearMissionState(sl()));

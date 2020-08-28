@@ -28,12 +28,34 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
+  List<Widget> _sequenceWidgets;
+
   @override
   void initState() {
     super.initState();
+    if (widget.state.locationAccuracy == 0) {
+      _sequenceWidgets = <Widget>[
+        FetchSettingsWidget(),
+        CheckLocationPermissionWidget(),
+        SetStateWidget(),
+        StopUpdatesWidget(),
+      ];
+    } else {
+      _sequenceWidgets = <Widget>[
+        FetchSettingsWidget(),
+        CheckLocationPermissionWidget(),
+        CheckLocationServicesWidget(),
+        SetStateWidget(),
+        StopUpdatesWidget(),
+        StartUpdatesWidget(),
+      ];
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.bloc<CheckRequirementsCubit>().userState = widget.state;
-      context.bloc<CheckRequirementsCubit>().retrieveSettings();
+      context.bloc<CheckRequirementsCubit>().start(
+            widget.state,
+            S.of(context).LOCATION_UPDATES_ACTIVE,
+            S.of(context).ETRAX_LOCATION_NOTIFICATION,
+          );
     });
   }
 
@@ -46,15 +68,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverList(
-            delegate: SliverChildListDelegate(
-              <Widget>[
-                FetchSettingsWidget(),
-                CheckLocationPermissionWidget(),
-                CheckLocationServicesWidget(),
-                SetStateWidget(),
-                StartUpdatesWidget(),
-              ],
-            ),
+            delegate: SliverChildListDelegate(_sequenceWidgets),
           ),
           SliverFillRemaining(
             hasScrollBody: false,
@@ -264,6 +278,34 @@ class SetStateWidget extends StatelessWidget {
   }
 }
 
+class StopUpdatesWidget extends StatelessWidget {
+  const StopUpdatesWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+        builder: (context, state) {
+      String title = S.of(context).STOPPING_UPDATES;
+      WidgetState widgetState;
+      if (state < StopUpdatesState()) {
+        widgetState = WidgetState.inactive;
+      } else if (state > StopUpdatesState()) {
+        widgetState = WidgetState.success;
+        title = S.of(context).STOPPING_UPDATES_DONE;
+      } else if (state is StopUpdatesInProgress) {
+        widgetState = WidgetState.loading;
+      } else if (state is StopUpdatesSuccess) {
+        widgetState = WidgetState.success;
+        title = S.of(context).STOPPING_UPDATES_DONE;
+      }
+      return SequenceItem(
+        title: title,
+        widgetState: widgetState,
+      );
+    });
+  }
+}
+
 class StartUpdatesWidget extends StatelessWidget {
   const StartUpdatesWidget({Key key}) : super(key: key);
 
@@ -304,104 +346,6 @@ class CircularProgressIndicatorIcon extends StatelessWidget {
     );
   }
 }
-
-/*
-class SequenceItem extends StatefulWidget {
-  SequenceItem(
-      {Key key,
-      @required this.widgetState,
-      @required this.title,
-      this.buttonLabel,
-      this.onPressed})
-      : super(key: key);
-
-  final String title;
-  final WidgetState widgetState;
-  final String buttonLabel;
-  final VoidCallback onPressed;
-
-  @override
-  _SequenceItemState createState() => _SequenceItemState();
-}
-
-class _SequenceItemState extends State<SequenceItem>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _animation = Tween(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _controller.forward();
-    return FadeTransition(
-      opacity: _animation,
-      child: Opacity(
-        opacity: widget.widgetState == WidgetState.inactive ? 0.4 : 1.0,
-        child: ListTile(
-          title: Text(
-            widget.title,
-            style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
-          ),
-          leading: Builder(
-            builder: (context) {
-              switch (widget.widgetState) {
-                case WidgetState.inactive:
-                  return SizedBox(
-                    height: Theme.of(context).textTheme.bodyText1.fontSize,
-                  );
-                  break;
-                case WidgetState.loading:
-                  return CircularProgressIndicatorIcon();
-                  break;
-                case WidgetState.error:
-                  return Icon(Icons.warning, color: Colors.yellow[700]);
-                  break;
-                case WidgetState.success:
-                  return Icon(Icons.check, color: Colors.green);
-                  break;
-              }
-              return SizedBox(
-                height: Theme.of(context).textTheme.bodyText1.fontSize,
-              );
-            },
-          ),
-          trailing: Builder(
-            builder: (context) {
-              if (widget.widgetState == WidgetState.error) {
-                return MaterialButton(
-                  onPressed: widget.onPressed ?? emptyCallback,
-                  child: Text(widget.buttonLabel ?? '',
-                      style: TextStyle(color: Colors.yellow[700])),
-                );
-              }
-              return SizedBox();
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  static void emptyCallback() {}
-}
-*/
 
 class SequenceItem extends StatelessWidget {
   const SequenceItem(

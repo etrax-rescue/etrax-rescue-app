@@ -11,9 +11,11 @@ class CenteredCardView extends StatelessWidget {
       children: <Widget>[
         SizedBox(height: MediaQuery.of(context).padding.top),
         WidthLimiter(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: child,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: child,
+            ),
           ),
         ),
       ],
