@@ -39,28 +39,29 @@ class RemoteInitializationDataSourceImpl
       throw ServerException();
     }
     final body = json.decode(response.body);
-    print(body);
 
-    AppConfiguration appConfiguration;
-    UserRoleCollection userRoleCollection;
-    UserStateCollection userStateCollection;
-    MissionCollection missionCollection;
+    //AppConfiguration appConfiguration;
+    //UserRoleCollection userRoleCollection;
+    //UserStateCollection userStateCollection;
+    //MissionCollection missionCollection;
 
     try {
-      appConfiguration = AppConfiguration.fromJson(body['appConfiguration']);
-      userRoleCollection = UserRoleCollection.fromJson(body);
-      userStateCollection = UserStateCollection.fromJson(body);
-      missionCollection = MissionCollection.fromJson(body);
+      //appConfiguration = AppConfiguration.fromJson(body['appConfiguration']);
+      //userRoleCollection = UserRoleCollection.fromJson(body);
+      //userStateCollection = UserStateCollection.fromJson(body);
+      //missionCollection = MissionCollection.fromJson(body);
+      final initializationData = InitializationData.fromJson(body);
+      return initializationData;
     } on NoSuchMethodError {
       throw ServerException();
     } on FormatException {
       throw ServerException();
     }
 
-    return InitializationData(
-        appConfiguration: appConfiguration,
-        missionCollection: missionCollection,
-        userStateCollection: userStateCollection,
-        userRoleCollection: userRoleCollection);
+    //return InitializationData(
+    //    appConfiguration: appConfiguration,
+    //    missionCollection: missionCollection,
+    //    userStateCollection: userStateCollection,
+    //    userRoleCollection: userRoleCollection);
   }
 }

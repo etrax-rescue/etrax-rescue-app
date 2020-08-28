@@ -6,6 +6,8 @@ enum SequencePosition {
   locationPermission,
   locationServices,
   setState,
+  startUpdates,
+  success,
 }
 
 abstract class CheckRequirementsState extends Equatable {
@@ -61,6 +63,11 @@ class LocationServicesResult extends LocationServicesState {
   LocationServicesResult({@required this.enabled}) : super();
 }
 
+class LocationServicesError extends LocationServicesState {
+  final String messageKey;
+  LocationServicesError({@required this.messageKey}) : super();
+}
+
 // Update State States
 class SetStateState extends CheckRequirementsState {
   SetStateState() : super(SequencePosition.setState);
@@ -78,10 +85,24 @@ class SetStateError extends SetStateState {
   List<Object> get props => [messageKey];
 }
 
-class UpdateStateError extends SetStateState {
+// Start Updates States
+class StartUpdatesState extends CheckRequirementsState {
+  StartUpdatesState() : super(SequencePosition.startUpdates);
+}
+
+class StartUpdatesInProgress extends StartUpdatesState {}
+
+class StartUpdatesSuccess extends StartUpdatesState {}
+
+// Error and Success
+class CheckRequirementsError extends SetStateState {
   final String messageKey;
-  UpdateStateError({@required this.messageKey}) : super();
+  CheckRequirementsError({@required this.messageKey}) : super();
 
   @override
   List<Object> get props => [messageKey];
+}
+
+class CheckRequirementsSuccess extends CheckRequirementsState {
+  CheckRequirementsSuccess() : super(SequencePosition.success);
 }

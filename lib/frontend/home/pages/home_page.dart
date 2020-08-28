@@ -63,11 +63,11 @@ class _HomePageState extends State<HomePage>
           bottom: PreferredSize(
             preferredSize: Size(
               double.infinity,
-              Theme.of(context).textTheme.bodyText2.fontSize + 4,
+              Theme.of(context).textTheme.bodyText2.fontSize + 8,
             ),
             child: Container(
               color: Theme.of(context).accentColor,
-              height: Theme.of(context).textTheme.bodyText2.fontSize + 4,
+              height: Theme.of(context).textTheme.bodyText2.fontSize + 8,
               width: double.infinity,
               child: Padding(
                 padding: EdgeInsets.all(2),

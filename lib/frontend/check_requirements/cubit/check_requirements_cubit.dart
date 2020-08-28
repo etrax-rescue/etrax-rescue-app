@@ -101,7 +101,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
   void locationServicesCheck() async {
     if (this._userState == null || this._appConfiguration == null) {
-      emit(UpdateStateError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
+      emit(LocationServicesError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
     }
     emit(LocationServicesInProgress());
     final locationServicesRequestEither = await requestLocationService(
@@ -126,7 +126,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     if (this._userState == null ||
         this._appConnection == null ||
         this._authenticationData == null) {
-      emit(UpdateStateError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
+      emit(SetStateError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
     }
 
     emit(SetStateInProgress());
@@ -139,10 +139,18 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     ));
 
     setStateEither.fold((failure) async {
-      emit(UpdateStateError(messageKey: _mapFailureToMessage(failure)));
+      emit(SetStateError(messageKey: _mapFailureToMessage(failure)));
     }, (_) async {
       emit(SetStateSuccess());
+      startUpdates();
     });
+  }
+
+  void startUpdates() async {
+    emit(StartUpdatesInProgress());
+    await Future.delayed(const Duration(seconds: 1));
+    emit(StartUpdatesSuccess());
+    emit(CheckRequirementsSuccess());
   }
 
   String _mapFailureToMessage(Failure failure) {

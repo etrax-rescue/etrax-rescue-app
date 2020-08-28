@@ -4,6 +4,8 @@
     "BACK": "Go back",
     "RETRY": "Retry",
     "DROPDOWN_HINT": "-- Please Select --",
+    "OK": "Ok",
+    "CONTINUE": "Continue",
     
     "APP_CONNECTION_HEADING": "Connect App:",
     "CONNECT": "Connect",
@@ -32,15 +34,29 @@
     "STATE_HEADING": "Update State",
     "STATE": "State",
     "UPDATE_STATE": "Update",
+
     "RETRIEVING_SETTINGS": "Loading app settings...",
-    "CHECKING_PERMISSIONS": "Checking permissions...",
-    "CHECKING_SERVICES": "Checking services...",
-    "UPDATING_STATE": "Updating status...",
-    "RESOLVE": "Resolve",
+    "RETRIEVING_SETTINGS_DONE": "App settings loaded.",
+    "RETRIEVING_SETTINGS_ERROR": "Error while loading app settings",
+
+    "CHECKING_PERMISSIONS": "Checking location permission...",
+    "CHECKING_PERMISSIONS_DONE": "Location permission granted",
     "LOCATION_PERMISSION_DENIED": "Location permission denied",
     "LOCATION_PERMISSION_DENIED_FOREVER": "Location permission permanently denied. Open settings to resolve this.",
-    "OPEN_LOCATION_SETTINGS": "Open",
+
+    "CHECKING_SERVICES": "Checking services...",
+    "CHECKING_SERVICES_DONE": "Location services successfully activated",
+    "CHECKING_SERVICES_ERROR": "Error while activating location services",
     "SERVICES_DISABLED": "Location services are disabled",
+
+    "UPDATING_STATE": "Updating status...",
+    "UPDATING_STATE_DONE": "Status updated",
+
+    "STARTING_UPDATES": "Starting location updates...",
+    "STARTING_UPDATES_DONE": "Location updates started successfully",
+
+    "RESOLVE": "Resolve",
+    "OPEN_LOCATION_SETTINGS": "Open",
 
     "SETTINGS": "Settings",
     "TAKE_PHOTO": "Take a photo",

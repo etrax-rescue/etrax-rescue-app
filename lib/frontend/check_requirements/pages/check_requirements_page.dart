@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:background_location/background_location.dart';
+import 'package:etrax_rescue_app/frontend/widgets/width_limiter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,13 +28,6 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
-  List<Widget> widgetSequence = [
-    FetchSettingsWidget(),
-    CheckLocationPermissionWidget(),
-    CheckLocationServicesWidget(),
-    SetStateWidget(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -49,22 +43,67 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
       appBar: AppBar(
         title: Text(S.of(context).STATE_HEADING),
       ),
-      body: BlocListener<CheckRequirementsCubit, CheckRequirementsState>(
-        listener: (context, state) {
-          print(state);
-          if (state is SetStateSuccess) {
-            ExtendedNavigator.of(context).pushAndRemoveUntil(
-              Routes.homePage,
-              (route) => false,
-              arguments: HomePageArguments(state: widget.state),
-            );
-          }
-        },
-        child: Center(
-          child: ListView(
-            children: widgetSequence,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(
+              <Widget>[
+                FetchSettingsWidget(),
+                CheckLocationPermissionWidget(),
+                CheckLocationServicesWidget(),
+                SetStateWidget(),
+                StartUpdatesWidget(),
+              ],
+            ),
           ),
-        ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: WidthLimiter(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: BlocBuilder<CheckRequirementsCubit,
+                      CheckRequirementsState>(
+                    builder: (context, state) {
+                      bool enabled =
+                          state is CheckRequirementsSuccess ? true : false;
+                      return AbsorbPointer(
+                        absorbing: !enabled,
+                        child: MaterialButton(
+                          onPressed: () {
+                            ExtendedNavigator.of(context).pushAndRemoveUntil(
+                              Routes.homePage,
+                              (route) => false,
+                              arguments: HomePageArguments(state: widget.state),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                S.of(context).CONTINUE,
+                                style: TextStyle(
+                                  color: enabled
+                                      ? Theme.of(context).accentColor
+                                      : Colors.grey,
+                                ),
+                              ),
+                              Icon(Icons.chevron_right,
+                                  color: enabled
+                                      ? Theme.of(context).accentColor
+                                      : Colors.grey),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -79,18 +118,21 @@ class FetchSettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
+      String title = S.of(context).RETRIEVING_SETTINGS;
       WidgetState widgetState;
       if (state < RetrievingSettingsState()) {
         widgetState = WidgetState.inactive;
       } else if (state > RetrievingSettingsState()) {
         widgetState = WidgetState.success;
+        title = S.of(context).RETRIEVING_SETTINGS_DONE;
       } else if (state is RetrievingSettingsInProgress) {
         widgetState = WidgetState.loading;
       } else if (state is RetrievingSettingsSuccess) {
         widgetState = WidgetState.success;
+        title = S.of(context).RETRIEVING_SETTINGS_DONE;
       }
       return SequenceItem(
-        title: S.of(context).RETRIEVING_SETTINGS,
+        title: title,
         widgetState: widgetState,
       );
     });
@@ -104,17 +146,20 @@ class CheckLocationPermissionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
+      String title = S.of(context).CHECKING_PERMISSIONS;
       WidgetState widgetState;
       if (state < LocationPermissionState()) {
         widgetState = WidgetState.inactive;
       } else if (state > LocationPermissionState()) {
         widgetState = WidgetState.success;
+        title = S.of(context).CHECKING_PERMISSIONS_DONE;
       } else if (state is LocationPermissionInProgress) {
         widgetState = WidgetState.loading;
       } else if (state is LocationPermissionResult) {
         switch (state.permissionStatus) {
           case PermissionStatus.granted:
             widgetState = WidgetState.success;
+            title = S.of(context).CHECKING_PERMISSIONS_DONE;
             break;
           case PermissionStatus.denied:
             return SequenceItem(
@@ -144,7 +189,7 @@ class CheckLocationPermissionWidget extends StatelessWidget {
         }
       }
       return SequenceItem(
-        title: S.of(context).CHECKING_PERMISSIONS,
+        title: title,
         widgetState: widgetState,
       );
     });
@@ -158,16 +203,19 @@ class CheckLocationServicesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
+      String title = S.of(context).CHECKING_SERVICES;
       WidgetState widgetState;
       if (state < LocationServicesState()) {
         widgetState = WidgetState.inactive;
       } else if (state > LocationServicesState()) {
         widgetState = WidgetState.success;
+        title = S.of(context).CHECKING_SERVICES_DONE;
       } else if (state is LocationServicesInProgress) {
         widgetState = WidgetState.loading;
       } else if (state is LocationServicesResult) {
         if (state.enabled == true) {
           widgetState = WidgetState.success;
+          title = S.of(context).CHECKING_SERVICES_DONE;
         } else {
           widgetState = WidgetState.error;
           return SequenceItem(
@@ -181,7 +229,7 @@ class CheckLocationServicesWidget extends StatelessWidget {
         }
       }
       return SequenceItem(
-        title: S.of(context).CHECKING_SERVICES,
+        title: title,
         widgetState: widgetState,
       );
     });
@@ -195,18 +243,49 @@ class SetStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
+      String title = S.of(context).UPDATING_STATE;
       WidgetState widgetState;
       if (state < SetStateState()) {
         widgetState = WidgetState.inactive;
       } else if (state > SetStateState()) {
         widgetState = WidgetState.success;
+        title = S.of(context).UPDATING_STATE_DONE;
       } else if (state is SetStateInProgress) {
         widgetState = WidgetState.loading;
       } else if (state is SetStateSuccess) {
         widgetState = WidgetState.success;
+        title = S.of(context).UPDATING_STATE_DONE;
       }
       return SequenceItem(
-        title: S.of(context).CHECKING_SERVICES,
+        title: title,
+        widgetState: widgetState,
+      );
+    });
+  }
+}
+
+class StartUpdatesWidget extends StatelessWidget {
+  const StartUpdatesWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+        builder: (context, state) {
+      String title = S.of(context).STARTING_UPDATES;
+      WidgetState widgetState;
+      if (state < StartUpdatesState()) {
+        widgetState = WidgetState.inactive;
+      } else if (state > StartUpdatesState()) {
+        widgetState = WidgetState.success;
+        title = S.of(context).STARTING_UPDATES_DONE;
+      } else if (state is StartUpdatesInProgress) {
+        widgetState = WidgetState.loading;
+      } else if (state is StartUpdatesSuccess) {
+        widgetState = WidgetState.success;
+        title = S.of(context).STARTING_UPDATES_DONE;
+      }
+      return SequenceItem(
+        title: title,
         widgetState: widgetState,
       );
     });
@@ -219,8 +298,8 @@ class CircularProgressIndicatorIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Theme.of(context).textTheme.bodyText1.fontSize,
-      width: Theme.of(context).textTheme.bodyText1.fontSize,
+      height: Theme.of(context).textTheme.bodyText2.fontSize,
+      width: Theme.of(context).textTheme.bodyText2.fontSize,
       child: CircularProgressIndicator(),
     );
   }
@@ -342,48 +421,50 @@ class SequenceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: widgetState == WidgetState.inactive ? 0.4 : 1.0,
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-              fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
-        ),
-        leading: Builder(
-          builder: (context) {
-            switch (widgetState) {
-              case WidgetState.inactive:
-                return SizedBox(
-                  height: Theme.of(context).textTheme.bodyText1.fontSize,
-                );
-                break;
-              case WidgetState.loading:
-                return CircularProgressIndicatorIcon();
-                break;
-              case WidgetState.error:
-                return Icon(Icons.warning, color: Colors.yellow[700]);
-                break;
-              case WidgetState.success:
-                return Icon(Icons.check, color: Colors.green);
-                break;
-            }
-            return SizedBox(
-              height: Theme.of(context).textTheme.bodyText1.fontSize,
-            );
-          },
-        ),
-        trailing: Builder(
-          builder: (context) {
-            if (widgetState == WidgetState.error) {
-              return MaterialButton(
-                onPressed: onPressed ?? emptyCallback,
-                child: Text(buttonLabel ?? '',
-                    style: TextStyle(color: Colors.yellow[700])),
+    return WidthLimiter(
+      child: Opacity(
+        opacity: widgetState == WidgetState.inactive ? 0.4 : 1.0,
+        child: ListTile(
+          title: Text(
+            title,
+            style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
+          ),
+          leading: Builder(
+            builder: (context) {
+              switch (widgetState) {
+                case WidgetState.inactive:
+                  return SizedBox(
+                    height: Theme.of(context).textTheme.bodyText1.fontSize,
+                  );
+                  break;
+                case WidgetState.loading:
+                  return CircularProgressIndicatorIcon();
+                  break;
+                case WidgetState.error:
+                  return Icon(Icons.warning, color: Colors.yellow[700]);
+                  break;
+                case WidgetState.success:
+                  return Icon(Icons.check, color: Colors.green);
+                  break;
+              }
+              return SizedBox(
+                height: Theme.of(context).textTheme.bodyText1.fontSize,
               );
-            }
-            return SizedBox();
-          },
+            },
+          ),
+          trailing: Builder(
+            builder: (context) {
+              if (widgetState == WidgetState.error) {
+                return MaterialButton(
+                  onPressed: onPressed ?? emptyCallback,
+                  child: Text(buttonLabel ?? '',
+                      style: TextStyle(color: Colors.yellow[700])),
+                );
+              }
+              return SizedBox();
+            },
+          ),
         ),
       ),
     );

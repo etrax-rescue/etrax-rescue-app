@@ -94,29 +94,27 @@ class _ConfirmationFormState extends State<ConfirmationForm> {
                   val == null ? S.of(context).FIELD_REQUIRED : null,
             ),
           ),
-          SizedBox(height: 16),
-          BlocBuilder<ConfirmationBloc, ConfirmationState>(
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
               builder: (context, state) {
-            if (state is ConfirmationInProgress) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return Container();
-          }),
-          BlocBuilder<ConfirmationBloc, ConfirmationState>(
-            builder: (context, state) {
-              if (!(state is ConfirmationInProgress)) {
-                return ButtonTheme(
-                  minWidth: double.infinity,
-                  child: RaisedButton(
-                    onPressed: submit,
-                    textTheme: ButtonTextTheme.primary,
-                    child: Text(S.of(context).ACCEPT_MISSION),
-                    color: Theme.of(context).accentColor,
-                  ),
-                );
-              }
-              return Container();
-            },
+                if (state is ConfirmationInProgress) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (!(state is ConfirmationInProgress)) {
+                  return ButtonTheme(
+                    minWidth: double.infinity,
+                    child: RaisedButton(
+                      onPressed: submit,
+                      textTheme: ButtonTextTheme.primary,
+                      child: Text(S.of(context).ACCEPT_MISSION),
+                      color: Theme.of(context).accentColor,
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
           ),
         ],
       ),

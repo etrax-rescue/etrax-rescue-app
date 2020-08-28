@@ -83,6 +83,26 @@ class S {
     );
   }
 
+  /// `Ok`
+  String get OK {
+    return Intl.message(
+      'Ok',
+      name: 'OK',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get CONTINUE {
+    return Intl.message(
+      'Continue',
+      name: 'CONTINUE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connect App:`
   String get APP_CONNECTION_HEADING {
     return Intl.message(
@@ -333,41 +353,41 @@ class S {
     );
   }
 
-  /// `Checking permissions...`
+  /// `App settings loaded.`
+  String get RETRIEVING_SETTINGS_DONE {
+    return Intl.message(
+      'App settings loaded.',
+      name: 'RETRIEVING_SETTINGS_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error while loading app settings`
+  String get RETRIEVING_SETTINGS_ERROR {
+    return Intl.message(
+      'Error while loading app settings',
+      name: 'RETRIEVING_SETTINGS_ERROR',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Checking location permission...`
   String get CHECKING_PERMISSIONS {
     return Intl.message(
-      'Checking permissions...',
+      'Checking location permission...',
       name: 'CHECKING_PERMISSIONS',
       desc: '',
       args: [],
     );
   }
 
-  /// `Checking services...`
-  String get CHECKING_SERVICES {
+  /// `Location permission granted`
+  String get CHECKING_PERMISSIONS_DONE {
     return Intl.message(
-      'Checking services...',
-      name: 'CHECKING_SERVICES',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Updating status...`
-  String get UPDATING_STATE {
-    return Intl.message(
-      'Updating status...',
-      name: 'UPDATING_STATE',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Resolve`
-  String get RESOLVE {
-    return Intl.message(
-      'Resolve',
-      name: 'RESOLVE',
+      'Location permission granted',
+      name: 'CHECKING_PERMISSIONS_DONE',
       desc: '',
       args: [],
     );
@@ -393,11 +413,31 @@ class S {
     );
   }
 
-  /// `Open`
-  String get OPEN_LOCATION_SETTINGS {
+  /// `Checking services...`
+  String get CHECKING_SERVICES {
     return Intl.message(
-      'Open',
-      name: 'OPEN_LOCATION_SETTINGS',
+      'Checking services...',
+      name: 'CHECKING_SERVICES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location services successfully activated`
+  String get CHECKING_SERVICES_DONE {
+    return Intl.message(
+      'Location services successfully activated',
+      name: 'CHECKING_SERVICES_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error while activating location services`
+  String get CHECKING_SERVICES_ERROR {
+    return Intl.message(
+      'Error while activating location services',
+      name: 'CHECKING_SERVICES_ERROR',
       desc: '',
       args: [],
     );
@@ -408,6 +448,66 @@ class S {
     return Intl.message(
       'Location services are disabled',
       name: 'SERVICES_DISABLED',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updating status...`
+  String get UPDATING_STATE {
+    return Intl.message(
+      'Updating status...',
+      name: 'UPDATING_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Status updated`
+  String get UPDATING_STATE_DONE {
+    return Intl.message(
+      'Status updated',
+      name: 'UPDATING_STATE_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starting location updates...`
+  String get STARTING_UPDATES {
+    return Intl.message(
+      'Starting location updates...',
+      name: 'STARTING_UPDATES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location updates started successfully`
+  String get STARTING_UPDATES_DONE {
+    return Intl.message(
+      'Location updates started successfully',
+      name: 'STARTING_UPDATES_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resolve`
+  String get RESOLVE {
+    return Intl.message(
+      'Resolve',
+      name: 'RESOLVE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open`
+  String get OPEN_LOCATION_SETTINGS {
+    return Intl.message(
+      'Open',
+      name: 'OPEN_LOCATION_SETTINGS',
       desc: '',
       args: [],
     );

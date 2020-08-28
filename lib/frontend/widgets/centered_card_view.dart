@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/frontend/widgets/width_limiter.dart';
 import 'package:flutter/material.dart';
 
 class CenteredCardView extends StatelessWidget {
@@ -9,16 +10,10 @@ class CenteredCardView extends StatelessWidget {
     return Column(
       children: <Widget>[
         SizedBox(height: MediaQuery.of(context).padding.top),
-        Container(
-          alignment: Alignment.center,
-          child: Card(
-            child: Container(
-              constraints: BoxConstraints(maxWidth: 450),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: child,
-              ),
-            ),
+        WidthLimiter(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: child,
           ),
         ),
       ],

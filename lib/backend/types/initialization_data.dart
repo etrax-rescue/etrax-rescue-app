@@ -19,6 +19,19 @@ class InitializationData extends Equatable {
     @required this.userRoleCollection,
   });
 
+  factory InitializationData.fromJson(Map<String, dynamic> json) {
+    final appConfiguration =
+        AppConfiguration.fromJson(json['appConfiguration']);
+    final missionCollection = MissionCollection.fromJson(json);
+    final userRoleCollection = UserRoleCollection.fromJson(json);
+    final userStateCollection = UserStateCollection.fromJson(json);
+    return InitializationData(
+        appConfiguration: appConfiguration,
+        missionCollection: missionCollection,
+        userRoleCollection: userRoleCollection,
+        userStateCollection: userStateCollection);
+  }
+
   @override
   List<Object> get props => [
         appConfiguration,

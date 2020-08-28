@@ -4,6 +4,8 @@
     "BACK": "Zurück",
     "RETRY": "Erneut versuchen",
     "DROPDOWN_HINT": "-- Bitte Auswählen --",
+    "OK": "Ok",
+    "CONTINUE": "Weiter",
     
     "APP_CONNECTION_HEADING": "App verbinden:",
     "CONNECT": "Verbinden",
@@ -32,16 +34,29 @@
     "STATE_HEADING": "Status Aktualisieren",
     "STATE": "Status",
     "UPDATE_STATE": "Aktualisieren",
+    
     "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",
+    "RETRIEVING_SETTINGS_DONE": "Einstellungen geladen",
+    "RETRIEVING_SETTINGS_ERROR": "Fehler beim Laden der Einstellungen",
+
     "CHECKING_PERMISSIONS": "Berechtigungen werden überprüft...",
-    "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
-    "UPDATING_STATE": "Staus wird aktualisiert...",
-    "RESOLVE": "Beheben",
+    "CHECKING_PERMISSIONS_DONE": "Standortberechtigung gewährt",
     "LOCATION_PERMISSION_DENIED": "Standortberechtigung verweigert",
     "LOCATION_PERMISSION_DENIED_FOREVER": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
-    "OPEN_LOCATION_SETTINGS": "Öffnen",
+
+    "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
+    "CHECKING_SERVICES_DONE": "Ortungsdienste erforlgreich aktiviert",
     "SERVICES_DISABLED": "Ortungsdienste sind deaktiviert",
-    
+    "CHECKING_SERVICES_ERROR": "Fehler beim Anfordern von Ortungsdiensten",
+
+    "UPDATING_STATE": "Staus wird aktualisiert...",
+    "UPDATING_STATE_DONE": "Status wurde aktualisiert",
+
+    "STARTING_UPDATES": "Standortdienst wird gestartet...",
+    "STARTING_UPDATES_DONE": "Standortdienst erfolgreich gestartet",
+
+    "RESOLVE": "Beheben",
+    "OPEN_LOCATION_SETTINGS": "Öffnen",
 
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",
