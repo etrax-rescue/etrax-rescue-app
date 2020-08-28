@@ -99,7 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "TAKE_PHOTO" : MessageLookupByLibrary.simpleMessage("Foto aufnehmen"),
     "UNEXPECTED_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Ein unerwarteter Fehler ist aufgetreten."),
     "UPDATE_STATE" : MessageLookupByLibrary.simpleMessage("Aktualisieren"),
-    "UPDATING_STATE" : MessageLookupByLibrary.simpleMessage("Staus wird aktualisiert..."),
+    "UPDATING_STATE" : MessageLookupByLibrary.simpleMessage("Status wird aktualisiert..."),
     "UPDATING_STATE_DONE" : MessageLookupByLibrary.simpleMessage("Status wurde aktualisiert"),
     "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername")
   };

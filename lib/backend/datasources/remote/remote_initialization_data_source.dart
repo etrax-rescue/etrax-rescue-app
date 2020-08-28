@@ -3,14 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../../core/error/exceptions.dart';
-import '../../types/app_configuration.dart';
 import '../../types/app_connection.dart';
 import '../../types/authentication_data.dart';
 import '../../types/etrax_server_endpoints.dart';
 import '../../types/initialization_data.dart';
-import '../../types/missions.dart';
-import '../../types/user_roles.dart';
-import '../../types/user_states.dart';
 
 abstract class RemoteInitializationDataSource {
   Future<InitializationData> fetchInitialization(

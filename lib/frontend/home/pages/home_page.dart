@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:background_location/background_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -178,35 +181,61 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-class GPSScreen extends StatelessWidget {
-  const GPSScreen({Key key}) : super(key: key);
+class GPSScreen extends StatefulWidget {
+  GPSScreen({Key key}) : super(key: key);
+
+  @override
+  _GPSScreenState createState() => _GPSScreenState();
+}
+
+class _GPSScreenState extends State<GPSScreen> {
+  Stream<LocationData> _locationStream;
 
   @override
   Widget build(BuildContext context) {
-    final DateTime dateTime = DateTime.parse('2020-02-02T20:20:20.000Z');
-    final latitude = 48.34;
-    final longitude = 16.29;
-    final accuracy = 20.0;
-    final altitude = 220.0;
-    final speed = 0.0;
-    final speedAccuracy = 0.0;
-    final heading = 301.0;
     return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            DataEntry(label: S.of(context).DATETIME, data: '$dateTime'),
-            DataEntry(label: S.of(context).LATITUDE, data: '$latitude'),
-            DataEntry(label: S.of(context).LONGITUDE, data: '$longitude'),
-            DataEntry(label: S.of(context).ACCURACY, data: '$accuracy'),
-            DataEntry(label: S.of(context).ALTITUDE, data: '$altitude'),
-            DataEntry(label: S.of(context).SPEED, data: '$speed'),
-            DataEntry(
-                label: S.of(context).SPEED_ACCURACY, data: '$speedAccuracy'),
-            DataEntry(label: S.of(context).HEADING, data: '$heading'),
-          ],
-        ),
-      ),
+        /*child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+        if (state is ConnectLocationStreamSuccess) {}
+        SingleChildScrollView(
+          child: StreamBuilder<LocationData>(
+            stream: _locationStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Error occured');
+              } else if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return LocationDataWidget(locationData: snapshot.data);
+            },
+          ),
+        );
+      }),*/
+        );
+  }
+}
+
+class LocationDataWidget extends StatelessWidget {
+  const LocationDataWidget({this.locationData});
+  final LocationData locationData;
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(locationData.time.toInt());
+    return Container(
+      child: Column(children: <Widget>[
+        DataEntry(label: 'Datetime', data: '$dateTime'),
+        DataEntry(label: 'Latitude', data: '${locationData.latitude}'),
+        DataEntry(label: 'Longitude', data: '${locationData.longitude}'),
+        DataEntry(label: 'Accuracy', data: '${locationData.accuracy}'),
+        DataEntry(label: 'Altitude', data: '${locationData.altitude}'),
+        DataEntry(label: 'Speed', data: '${locationData.speed}'),
+        DataEntry(
+            label: 'Speed Accuracy', data: '${locationData.speedAccuracy}'),
+        DataEntry(label: 'Heading', data: '${locationData.heading}'),
+      ]),
     );
   }
 }

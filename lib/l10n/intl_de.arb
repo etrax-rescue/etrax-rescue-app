@@ -51,7 +51,7 @@
     "SERVICES_DISABLED": "Ortungsdienste sind deaktiviert",
     "CHECKING_SERVICES_ERROR": "Fehler beim Anfordern von Ortungsdiensten",
 
-    "UPDATING_STATE": "Staus wird aktualisiert...",
+    "UPDATING_STATE": "Status wird aktualisiert...",
     "UPDATING_STATE_DONE": "Status wurde aktualisiert",
 
     "STARTING_UPDATES": "Standortdienst wird gestartet...",
@@ -65,7 +65,7 @@
 
     "LOCATION_UPDATES_ACTIVE": "Standortdienst aktiv",
     "ETRAX_LOCATION_NOTIFICATION":"eTrax|rescue sammelt gerade für den aktiven Einsatz Standortdaten",
-    
+
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",
     "CHANGE_STATUS": "Status ändern",

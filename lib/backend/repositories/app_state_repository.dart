@@ -252,6 +252,9 @@ class AppStateRepositoryImpl implements AppStateRepository {
   @override
   Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
       AuthenticationData authenticationData, UserRole role) async {
+    if (!(await networkInfo.isConnected)) {
+      return Left(NetworkFailure());
+    }
     try {
       await remoteMissionStateDataSource.selectUserRole(
           appConnection, authenticationData, role);
@@ -277,6 +280,9 @@ class AppStateRepositoryImpl implements AppStateRepository {
       AppConnection appConnection,
       AuthenticationData authenticationData,
       UserState state) async {
+    if (!(await networkInfo.isConnected)) {
+      return Left(NetworkFailure());
+    }
     try {
       await remoteMissionStateDataSource.selectUserState(
           appConnection, authenticationData, state);
@@ -300,6 +306,9 @@ class AppStateRepositoryImpl implements AppStateRepository {
   @override
   Future<Either<Failure, None>> setSelectedMission(AppConnection appConnection,
       AuthenticationData authenticationData, Mission mission) async {
+    if (!(await networkInfo.isConnected)) {
+      return Left(NetworkFailure());
+    }
     try {
       await remoteMissionStateDataSource.selectMission(
           appConnection, authenticationData, mission);

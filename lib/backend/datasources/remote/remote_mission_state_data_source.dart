@@ -32,7 +32,7 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
       AuthenticationData authenticationData, Mission mission) async {
     final headers = authenticationData.generateAuthHeader();
     headers[HttpHeaders.contentTypeHeader] = 'application/json';
-    print(headers);
+
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.missionSelect),
         headers: headers,
@@ -40,7 +40,6 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
 
     final response = await request.timeout(const Duration(seconds: 2));
 
-    print(response.statusCode);
     if (response.statusCode == 403) {
       throw AuthenticationException();
     }

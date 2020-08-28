@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:background_location/background_location.dart';
+import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/frontend/widgets/width_limiter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -269,6 +270,17 @@ class SetStateWidget extends StatelessWidget {
       } else if (state is SetStateSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).UPDATING_STATE_DONE;
+      } else if (state is SetStateError) {
+        widgetState = WidgetState.error;
+        title = translateErrorMessage(context, state.messageKey);
+        return SequenceItem(
+          title: title,
+          widgetState: widgetState,
+          buttonLabel: S.of(context).RETRY,
+          onPressed: () {
+            context.bloc<CheckRequirementsCubit>().updateState();
+          },
+        );
       }
       return SequenceItem(
         title: title,

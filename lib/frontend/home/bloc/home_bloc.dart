@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:etrax_rescue_app/backend/usecases/stop_location_updates.dart';
@@ -14,6 +15,9 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ClearMissionState clearMissionState;
   final StopLocationUpdates stopLocationUpdates;
+
+  StreamSubscription<LocationData> _streamSubscription;
+
   HomeBloc(
       {@required this.clearMissionState, @required this.stopLocationUpdates})
       : assert(clearMissionState != null),
@@ -24,7 +28,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
-    if (event is LeaveMission) {
+    if (event is Startup) {
+    } else if (event is LeaveMission) {
       final clearMissionStateEither = await clearMissionState(NoParams());
       yield* clearMissionStateEither.fold((failure) async* {
         // TODO: handle failure
@@ -38,5 +43,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         });
       });
     }
+  }
+
+  @override
+  Future<void> close() {
+    _streamSubscription?.cancel();
+    return super.close();
   }
 }
