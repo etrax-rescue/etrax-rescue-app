@@ -43,9 +43,14 @@ class LocationRepositoryImpl implements LocationRepository {
 
   @override
   Future<Either<Failure, Stream<LocationData>>> getLocationUpdateStream(
-      String label) {
-    // TODO: implement getLocationUpdateStream
-    throw UnimplementedError();
+      String label) async {
+    try {
+      final result =
+          await localLocationDataSource.getLocationUpdateStream(label);
+      return Right(result);
+    } on PlatformException {
+      return Left(PlatformFailure());
+    }
   }
 
   @override

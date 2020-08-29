@@ -6,6 +6,7 @@
     "DROPDOWN_HINT": "-- Bitte Auswählen --",
     "OK": "Ok",
     "CONTINUE": "Weiter",
+    "ABOUT": "App Info",
     
     "APP_CONNECTION_HEADING": "App verbinden:",
     "CONNECT": "Verbinden",
@@ -77,6 +78,7 @@
     "HEADING_GPS_SHORT": "GPS",
     "HEADING_MAP_SHORT": "Karte",
     "STATUS_DISPLAY": "Status: ",
+    "STATUS_NO_LOCATION": "Beim derzeitigen Status wird nicht auf den Gerätestandort zugegriffen.",
 
     "SUBMIT_POI": "POI Hochladen",
     "POI_DESCRIPTION": "POI Beschreibung",

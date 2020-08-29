@@ -6,6 +6,7 @@
     "DROPDOWN_HINT": "-- Please Select --",
     "OK": "Ok",
     "CONTINUE": "Continue",
+    "ABOUT": "About",
     
     "APP_CONNECTION_HEADING": "Connect App:",
     "CONNECT": "Connect",
@@ -77,6 +78,7 @@
     "HEADING_GPS_SHORT": "GPS",
     "HEADING_MAP_SHORT": "Map",
     "STATUS_DISPLAY": "State: ",
+    "STATUS_NO_LOCATION": "The current state doesn't require the collection of location data.",
 
     "SUBMIT_POI": "Submit POI",
     "POI_DESCRIPTION": "POI Description",

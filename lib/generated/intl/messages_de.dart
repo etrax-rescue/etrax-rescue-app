@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "ABOUT" : MessageLookupByLibrary.simpleMessage("App Info"),
     "ACCEPT_MISSION" : MessageLookupByLibrary.simpleMessage("Zusagen"),
     "ACCURACY" : MessageLookupByLibrary.simpleMessage("Genauigkeit"),
     "ACTIVE_STATE" : MessageLookupByLibrary.simpleMessage("Derzeit aktiver Status"),
@@ -93,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "STATE" : MessageLookupByLibrary.simpleMessage("Status"),
     "STATE_HEADING" : MessageLookupByLibrary.simpleMessage("Status Aktualisieren"),
     "STATUS_DISPLAY" : MessageLookupByLibrary.simpleMessage("Status: "),
+    "STATUS_NO_LOCATION" : MessageLookupByLibrary.simpleMessage("Beim derzeitigen Status wird nicht auf den Gerätestandort zugegriffen."),
     "STOPPING_UPDATES" : MessageLookupByLibrary.simpleMessage("Standortdienst wird gestoppt..."),
     "STOPPING_UPDATES_DONE" : MessageLookupByLibrary.simpleMessage("Standortdienst erfolgreich gestoppt"),
     "SUBMIT_POI" : MessageLookupByLibrary.simpleMessage("POI Hochladen"),

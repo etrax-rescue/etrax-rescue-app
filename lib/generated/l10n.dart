@@ -103,6 +103,16 @@ class S {
     );
   }
 
+  /// `About`
+  String get ABOUT {
+    return Intl.message(
+      'About',
+      name: 'ABOUT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connect App:`
   String get APP_CONNECTION_HEADING {
     return Intl.message(
@@ -678,6 +688,16 @@ class S {
     return Intl.message(
       'State: ',
       name: 'STATUS_DISPLAY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The current state doesn't require the collection of location data.`
+  String get STATUS_NO_LOCATION {
+    return Intl.message(
+      'The current state doesn\'t require the collection of location data.',
+      name: 'STATUS_NO_LOCATION',
       desc: '',
       args: [],
     );

@@ -1,5 +1,6 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_location_update_stream.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -229,11 +230,15 @@ Future<void> init() async {
 
   //! Features - Home
   // BLoC
-  sl.registerFactory<HomeBloc>(
-      () => HomeBloc(clearMissionState: sl(), stopLocationUpdates: sl()));
+  sl.registerFactory<HomeBloc>(() => HomeBloc(
+      clearMissionState: sl(),
+      stopLocationUpdates: sl(),
+      getLocationUpdateStream: sl()));
 
   // Use Cases
   sl.registerLazySingleton<ClearMissionState>(() => ClearMissionState(sl()));
+  sl.registerLazySingleton<GetLocationUpdateStream>(
+      () => GetLocationUpdateStream(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

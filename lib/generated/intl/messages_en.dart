@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "ABOUT" : MessageLookupByLibrary.simpleMessage("About"),
     "ACCEPT_MISSION" : MessageLookupByLibrary.simpleMessage("Confirm"),
     "ACCURACY" : MessageLookupByLibrary.simpleMessage("Accuracy"),
     "ACTIVE_STATE" : MessageLookupByLibrary.simpleMessage("Currently active state"),
@@ -93,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "STATE" : MessageLookupByLibrary.simpleMessage("State"),
     "STATE_HEADING" : MessageLookupByLibrary.simpleMessage("Update State"),
     "STATUS_DISPLAY" : MessageLookupByLibrary.simpleMessage("State: "),
+    "STATUS_NO_LOCATION" : MessageLookupByLibrary.simpleMessage("The current state doesn\'t require the collection of location data."),
     "STOPPING_UPDATES" : MessageLookupByLibrary.simpleMessage("Stopping location updates..."),
     "STOPPING_UPDATES_DONE" : MessageLookupByLibrary.simpleMessage("Location updates stopped successfully"),
     "SUBMIT_POI" : MessageLookupByLibrary.simpleMessage("Submit POI"),
