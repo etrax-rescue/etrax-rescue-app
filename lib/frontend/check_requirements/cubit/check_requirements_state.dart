@@ -1,118 +1,112 @@
 part of 'check_requirements_cubit.dart';
 
-enum SequencePosition {
+enum CheckRequirementsStatus {
   initial,
-  settings,
-  locationPermission,
-  locationServices,
-  setState,
-  stopUpdates,
-  startUpdates,
+
+  started,
+
+  settingsLoading,
+  settingsFailure,
+  settingsSuccess,
+
+  locationPermissionLoading,
+  locationPermissionDenied,
+  locationPermissionDeniedForever,
+  locationPermissionFailure,
+  locationPermissionSuccess,
+
+  locationServicesLoading,
+  locationServicesDisabled,
+  locationServicesFailure,
+  locationServicesSuccess,
+
+  setStateLoading,
+  setStateFailure,
+  setStateSuccess,
+
+  stopUpdatesLoading,
+  stopUpdatesFailure,
+  stopUpdatesSuccess,
+
+  startUpdatesLoading,
+  startUpdatesFailure,
+  startUpdatesSuccess,
+
   success,
 }
 
-abstract class CheckRequirementsState extends Equatable {
-  final SequencePosition sequencePosition;
-  const CheckRequirementsState(this.sequencePosition);
-
-  bool operator <(CheckRequirementsState other) {
-    return sequencePosition.index < other.sequencePosition.index;
+extension CheckRequirementsStatusExtension on CheckRequirementsStatus {
+  bool operator <(CheckRequirementsStatus other) {
+    return this.index < other.index;
   }
 
-  bool operator >(CheckRequirementsState other) {
-    return sequencePosition.index > other.sequencePosition.index;
+  bool operator >=(CheckRequirementsStatus other) {
+    return this.index >= other.index;
   }
+}
+
+class CheckRequirementsState extends Equatable {
+  const CheckRequirementsState({
+    this.status = CheckRequirementsStatus.initial,
+    this.messageKey = '',
+    @required this.userState,
+    @required this.appConfiguration,
+    @required this.appConnection,
+    @required this.authenticationData,
+    @required this.notificationTitle,
+    @required this.notificationBody,
+    @required this.label,
+  });
+
+  final CheckRequirementsStatus status;
+
+  final String messageKey;
+
+  final UserState userState;
+
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
+  final AppConfiguration appConfiguration;
+
+  final String notificationTitle;
+  final String notificationBody;
+  final String label;
 
   @override
-  List<Object> get props => [sequencePosition.index];
-}
+  List<Object> get props => [status.index];
 
-class UpdateStateInitial extends CheckRequirementsState {
-  UpdateStateInitial() : super(SequencePosition.initial);
-}
+  const CheckRequirementsState.initial()
+      : this(
+          userState: null,
+          appConfiguration: null,
+          appConnection: null,
+          authenticationData: null,
+          notificationTitle: '',
+          notificationBody: '',
+          label: '',
+        );
 
-// Settings
-class RetrievingSettingsState extends CheckRequirementsState {
-  RetrievingSettingsState() : super(SequencePosition.settings);
-}
-
-class RetrievingSettingsInProgress extends RetrievingSettingsState {}
-
-class RetrievingSettingsSuccess extends RetrievingSettingsState {}
-
-// Location Permission States
-class LocationPermissionState extends CheckRequirementsState {
-  LocationPermissionState() : super(SequencePosition.locationPermission);
-}
-
-class LocationPermissionInProgress extends LocationPermissionState {}
-
-class LocationPermissionResult extends LocationPermissionState {
-  final PermissionStatus permissionStatus;
-  LocationPermissionResult({@required this.permissionStatus}) : super();
-}
-
-// Location Services States
-class LocationServicesState extends CheckRequirementsState {
-  LocationServicesState() : super(SequencePosition.locationServices);
-}
-
-class LocationServicesInProgress extends LocationServicesState {}
-
-class LocationServicesResult extends LocationServicesState {
-  final bool enabled;
-  LocationServicesResult({@required this.enabled}) : super();
-}
-
-class LocationServicesError extends LocationServicesState {
-  final String messageKey;
-  LocationServicesError({@required this.messageKey}) : super();
-}
-
-// Update State States
-class SetStateState extends CheckRequirementsState {
-  SetStateState() : super(SequencePosition.setState);
-}
-
-class SetStateInProgress extends SetStateState {}
-
-class SetStateSuccess extends SetStateState {}
-
-class SetStateError extends SetStateState {
-  final String messageKey;
-  SetStateError({@required this.messageKey}) : super();
-
-  @override
-  List<Object> get props => [messageKey];
-}
-
-// Stop Updates States
-class StopUpdatesState extends CheckRequirementsState {
-  StopUpdatesState() : super(SequencePosition.stopUpdates);
-}
-
-class StopUpdatesInProgress extends StopUpdatesState {}
-
-class StopUpdatesSuccess extends StopUpdatesState {}
-
-// Start Updates States
-class StartUpdatesState extends CheckRequirementsState {
-  StartUpdatesState() : super(SequencePosition.startUpdates);
-}
-
-class StartUpdatesInProgress extends StartUpdatesState {}
-
-class StartUpdatesSuccess extends StartUpdatesState {}
-
-// Error and Success
-class CheckRequirementsError extends SetStateState {
-  final String messageKey;
-  CheckRequirementsError({@required this.messageKey}) : super();
-
-  @override
-  List<Object> get props => [messageKey];
-}
-
-class CheckRequirementsSuccess extends CheckRequirementsState {
-  CheckRequirementsSuccess() : super(SequencePosition.success);
+  CheckRequirementsState copyWith({
+    @required status,
+    messageKey = '',
+    userState,
+    appConfiguration,
+    appConnection,
+    authenticationData,
+    notificationTitle,
+    notificationBody,
+    label,
+  }) {
+    return CheckRequirementsState(
+      status: status ?? this.status,
+      messageKey: messageKey ?? '',
+      userState: userState ?? this.userState,
+      appConfiguration: appConfiguration ?? this.appConfiguration,
+      appConnection: appConnection ?? this.appConnection,
+      authenticationData: authenticationData ?? this.authenticationData,
+      notificationTitle: notificationTitle ?? this.notificationTitle,
+      notificationBody: notificationBody ?? this.notificationBody,
+      label: label ?? this.label,
+    );
+  }
 }

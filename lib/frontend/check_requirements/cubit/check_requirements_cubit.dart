@@ -48,50 +48,55 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         assert(requestLocationService != null),
         assert(stopLocationUpdates != null),
         assert(startLocationUpdates != null),
-        super(UpdateStateInitial());
-
-  //! Should we keep the state here in the Cubit, or in the widget's state?
-  UserState _userState;
-  AppConnection _appConnection;
-  AuthenticationData _authenticationData;
-  AppConfiguration _appConfiguration;
-
-  String _notificationTitle;
-  String _notificationBody;
-  String _label;
+        super(CheckRequirementsState.initial());
 
   void start(UserState desiredState, String notificationTitle,
-      String notificationBody) async {
-    this._userState = desiredState;
-    this._notificationTitle = notificationTitle;
-    this._notificationBody = notificationBody;
-    this._label = desiredState.name;
-
+      String notificationBody, String label) async {
+    emit(state.copyWith(
+      status: CheckRequirementsStatus.started,
+      userState: desiredState,
+      notificationTitle: notificationTitle,
+      notificationBody: notificationBody,
+      label: label,
+    ));
     retrieveSettings();
   }
 
   void retrieveSettings() async {
-    emit(RetrievingSettingsInProgress());
+    emit(state.copyWith(status: CheckRequirementsStatus.settingsLoading));
+
     final getAppConnectionEither = await getAppConnection(NoParams());
     getAppConnectionEither.fold((failure) async {
-      // TODO: handle failure
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.settingsFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
     }, (appConnection) async {
-      this._appConnection = appConnection;
       final getAuthenticationDataEither =
           await getAuthenticationData(NoParams());
 
       getAuthenticationDataEither.fold((failure) async {
-        // TODO: handle failure
+        emit(state.copyWith(
+          status: CheckRequirementsStatus.settingsFailure,
+          messageKey: _mapFailureToMessageKey(failure),
+        ));
       }, (authenticationData) async {
-        this._authenticationData = authenticationData;
         final getAppConfigurationEither = await getAppConfiguration(NoParams());
 
         getAppConfigurationEither.fold((failure) async {
-          // TODO: handle failure
+          emit(state.copyWith(
+            status: CheckRequirementsStatus.settingsFailure,
+            messageKey: _mapFailureToMessageKey(failure),
+          ));
         }, (appConfiguration) async {
-          this._appConfiguration = appConfiguration;
-          emit(RetrievingSettingsSuccess());
-          if (this._userState.locationAccuracy == 0) {
+          emit(state.copyWith(
+            status: CheckRequirementsStatus.settingsSuccess,
+            appConnection: appConnection,
+            authenticationData: authenticationData,
+            appConfiguration: appConfiguration,
+          ));
+
+          if (state.userState.locationAccuracy == 0) {
             updateState();
           } else {
             locationPermissionCheck();
@@ -102,107 +107,143 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   }
 
   void locationPermissionCheck() async {
-    emit(LocationPermissionInProgress());
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.locationPermissionLoading));
     final locationPermissionRequestEither =
         await requestLocationPermission(NoParams());
 
     locationPermissionRequestEither.fold((failure) async {
-      // TODO: Handle PlatformFailure
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.locationPermissionFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
     }, (permissionStatus) async {
-      emit(LocationPermissionResult(permissionStatus: permissionStatus));
-
-      if (permissionStatus == PermissionStatus.granted) {
-        locationServicesCheck();
+      switch (permissionStatus) {
+        case PermissionStatus.granted:
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.locationPermissionSuccess));
+          locationServicesCheck();
+          break;
+        case PermissionStatus.denied:
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.locationPermissionDenied));
+          break;
+        case PermissionStatus.deniedForever:
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.locationPermissionDeniedForever));
+          break;
       }
     });
   }
 
   void locationServicesCheck() async {
-    if (this._userState == null || this._appConfiguration == null) {
-      emit(LocationServicesError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
-    }
-    emit(LocationServicesInProgress());
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.locationServicesLoading));
+
     final locationServicesRequestEither = await requestLocationService(
         RequestLocationServiceParams(
             accuracy:
-                _mapUserStateLocationAccuracy(this._userState.locationAccuracy),
-            appConfiguration: this._appConfiguration));
+                _mapUserStateLocationAccuracy(state.userState.locationAccuracy),
+            appConfiguration: state.appConfiguration));
 
     locationServicesRequestEither.fold((failure) async {
-      // TODO: Handle PlatformFailure
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.locationServicesFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
     }, (enabled) async {
-      emit(LocationServicesResult(enabled: enabled));
-      print(enabled);
-
       if (enabled == true) {
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.locationServicesSuccess));
         updateState();
+      } else {
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.locationServicesDisabled));
       }
     });
   }
 
   void updateState() async {
-    if (this._userState == null ||
-        this._appConnection == null ||
-        this._authenticationData == null) {
-      emit(SetStateError(messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
-    }
-
-    emit(SetStateInProgress());
+    emit(state.copyWith(status: CheckRequirementsStatus.setStateLoading));
 
     final setStateEither =
         await setSelectedUserState(SetSelectedUserStateParams(
-      appConnection: this._appConnection,
-      authenticationData: this._authenticationData,
-      state: this._userState,
+      appConnection: state.appConnection,
+      authenticationData: state.authenticationData,
+      state: state.userState,
     ));
 
     setStateEither.fold((failure) async {
-      emit(SetStateError(messageKey: _mapFailureToMessage(failure)));
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.setStateFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
     }, (_) async {
-      emit(SetStateSuccess());
+      emit(state.copyWith(status: CheckRequirementsStatus.setStateSuccess));
       stopUpdates();
     });
   }
 
   void stopUpdates() async {
-    emit(StopUpdatesInProgress());
+    emit(state.copyWith(status: CheckRequirementsStatus.stopUpdatesLoading));
+
     final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
     stopLocationUpdatesEither.fold((failure) async {
-      // TODO: handle failure
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.stopUpdatesFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
     }, (stopped) async {
       if (stopped == true) {
-        emit(StopUpdatesSuccess());
-        if (this._userState.locationAccuracy == 0) {
-          emit(CheckRequirementsSuccess());
+        emit(
+            state.copyWith(status: CheckRequirementsStatus.stopUpdatesSuccess));
+        if (state.userState.locationAccuracy == 0) {
+          emit(state.copyWith(status: CheckRequirementsStatus.success));
         } else {
           startUpdates();
         }
       } else {
-        // TODO: what should we do when this returns false?
+        // TODO: add proper message key
+        emit(
+            state.copyWith(status: CheckRequirementsStatus.stopUpdatesFailure));
       }
     });
   }
 
   void startUpdates() async {
-    emit(StartUpdatesInProgress());
+    emit(state.copyWith(status: CheckRequirementsStatus.startUpdatesLoading));
     final startLocationUpdatesEither = await startLocationUpdates(
       StartLocationUpdatesParams(
         accuracy:
-            _mapUserStateLocationAccuracy(this._userState.locationAccuracy),
-        appConfiguration: this._appConfiguration,
-        notificationTitle: this._notificationTitle,
-        notificationBody: this._notificationBody,
-        appConnection: this._appConnection,
-        authenticationData: this._authenticationData,
-        label: this._label,
+            _mapUserStateLocationAccuracy(state.userState.locationAccuracy),
+        appConfiguration: state.appConfiguration,
+        notificationTitle: state.notificationTitle,
+        notificationBody: state.notificationBody,
+        appConnection: state.appConnection,
+        authenticationData: state.authenticationData,
+        label: state.label,
       ),
     );
-    await Future.delayed(const Duration(seconds: 1));
-    emit(StartUpdatesSuccess());
-    emit(CheckRequirementsSuccess());
+
+    startLocationUpdatesEither.fold((failure) async {
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.startUpdatesFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
+    }, (success) async {
+      if (success == true) {
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.startUpdatesSuccess));
+        emit(state.copyWith(status: CheckRequirementsStatus.success));
+      } else {
+        // TODO: add proper message key
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.startUpdatesFailure));
+      }
+    });
   }
 
-  String _mapFailureToMessage(Failure failure) {
+  String _mapFailureToMessageKey(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
         return NETWORK_FAILURE_MESSAGE_KEY;

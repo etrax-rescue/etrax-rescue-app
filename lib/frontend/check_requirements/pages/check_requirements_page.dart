@@ -56,6 +56,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             widget.state,
             S.of(context).LOCATION_UPDATES_ACTIVE,
             S.of(context).ETRAX_LOCATION_NOTIFICATION,
+            widget.state.name,
           );
     });
   }
@@ -81,8 +82,10 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
                   child: BlocBuilder<CheckRequirementsCubit,
                       CheckRequirementsState>(
                     builder: (context, state) {
-                      bool enabled =
-                          state is CheckRequirementsSuccess ? true : false;
+                      bool enabled = state.status.index ==
+                              CheckRequirementsStatus.success.index
+                          ? true
+                          : false;
                       return AbsorbPointer(
                         absorbing: !enabled,
                         child: MaterialButton(
@@ -133,22 +136,47 @@ class FetchSettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      String title = S.of(context).RETRIEVING_SETTINGS;
       WidgetState widgetState;
-      if (state < RetrievingSettingsState()) {
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.settingsLoading) {
         widgetState = WidgetState.inactive;
-      } else if (state > RetrievingSettingsState()) {
+        title = S.of(context).RETRIEVING_SETTINGS;
+      } else if (state.status >= CheckRequirementsStatus.settingsSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).RETRIEVING_SETTINGS_DONE;
-      } else if (state is RetrievingSettingsInProgress) {
-        widgetState = WidgetState.loading;
-      } else if (state is RetrievingSettingsSuccess) {
-        widgetState = WidgetState.success;
-        title = S.of(context).RETRIEVING_SETTINGS_DONE;
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.settingsLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).RETRIEVING_SETTINGS;
+            break;
+          case CheckRequirementsStatus.settingsFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().retrieveSettings();
+            };
+            break;
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().retrieveSettings();
+            };
+            break;
+        }
       }
       return SequenceItem(
         title: title,
         widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
       );
     });
   }
@@ -161,51 +189,68 @@ class CheckLocationPermissionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      String title = S.of(context).CHECKING_PERMISSIONS;
       WidgetState widgetState;
-      if (state < LocationPermissionState()) {
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.locationPermissionLoading) {
         widgetState = WidgetState.inactive;
-      } else if (state > LocationPermissionState()) {
+        title = S.of(context).CHECKING_PERMISSIONS;
+      } else if (state.status >=
+          CheckRequirementsStatus.locationPermissionSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).CHECKING_PERMISSIONS_DONE;
-      } else if (state is LocationPermissionInProgress) {
-        widgetState = WidgetState.loading;
-      } else if (state is LocationPermissionResult) {
-        switch (state.permissionStatus) {
-          case PermissionStatus.granted:
-            widgetState = WidgetState.success;
-            title = S.of(context).CHECKING_PERMISSIONS_DONE;
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.locationPermissionLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).CHECKING_PERMISSIONS;
             break;
-          case PermissionStatus.denied:
-            return SequenceItem(
-              title: S.of(context).LOCATION_PERMISSION_DENIED,
-              widgetState: WidgetState.error,
-              buttonLabel: S.of(context).RESOLVE,
-              onPressed: () {
-                print('resolving');
-                context
-                    .bloc<CheckRequirementsCubit>()
-                    .locationPermissionCheck();
-              },
-            );
+
+          case CheckRequirementsStatus.locationPermissionFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
+            };
             break;
-          case PermissionStatus.deniedForever:
-            return SequenceItem(
-              title: S.of(context).LOCATION_PERMISSION_DENIED_FOREVER,
-              widgetState: WidgetState.error,
-              buttonLabel: S.of(context).RETRY,
-              onPressed: () {
-                context
-                    .bloc<CheckRequirementsCubit>()
-                    .locationPermissionCheck();
-              },
-            );
+
+          case CheckRequirementsStatus.locationPermissionDenied:
+            widgetState = WidgetState.error;
+            title = S.of(context).LOCATION_PERMISSION_DENIED;
+            buttonLabel = S.of(context).RESOLVE;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
+            };
+            break;
+
+          case CheckRequirementsStatus.locationPermissionDeniedForever:
+            widgetState = WidgetState.error;
+            title = S.of(context).LOCATION_PERMISSION_DENIED;
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
+            };
+            break;
+
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
+            };
             break;
         }
       }
       return SequenceItem(
         title: title,
         widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
       );
     });
   }
@@ -218,34 +263,57 @@ class CheckLocationServicesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      String title = S.of(context).CHECKING_SERVICES;
       WidgetState widgetState;
-      if (state < LocationServicesState()) {
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.locationServicesLoading) {
         widgetState = WidgetState.inactive;
-      } else if (state > LocationServicesState()) {
+        title = S.of(context).CHECKING_SERVICES;
+      } else if (state.status >=
+          CheckRequirementsStatus.locationServicesSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).CHECKING_SERVICES_DONE;
-      } else if (state is LocationServicesInProgress) {
-        widgetState = WidgetState.loading;
-      } else if (state is LocationServicesResult) {
-        if (state.enabled == true) {
-          widgetState = WidgetState.success;
-          title = S.of(context).CHECKING_SERVICES_DONE;
-        } else {
-          widgetState = WidgetState.error;
-          return SequenceItem(
-            title: S.of(context).SERVICES_DISABLED,
-            widgetState: WidgetState.error,
-            buttonLabel: S.of(context).RESOLVE,
-            onPressed: () {
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.locationServicesLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).CHECKING_SERVICES;
+            break;
+          case CheckRequirementsStatus.locationServicesFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
               context.bloc<CheckRequirementsCubit>().locationServicesCheck();
-            },
-          );
+            };
+            break;
+          case CheckRequirementsStatus.locationServicesDisabled:
+            widgetState = WidgetState.error;
+            title = S.of(context).SERVICES_DISABLED;
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().locationServicesCheck();
+            };
+            break;
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().locationServicesCheck();
+            };
+            break;
         }
       }
+
       return SequenceItem(
         title: title,
         widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
       );
     });
   }
@@ -258,33 +326,48 @@ class SetStateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      String title = S.of(context).UPDATING_STATE;
       WidgetState widgetState;
-      if (state < SetStateState()) {
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.setStateLoading) {
         widgetState = WidgetState.inactive;
-      } else if (state > SetStateState()) {
+        title = S.of(context).UPDATING_STATE;
+      } else if (state.status >= CheckRequirementsStatus.setStateSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).UPDATING_STATE_DONE;
-      } else if (state is SetStateInProgress) {
-        widgetState = WidgetState.loading;
-      } else if (state is SetStateSuccess) {
-        widgetState = WidgetState.success;
-        title = S.of(context).UPDATING_STATE_DONE;
-      } else if (state is SetStateError) {
-        widgetState = WidgetState.error;
-        title = translateErrorMessage(context, state.messageKey);
-        return SequenceItem(
-          title: title,
-          widgetState: widgetState,
-          buttonLabel: S.of(context).RETRY,
-          onPressed: () {
-            context.bloc<CheckRequirementsCubit>().updateState();
-          },
-        );
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.setStateLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).UPDATING_STATE;
+            break;
+          case CheckRequirementsStatus.setStateFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().updateState();
+            };
+            break;
+
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().updateState();
+            };
+            break;
+        }
       }
       return SequenceItem(
         title: title,
         widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
       );
     });
   }
@@ -297,22 +380,48 @@ class StopUpdatesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      String title = S.of(context).STOPPING_UPDATES;
       WidgetState widgetState;
-      if (state < StopUpdatesState()) {
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.stopUpdatesLoading) {
         widgetState = WidgetState.inactive;
-      } else if (state > StopUpdatesState()) {
+        title = S.of(context).STOPPING_UPDATES;
+      } else if (state.status >= CheckRequirementsStatus.stopUpdatesSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).STOPPING_UPDATES_DONE;
-      } else if (state is StopUpdatesInProgress) {
-        widgetState = WidgetState.loading;
-      } else if (state is StopUpdatesSuccess) {
-        widgetState = WidgetState.success;
-        title = S.of(context).STOPPING_UPDATES_DONE;
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.stopUpdatesLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).STOPPING_UPDATES;
+            break;
+          case CheckRequirementsStatus.stopUpdatesFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().stopUpdates();
+            };
+            break;
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().stopUpdates();
+            };
+            break;
+        }
       }
+
       return SequenceItem(
         title: title,
         widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
       );
     });
   }
@@ -325,22 +434,47 @@ class StartUpdatesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      String title = S.of(context).STARTING_UPDATES;
       WidgetState widgetState;
-      if (state < StartUpdatesState()) {
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.startUpdatesLoading) {
         widgetState = WidgetState.inactive;
-      } else if (state > StartUpdatesState()) {
+        title = S.of(context).STARTING_UPDATES;
+      } else if (state.status >= CheckRequirementsStatus.startUpdatesSuccess) {
         widgetState = WidgetState.success;
         title = S.of(context).STARTING_UPDATES_DONE;
-      } else if (state is StartUpdatesInProgress) {
-        widgetState = WidgetState.loading;
-      } else if (state is StartUpdatesSuccess) {
-        widgetState = WidgetState.success;
-        title = S.of(context).STARTING_UPDATES_DONE;
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.startUpdatesLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).STARTING_UPDATES;
+            break;
+          case CheckRequirementsStatus.startUpdatesFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().startUpdates();
+            };
+            break;
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().startUpdates();
+            };
+            break;
+        }
       }
       return SequenceItem(
         title: title,
         widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
       );
     });
   }
@@ -364,16 +498,14 @@ class SequenceItem extends StatelessWidget {
       {Key key,
       @required this.widgetState,
       @required this.title,
-      this.buttonLabel,
-      this.onPressed})
+      @required this.buttonLabel,
+      @required this.onPressed})
       : super(key: key);
 
   final String title;
   final WidgetState widgetState;
   final String buttonLabel;
   final VoidCallback onPressed;
-
-  static void emptyCallback() {}
 
   @override
   Widget build(BuildContext context) {
@@ -413,8 +545,8 @@ class SequenceItem extends StatelessWidget {
             builder: (context) {
               if (widgetState == WidgetState.error) {
                 return MaterialButton(
-                  onPressed: onPressed ?? emptyCallback,
-                  child: Text(buttonLabel ?? '',
+                  onPressed: onPressed,
+                  child: Text(buttonLabel,
                       style: TextStyle(color: Colors.yellow[700])),
                 );
               }
