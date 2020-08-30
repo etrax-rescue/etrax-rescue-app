@@ -23,6 +23,8 @@
     "MISSION_NAME": "Mission Name",
     "LOGOUT": "Logout",
     "RECONNECT": "Reconnect App",
+    "NO_MISSIONS": "There are no active missions.",
+
     "CONFIRMATION_HEADING": "Confirmation",
     "ACCEPT_MISSION": "Confirm",
     "LATITUDE": "Latitude",
@@ -36,7 +38,6 @@
     "STATE": "State",
     "ACTIVE_STATE": "Currently active state", 
     "UPDATE_STATE": "Update",
-    "SAME_STATE": "The same state cannot be submitted twice",
 
     "RETRIEVING_SETTINGS": "Loading app settings...",
     "RETRIEVING_SETTINGS_DONE": "App settings loaded.",
@@ -78,7 +79,7 @@
     "HEADING_GPS_SHORT": "GPS",
     "HEADING_MAP_SHORT": "Map",
     "STATUS_DISPLAY": "State: ",
-    "STATUS_NO_LOCATION": "The current state doesn't require the collection of location data.",
+    "STATUS_NO_LOCATION": "The current state does not access this device's location.",
 
     "SUBMIT_POI": "Submit POI",
     "POI_DESCRIPTION": "POI Description",

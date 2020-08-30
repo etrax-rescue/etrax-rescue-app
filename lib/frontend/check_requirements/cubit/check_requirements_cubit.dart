@@ -11,6 +11,7 @@ import '../../../backend/types/user_states.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
+import '../../../backend/usecases/get_selected_mission.dart';
 import '../../../backend/usecases/request_location_permission.dart';
 import '../../../backend/usecases/request_location_service.dart';
 import '../../../backend/usecases/set_selected_user_state.dart';
@@ -25,6 +26,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final GetAppConfiguration getAppConfiguration;
+  final GetSelectedMission getSelectedMission;
   final SetSelectedUserState setSelectedUserState;
   final RequestLocationPermission requestLocationPermission;
   final RequestLocationService requestLocationService;
@@ -36,6 +38,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     @required this.getAppConnection,
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
+    @required this.getSelectedMission,
     @required this.requestLocationPermission,
     @required this.requestLocationService,
     @required this.stopLocationUpdates,
@@ -44,6 +47,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
         assert(getAppConfiguration != null),
+        assert(getSelectedMission != null),
         assert(requestLocationPermission != null),
         assert(requestLocationService != null),
         assert(stopLocationUpdates != null),
@@ -51,13 +55,12 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         super(CheckRequirementsState.initial());
 
   void start(UserState desiredState, String notificationTitle,
-      String notificationBody, String label) async {
+      String notificationBody) async {
     emit(state.copyWith(
       status: CheckRequirementsStatus.started,
       userState: desiredState,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
-      label: label,
     ));
     retrieveSettings();
   }
@@ -89,18 +92,27 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
             messageKey: _mapFailureToMessageKey(failure),
           ));
         }, (appConfiguration) async {
-          emit(state.copyWith(
-            status: CheckRequirementsStatus.settingsSuccess,
-            appConnection: appConnection,
-            authenticationData: authenticationData,
-            appConfiguration: appConfiguration,
-          ));
+          final getSelectedMissionEither = await getSelectedMission(NoParams());
+          getSelectedMissionEither.fold((failure) async {
+            emit(state.copyWith(
+              status: CheckRequirementsStatus.settingsFailure,
+              messageKey: _mapFailureToMessageKey(failure),
+            ));
+          }, (selectedMission) async {
+            emit(state.copyWith(
+              status: CheckRequirementsStatus.settingsSuccess,
+              appConnection: appConnection,
+              authenticationData: authenticationData,
+              appConfiguration: appConfiguration,
+              label: selectedMission.id.toString(),
+            ));
 
-          if (state.userState.locationAccuracy == 0) {
-            updateState();
-          } else {
-            locationPermissionCheck();
-          }
+            if (state.userState.locationAccuracy == 0) {
+              updateState();
+            } else {
+              locationPermissionCheck();
+            }
+          });
         });
       });
     });

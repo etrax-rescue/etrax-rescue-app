@@ -56,7 +56,6 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             widget.state,
             S.of(context).LOCATION_UPDATES_ACTIVE,
             S.of(context).ETRAX_LOCATION_NOTIFICATION,
-            widget.state.name,
           );
     });
   }

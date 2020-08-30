@@ -92,35 +92,66 @@ class _MissionListState extends State<MissionList> {
             });
           }
         },
-        child: ListView.builder(
-          padding: const EdgeInsets.all(8),
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: initializationData.missionCollection.missions.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: InkWell(
-                onTap: () {
-                  ExtendedNavigator.of(context).push(
-                    '/confirmation-page',
-                    arguments: ConfirmationPageArguments(
-                      mission:
-                          initializationData.missionCollection.missions[index],
-                      states: initializationData.userStateCollection,
-                      roles: initializationData.userRoleCollection,
+        child: Builder(
+          builder: (context) {
+            if (initializationData.missionCollection.missions.length > 0) {
+              return ListView.builder(
+                padding: const EdgeInsets.all(8),
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: initializationData.missionCollection.missions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: InkWell(
+                      onTap: () {
+                        ExtendedNavigator.of(context).push(
+                          '/confirmation-page',
+                          arguments: ConfirmationPageArguments(
+                            mission: initializationData
+                                .missionCollection.missions[index],
+                            states: initializationData.userStateCollection,
+                            roles: initializationData.userRoleCollection,
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        title: Text(initializationData
+                            .missionCollection.missions[index].name),
+                        subtitle: Text(
+                          DateFormat('dd.MM.yyyy - HH:mm').format(
+                              initializationData
+                                  .missionCollection.missions[index].start),
+                        ),
+                        trailing: Icon(Icons.chevron_right),
+                      ),
                     ),
                   );
                 },
-                child: ListTile(
-                  title: Text(initializationData
-                      .missionCollection.missions[index].name),
-                  subtitle: Text(
-                    DateFormat('dd.MM.yyyy - HH:mm').format(initializationData
-                        .missionCollection.missions[index].start),
+              );
+            } else {
+              return Container(
+                alignment: Alignment.center,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.list,
+                          size: 72,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          S.of(context).NO_MISSIONS,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
-                  trailing: Icon(Icons.chevron_right),
                 ),
-              ),
-            );
+              );
+            }
           },
         ),
       ),

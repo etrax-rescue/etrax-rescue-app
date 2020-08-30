@@ -1,21 +1,47 @@
 part of 'home_bloc.dart';
 
+enum HomeStatus {
+  initial,
+  ready,
+  closed,
+}
+
 class HomeState extends Equatable {
-  const HomeState({@required this.currentLocation});
+  const HomeState({
+    @required this.status,
+    @required this.missionState,
+    @required this.locationHistory,
+  });
 
-  final LocationData currentLocation;
+  final HomeStatus status;
+  final List<LocationData> locationHistory;
+  final MissionState missionState;
 
-  const HomeState.initial() : this(currentLocation: null);
+  const HomeState.initial()
+      : this(
+          status: HomeStatus.initial,
+          missionState: null,
+          locationHistory: const [],
+        );
 
-  const HomeState.locationUpdate({@required LocationData locationData})
-      : this(currentLocation: locationData);
+  const HomeState.closed()
+      : this(
+          status: HomeStatus.closed,
+          missionState: null,
+          locationHistory: const [],
+        );
 
-  const HomeState.closed() : this(currentLocation: null);
-
-  HomeState copyWith({LocationData locationData}) {
-    return HomeState(currentLocation: locationData);
+  HomeState copyWith(
+      {HomeStatus status,
+      MissionState missionState,
+      List<LocationData> locationHistory}) {
+    return HomeState(
+      status: status ?? this.status,
+      missionState: missionState ?? this.missionState,
+      locationHistory: locationHistory ?? this.locationHistory,
+    );
   }
 
   @override
-  List<Object> get props => [currentLocation];
+  List<Object> get props => [locationHistory];
 }

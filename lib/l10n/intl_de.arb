@@ -23,6 +23,8 @@
     "MISSION_NAME": "Einsatzbezeichnung",
     "LOGOUT": "Abmelden",
     "RECONNECT": "App neu verbinden",
+    "NO_MISSIONS": "Keine aktiven Einsätze vorhanden.",
+
     "CONFIRMATION_HEADING": "Rückmelden",
     "ACCEPT_MISSION": "Zusagen",
     "LATITUDE": "Latitude",
@@ -36,7 +38,6 @@
     "STATE": "Status",
     "ACTIVE_STATE": "Derzeit aktiver Status", 
     "UPDATE_STATE": "Aktualisieren",
-    "SAME_STATE": "Der selbe Status kann nicht doppelt gemeldet werden",
     
     "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",
     "RETRIEVING_SETTINGS_DONE": "Einstellungen geladen",
@@ -65,7 +66,7 @@
     "OPEN_LOCATION_SETTINGS": "Öffnen",
 
     "LOCATION_UPDATES_ACTIVE": "Standortdienst aktiv",
-    "ETRAX_LOCATION_NOTIFICATION":"eTrax|rescue sammelt gerade für den aktiven Einsatz Standortdaten",
+    "ETRAX_LOCATION_NOTIFICATION":"eTrax|rescue greift gerade auf den Gerätestandort zu",
 
     "SETTINGS": "Einstellungen",
     "TAKE_PHOTO": "Foto aufnehmen",

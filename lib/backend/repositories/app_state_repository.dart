@@ -46,6 +46,8 @@ abstract class AppStateRepository {
   Future<Either<Failure, None>> setSelectedMission(AppConnection appConnection,
       AuthenticationData authenticationData, Mission mission);
 
+  Future<Either<Failure, Mission>> getSelectedMission();
+
   // Selected UserState
   Future<Either<Failure, None>> setSelectedUserState(
       AppConnection appConnection,
@@ -352,5 +354,16 @@ class AppStateRepositoryImpl implements AppStateRepository {
       return Left(CacheFailure());
     }
     return Right(None());
+  }
+
+  @override
+  Future<Either<Failure, Mission>> getSelectedMission() async {
+    Mission mission;
+    try {
+      mission = await localMissionStateDataSource.getCachedSelectedMission();
+      return Right(mission);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
   }
 }

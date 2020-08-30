@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage>
     _title = _mapIndexToTitle(_pageIndex);
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        if (state == HomeState.closed()) {
+        if (state.status == HomeStatus.closed) {
           ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
         }
       },
@@ -108,7 +108,12 @@ class _HomePageState extends State<HomePage>
           itemBuilder: (BuildContext context, int position) {
             switch (position) {
               case 0:
-                return Container(child: Icon(Icons.account_circle));
+                return Container(
+                    child: Icon(
+                  Icons.account_circle,
+                  size: 72,
+                  color: Colors.grey,
+                ));
               case 1:
                 return GPSScreen(
                   locationActive: widget.state.locationAccuracy != 0,
@@ -137,13 +142,14 @@ class _HomePageState extends State<HomePage>
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: _updateState,
             ),
-            SpeedDialChild(
+            /*SpeedDialChild(
               child: Icon(Icons.add_a_photo),
               backgroundColor: Colors.green,
               label: S.of(context).TAKE_PHOTO,
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: _takePhoto,
             ),
+            */
           ],
         ),
       ),

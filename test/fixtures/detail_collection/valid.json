@@ -1,0 +1,10 @@
+[
+    {
+        "type": "image",
+        "uid": "abcdefg"
+    },
+    {
+        "type": "text",
+        "content": "Hello world!"
+    }
+]

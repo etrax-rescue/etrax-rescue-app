@@ -23,7 +23,7 @@ dependencies:
   # Local cache
   shared_preferences: ^0.5.8
   # QR scanner data source
-  qrscan: ^0.2.17
+  #qrscan: ^0.2.17
   # Internet connection checker
   data_connection_checker: ^0.3.4
   # For proper conversion of DateTime to string

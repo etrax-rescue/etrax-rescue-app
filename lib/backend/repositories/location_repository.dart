@@ -35,6 +35,10 @@ abstract class LocationRepository {
 
   Future<Either<Failure, Stream<LocationData>>> getLocationUpdateStream(
       String label);
+
+  Future<Either<Failure, List<LocationData>>> getLocations(String label);
+
+  Future<Either<Failure, None>> clearLocationCache();
 }
 
 class LocationRepositoryImpl implements LocationRepository {
@@ -141,5 +145,25 @@ class LocationRepositoryImpl implements LocationRepository {
   Future<Either<Failure, bool>> updatesActive() {
     // TODO: implement updatesActive
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, List<LocationData>>> getLocations(String label) async {
+    try {
+      final result = await localLocationDataSource.getLocations(label);
+      return Right(result);
+    } on PlatformException {
+      return Left(PlatformFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, None>> clearLocationCache() async {
+    try {
+      final result = await localLocationDataSource.clearLocationCache();
+      return Right(None());
+    } on PlatformException {
+      return Left(PlatformFailure());
+    }
   }
 }

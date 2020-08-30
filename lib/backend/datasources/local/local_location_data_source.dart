@@ -32,6 +32,10 @@ abstract class LocalLocationDataSource {
   Future<bool> stopUpdates();
 
   Stream<LocationData> getLocationUpdateStream(String label);
+
+  Future<List<LocationData>> getLocations(String label);
+
+  Future<void> clearLocationCache();
 }
 
 class LocalLocationDataSourceImpl implements LocalLocationDataSource {
@@ -99,5 +103,15 @@ class LocalLocationDataSourceImpl implements LocalLocationDataSource {
   @override
   Future<bool> updatesActive() async {
     return await backgroundLocation.updatesActive();
+  }
+
+  @override
+  Future<List<LocationData>> getLocations(String label) async {
+    return await backgroundLocation.getLocations([label]);
+  }
+
+  @override
+  Future<void> clearLocationCache() async {
+    return await backgroundLocation.clearLocationCache();
   }
 }

@@ -16,10 +16,10 @@ class GPSScreen extends StatelessWidget {
       return Container(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            if (state.currentLocation != null) {
+            if (state.locationHistory.length > 0) {
               return SingleChildScrollView(
-                  child:
-                      LocationDataWidget(locationData: state.currentLocation));
+                  child: LocationDataWidget(
+                      locationData: state.locationHistory[0]));
             } else {
               return Center(child: CircularProgressIndicator());
             }

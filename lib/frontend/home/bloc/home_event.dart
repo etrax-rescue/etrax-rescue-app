@@ -18,10 +18,4 @@ class Startup extends HomeEvent {
   List<Object> get props => [userState];
 }
 
-class LocationUpdate extends HomeEvent {
-  final LocationData locationData;
-  LocationUpdate({@required this.locationData});
-
-  @override
-  List<Object> get props => [locationData];
-}
+class LocationUpdate extends HomeEvent {}

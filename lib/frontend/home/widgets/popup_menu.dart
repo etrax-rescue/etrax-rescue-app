@@ -31,10 +31,10 @@ class HomePopupMenu extends StatelessWidget {
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<PopupChoices>>[
-        PopupMenuItem<PopupChoices>(
+        /*PopupMenuItem<PopupChoices>(
           value: PopupChoices.settings,
           child: Text(S.of(context).SETTINGS),
-        ),
+        ),*/
         PopupMenuItem<PopupChoices>(
           value: PopupChoices.about,
           child: Text(S.of(context).ABOUT),

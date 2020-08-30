@@ -243,6 +243,16 @@ class S {
     );
   }
 
+  /// `There are no active missions.`
+  String get NO_MISSIONS {
+    return Intl.message(
+      'There are no active missions.',
+      name: 'NO_MISSIONS',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirmation`
   String get CONFIRMATION_HEADING {
     return Intl.message(
@@ -358,16 +368,6 @@ class S {
     return Intl.message(
       'Update',
       name: 'UPDATE_STATE',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The same state cannot be submitted twice`
-  String get SAME_STATE {
-    return Intl.message(
-      'The same state cannot be submitted twice',
-      name: 'SAME_STATE',
       desc: '',
       args: [],
     );
@@ -693,10 +693,10 @@ class S {
     );
   }
 
-  /// `The current state doesn't require the collection of location data.`
+  /// `The current state does not access this device's location.`
   String get STATUS_NO_LOCATION {
     return Intl.message(
-      'The current state doesn\'t require the collection of location data.',
+      'The current state does not access this device\'s location.',
       name: 'STATUS_NO_LOCATION',
       desc: '',
       args: [],

@@ -1,4 +1,8 @@
+import 'package:background_location/background_location.dart';
+
+import '../bloc/home_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
@@ -22,18 +26,37 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        FlutterMap(
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        LatLng centerPosition;
+        List<LatLng> points;
+        if (state.locationHistory.length > 0) {
+          centerPosition = LatLng(state.locationHistory[0].latitude,
+              state.locationHistory[0].longitude);
+          points = state.locationHistory
+              .map((locationData) =>
+                  LatLng(locationData.latitude, locationData.longitude))
+              .toList();
+        } else {
+          centerPosition = LatLng(48.2084114, 16.3712767);
+          points = [centerPosition];
+        }
+        if (_mapController.ready) {
+          if (_mapController.zoom != null) {
+            _mapController.move(centerPosition, _mapController.zoom);
+          }
+        }
+
+        return FlutterMap(
           key: _key,
           options: MapOptions(
-            center: LatLng(48.2084114, 16.3712767),
+            center: centerPosition,
             zoom: 12.0,
           ),
           mapController: _mapController,
           layers: [
             TileLayerOptions(
-              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              urlTemplate: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
               subdomains: ['a', 'b', 'c'],
               tileProvider: CachedNetworkTileProvider(),
             ),
@@ -42,30 +65,26 @@ class _MapScreenState extends State<MapScreen> {
                 Marker(
                   width: 80.0,
                   height: 80.0,
-                  point: LatLng(48.2084114, 16.3712767),
+                  point: centerPosition,
                   builder: (ctx) => Container(
                     child: Icon(Icons.my_location),
                   ),
                 ),
               ],
             ),
+            PolylineLayerOptions(
+              polylines: [
+                Polyline(
+                  points: points,
+                  color: Colors.red,
+                  strokeWidth: 3,
+                  isDotted: true,
+                )
+              ],
+            )
           ],
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: FloatingActionButton(
-              mini: true,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.layers, color: Colors.grey),
-              onPressed: () {
-                print('layer selection...');
-              },
-            ),
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
