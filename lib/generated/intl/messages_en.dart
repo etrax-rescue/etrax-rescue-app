@@ -71,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "MISSION_NAME" : MessageLookupByLibrary.simpleMessage("Mission Name"),
     "MISSION_START" : MessageLookupByLibrary.simpleMessage("Begin"),
     "NETWORK_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Your device is offline."),
+    "NO_DETAILS" : MessageLookupByLibrary.simpleMessage("There are currently no mission details available."),
     "NO_MISSIONS" : MessageLookupByLibrary.simpleMessage("There are no active missions."),
     "OK" : MessageLookupByLibrary.simpleMessage("Ok"),
     "OPEN_LOCATION_SETTINGS" : MessageLookupByLibrary.simpleMessage("Open"),

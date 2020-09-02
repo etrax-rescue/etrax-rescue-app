@@ -17,11 +17,13 @@ import 'backend/datasources/local/local_user_states_data_source.dart';
 import 'backend/datasources/remote/remote_app_connection_data_source.dart';
 import 'backend/datasources/remote/remote_initialization_data_source.dart';
 import 'backend/datasources/remote/remote_login_data_source.dart';
+import 'backend/datasources/remote/remote_mission_details_data_source.dart';
 import 'backend/datasources/remote/remote_mission_state_data_source.dart';
 import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
 import 'backend/repositories/location_repository.dart';
+import 'backend/repositories/mission_detail_repository.dart';
 import 'backend/usecases/clear_location_cache.dart';
 import 'backend/usecases/clear_mission_state.dart';
 import 'backend/usecases/delete_app_connection.dart';
@@ -31,6 +33,7 @@ import 'backend/usecases/get_app_connection.dart';
 import 'backend/usecases/get_authentication_data.dart';
 import 'backend/usecases/get_location_history.dart';
 import 'backend/usecases/get_location_update_stream.dart';
+import 'backend/usecases/get_mission_details.dart';
 import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
 import 'backend/usecases/get_selected_mission.dart';
@@ -244,6 +247,9 @@ Future<void> init() async {
         clearLocationCache: sl(),
         getMissionState: sl(),
         getLocationHistory: sl(),
+        getMissionDetails: sl(),
+        getAppConnection: sl(),
+        getAuthenticationData: sl(),
       ));
 
   // Use Cases
@@ -252,6 +258,19 @@ Future<void> init() async {
       () => GetLocationUpdateStream(sl()));
   sl.registerLazySingleton<GetLocationHistory>(() => GetLocationHistory(sl()));
   sl.registerLazySingleton<ClearLocationCache>(() => ClearLocationCache(sl()));
+
+  sl.registerLazySingleton<GetMissionDetails>(() => GetMissionDetails(sl()));
+
+  // Repositories
+  sl.registerLazySingleton<MissionDetailRepository>(
+      () => MissionDetailRepositoryImpl(
+            networkInfo: sl(),
+            remoteDetailsDataSource: sl(),
+          ));
+
+  // Data Sources
+  sl.registerLazySingleton<RemoteMissionDetailsDataSource>(
+      () => RemoteMissionDetailsDataSourceImpl(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

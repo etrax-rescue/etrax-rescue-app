@@ -81,6 +81,8 @@
     "STATUS_DISPLAY": "Status: ",
     "STATUS_NO_LOCATION": "Beim derzeitigen Status wird nicht auf den Gerätestandort zugegriffen.",
 
+    "NO_DETAILS": "Es sind derzeit keine weiteren Einsatzdetails verfügbar.",
+
     "SUBMIT_POI": "POI Hochladen",
     "POI_DESCRIPTION": "POI Beschreibung",
 

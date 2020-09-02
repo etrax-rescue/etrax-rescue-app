@@ -7,8 +7,6 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LeaveMission extends HomeEvent {}
-
 class Startup extends HomeEvent {
   const Startup({@required this.userState});
 
@@ -19,3 +17,7 @@ class Startup extends HomeEvent {
 }
 
 class LocationUpdate extends HomeEvent {}
+
+class UpdateMissionDetails extends HomeEvent {}
+
+class Shutdown extends HomeEvent {}

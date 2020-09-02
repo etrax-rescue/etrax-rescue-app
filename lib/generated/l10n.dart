@@ -703,6 +703,16 @@ class S {
     );
   }
 
+  /// `There are currently no mission details available.`
+  String get NO_DETAILS {
+    return Intl.message(
+      'There are currently no mission details available.',
+      name: 'NO_DETAILS',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Submit POI`
   String get SUBMIT_POI {
     return Intl.message(

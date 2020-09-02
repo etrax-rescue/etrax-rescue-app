@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _leaveMission() {
-    BlocProvider.of<HomeBloc>(context).add(LeaveMission());
+    BlocProvider.of<HomeBloc>(context).add(Shutdown());
   }
 
   void _updateState() {

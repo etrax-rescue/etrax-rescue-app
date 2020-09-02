@@ -81,6 +81,8 @@
     "STATUS_DISPLAY": "State: ",
     "STATUS_NO_LOCATION": "The current state does not access this device's location.",
 
+    "NO_DETAILS": "There are currently no mission details available.",
+
     "SUBMIT_POI": "Submit POI",
     "POI_DESCRIPTION": "POI Description",
 
