@@ -43,5 +43,5 @@ class HomeState extends Equatable {
   }
 
   @override
-  List<Object> get props => [locationHistory];
+  List<Object> get props => [status, locationHistory, missionState];
 }

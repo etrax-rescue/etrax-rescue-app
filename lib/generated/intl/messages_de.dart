@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "AUTHENTICATION_SUCCESS" : MessageLookupByLibrary.simpleMessage("Erfolg!"),
     "BACK" : MessageLookupByLibrary.simpleMessage("Zurück"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Beim Speichern des Links ist ein Fehler aufgetreten."),
+    "CENTER" : MessageLookupByLibrary.simpleMessage("Zentrieren"),
     "CHANGE_STATUS" : MessageLookupByLibrary.simpleMessage("Status ändern"),
     "CHECKING_PERMISSIONS" : MessageLookupByLibrary.simpleMessage("Berechtigungen werden überprüft..."),
     "CHECKING_PERMISSIONS_DONE" : MessageLookupByLibrary.simpleMessage("Standortberechtigung gewährt"),

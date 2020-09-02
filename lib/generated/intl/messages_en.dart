@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "AUTHENTICATION_SUCCESS" : MessageLookupByLibrary.simpleMessage("Success!"),
     "BACK" : MessageLookupByLibrary.simpleMessage("Go back"),
     "CACHE_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("An error occured during the URI storage process."),
+    "CENTER" : MessageLookupByLibrary.simpleMessage("Center"),
     "CHANGE_STATUS" : MessageLookupByLibrary.simpleMessage("Change status"),
     "CHECKING_PERMISSIONS" : MessageLookupByLibrary.simpleMessage("Checking location permission..."),
     "CHECKING_PERMISSIONS_DONE" : MessageLookupByLibrary.simpleMessage("Location permission granted"),

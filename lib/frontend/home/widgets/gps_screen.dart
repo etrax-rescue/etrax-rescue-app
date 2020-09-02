@@ -6,51 +6,51 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/home_bloc.dart';
 
 class GPSScreen extends StatelessWidget {
-  GPSScreen({@required this.locationActive}) : super();
-
-  final bool locationActive;
+  GPSScreen() : super();
 
   @override
   Widget build(BuildContext context) {
-    if (locationActive) {
-      return Container(
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        if (state.missionState != null) {
+          if (state.missionState.state.locationAccuracy != 0) {
             if (state.locationHistory.length > 0) {
-              return SingleChildScrollView(
+              return Container(
+                child: SingleChildScrollView(
                   child: LocationDataWidget(
-                      locationData: state.locationHistory[0]));
-            } else {
-              return Center(child: CircularProgressIndicator());
+                      locationData: state.locationHistory[0]),
+                ),
+              );
             }
-          },
-        ),
-      );
-    } else {
-      return Container(
-        alignment: Alignment.center,
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.location_off,
-                  size: 72,
-                  color: Colors.grey,
+          } else {
+            return Container(
+              alignment: Alignment.center,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.location_off,
+                        size: 72,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        S.of(context).STATUS_NO_LOCATION,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  S.of(context).STATUS_NO_LOCATION,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+              ),
+            );
+          }
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+    );
   }
 }
 
@@ -64,15 +64,21 @@ class LocationDataWidget extends StatelessWidget {
         DateTime.fromMillisecondsSinceEpoch(locationData.time.toInt());
     return Container(
       child: Column(children: <Widget>[
-        DataEntry(label: 'Datetime', data: '$dateTime'),
-        DataEntry(label: 'Latitude', data: '${locationData.latitude}'),
-        DataEntry(label: 'Longitude', data: '${locationData.longitude}'),
-        DataEntry(label: 'Accuracy', data: '${locationData.accuracy}'),
-        DataEntry(label: 'Altitude', data: '${locationData.altitude}'),
-        DataEntry(label: 'Speed', data: '${locationData.speed}'),
+        DataEntry(label: S.of(context).DATETIME, data: '$dateTime'),
         DataEntry(
-            label: 'Speed Accuracy', data: '${locationData.speedAccuracy}'),
-        DataEntry(label: 'Heading', data: '${locationData.heading}'),
+            label: S.of(context).LATITUDE, data: '${locationData.latitude}'),
+        DataEntry(
+            label: S.of(context).LONGITUDE, data: '${locationData.longitude}'),
+        DataEntry(
+            label: S.of(context).ACCURACY, data: '${locationData.accuracy}'),
+        DataEntry(
+            label: S.of(context).ALTITUDE, data: '${locationData.altitude}'),
+        DataEntry(label: S.of(context).SPEED, data: '${locationData.speed}'),
+        DataEntry(
+            label: S.of(context).SPEED_ACCURACY,
+            data: '${locationData.speedAccuracy}'),
+        DataEntry(
+            label: S.of(context).HEADING, data: '${locationData.heading}'),
       ]),
     );
   }

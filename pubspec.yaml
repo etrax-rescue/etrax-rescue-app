@@ -55,6 +55,8 @@ dependencies:
       url: git@github.com:yozoon/background_location.git
   # For opening the system settings page corresponding to the app
   app_settings: ^4.0.3
+  # For storing the authentication token
+  flutter_secure_storage: ^3.3.3
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +76,7 @@ flutter:
   assets:
     - assets/images/background.jpg
     - assets/images/etrax_rescue_icon.png
+    - assets/images/leitstelle.png
 
 flutter_intl:
   enabled: true

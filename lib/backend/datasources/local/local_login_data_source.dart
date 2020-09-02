@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
@@ -19,8 +20,9 @@ abstract class LocalLoginDataSource {
 }
 
 class LocalLoginDataSourceImpl implements LocalLoginDataSource {
+  final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;
-  LocalLoginDataSourceImpl(this.sharedPreferences);
+  LocalLoginDataSourceImpl(this.sharedPreferences, this.secureStorage);
 
   @override
   Future<void> cacheUsername(String username) async {
@@ -72,17 +74,17 @@ class LocalLoginDataSourceImpl implements LocalLoginDataSource {
 
   @override
   Future<void> cacheToken(String token) async {
-    await sharedPreferences.setString(SharedPreferencesKeys.token, token);
+    await secureStorage.write(key: SharedPreferencesKeys.token, value: token);
   }
 
   @override
   Future<void> deleteToken() async {
-    await sharedPreferences.remove(SharedPreferencesKeys.token);
+    await secureStorage.delete(key: SharedPreferencesKeys.token);
   }
 
   @override
   Future<String> getCachedToken() async {
-    final data = sharedPreferences.getString(SharedPreferencesKeys.token);
+    final data = secureStorage.read(key: SharedPreferencesKeys.token);
     if (data != null) {
       return data;
     } else {

@@ -30,13 +30,10 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<void> selectMission(AppConnection appConnection,
       AuthenticationData authenticationData, Mission mission) async {
-    final headers = authenticationData.generateAuthHeader();
-    headers[HttpHeaders.contentTypeHeader] = 'application/json';
-
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.missionSelect),
-        headers: headers,
-        body: json.encode(mission.toJson()));
+        headers: authenticationData.generateAuthHeader(),
+        body: {'mission_id': mission.id.toString()});
 
     final response = await request.timeout(const Duration(seconds: 2));
 
@@ -52,12 +49,10 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<void> selectUserState(AppConnection appConnection,
       AuthenticationData authenticationData, UserState state) async {
-    final headers = authenticationData.generateAuthHeader();
-    headers[HttpHeaders.contentTypeHeader] = 'application/json';
     final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.missionSelect),
-        headers: headers,
-        body: json.encode(state.toJson()));
+        appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
+        headers: authenticationData.generateAuthHeader(),
+        body: {'state_id': state.id.toString()});
 
     final response = await request.timeout(const Duration(seconds: 2));
 
@@ -73,15 +68,13 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<void> selectUserRole(AppConnection appConnection,
       AuthenticationData authenticationData, UserRole role) async {
-    final headers = authenticationData.generateAuthHeader();
-    headers[HttpHeaders.contentTypeHeader] = 'application/json';
     final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.missionSelect),
-        headers: headers,
-        body: json.encode(role.toJson()));
+        appConnection.generateUri(subPath: EtraxServerEndpoints.roleSelect),
+        headers: authenticationData.generateAuthHeader(),
+        body: {'role_id': role.id.toString()});
 
     final response = await request.timeout(const Duration(seconds: 2));
-
+    print(response.statusCode);
     if (response.statusCode == 403) {
       throw AuthenticationException();
     }

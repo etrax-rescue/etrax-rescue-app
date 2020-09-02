@@ -15,7 +15,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
+    <!-- Disabling backup so that we dont get an exception with FlutterSecureStorage extension
+        (and we don't need to backup anything anyway...) -->
     <application
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:name="io.flutter.app.FlutterApplication"
         android:label="eTrax|rescue"
         android:icon="@mipmap/ic_launcher">

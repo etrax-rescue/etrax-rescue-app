@@ -1,7 +1,6 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:etrax_rescue_app/backend/usecases/clear_location_cache.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_location_history.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,12 +22,14 @@ import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
 import 'backend/repositories/location_repository.dart';
+import 'backend/usecases/clear_location_cache.dart';
 import 'backend/usecases/clear_mission_state.dart';
 import 'backend/usecases/delete_app_connection.dart';
 import 'backend/usecases/fetch_initialization_data.dart';
 import 'backend/usecases/get_app_configuration.dart';
 import 'backend/usecases/get_app_connection.dart';
 import 'backend/usecases/get_authentication_data.dart';
+import 'backend/usecases/get_location_history.dart';
 import 'backend/usecases/get_location_update_stream.dart';
 import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
@@ -113,7 +114,7 @@ Future<void> init() async {
   sl.registerLazySingleton<RemoteLoginDataSource>(
       () => RemoteLoginDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalLoginDataSource>(
-      () => LocalLoginDataSourceImpl(sl()));
+      () => LocalLoginDataSourceImpl(sl(), sl()));
 
   sl.registerLazySingleton<LocalMissionStateDataSource>(
       () => LocalMissionStateDataSourceImpl(sl()));
@@ -261,5 +262,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());
+  sl.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
   sl.registerLazySingleton<BackgroundLocation>(() => BackgroundLocation());
 }

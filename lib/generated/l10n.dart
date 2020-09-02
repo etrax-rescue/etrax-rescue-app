@@ -723,6 +723,16 @@ class S {
     );
   }
 
+  /// `Center`
+  String get CENTER {
+    return Intl.message(
+      'Center',
+      name: 'CENTER',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Datetime`
   String get DATETIME {
     return Intl.message(

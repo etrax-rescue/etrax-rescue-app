@@ -54,6 +54,7 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
                   appConnection: appConnection,
                   authenticationData: authenticationData,
                   mission: event.mission));
+
           yield* setMissionEither.fold((failure) async* {
             yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
           }, (_) async* {
@@ -62,6 +63,7 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
                     appConnection: appConnection,
                     authenticationData: authenticationData,
                     role: event.role));
+
             yield* setUserRoleEither.fold((failure) async* {
               yield ConfirmationError(
                   messageKey: _mapFailureToMessage(failure));

@@ -84,6 +84,8 @@
     "SUBMIT_POI": "POI Hochladen",
     "POI_DESCRIPTION": "POI Beschreibung",
 
+    "CENTER": "Zentrieren",
+
     "DATETIME": "Zeitpunkt",
     "ALTITUDE": "Altitude",
     "ACCURACY": "Genauigkeit",

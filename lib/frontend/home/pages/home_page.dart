@@ -9,6 +9,7 @@ import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../bloc/home_bloc.dart';
+import '../widgets/details_screen.dart';
 import '../widgets/gps_screen.dart';
 import '../widgets/map_screen.dart';
 import '../widgets/popup_menu.dart';
@@ -87,11 +88,11 @@ class _HomePageState extends State<HomePage>
                 icon: Icon(Icons.account_circle),
                 title: Text(S.of(context).HEADING_INFO_SHORT)),
             BottomNavigationBarItem(
-                icon: Icon(Icons.place),
-                title: Text(S.of(context).HEADING_GPS_SHORT)),
-            BottomNavigationBarItem(
                 icon: Icon(Icons.map),
                 title: Text(S.of(context).HEADING_MAP_SHORT)),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.place),
+                title: Text(S.of(context).HEADING_GPS_SHORT)),
           ],
           onTap: (index) {
             _pageController.jumpToPage(index);
@@ -108,18 +109,11 @@ class _HomePageState extends State<HomePage>
           itemBuilder: (BuildContext context, int position) {
             switch (position) {
               case 0:
-                return Container(
-                    child: Icon(
-                  Icons.account_circle,
-                  size: 72,
-                  color: Colors.grey,
-                ));
+                return DetailsScreen();
               case 1:
-                return GPSScreen(
-                  locationActive: widget.state.locationAccuracy != 0,
-                );
-              case 2:
                 return MapScreen();
+              case 2:
+                return GPSScreen();
             }
             return Container();
           },
@@ -142,14 +136,13 @@ class _HomePageState extends State<HomePage>
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: _updateState,
             ),
-            /*SpeedDialChild(
+            SpeedDialChild(
               child: Icon(Icons.add_a_photo),
               backgroundColor: Colors.green,
               label: S.of(context).TAKE_PHOTO,
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: _takePhoto,
             ),
-            */
           ],
         ),
       ),

@@ -53,20 +53,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* getMissionStateEither.fold((failure) async* {
         // TODO: handle failure
       }, (missionState) async* {
-        if (missionState.state.locationAccuracy != 0) {
-          await _streamSubscription?.cancel();
-          final getLocationUpdateStreamEither = await getLocationUpdateStream(
-              GetLocationUpdateStreamParams(
-                  label: missionState.mission.id.toString()));
+        yield state.copyWith(missionState: missionState);
 
-          yield state.copyWith(missionState: missionState);
+        await _streamSubscription?.cancel();
+        final getLocationUpdateStreamEither = await getLocationUpdateStream(
+            GetLocationUpdateStreamParams(
+                label: missionState.mission.id.toString()));
 
-          yield* getLocationUpdateStreamEither.fold((failure) async* {},
-              (locationStream) async* {
-            _streamSubscription =
-                locationStream.listen((_) => add(LocationUpdate()));
-          });
-        }
+        yield* getLocationUpdateStreamEither.fold((failure) async* {
+          // TODO: handle failure
+        }, (locationStream) async* {
+          _streamSubscription =
+              locationStream.listen((_) => add(LocationUpdate()));
+        });
       });
     } else if (event is LocationUpdate) {
       final getLocationHistoryEither = await getLocationHistory(

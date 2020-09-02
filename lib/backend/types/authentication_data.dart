@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -18,9 +17,7 @@ class AuthenticationData extends Equatable {
   });
 
   Map<String, String> generateAuthHeader() {
-    final authString =
-        base64.encode(utf8.encode('$organizationID-$username:$token'));
-    return {HttpHeaders.authorizationHeader: 'Basic $authString'};
+    return {HttpHeaders.authorizationHeader: 'Bearer $token'};
   }
 
   factory AuthenticationData.fromJson(Map<String, dynamic> json) {
