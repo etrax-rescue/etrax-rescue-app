@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "HEADING_MAP" : MessageLookupByLibrary.simpleMessage("Map View"),
     "HEADING_MAP_SHORT" : MessageLookupByLibrary.simpleMessage("Map"),
     "INVALID_INPUT_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("The provided URL does not resemble a valid format.\n Example for a valid URL: https://etrax.at"),
+    "LAST_UPDATE" : MessageLookupByLibrary.simpleMessage("Last Update"),
     "LATITUDE" : MessageLookupByLibrary.simpleMessage("Latitude"),
     "LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Leave"),
     "LOCATION_PERMISSION_DENIED" : MessageLookupByLibrary.simpleMessage("Location permission denied"),

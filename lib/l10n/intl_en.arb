@@ -89,6 +89,7 @@
     "CENTER": "Center",
     
     "DATETIME": "Datetime",
+    "LAST_UPDATE": "Last Update",
     "ALTITUDE": "Altitude",
     "ACCURACY": "Accuracy",
     "SPEED": "Speed",

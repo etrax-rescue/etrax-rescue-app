@@ -39,14 +39,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
       onRefresh: () async {
         BlocProvider.of<HomeBloc>(context).add(UpdateMissionDetails());
         Scaffold.of(context).hideCurrentSnackBar();
-        return _refreshCompleter.future;
+        //return _refreshCompleter.future;
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          _refreshCompleter?.complete();
-          _refreshCompleter = Completer();
-
           if (state.missionDetailCollection != null) {
+            _refreshCompleter?.complete();
+            _refreshCompleter = Completer();
             if (state.missionDetailCollection.details.length > 0) {
               MissionDetailCollection details = state.missionDetailCollection;
               return ListView.builder(
@@ -58,6 +57,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     case DetailType.text:
                       MissionDetailText detail = details.details[index];
                       return ListTile(
+                        visualDensity: VisualDensity(
+                            horizontal: VisualDensity.maximumDensity,
+                            vertical: VisualDensity.minimumDensity),
                         title: Text(detail.title),
                         subtitle: Text(detail.body),
                       );
@@ -72,11 +74,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                       subPath: EtraxServerEndpoints.image)
                                   .toString() +
                               '/' +
+                              state.missionState.mission.id.toString() +
+                              '/' +
                               detail.uid,
                           placeholder: (context, url) =>
                               CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.broken_image,
+                            size: 24,
+                          ),
                           httpHeaders:
                               state.authenticationData.generateAuthHeader(),
                         );
@@ -116,7 +122,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               );
             }
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Container();
           }
         },
       ),

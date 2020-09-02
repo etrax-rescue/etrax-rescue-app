@@ -89,6 +89,7 @@
     "CENTER": "Zentrieren",
 
     "DATETIME": "Zeitpunkt",
+    "LAST_UPDATE": "Letzte Aktualisierung",
     "ALTITUDE": "Altitude",
     "ACCURACY": "Genauigkeit",
     "SPEED": "Geschwindigkeit",

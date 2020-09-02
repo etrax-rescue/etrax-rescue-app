@@ -753,6 +753,16 @@ class S {
     );
   }
 
+  /// `Last Update`
+  String get LAST_UPDATE {
+    return Intl.message(
+      'Last Update',
+      name: 'LAST_UPDATE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Altitude`
   String get ALTITUDE {
     return Intl.message(

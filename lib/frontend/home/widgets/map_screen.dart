@@ -127,7 +127,7 @@ class _MapScreenState extends State<MapScreen> {
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.topCenter,
                   child: Visibility(
                     child: FloatingActionButton.extended(
                       onPressed: () {
@@ -142,7 +142,7 @@ class _MapScreenState extends State<MapScreen> {
                         }
                       },
                       icon: Icon(
-                        Icons.navigation,
+                        Icons.gps_fixed,
                         color: Theme.of(context).primaryColor,
                       ),
                       label: Text(S.of(context).CENTER,
