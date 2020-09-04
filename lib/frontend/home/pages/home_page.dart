@@ -154,9 +154,9 @@ class _HomePageState extends State<HomePage>
       case 0:
         return S.of(context).HEADING_INFO;
       case 1:
-        return S.of(context).HEADING_GPS;
-      case 2:
         return S.of(context).HEADING_MAP;
+      case 2:
+        return S.of(context).HEADING_GPS;
       default:
         return S.of(context).APP_NAME;
     }

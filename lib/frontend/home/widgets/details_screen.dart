@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:etrax_rescue_app/backend/types/etrax_server_endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../../../backend/types/mission_details.dart';
 import '../../../generated/l10n.dart';
@@ -17,7 +18,8 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  Completer<void> _refreshCompleter;
+  Completer<void> _refreshCompleter = Completer<void>();
+  DefaultCacheManager _cacheManager = DefaultCacheManager();
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
@@ -25,9 +27,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _refreshCompleter = Completer<void>();
-
     WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      // This also triggers the onRefresh callback of the RefreshIndicator
       this._refreshIndicatorKey.currentState.show();
     });
   }
@@ -39,7 +40,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
       onRefresh: () async {
         BlocProvider.of<HomeBloc>(context).add(UpdateMissionDetails());
         Scaffold.of(context).hideCurrentSnackBar();
-        //return _refreshCompleter.future;
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
@@ -68,20 +68,42 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       MissionDetailImage detail = details.details[index];
                       if (state.appConnection != null &&
                           state.authenticationData != null) {
+                        String imageUrl = state.appConnection
+                                .generateUri(
+                                    subPath: EtraxServerEndpoints.image)
+                                .toString() +
+                            '/' +
+                            state.missionState.mission.id.toString() +
+                            '/' +
+                            detail.uid;
                         return CachedNetworkImage(
-                          imageUrl: state.appConnection
-                                  .generateUri(
-                                      subPath: EtraxServerEndpoints.image)
-                                  .toString() +
-                              '/' +
-                              state.missionState.mission.id.toString() +
-                              '/' +
-                              detail.uid,
+                          cacheManager: _cacheManager,
+                          imageUrl: imageUrl,
                           placeholder: (context, url) =>
                               CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Icon(
-                            Icons.broken_image,
-                            size: 24,
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[300],
+                            child: Column(
+                              children: [
+                                Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                    size: 72,
+                                  ),
+                                ),
+                                Center(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      _cacheManager.removeFile(imageUrl);
+                                      BlocProvider.of<HomeBloc>(context)
+                                          .add(UpdateMissionDetails());
+                                    },
+                                    child: Text(S.of(context).RETRY),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           httpHeaders:
                               state.authenticationData.generateAuthHeader(),

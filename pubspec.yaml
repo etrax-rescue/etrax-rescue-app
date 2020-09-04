@@ -59,6 +59,7 @@ dependencies:
   flutter_secure_storage: ^3.3.3
   # For caching images retrieved by the server
   cached_network_image: ^2.3.1
+  flutter_cache_manager: ^1.4.1
 
 dev_dependencies:
   flutter_test:

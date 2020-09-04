@@ -11,6 +11,7 @@ class HomeState extends Equatable {
     @required this.status,
     @required this.appConnection,
     @required this.authenticationData,
+    @required this.appConfiguration,
     @required this.missionState,
     @required this.missionDetailCollection,
     @required this.locationHistory,
@@ -19,6 +20,7 @@ class HomeState extends Equatable {
   final HomeStatus status;
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
+  final AppConfiguration appConfiguration;
   final List<LocationData> locationHistory;
   final MissionState missionState;
   final MissionDetailCollection missionDetailCollection;
@@ -28,6 +30,7 @@ class HomeState extends Equatable {
           status: HomeStatus.initial,
           appConnection: null,
           authenticationData: null,
+          appConfiguration: null,
           missionState: null,
           missionDetailCollection: null,
           locationHistory: const [],
@@ -38,6 +41,7 @@ class HomeState extends Equatable {
           status: HomeStatus.closed,
           appConnection: null,
           authenticationData: null,
+          appConfiguration: null,
           missionState: null,
           missionDetailCollection: null,
           locationHistory: const [],
@@ -47,6 +51,7 @@ class HomeState extends Equatable {
     HomeStatus status,
     AppConnection appConnection,
     AuthenticationData authenticationData,
+    AppConfiguration appConfiguration,
     MissionState missionState,
     MissionDetailCollection missionDetailCollection,
     List<LocationData> locationHistory,
@@ -55,6 +60,7 @@ class HomeState extends Equatable {
       status: status ?? this.status,
       appConnection: appConnection ?? this.appConnection,
       authenticationData: authenticationData ?? this.authenticationData,
+      appConfiguration: appConfiguration ?? this.appConfiguration,
       missionState: missionState ?? this.missionState,
       locationHistory: locationHistory ?? this.locationHistory,
       missionDetailCollection:
@@ -67,7 +73,9 @@ class HomeState extends Equatable {
         status,
         appConnection,
         authenticationData,
+        appConfiguration,
         locationHistory,
-        missionState
+        missionState,
+        missionDetailCollection,
       ];
 }

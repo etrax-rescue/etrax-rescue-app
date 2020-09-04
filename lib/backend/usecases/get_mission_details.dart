@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/failures.dart';
-import '../repositories/mission_detail_repository.dart';
+import '../repositories/mission_details_repository.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/mission_details.dart';
@@ -11,7 +11,7 @@ import '../types/usecase.dart';
 
 class GetMissionDetails
     extends UseCase<MissionDetailCollection, GetMissionDetailsParams> {
-  final MissionDetailRepository repository;
+  final MissionDetailsRepository repository;
 
   GetMissionDetails(this.repository);
 

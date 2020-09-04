@@ -3,16 +3,19 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../backend/types/app_configuration.dart';
+import '../../../backend/types/app_connection.dart';
+import '../../../backend/types/authentication_data.dart';
 import '../../../backend/types/mission_details.dart';
 import '../../../backend/types/mission_state.dart';
 import '../../../backend/types/usecase.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../backend/usecases/clear_location_cache.dart';
+import '../../../backend/usecases/clear_mission_details.dart';
 import '../../../backend/usecases/clear_mission_state.dart';
+import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/get_location_history.dart';
@@ -29,18 +32,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     @required this.getMissionState,
     @required this.getAppConnection,
     @required this.getAuthenticationData,
+    @required this.getAppConfiguration,
     @required this.getMissionDetails,
     @required this.getLocationHistory,
     @required this.clearMissionState,
     @required this.clearLocationCache,
     @required this.stopLocationUpdates,
+    @required this.clearMissionDetails,
     @required this.getLocationUpdateStream,
   })  : assert(getMissionState != null),
         assert(getAppConnection != null),
+        assert(getAppConfiguration != null),
         assert(getAuthenticationData != null),
         assert(getMissionDetails != null),
         assert(getLocationHistory != null),
         assert(clearMissionState != null),
+        assert(clearMissionDetails != null),
         assert(clearLocationCache != null),
         assert(stopLocationUpdates != null),
         assert(getLocationUpdateStream != null),
@@ -49,14 +56,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetMissionState getMissionState;
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
+  final GetAppConfiguration getAppConfiguration;
   final GetMissionDetails getMissionDetails;
   final GetLocationUpdateStream getLocationUpdateStream;
   final GetLocationHistory getLocationHistory;
   final ClearLocationCache clearLocationCache;
   final ClearMissionState clearMissionState;
   final StopLocationUpdates stopLocationUpdates;
+  final ClearMissionDetails clearMissionDetails;
 
   StreamSubscription<LocationData> _streamSubscription;
+  StreamSubscription<void> _tickerSubscription;
 
   @override
   Stream<HomeState> mapEventToState(
@@ -86,29 +96,40 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* authenticationDataEither.fold((failure) async* {
         // TODO: handle failure
       }, (authenticationData) async* {
-        final getMissionStateEither = await getMissionState(NoParams());
+        final getAppConfigurationEither = await getAppConfiguration(NoParams());
 
-        yield* getMissionStateEither.fold((failure) async* {
+        yield* getAppConfigurationEither.fold((failure) async* {
           // TODO: handle failure
-        }, (missionState) async* {
-          yield state.copyWith(
-            appConnection: appConnection,
-            authenticationData: authenticationData,
-            missionState: missionState,
-          );
+        }, (appConfiguration) async* {
+          final getMissionStateEither = await getMissionState(NoParams());
 
-          await _streamSubscription?.cancel();
-          final getLocationUpdateStreamEither = await getLocationUpdateStream(
-              GetLocationUpdateStreamParams(
-                  label: missionState.mission.id.toString()));
-
-          yield* getLocationUpdateStreamEither.fold((failure) async* {
+          yield* getMissionStateEither.fold((failure) async* {
             // TODO: handle failure
-          }, (locationStream) async* {
-            _streamSubscription =
-                locationStream.listen((_) => add(LocationUpdate()));
+          }, (missionState) async* {
+            yield state.copyWith(
+              appConnection: appConnection,
+              authenticationData: authenticationData,
+              appConfiguration: appConfiguration,
+              missionState: missionState,
+            );
 
-            yield* _updateMissionDetails(event);
+            // Start the periodic updates of the mission details
+            await _tickerSubscription?.cancel();
+            _tickerSubscription = Stream.periodic(
+                    Duration(minutes: appConfiguration.infoUpdateInterval))
+                .listen((_) => add(UpdateMissionDetails()));
+
+            final getLocationUpdateStreamEither = await getLocationUpdateStream(
+                GetLocationUpdateStreamParams(
+                    label: missionState.mission.id.toString()));
+
+            yield* getLocationUpdateStreamEither.fold((failure) async* {
+              // TODO: handle failure
+            }, (locationStream) async* {
+              await _streamSubscription?.cancel();
+              _streamSubscription =
+                  locationStream.listen((_) => add(LocationUpdate()));
+            });
           });
         });
       });
@@ -132,18 +153,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _updateMissionDetails(
     HomeEvent event,
   ) async* {
-    final getMissionDetailsEither = await getMissionDetails(
-        GetMissionDetailsParams(
-            appConnection: state.appConnection,
-            authenticationData: state.authenticationData));
+    if (state.appConnection != null && state.authenticationData != null) {
+      final getMissionDetailsEither = await getMissionDetails(
+          GetMissionDetailsParams(
+              appConnection: state.appConnection,
+              authenticationData: state.authenticationData));
 
-    yield* getMissionDetailsEither.fold((failure) async* {
-      // TODO: handle failure
-    }, (missionDetailCollection) async* {
-      yield state.copyWith(
-          status: HomeStatus.ready,
-          missionDetailCollection: missionDetailCollection);
-    });
+      yield* getMissionDetailsEither.fold((failure) async* {
+        // TODO: handle failure
+      }, (missionDetailCollection) async* {
+        yield state.copyWith(
+            status: HomeStatus.ready,
+            missionDetailCollection: missionDetailCollection);
+      });
+    }
   }
 
   Stream<HomeState> _shutdown(
@@ -167,7 +190,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield* clearLocationCacheEither.fold((failure) async* {
           // TODO: handle failure
         }, (_) async* {
-          yield HomeState.closed();
+          final clearMissionDetailsEither =
+              await clearMissionDetails(NoParams());
+
+          yield* clearMissionDetailsEither.fold((failure) async* {
+            // TODO: handle failure
+          }, (_) async* {
+            yield HomeState.closed();
+          });
         });
       });
     });
@@ -176,6 +206,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Future<void> close() {
     _streamSubscription?.cancel();
+    _tickerSubscription?.cancel();
     return super.close();
   }
 }

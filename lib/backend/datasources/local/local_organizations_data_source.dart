@@ -18,7 +18,7 @@ class LocalOrganizationsDataSourceImpl implements LocalOrganizationsDataSource {
 
   @override
   Future<void> cacheOrganizations(OrganizationCollection model) async {
-    sharedPreferences.setString(
+    await sharedPreferences.setString(
         SharedPreferencesKeys.organizations, json.encode(model.toJson()));
   }
 
@@ -33,8 +33,7 @@ class LocalOrganizationsDataSourceImpl implements LocalOrganizationsDataSource {
   }
 
   @override
-  Future<void> deleteCachedOrganizations() {
-    // TODO: implement deleteCachedOrganizations
-    throw UnimplementedError();
+  Future<void> deleteCachedOrganizations() async {
+    await sharedPreferences.remove(SharedPreferencesKeys.organizations);
   }
 }

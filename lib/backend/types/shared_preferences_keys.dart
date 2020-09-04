@@ -13,4 +13,5 @@ class SharedPreferencesKeys {
   static final String selectedMission = 'SELECTED_MISSION';
   static final String selectedUserState = 'SELECTED_USER_STATE';
   static final String selectedUserRole = 'SELECTED_USER_ROLE';
+  static final String missionDetails = 'MISSION_DETAILS';
 }

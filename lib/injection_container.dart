@@ -9,6 +9,7 @@ import 'backend/datasources/local/local_app_configuration_data_source.dart';
 import 'backend/datasources/local/local_app_connection_data_source.dart';
 import 'backend/datasources/local/local_location_data_source.dart';
 import 'backend/datasources/local/local_login_data_source.dart';
+import 'backend/datasources/local/local_mission_details_data_source.dart';
 import 'backend/datasources/local/local_mission_state_data_source.dart';
 import 'backend/datasources/local/local_missions_data_source.dart';
 import 'backend/datasources/local/local_organizations_data_source.dart';
@@ -23,8 +24,9 @@ import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/repositories/app_state_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
 import 'backend/repositories/location_repository.dart';
-import 'backend/repositories/mission_detail_repository.dart';
+import 'backend/repositories/mission_details_repository.dart';
 import 'backend/usecases/clear_location_cache.dart';
+import 'backend/usecases/clear_mission_details.dart';
 import 'backend/usecases/clear_mission_state.dart';
 import 'backend/usecases/delete_app_connection.dart';
 import 'backend/usecases/fetch_initialization_data.dart';
@@ -250,6 +252,8 @@ Future<void> init() async {
         getMissionDetails: sl(),
         getAppConnection: sl(),
         getAuthenticationData: sl(),
+        getAppConfiguration: sl(),
+        clearMissionDetails: sl(),
       ));
 
   // Use Cases
@@ -258,19 +262,24 @@ Future<void> init() async {
       () => GetLocationUpdateStream(sl()));
   sl.registerLazySingleton<GetLocationHistory>(() => GetLocationHistory(sl()));
   sl.registerLazySingleton<ClearLocationCache>(() => ClearLocationCache(sl()));
+  sl.registerLazySingleton<ClearMissionDetails>(
+      () => ClearMissionDetails(sl()));
 
   sl.registerLazySingleton<GetMissionDetails>(() => GetMissionDetails(sl()));
 
   // Repositories
-  sl.registerLazySingleton<MissionDetailRepository>(
-      () => MissionDetailRepositoryImpl(
+  sl.registerLazySingleton<MissionDetailsRepository>(
+      () => MissionDetailsRepositoryImpl(
             networkInfo: sl(),
             remoteDetailsDataSource: sl(),
+            localMissionDetailsDataSource: sl(),
           ));
 
   // Data Sources
   sl.registerLazySingleton<RemoteMissionDetailsDataSource>(
       () => RemoteMissionDetailsDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalMissionDetailsDataSource>(
+      () => LocalMissionDetailsDataSourceImpl(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

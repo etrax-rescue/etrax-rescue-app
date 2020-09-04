@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_mission_details_data_source.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/exceptions.dart';
@@ -12,19 +13,23 @@ import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/mission_details.dart';
 
-abstract class MissionDetailRepository {
+abstract class MissionDetailsRepository {
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
       AppConnection appConnection, AuthenticationData authenticationData);
+
+  Future<Either<Failure, None>> clearMissionDetails();
 }
 
-class MissionDetailRepositoryImpl implements MissionDetailRepository {
-  MissionDetailRepositoryImpl({
+class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
+  MissionDetailsRepositoryImpl({
     @required this.networkInfo,
     @required this.remoteDetailsDataSource,
+    @required this.localMissionDetailsDataSource,
   });
 
   final NetworkInfo networkInfo;
   final RemoteMissionDetailsDataSource remoteDetailsDataSource;
+  final LocalMissionDetailsDataSource localMissionDetailsDataSource;
 
   @override
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
@@ -44,9 +49,40 @@ class MissionDetailRepositoryImpl implements MissionDetailRepository {
       } on SocketException {
         failed = true;
       }
-      return Left(ServerFailure());
+      if (failed == true) {
+        try {
+          collection =
+              await localMissionDetailsDataSource.getCachedMissionDetails();
+        } on CacheException {
+          return Left(CacheFailure());
+        }
+        return Right(collection);
+      } else {
+        try {
+          await localMissionDetailsDataSource.cacheMissionDetails(collection);
+        } on CacheException {
+          return Left(CacheFailure());
+        }
+        return Right(collection);
+      }
     } else {
-      return Left(NetworkFailure());
+      try {
+        collection =
+            await localMissionDetailsDataSource.getCachedMissionDetails();
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+      return Right(collection);
+    }
+  }
+
+  @override
+  Future<Either<Failure, None>> clearMissionDetails() async {
+    try {
+      await localMissionDetailsDataSource.deleteCachedMissionDetails();
+      return Right(None());
+    } on CacheException {
+      return Left(CacheFailure());
     }
   }
 }
