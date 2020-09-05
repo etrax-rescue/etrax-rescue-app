@@ -1,7 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:background_location/background_location.dart';
-import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/frontend/widgets/width_limiter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +6,9 @@ import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../util/translate_error_messages.dart';
+import '../../widgets/circular_progress_indicator_icon.dart';
+import '../../widgets/width_limiter.dart';
 import '../cubit/check_requirements_cubit.dart';
 
 class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
@@ -476,19 +476,6 @@ class StartUpdatesWidget extends StatelessWidget {
         onPressed: onPressed,
       );
     });
-  }
-}
-
-class CircularProgressIndicatorIcon extends StatelessWidget {
-  const CircularProgressIndicatorIcon({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: Theme.of(context).textTheme.bodyText2.fontSize,
-      width: Theme.of(context).textTheme.bodyText2.fontSize,
-      child: CircularProgressIndicator(),
-    );
   }
 }
 

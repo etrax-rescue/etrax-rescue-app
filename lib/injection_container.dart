@@ -1,8 +1,14 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_image_data_source.dart';
+import 'package:etrax_rescue_app/backend/repositories/poi_repository.dart';
+import 'package:etrax_rescue_app/backend/usecases/take_photo.dart';
+import 'package:etrax_rescue_app/frontend/submit_poi/cubit/submit_poi_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_uploader/flutter_uploader.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'backend/datasources/local/local_app_configuration_data_source.dart';
@@ -281,6 +287,22 @@ Future<void> init() async {
   sl.registerLazySingleton<LocalMissionDetailsDataSource>(
       () => LocalMissionDetailsDataSourceImpl(sl()));
 
+  //! Submit POI
+  // BLoC
+  sl.registerFactory<SubmitPoiCubit>(() => SubmitPoiCubit(
+        takePhoto: sl(),
+      ));
+
+  // Use Cases
+  sl.registerLazySingleton<TakePhoto>(() => TakePhoto(sl()));
+
+  // Repositories
+  sl.registerLazySingleton<PoiRepository>(() => PoiRepositoryImpl(sl(), sl()));
+
+  // Data Sources
+  sl.registerLazySingleton<LocalImageDataSource>(
+      () => LocalImageDataSourceImpl(sl()));
+
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<UriInputConverter>(() => UriInputConverter());
@@ -292,4 +314,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => DataConnectionChecker());
   sl.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
   sl.registerLazySingleton<BackgroundLocation>(() => BackgroundLocation());
+  sl.registerLazySingleton<FlutterUploader>(() => FlutterUploader());
+  sl.registerLazySingleton<ImagePicker>(() => ImagePicker());
 }

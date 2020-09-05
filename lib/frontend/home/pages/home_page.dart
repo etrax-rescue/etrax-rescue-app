@@ -172,6 +172,6 @@ class _HomePageState extends State<HomePage>
   }
 
   void _takePhoto() async {
-    ExtendedNavigator.of(context).push(Routes.submitImagePage);
+    ExtendedNavigator.of(context).push(Routes.submitPoiPage);
   }
 }

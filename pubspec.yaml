@@ -23,7 +23,7 @@ dependencies:
   # Local cache
   shared_preferences: ^0.5.8
   # QR scanner data source
-  #qrscan: ^0.2.17
+  barcode_scan: ^3.0.1
   # Internet connection checker
   data_connection_checker: ^0.3.4
   # For proper conversion of DateTime to string
@@ -60,6 +60,8 @@ dependencies:
   # For caching images retrieved by the server
   cached_network_image: ^2.3.1
   flutter_cache_manager: ^1.4.1
+  # For image uploads
+  flutter_uploader: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -21,7 +21,7 @@ import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/login/pages/login_page.dart';
 import '../frontend/missions/pages/mission_page.dart';
 import '../frontend/state_update/pages/state_update_page.dart';
-import '../frontend/submit_image/pages/submit_image_page.dart';
+import '../frontend/submit_poi/pages/submit_poi_page.dart';
 
 class Routes {
   static const String launchPage = '/';
@@ -31,7 +31,7 @@ class Routes {
   static const String confirmationPage = '/confirmation-page';
   static const String checkRequirementsPage = '/check-requirements-page';
   static const String homePage = '/home-page';
-  static const String submitImagePage = '/submit-image-page';
+  static const String submitPoiPage = '/submit-poi-page';
   static const String stateUpdatePage = '/state-update-page';
   static const all = <String>{
     launchPage,
@@ -41,7 +41,7 @@ class Routes {
     confirmationPage,
     checkRequirementsPage,
     homePage,
-    submitImagePage,
+    submitPoiPage,
     stateUpdatePage,
   };
 }
@@ -57,7 +57,7 @@ class Router extends RouterBase {
     RouteDef(Routes.confirmationPage, page: ConfirmationPage),
     RouteDef(Routes.checkRequirementsPage, page: CheckRequirementsPage),
     RouteDef(Routes.homePage, page: HomePage),
-    RouteDef(Routes.submitImagePage, page: SubmitImagePage),
+    RouteDef(Routes.submitPoiPage, page: SubmitPoiPage),
     RouteDef(Routes.stateUpdatePage, page: StateUpdatePage),
   ];
   @override
@@ -76,7 +76,7 @@ class Router extends RouterBase {
       );
     },
     LoginPage: (data) {
-      var args = data.getArgs<LoginPageArguments>(nullOk: false);
+      final args = data.getArgs<LoginPageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => LoginPage(
           key: args.key,
@@ -94,7 +94,7 @@ class Router extends RouterBase {
       );
     },
     ConfirmationPage: (data) {
-      var args = data.getArgs<ConfirmationPageArguments>(nullOk: false);
+      final args = data.getArgs<ConfirmationPageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => ConfirmationPage(
           key: args.key,
@@ -106,7 +106,7 @@ class Router extends RouterBase {
       );
     },
     CheckRequirementsPage: (data) {
-      var args = data.getArgs<CheckRequirementsPageArguments>(nullOk: false);
+      final args = data.getArgs<CheckRequirementsPageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => CheckRequirementsPage(
           key: args.key,
@@ -116,7 +116,7 @@ class Router extends RouterBase {
       );
     },
     HomePage: (data) {
-      var args = data.getArgs<HomePageArguments>(nullOk: false);
+      final args = data.getArgs<HomePageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => HomePage(
           key: args.key,
@@ -125,17 +125,18 @@ class Router extends RouterBase {
         settings: data,
       );
     },
-    SubmitImagePage: (data) {
-      var args = data.getArgs<SubmitImagePageArguments>(
-        orElse: () => SubmitImagePageArguments(),
+    SubmitPoiPage: (data) {
+      final args = data.getArgs<SubmitPoiPageArguments>(
+        orElse: () => SubmitPoiPageArguments(),
       );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => SubmitImagePage(key: args.key),
+        builder: (context) =>
+            SubmitPoiPage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
     StateUpdatePage: (data) {
-      var args = data.getArgs<StateUpdatePageArguments>(nullOk: false);
+      final args = data.getArgs<StateUpdatePageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
         builder: (context) => StateUpdatePage(
           key: args.key,
@@ -191,10 +192,10 @@ class HomePageArguments {
   HomePageArguments({this.key, @required this.state});
 }
 
-/// SubmitImagePage arguments holder class
-class SubmitImagePageArguments {
+/// SubmitPoiPage arguments holder class
+class SubmitPoiPageArguments {
   final Key key;
-  SubmitImagePageArguments({this.key});
+  SubmitPoiPageArguments({this.key});
 }
 
 /// StateUpdatePage arguments holder class

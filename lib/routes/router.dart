@@ -6,7 +6,7 @@ import '../frontend/home/pages/home_page.dart';
 import '../frontend/launch/pages/launch_page.dart';
 import '../frontend/login/pages/login_page.dart';
 import '../frontend/missions/pages/mission_page.dart';
-import '../frontend/submit_image/pages/submit_image_page.dart';
+import '../frontend/submit_poi/pages/submit_poi_page.dart';
 import '../frontend/check_requirements/pages/check_requirements_page.dart';
 import '../frontend/state_update/pages/state_update_page.dart';
 
@@ -19,7 +19,7 @@ import '../frontend/state_update/pages/state_update_page.dart';
     MaterialRoute(page: ConfirmationPage),
     MaterialRoute(page: CheckRequirementsPage),
     MaterialRoute(page: HomePage),
-    MaterialRoute(page: SubmitImagePage),
+    MaterialRoute(page: SubmitPoiPage),
     MaterialRoute(page: StateUpdatePage),
   ],
 )

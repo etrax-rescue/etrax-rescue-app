@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../util/translate_error_messages.dart';
 import '../../../generated/l10n.dart';
+import '../../util/translate_error_messages.dart';
 import '../bloc/app_connection_bloc.dart';
 
 class AppConnectionForm extends StatefulWidget {
@@ -32,9 +32,9 @@ class _AppConnectionFormState extends State<AppConnectionForm> {
             autofocus: true,
             keyboardType: TextInputType.url,
             decoration: InputDecoration(
-              icon: Text('https://'),
-              hintText: 'etrax.at',
-            ),
+                icon: Text('https://'),
+                hintText: 'etrax.at',
+                suffixIcon: Icon(Icons.camera_alt)),
             onChanged: (value) {
               _inputStr = value;
             },
