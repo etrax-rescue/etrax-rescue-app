@@ -30,7 +30,7 @@ class RemotePoiDataSourceImpl implements RemotePoiDataSource {
     });
 
     try {
-      dio.post(
+      final response = dio.post(
         appConnection
             .generateUri(subPath: EtraxServerEndpoints.uploadPoi)
             .toString(),
@@ -42,8 +42,9 @@ class RemotePoiDataSourceImpl implements RemotePoiDataSource {
           controller.add(sent.toDouble() / total);
         },
       );
+      response.whenComplete(() => controller?.close());
     } on DioError {
-      controller.close();
+      controller?.close();
       throw ServerException();
     }
     return controller.stream;

@@ -28,6 +28,7 @@ class SubmitPoiPage extends StatefulWidget implements AutoRouteWrapper {
 class _SubmitPoiPageState extends State<SubmitPoiPage> {
   final _formKey = GlobalKey<FormState>();
   final Color _alphaColor = const Color.fromARGB(128, 0, 0, 0);
+  String _description;
 
   @override
   void initState() {
@@ -125,6 +126,9 @@ class _SubmitPoiPageState extends State<SubmitPoiPage> {
                           },
                         ),
                       ),
+                      onChanged: (val) {
+                        _description = val;
+                      },
                       validator: (String val) {
                         return val.length < 1
                             ? S.of(context).FIELD_REQUIRED
@@ -144,7 +148,7 @@ class _SubmitPoiPageState extends State<SubmitPoiPage> {
   void _submit() {
     if (_formKey.currentState.validate()) {
       print('POI submitted');
-      context.bloc<SubmitPoiCubit>().submit();
+      context.bloc<SubmitPoiCubit>().submit(_description);
     }
   }
 }

@@ -25,6 +25,7 @@ import 'backend/datasources/remote/remote_login_data_source.dart';
 import 'backend/datasources/remote/remote_mission_details_data_source.dart';
 import 'backend/datasources/remote/remote_mission_state_data_source.dart';
 import 'backend/datasources/remote/remote_organizations_data_source.dart';
+import 'backend/datasources/remote/remote_poi_data_source.dart';
 import 'backend/repositories/app_connection_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
 import 'backend/repositories/location_repository.dart';
@@ -32,6 +33,7 @@ import 'backend/repositories/login_repository.dart';
 import 'backend/repositories/mission_details_repository.dart';
 import 'backend/repositories/mission_state_repository.dart';
 import 'backend/repositories/poi_repository.dart';
+import 'backend/usecases/capture_poi.dart';
 import 'backend/usecases/clear_location_cache.dart';
 import 'backend/usecases/clear_mission_details.dart';
 import 'backend/usecases/clear_mission_state.dart';
@@ -52,13 +54,13 @@ import 'backend/usecases/logout.dart';
 import 'backend/usecases/request_location_permission.dart';
 import 'backend/usecases/request_location_service.dart';
 import 'backend/usecases/scan_qr_code.dart';
+import 'backend/usecases/send_poi.dart';
 import 'backend/usecases/set_app_connection.dart';
 import 'backend/usecases/set_selected_mission.dart';
 import 'backend/usecases/set_selected_user_role.dart';
 import 'backend/usecases/set_selected_user_state.dart';
 import 'backend/usecases/start_location_updates.dart';
 import 'backend/usecases/stop_location_updates.dart';
-import 'backend/usecases/take_photo.dart';
 import 'core/network/network_info.dart';
 import 'frontend/app_connection/bloc/app_connection_bloc.dart';
 import 'frontend/app_connection/cubit/app_connection_cubit.dart';
@@ -322,18 +324,30 @@ Future<void> init() async {
   //! Submit POI
   // BLoC
   sl.registerFactory<SubmitPoiCubit>(() => SubmitPoiCubit(
-        takePhoto: sl(),
+        capturePoi: sl(),
+        getAppConnection: sl(),
+        getAuthenticationData: sl(),
+        sendPoi: sl(),
       ));
 
   // Use Cases
-  sl.registerLazySingleton<TakePhoto>(() => TakePhoto(sl()));
+  sl.registerLazySingleton<CapturePoi>(() => CapturePoi(sl()));
+  sl.registerLazySingleton<SendPoi>(() => SendPoi(sl()));
 
   // Repositories
-  sl.registerLazySingleton<PoiRepository>(() => PoiRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<PoiRepository>(
+    () => PoiRepositoryImpl(
+        imageDataSource: sl(),
+        locationDataSource: sl(),
+        networkInfo: sl(),
+        remotePoiDataSource: sl()),
+  );
 
   // Data Sources
   sl.registerLazySingleton<LocalImageDataSource>(
       () => LocalImageDataSourceImpl(sl()));
+  sl.registerLazySingleton<RemotePoiDataSource>(
+      () => RemotePoiDataSourceImpl(sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

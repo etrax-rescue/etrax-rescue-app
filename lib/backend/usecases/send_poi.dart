@@ -1,0 +1,36 @@
+import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/repositories/poi_repository.dart';
+import 'package:etrax_rescue_app/backend/types/app_connection.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
+import 'package:etrax_rescue_app/backend/types/poi.dart';
+import 'package:meta/meta.dart';
+
+import '../../core/error/failures.dart';
+import '../repositories/app_connection_repository.dart';
+import '../types/usecase.dart';
+
+class SendPoi extends UseCase<Stream<double>, SendPoiParams> {
+  final PoiRepository repository;
+  SendPoi(this.repository);
+
+  @override
+  Future<Either<Failure, Stream<double>>> call(SendPoiParams params) async {
+    return await repository.sendPOI(
+        params.appConnection, params.authenticationData, params.poi);
+  }
+}
+
+class SendPoiParams extends Equatable {
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
+  final Poi poi;
+
+  SendPoiParams(
+      {@required this.appConnection,
+      @required this.authenticationData,
+      @required this.poi});
+
+  @override
+  List<Object> get props => [appConnection, authenticationData, poi];
+}
