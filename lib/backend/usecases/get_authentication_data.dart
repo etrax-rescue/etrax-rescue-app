@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failures.dart';
-import '../types/usecase.dart';
+import '../repositories/login_repository.dart';
 import '../types/authentication_data.dart';
-import '../repositories/app_state_repository.dart';
+import '../types/usecase.dart';
 
 class GetAuthenticationData extends UseCase<AuthenticationData, NoParams> {
-  final AppStateRepository repository;
+  final LoginRepository repository;
 
   GetAuthenticationData(this.repository);
 

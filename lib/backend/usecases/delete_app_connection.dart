@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failures.dart';
+import '../repositories/app_connection_repository.dart';
 import '../types/usecase.dart';
-import '../repositories/app_state_repository.dart';
 
 class DeleteAppConnection extends UseCase<None, NoParams> {
-  final AppStateRepository repository;
+  final AppConnectionRepository repository;
   DeleteAppConnection(this.repository);
 
   @override

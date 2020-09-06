@@ -30,6 +30,7 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
 
 class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
   List<Widget> _sequenceWidgets;
+  bool _goingBackPossible = true;
 
   @override
   void initState() {
@@ -37,7 +38,6 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
     if (widget.state.locationAccuracy == 0) {
       _sequenceWidgets = <Widget>[
         FetchSettingsWidget(),
-        CheckLocationPermissionWidget(),
         SetStateWidget(),
         StopUpdatesWidget(),
       ];
@@ -62,65 +62,82 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).STATE_HEADING),
-      ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(_sequenceWidgets),
+    return WillPopScope(
+      onWillPop: () async {
+        return _goingBackPossible;
+      },
+      child: BlocListener<CheckRequirementsCubit, CheckRequirementsState>(
+        listener: (context, state) {
+          if (state.status >= CheckRequirementsStatus.setStateSuccess) {
+            setState(() {
+              _goingBackPossible = false;
+            });
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(S.of(context).STATE_HEADING),
+            automaticallyImplyLeading: _goingBackPossible,
           ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: WidthLimiter(
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: BlocBuilder<CheckRequirementsCubit,
-                      CheckRequirementsState>(
-                    builder: (context, state) {
-                      bool enabled = state.status.index ==
-                              CheckRequirementsStatus.success.index
-                          ? true
-                          : false;
-                      return AbsorbPointer(
-                        absorbing: !enabled,
-                        child: MaterialButton(
-                          onPressed: () {
-                            ExtendedNavigator.of(context).pushAndRemoveUntil(
-                              Routes.homePage,
-                              (route) => false,
-                              arguments: HomePageArguments(state: widget.state),
-                            );
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                S.of(context).CONTINUE,
-                                style: TextStyle(
-                                  color: enabled
-                                      ? Theme.of(context).accentColor
-                                      : Colors.grey,
-                                ),
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate(_sequenceWidgets),
+              ),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: WidthLimiter(
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: BlocBuilder<CheckRequirementsCubit,
+                          CheckRequirementsState>(
+                        builder: (context, state) {
+                          bool enabled = state.status.index ==
+                                  CheckRequirementsStatus.success.index
+                              ? true
+                              : false;
+                          return AbsorbPointer(
+                            absorbing: !enabled,
+                            child: MaterialButton(
+                              onPressed: () {
+                                ExtendedNavigator.of(context)
+                                    .pushAndRemoveUntil(
+                                  Routes.homePage,
+                                  (route) => false,
+                                  arguments:
+                                      HomePageArguments(state: widget.state),
+                                );
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    S.of(context).CONTINUE,
+                                    style: TextStyle(
+                                      color: enabled
+                                          ? Theme.of(context).accentColor
+                                          : Colors.grey,
+                                    ),
+                                  ),
+                                  Icon(Icons.chevron_right,
+                                      color: enabled
+                                          ? Theme.of(context).accentColor
+                                          : Colors.grey),
+                                ],
                               ),
-                              Icon(Icons.chevron_right,
-                                  color: enabled
-                                      ? Theme.of(context).accentColor
-                                      : Colors.grey),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

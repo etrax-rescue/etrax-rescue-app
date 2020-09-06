@@ -3,14 +3,14 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../core/error/failures.dart';
-import '../repositories/app_state_repository.dart';
+import '../repositories/mission_state_repository.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/usecase.dart';
 import '../types/user_states.dart';
 
 class SetSelectedUserState extends UseCase<None, SetSelectedUserStateParams> {
-  final AppStateRepository repository;
+  final MissionStateRepository repository;
   SetSelectedUserState(this.repository);
 
   @override

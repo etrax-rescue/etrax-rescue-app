@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failures.dart';
-import '../repositories/app_state_repository.dart';
+import '../repositories/mission_state_repository.dart';
 import '../types/mission_state.dart';
 import '../types/usecase.dart';
 
 class GetMissionState extends UseCase<MissionState, NoParams> {
-  final AppStateRepository repository;
+  final MissionStateRepository repository;
   GetMissionState(this.repository);
 
   @override

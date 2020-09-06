@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failures.dart';
-import '../repositories/app_state_repository.dart';
+import '../repositories/login_repository.dart';
 import '../types/usecase.dart';
 
 class Logout extends UseCase<None, NoParams> {
-  final AppStateRepository repository;
+  final LoginRepository repository;
   Logout(this.repository);
 
   @override

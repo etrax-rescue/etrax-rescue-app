@@ -11,7 +11,7 @@ import 'package:etrax_rescue_app/backend/types/organizations.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/repositories/app_state_repository.dart';
+import 'package:etrax_rescue_app/backend/repositories/mission_state_repository.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_app_connection_data_source.dart';
 import 'package:etrax_rescue_app/backend/datasources/remote/remote_app_connection_data_source.dart';
 import 'package:etrax_rescue_app/backend/datasources/remote/remote_login_data_source.dart';
@@ -42,7 +42,7 @@ class MockLocalLoginDataSource extends Mock implements LocalLoginDataSource {}
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
-  AppStateRepositoryImpl repository;
+  MissionStateRepository repository;
   MockLocalMissionStateDataSource mockLocalMissionStateDataSource;
   MockRemoteAppConnectionDataSource mockRemoteAppConnectionDataSource;
   MockLocalAppConnectionDataSource mockLocalAppConnectionDataSource;
@@ -62,7 +62,7 @@ void main() {
     mockLocalLoginDataSource = MockLocalLoginDataSource();
     mockNetworkInfo = MockNetworkInfo();
 
-    repository = AppStateRepositoryImpl(
+    repository = MissionStateRepositoryImpl(
       remoteAppConnectionDataSource: mockRemoteAppConnectionDataSource,
       localAppConnectionDataSource: mockLocalAppConnectionDataSource,
       networkInfo: mockNetworkInfo,

@@ -3,12 +3,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/failures.dart';
+import '../repositories/login_repository.dart';
 import '../types/app_connection.dart';
 import '../types/usecase.dart';
-import '../repositories/app_state_repository.dart';
 
 class Login extends UseCase<None, LoginParams> {
-  final AppStateRepository repository;
+  final LoginRepository repository;
   Login(this.repository);
 
   @override

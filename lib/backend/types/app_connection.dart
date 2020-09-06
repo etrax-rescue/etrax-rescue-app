@@ -3,35 +3,34 @@ import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
 class AppConnection extends Equatable {
-  final String authority;
   final String basePath;
-  AppConnection({@required this.authority, @required this.basePath});
+  final String host;
+  AppConnection({@required this.host, @required this.basePath});
 
   Uri generateUri({String subPath, Map<String, String> paramMap}) {
-    if (subPath == null && paramMap == null) {
-      return Uri.https(authority, basePath);
-    } else if (subPath != null) {
-      if (paramMap != null) {
-        return Uri.https(authority, p.join(basePath, subPath), paramMap);
-      } else {
-        return Uri.https(authority, p.join(basePath, subPath));
-      }
+    final uri = Uri.parse(p.join(host, basePath ?? '', subPath ?? ''));
+    if (paramMap != null) {
+      return Uri(
+          scheme: uri.scheme,
+          host: uri.host,
+          path: uri.path,
+          port: uri.port,
+          queryParameters: paramMap);
     }
-    return Uri.https(authority, basePath, paramMap);
+    return uri;
   }
 
   factory AppConnection.fromJson(Map<String, dynamic> json) {
-    return AppConnection(
-        authority: json['authority'], basePath: json['basePath']);
+    return AppConnection(host: json['host'], basePath: json['basePath']);
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'authority': authority,
+      'host': host,
       'basePath': basePath,
     };
   }
 
   @override
-  List<Object> get props => [authority, basePath];
+  List<Object> get props => [host, basePath];
 }

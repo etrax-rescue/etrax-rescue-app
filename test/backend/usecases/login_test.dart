@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/repositories/app_state_repository.dart';
+import 'package:etrax_rescue_app/backend/repositories/mission_state_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/login.dart';
 
 class MockAppStateRepository extends Mock implements AppStateRepository {}

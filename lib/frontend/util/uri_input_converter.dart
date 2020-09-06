@@ -3,16 +3,16 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
 
 class UriInputConverter {
-  Either<Failure, String> convert(String authorityString) {
-    if (authorityString.contains(' ')) {
+  Either<Failure, String> convert(String connectionString) {
+    if (connectionString.contains(' ')) {
       return Left(InvalidInputFailure());
     }
     // Removes trailing backslash from uri
-    authorityString =
-        authorityString.replaceAllMapped(RegExp(r'\/$'), (match) => '');
+    connectionString =
+        connectionString.replaceAllMapped(RegExp(r'\/$'), (match) => '');
     Uri uri;
     try {
-      uri = Uri.https(authorityString, '');
+      uri = Uri.parse(connectionString);
     } on FormatException {
       return Left(InvalidInputFailure());
     }
@@ -27,6 +27,6 @@ class UriInputConverter {
       return Left(InvalidInputFailure());
     }
 
-    return Right(authorityString);
+    return Right(connectionString);
   }
 }

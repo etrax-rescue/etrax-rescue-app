@@ -3,14 +3,14 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/failures.dart';
+import '../repositories/login_repository.dart';
 import '../types/app_connection.dart';
-import '../types/usecase.dart';
 import '../types/organizations.dart';
-import '../repositories/app_state_repository.dart';
+import '../types/usecase.dart';
 
 class GetOrganizations
     extends UseCase<OrganizationCollection, GetOrganizationsParams> {
-  final AppStateRepository repository;
+  final LoginRepository repository;
 
   GetOrganizations(this.repository);
 

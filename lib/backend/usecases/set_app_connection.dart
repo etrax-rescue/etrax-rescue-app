@@ -3,11 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../core/error/failures.dart';
+import '../repositories/app_connection_repository.dart';
 import '../types/usecase.dart';
-import '../repositories/app_state_repository.dart';
 
 class SetAppConnection extends UseCase<None, AppConnectionParams> {
-  final AppStateRepository repository;
+  final AppConnectionRepository repository;
   SetAppConnection(this.repository);
 
   @override

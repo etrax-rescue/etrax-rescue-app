@@ -4,10 +4,10 @@ import 'package:mockito/mockito.dart';
 
 import 'package:etrax_rescue_app/backend/types/usecase.dart';
 import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/repositories/app_state_repository.dart';
+import 'package:etrax_rescue_app/backend/repositories/mission_state_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_authentication_data.dart';
 
-class MockAppStateRepository extends Mock implements AppStateRepository {}
+class MockAppStateRepository extends Mock implements MissionStateRepository {}
 
 void main() {
   GetAuthenticationData usecase;

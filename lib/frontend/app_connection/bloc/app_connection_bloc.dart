@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/scan_qr_code.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/etrax_server_endpoints.dart';
@@ -14,14 +15,15 @@ part 'app_connection_event.dart';
 part 'app_connection_state.dart';
 
 class AppConnectionBloc extends Bloc<AppConnectionEvent, AppConnectionState> {
-  final SetAppConnection setAppConnection;
-  final UriInputConverter inputConverter;
   AppConnectionBloc({
     @required this.setAppConnection,
     @required this.inputConverter,
   })  : assert(setAppConnection != null),
         assert(inputConverter != null),
         super(AppConnectionInitial());
+
+  final SetAppConnection setAppConnection;
+  final UriInputConverter inputConverter;
 
   @override
   Stream<AppConnectionState> mapEventToState(

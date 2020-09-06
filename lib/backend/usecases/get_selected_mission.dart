@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failures.dart';
-import '../repositories/app_state_repository.dart';
+import '../repositories/mission_state_repository.dart';
 import '../types/missions.dart';
 import '../types/usecase.dart';
 
 class GetSelectedMission extends UseCase<Mission, NoParams> {
-  final AppStateRepository repository;
+  final MissionStateRepository repository;
   GetSelectedMission(this.repository);
 
   @override

@@ -3,14 +3,14 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../core/error/failures.dart';
-import '../repositories/app_state_repository.dart';
+import '../repositories/mission_state_repository.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/missions.dart';
 import '../types/usecase.dart';
 
 class SetSelectedMission extends UseCase<None, SetSelectedMissionParams> {
-  final AppStateRepository repository;
+  final MissionStateRepository repository;
   SetSelectedMission(this.repository);
 
   @override

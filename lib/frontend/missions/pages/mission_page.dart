@@ -8,7 +8,7 @@ import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../widgets/background.dart';
 import '../bloc/missions_bloc.dart';
-import '../widgets/custom_material_icons_icons.dart';
+import '../../widgets/custom_material_icons.dart';
 import '../widgets/missions_list.dart';
 
 class MissionPage extends StatelessWidget implements AutoRouteWrapper {
@@ -34,7 +34,7 @@ class MissionPage extends StatelessWidget implements AutoRouteWrapper {
           BlocProvider.of<InitializationBloc>(context).add(LogoutEvent());
         },
         label: Text(S.of(context).LOGOUT),
-        icon: Icon(CustomMaterialIcons.logout_24px),
+        icon: Icon(CustomMaterialIcons.logout),
         backgroundColor: Theme.of(context).accentColor,
       ),
       body: BlocListener<InitializationBloc, InitializationState>(

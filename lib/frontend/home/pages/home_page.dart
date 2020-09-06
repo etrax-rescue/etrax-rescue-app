@@ -35,11 +35,42 @@ class _HomePageState extends State<HomePage>
   PreloadPageController _pageController;
   String _title;
   int _pageIndex = 0;
+  List<SpeedDialChild> _speedDials = [];
 
   @override
   void initState() {
     super.initState();
     _pageController = PreloadPageController(initialPage: _pageIndex);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _speedDials = [
+        SpeedDialChild(
+          child: Icon(Icons.exit_to_app),
+          backgroundColor: Colors.red,
+          label: S.of(context).LEAVE_MISSION,
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: _leaveMission,
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.update),
+          backgroundColor: Colors.blue,
+          label: S.of(context).CHANGE_STATUS,
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: _updateState,
+        )
+      ];
+
+      if (widget.state.locationAccuracy >= 3) {
+        _speedDials.add(SpeedDialChild(
+          child: Icon(Icons.add_a_photo),
+          backgroundColor: Colors.green,
+          label: S.of(context).TAKE_PHOTO,
+          labelStyle: TextStyle(fontSize: 18.0),
+          onTap: _takePhoto,
+        ));
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -121,29 +152,7 @@ class _HomePageState extends State<HomePage>
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           backgroundColor: Theme.of(context).accentColor,
-          children: [
-            SpeedDialChild(
-              child: Icon(Icons.exit_to_app),
-              backgroundColor: Colors.red,
-              label: S.of(context).LEAVE_MISSION,
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: _leaveMission,
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.update),
-              backgroundColor: Colors.blue,
-              label: S.of(context).CHANGE_STATUS,
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: _updateState,
-            ),
-            SpeedDialChild(
-              child: Icon(Icons.add_a_photo),
-              backgroundColor: Colors.green,
-              label: S.of(context).TAKE_PHOTO,
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: _takePhoto,
-            ),
-          ],
+          children: _speedDials,
         ),
       ),
     );

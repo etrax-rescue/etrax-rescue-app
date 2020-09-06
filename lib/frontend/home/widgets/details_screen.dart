@@ -109,11 +109,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               state.authenticationData.generateAuthHeader(),
                         );
                       } else {
-                        return Container();
+                        return ListView();
                       }
                       break;
                     default:
-                      return Container();
+                      return ListView();
                       break;
                   }
                 },
@@ -144,7 +144,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               );
             }
           } else {
-            return Container();
+            return ListView();
           }
         },
       ),

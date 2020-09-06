@@ -30,6 +30,8 @@ dependencies:
   intl: ^0.16.1
   # Making requests to the API
   http: ^0.12.2
+  # HTTP library
+  dio: ^3.0.10
   # For advanced routing features
   auto_route: ^0.6.6
   # Internationalization
@@ -60,8 +62,6 @@ dependencies:
   # For caching images retrieved by the server
   cached_network_image: ^2.3.1
   flutter_cache_manager: ^1.4.1
-  # For image uploads
-  flutter_uploader: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -77,7 +77,7 @@ flutter:
     # Custom logout icon
     - family: CustomMaterialIcons
       fonts:
-        - asset: fonts/CustomMaterialIcons.ttf
+        - asset: fonts/custom_material_icons.ttf
   assets:
     - assets/images/background.jpg
     - assets/images/etrax_rescue_icon.png

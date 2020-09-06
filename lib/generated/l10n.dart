@@ -133,6 +133,36 @@ class S {
     );
   }
 
+  /// `Cancel`
+  String get CANCEL {
+    return Intl.message(
+      'Cancel',
+      name: 'CANCEL',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flash on`
+  String get FLASH_ON {
+    return Intl.message(
+      'Flash on',
+      name: 'FLASH_ON',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flash off`
+  String get FLASH_OFF {
+    return Intl.message(
+      'Flash off',
+      name: 'FLASH_OFF',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login`
   String get LOGIN_HEADING {
     return Intl.message(
@@ -863,10 +893,10 @@ class S {
     );
   }
 
-  /// `The provided URL does not resemble a valid format.\n Example for a valid URL: https://etrax.at`
+  /// `The provided URL does not resemble a valid format.\n Example for a valid URL: https://app.etrax.at`
   String get INVALID_INPUT_FAILURE_MESSAGE {
     return Intl.message(
-      'The provided URL does not resemble a valid format.\n Example for a valid URL: https://etrax.at',
+      'The provided URL does not resemble a valid format.\n Example for a valid URL: https://app.etrax.at',
       name: 'INVALID_INPUT_FAILURE_MESSAGE',
       desc: '',
       args: [],

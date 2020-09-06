@@ -7,10 +7,9 @@ import 'package:etrax_rescue_app/backend/types/app_connection.dart';
 import '../../fixtures/fixture_reader.dart';
 
 void main() {
-  final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
-  final tAppConnection =
-      AppConnection(authority: tAuthority, basePath: tBasePath);
+  final tHost = 'https://apptest.etrax.at';
+  final tBasePath = 'subdir';
+  final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
 
   group('generateUri', () {
     test(
@@ -19,7 +18,7 @@ void main() {
         // act
         final result = tAppConnection.generateUri();
         // assert
-        expect(result, equals(Uri.https(tAuthority, tBasePath)));
+        expect(result, equals(Uri.parse(p.join(tHost, tBasePath))));
       },
     );
 
@@ -31,8 +30,7 @@ void main() {
         // act
         final result = tAppConnection.generateUri(subPath: tSubPath);
         // assert
-        expect(
-            result, equals(Uri.https(tAuthority, tBasePath + '/' + tSubPath)));
+        expect(result, equals(Uri.parse(p.join(tHost, tBasePath, tSubPath))));
       },
     );
 
@@ -50,8 +48,8 @@ void main() {
         // assert
         expect(
             result,
-            equals(
-                Uri.https(tAuthority, p.join(tBasePath, tSubPath), tParamMap)));
+            equals(Uri.parse(
+                'https://apptest.etrax.at/subdir/test.php?username=JohnDoe')));
       },
     );
 
@@ -65,7 +63,10 @@ void main() {
         // act
         final result = tAppConnection.generateUri(paramMap: tParamMap);
         // assert
-        expect(result, equals(Uri.https(tAuthority, tBasePath, tParamMap)));
+        expect(
+            result,
+            equals(
+                Uri.parse('https://apptest.etrax.at/subdir?username=JohnDoe')));
       },
     );
   });
@@ -93,8 +94,8 @@ void main() {
         final result = tAppConnection.toJson();
         // assert
         final expectedJsonMap = {
-          "authority": "etrax.at",
-          "basePath": "appdata",
+          "host": "https://apptest.etrax.at",
+          "basePath": "subdir",
         };
         expect(result, expectedJsonMap);
       },
