@@ -25,7 +25,12 @@ class RemoteInitializationDataSourceImpl
         appConnection.generateUri(subPath: EtraxServerEndpoints.initialization),
         headers: authenticationData.generateAuthHeader());
 
-    final response = await request.timeout(const Duration(seconds: 2));
+    http.Response response;
+    try {
+      response = await request.timeout(const Duration(seconds: 2));
+    } on Exception {
+      throw ServerException();
+    }
 
     if (response.statusCode == 401) {
       throw AuthenticationException();

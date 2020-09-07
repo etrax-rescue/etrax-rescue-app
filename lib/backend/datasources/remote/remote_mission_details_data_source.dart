@@ -28,6 +28,7 @@ class RemoteMissionDetailsDataSourceImpl
       appConnection.generateUri(subPath: EtraxServerEndpoints.missionDetails),
       headers: authenticationData.generateAuthHeader(),
     );
+
     http.Response response;
     try {
       response = await request.timeout(const Duration(seconds: 2));

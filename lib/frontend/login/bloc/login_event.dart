@@ -6,6 +6,8 @@ abstract class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class InitializeLogin extends LoginEvent {}
+
 class SubmitLogin extends LoginEvent {
   final String username;
   final String password;

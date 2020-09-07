@@ -23,7 +23,12 @@ class RemoteOrganizationsDataSourceImpl
     final request = client.get(
         appConnection.generateUri(subPath: EtraxServerEndpoints.organizations));
 
-    final response = await request.timeout(const Duration(seconds: 2));
+    http.Response response;
+    try {
+      response = await request.timeout(const Duration(seconds: 2));
+    } on Exception {
+      throw ServerException();
+    }
 
     if (response.statusCode == 401) {
       throw AuthenticationException();

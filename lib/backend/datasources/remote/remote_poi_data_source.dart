@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
 
-import '../../../core/error/exceptions.dart';
+import '../../../core/error/failures.dart';
 import '../../types/app_connection.dart';
 import '../../types/authentication_data.dart';
 import '../../types/etrax_server_endpoints.dart';

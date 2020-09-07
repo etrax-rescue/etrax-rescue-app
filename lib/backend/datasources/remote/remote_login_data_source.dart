@@ -27,9 +27,12 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
           'password': password
         });
 
-    // TODO: This delay is required until https://github.com/flutter/flutter/issues/41573 is resolved
-    await Future<void>.delayed(Duration(milliseconds: 100));
-    final response = await request.timeout(const Duration(seconds: 2));
+    http.Response response;
+    try {
+      response = await request.timeout(const Duration(seconds: 2));
+    } on Exception {
+      throw ServerException();
+    }
 
     if (response.statusCode == 200) {
       if (response.body == null || response.body == '') {
