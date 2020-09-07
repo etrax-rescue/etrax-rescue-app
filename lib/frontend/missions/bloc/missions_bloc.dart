@@ -18,10 +18,6 @@ part 'missions_state.dart';
 
 class InitializationBloc
     extends Bloc<InitializationEvent, InitializationState> {
-  final FetchInitializationData fetchInitializationData;
-  final GetAppConnection getAppConnection;
-  final GetAuthenticationData getAuthenticationData;
-  final Logout logout;
   InitializationBloc({
     @required this.fetchInitializationData,
     @required this.getAppConnection,
@@ -33,12 +29,18 @@ class InitializationBloc
         assert(logout != null),
         super(InitializationInitial());
 
+  final FetchInitializationData fetchInitializationData;
+  final GetAppConnection getAppConnection;
+  final GetAuthenticationData getAuthenticationData;
+  final Logout logout;
+
   @override
   Stream<InitializationState> mapEventToState(
     InitializationEvent event,
   ) async* {
     if (event is StartFetchingInitializationData) {
-      yield InitializationInProgress();
+      yield InitializationInProgress(
+          initializationData: state.initializationData);
 
       final appConnectionEither = await getAppConnection(NoParams());
 
@@ -61,7 +63,7 @@ class InitializationBloc
           yield* initializationEither.fold((failure) async* {
             yield _mapFailureToErrorState(failure);
           }, (initializationData) async* {
-            yield InitializationSuccess(initializationData);
+            yield InitializationSuccess(initializationData: initializationData);
           });
         });
       });
@@ -75,27 +77,29 @@ class InitializationBloc
       });
     }
   }
-}
 
-InitializationState _mapFailureToErrorState(Failure failure) {
-  switch (failure.runtimeType) {
-    case NetworkFailure:
-      return InitializationRecoverableError(
-          messageKey: NETWORK_FAILURE_MESSAGE_KEY);
-    case ServerFailure:
-      return InitializationRecoverableError(
-          messageKey: SERVER_FAILURE_MESSAGE_KEY);
-    case CacheFailure:
-      return InitializationUnrecoverableError(
-          messageKey: CACHE_FAILURE_MESSAGE_KEY);
-    case LoginFailure:
-      return InitializationUnrecoverableError(
-          messageKey: LOGIN_FAILURE_MESSAGE_KEY);
-    case AuthenticationFailure:
-      return InitializationUnrecoverableError(
-          messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY);
-    default:
-      return InitializationUnrecoverableError(
-          messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY);
+  InitializationState _mapFailureToErrorState(Failure failure) {
+    switch (failure.runtimeType) {
+      case NetworkFailure:
+        return InitializationRecoverableError(
+            initializationData: state.initializationData,
+            messageKey: NETWORK_FAILURE_MESSAGE_KEY);
+      case ServerFailure:
+        return InitializationRecoverableError(
+            initializationData: state.initializationData,
+            messageKey: SERVER_FAILURE_MESSAGE_KEY);
+      case CacheFailure:
+        return InitializationUnrecoverableError(
+            messageKey: CACHE_FAILURE_MESSAGE_KEY);
+      case LoginFailure:
+        return InitializationUnrecoverableError(
+            messageKey: LOGIN_FAILURE_MESSAGE_KEY);
+      case AuthenticationFailure:
+        return InitializationUnrecoverableError(
+            messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY);
+      default:
+        return InitializationUnrecoverableError(
+            messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY);
+    }
   }
 }

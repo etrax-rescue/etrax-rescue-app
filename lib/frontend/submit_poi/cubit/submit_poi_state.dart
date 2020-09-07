@@ -19,13 +19,11 @@ class SubmitPoiCaptureFailure extends SubmitPoiState {}
 
 class SubmitPoiError extends SubmitPoiState {
   SubmitPoiError({
-    @required this.imagePath,
-    @required this.currentLocation,
+    @required String imagePath,
+    @required LocationData currentLocation,
     @required this.messageKey,
-  }) : super();
+  }) : super(imagePath: imagePath, currentLocation: currentLocation);
 
-  final String imagePath;
-  final LocationData currentLocation;
   final String messageKey;
 
   @override
@@ -40,13 +38,11 @@ class SubmitPoiReady extends SubmitPoiState {
 
 class SubmitPoiUploading extends SubmitPoiState {
   SubmitPoiUploading(
-      {@required this.imagePath,
-      @required this.currentLocation,
+      {@required String imagePath,
+      @required LocationData currentLocation,
       @required this.progress})
       : super(imagePath: imagePath, currentLocation: currentLocation);
 
-  final String imagePath;
-  final LocationData currentLocation;
   final double progress;
 
   @override

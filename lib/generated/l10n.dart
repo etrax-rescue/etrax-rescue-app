@@ -783,6 +783,16 @@ class S {
     );
   }
 
+  /// `Map data`
+  String get MAP_DATA {
+    return Intl.message(
+      'Map data',
+      name: 'MAP_DATA',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Datetime`
   String get DATETIME {
     return Intl.message(

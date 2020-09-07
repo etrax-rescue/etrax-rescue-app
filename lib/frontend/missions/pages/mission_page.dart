@@ -44,10 +44,7 @@ class MissionPage extends StatelessWidget implements AutoRouteWrapper {
           }
         },
         child: Background(
-          child: Container(
-            alignment: Alignment.center,
-            child: MissionList(),
-          ),
+          child: MissionList(),
         ),
       ),
     );

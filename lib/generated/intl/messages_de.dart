@@ -69,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Anmelden"),
     "LOGOUT" : MessageLookupByLibrary.simpleMessage("Abmelden"),
     "LONGITUDE" : MessageLookupByLibrary.simpleMessage("Longitude"),
+    "MAP_DATA" : MessageLookupByLibrary.simpleMessage("Kartenmaterial"),
     "MISSION" : MessageLookupByLibrary.simpleMessage("Einsatz"),
     "MISSIONS" : MessageLookupByLibrary.simpleMessage("Einsätze"),
     "MISSION_LOCATION" : MessageLookupByLibrary.simpleMessage("Einsatzort"),

@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../generated/l10n.dart';
 import '../bloc/home_bloc.dart';
@@ -21,10 +23,10 @@ class _MapScreenState extends State<MapScreen> {
   bool centerButtonVisible = true;
   StreamSubscription<MapPosition> _streamSubscription;
   List<Marker> _markers = [];
+  bool initiallyCentered = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mapController = MapController();
   }
@@ -58,6 +60,11 @@ class _MapScreenState extends State<MapScreen> {
         }
 
         if (_mapController.ready) {
+          if (!initiallyCentered && state.missionState != null) {
+            _mapController.move(centerPosition, _mapController.zoom);
+            initiallyCentered = true;
+            centerButtonVisible = false;
+          }
           if (_mapController.center != null) {
             _streamSubscription?.cancel();
             _streamSubscription = _mapController.position.listen((position) {
@@ -98,7 +105,7 @@ class _MapScreenState extends State<MapScreen> {
               key: _key,
               options: MapOptions(
                 center: centerPosition,
-                zoom: 12.0,
+                zoom: 14.0,
               ),
               mapController: _mapController,
               layers: [
@@ -155,6 +162,33 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                color: Color.fromARGB(200, 255, 255, 255),
+                child: Padding(
+                  padding: EdgeInsets.all(2),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${S.of(context).MAP_DATA} © ',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        TextSpan(
+                          text: 'opentopomap.org',
+                          style: TextStyle(color: Colors.blue),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launch('https://opentopomap.org/credits');
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         );
       },

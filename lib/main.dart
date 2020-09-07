@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl_standalone.dart';
 
 import 'generated/l10n.dart';
 import 'injection_container.dart' as di;
@@ -9,6 +10,7 @@ import 'routes/router.gr.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  await findSystemLocale();
   WidgetsFlutterBinding.ensureInitialized();
   runApp(EtraxApp());
 }

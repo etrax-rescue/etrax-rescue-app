@@ -91,6 +91,7 @@
     "SENT": "Sent",
 
     "CENTER": "Center",
+    "MAP_DATA": "Map data",
     
     "DATETIME": "Datetime",
     "LAST_UPDATE": "Last Update",
