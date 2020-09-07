@@ -35,6 +35,10 @@ class RemoteMissionDetailsDataSourceImpl
       throw ServerException();
     }
 
+    if (response.statusCode == 401) {
+      throw AuthenticationException();
+    }
+
     if (response.body == '' || response.statusCode != 200) {
       throw ServerException();
     }

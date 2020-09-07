@@ -41,7 +41,6 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
       try {
         collection = await remoteDetailsDataSource.fetchMissionDetails(
             appConnection, authenticationData);
-        return Right(collection);
       } on ServerException {
         failed = true;
       } on TimeoutException {
@@ -49,6 +48,7 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
       } on SocketException {
         failed = true;
       }
+
       if (failed == true) {
         try {
           collection =

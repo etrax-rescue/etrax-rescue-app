@@ -37,7 +37,7 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
 
     final response = await request.timeout(const Duration(seconds: 2));
 
-    if (response.statusCode == 403) {
+    if (response.statusCode == 401) {
       throw AuthenticationException();
     }
 

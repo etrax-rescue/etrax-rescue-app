@@ -1,13 +1,18 @@
+import 'dart:async';
+
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/types/poi.dart';
-import 'package:etrax_rescue_app/backend/types/usecase.dart';
-import 'package:etrax_rescue_app/backend/usecases/capture_poi.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_authentication_data.dart';
-import 'package:etrax_rescue_app/backend/usecases/send_poi.dart';
 import 'package:flutter/material.dart';
+
+import '../../../backend/types/poi.dart';
+import '../../../backend/types/usecase.dart';
+import '../../../backend/usecases/capture_poi.dart';
+import '../../../backend/usecases/get_app_connection.dart';
+import '../../../backend/usecases/get_authentication_data.dart';
+import '../../../backend/usecases/send_poi.dart';
+import '../../../core/error/failures.dart';
+import '../../util/translate_error_messages.dart';
 
 part 'submit_poi_state.dart';
 
@@ -21,29 +26,28 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
         assert(getAuthenticationData != null),
         assert(capturePoi != null),
         assert(sendPoi != null),
-        super(SubmitPoiState.initial());
+        super(SubmitPoiInitial());
 
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final CapturePoi capturePoi;
   final SendPoi sendPoi;
 
+  StreamSubscription<double> _streamSubscription;
+
   void capture() async {
-    emit(state.copyWith(status: SubmitPoiStatus.captureInProgress));
+    emit(SubmitPoiLoading());
     final capturePoiEither = await capturePoi(NoParams());
 
     await capturePoiEither.fold((failure) async {
-      emit(state.copyWith(status: SubmitPoiStatus.captureFailure));
+      emit(SubmitPoiCaptureFailure());
     }, (poi) async {
-      emit(state.copyWith(
-          status: SubmitPoiStatus.captureSuccess,
-          imagePath: poi.imagePath,
-          currentLocation: poi.locationData));
+      emit(SubmitPoiReady(
+          imagePath: poi.imagePath, currentLocation: poi.locationData));
     });
   }
 
   void submit(String description) async {
-    emit(state.copyWith(status: SubmitPoiStatus.submitInProgress));
     final getAppConnectionEither = await getAppConnection(NoParams());
 
     getAppConnectionEither.fold((failure) {
@@ -65,12 +69,65 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
             poi: poi));
 
         sendPoiEither.fold((failure) {
-          // TODO: handle failure
+          emit(SubmitPoiError(
+              imagePath: state.imagePath,
+              currentLocation: state.currentLocation,
+              messageKey: _mapFailureToMessage(failure)));
         }, (progressStream) async {
           // TODO: subscribe to stream
-          emit(state.copyWith(status: SubmitPoiStatus.submitSuccess));
+          await _streamSubscription?.cancel();
+          emit(SubmitPoiUploading(
+              imagePath: state.imagePath,
+              currentLocation: state.currentLocation,
+              progress: 0.0));
+          _streamSubscription = progressStream
+              .listen((double progress) => progressUpdate(progress),
+                  onError: (failure) {
+            if (failure is Failure) {
+              emit(SubmitPoiError(
+                  imagePath: state.imagePath,
+                  currentLocation: state.currentLocation,
+                  messageKey: _mapFailureToMessage(failure)));
+            } else {
+              emit(SubmitPoiError(
+                  imagePath: state.imagePath,
+                  currentLocation: state.currentLocation,
+                  messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
+            }
+          });
         });
       });
     });
+  }
+
+  void progressUpdate(progress) {
+    if (progress < 1.0) {
+      emit(SubmitPoiUploading(
+          imagePath: state.imagePath,
+          currentLocation: state.currentLocation,
+          progress: progress));
+    } else {
+      emit(SubmitPoiSuccess(
+          imagePath: state.imagePath, currentLocation: state.currentLocation));
+    }
+  }
+
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case NetworkFailure:
+        return NETWORK_FAILURE_MESSAGE_KEY;
+      case ServerFailure:
+        return SERVER_URL_FAILURE_MESSAGE_KEY;
+      case CacheFailure:
+        return CACHE_FAILURE_MESSAGE_KEY;
+      default:
+        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+    }
+  }
+
+  @override
+  Future<void> close() {
+    _streamSubscription?.cancel();
+    return super.close();
   }
 }

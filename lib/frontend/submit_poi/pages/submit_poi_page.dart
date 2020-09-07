@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:photo_view/photo_view.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
-import '../../widgets/circular_progress_indicator_icon.dart';
 import '../cubit/submit_poi_cubit.dart';
+import '../widgets/image_view.dart';
+import '../widgets/submit_poi_controls.dart';
+import '../widgets/success_overlay.dart';
+
+const Color ALPHA_COLOR = const Color.fromARGB(128, 0, 0, 0);
 
 class SubmitPoiPage extends StatefulWidget implements AutoRouteWrapper {
   SubmitPoiPage({Key key}) : super(key: key);
@@ -26,10 +29,6 @@ class SubmitPoiPage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _SubmitPoiPageState extends State<SubmitPoiPage> {
-  final _formKey = GlobalKey<FormState>();
-  final Color _alphaColor = const Color.fromARGB(128, 0, 0, 0);
-  String _description;
-
   @override
   void initState() {
     super.initState();
@@ -40,53 +39,33 @@ class _SubmitPoiPageState extends State<SubmitPoiPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SubmitPoiCubit, SubmitPoiState>(
-      listener: (context, state) {
-        if (state.status == SubmitPoiStatus.submitSuccess ||
-            state.status == SubmitPoiStatus.captureFailure) {
-          Navigator.of(context).pop();
-        }
-      },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: Text(S.of(context).SUBMIT_POI),
-          backgroundColor: _alphaColor,
-        ),
-        body: Stack(
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text(S.of(context).SUBMIT_POI),
+        backgroundColor: ALPHA_COLOR,
+      ),
+      body: BlocListener<SubmitPoiCubit, SubmitPoiState>(
+        listener: (context, state) {
+          if (state is SubmitPoiCaptureFailure) {
+            Navigator.of(context).pop();
+          } else if (state is SubmitPoiSuccess) {
+            delayedPop();
+          }
+        },
+        child: Stack(
           children: [
             Center(
               child: SingleChildScrollView(
                 child: BlocBuilder<SubmitPoiCubit, SubmitPoiState>(
                   builder: (context, state) {
-                    if (state.imagePath != '') {
+                    if (state is SubmitPoiReady ||
+                        state is SubmitPoiUploading ||
+                        state is SubmitPoiError ||
+                        state is SubmitPoiSuccess) {
                       final image = FileImage(File(state.imagePath));
-                      return Stack(
-                        children: <Widget>[
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(8),
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return FullScreenImagePreview(image: image);
-                                  },
-                                ),
-                              );
-                            },
-                            child: Hero(
-                              tag: 'preview',
-                              child: Image(image: image),
-                            ),
-                          ),
-                        ],
-                      );
+                      return ImageView(image: image);
                     } else {
                       return Center(
                         child: Padding(
@@ -99,80 +78,16 @@ class _SubmitPoiPageState extends State<SubmitPoiPage> {
                 ),
               ),
             ),
-            Align(
-              alignment: FractionalOffset.bottomLeft,
-              child: Container(
-                color: _alphaColor,
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: S.of(context).POI_DESCRIPTION,
-                        suffixIcon: BlocBuilder<SubmitPoiCubit, SubmitPoiState>(
-                          builder: (context, state) {
-                            if (state.status ==
-                                SubmitPoiStatus.submitInProgress) {
-                              return CircularProgressIndicatorIcon(size: 2);
-                            }
-                            return IconButton(
-                              onPressed: _submit,
-                              icon: Icon(Icons.send),
-                            );
-                          },
-                        ),
-                      ),
-                      onChanged: (val) {
-                        _description = val;
-                      },
-                      validator: (String val) {
-                        return val.length < 1
-                            ? S.of(context).FIELD_REQUIRED
-                            : null;
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            SubmitPoiControls(),
+            SuccessOverlay(),
           ],
         ),
       ),
     );
   }
 
-  void _submit() {
-    if (_formKey.currentState.validate()) {
-      print('POI submitted');
-      context.bloc<SubmitPoiCubit>().submit(_description);
-    }
-  }
-}
-
-class FullScreenImagePreview extends StatelessWidget {
-  final FileImage image;
-  const FullScreenImagePreview({Key key, @required this.image})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: PhotoView(
-            imageProvider: image,
-            heroAttributes: PhotoViewHeroAttributes(tag: 'preview'),
-          ),
-        ),
-      ),
-    );
+  void delayedPop() async {
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.of(context).pop();
   }
 }

@@ -25,6 +25,10 @@ class RemoteOrganizationsDataSourceImpl
 
     final response = await request.timeout(const Duration(seconds: 2));
 
+    if (response.statusCode == 401) {
+      throw AuthenticationException();
+    }
+
     if (response.body == '' || response.statusCode != 200) {
       throw ServerException();
     }

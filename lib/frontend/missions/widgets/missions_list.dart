@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/widgets/custom_material_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -137,7 +138,7 @@ class _MissionListState extends State<MissionList> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.list,
+                          CustomMaterialIcons.noList,
                           size: 72,
                           color: Colors.white,
                         ),

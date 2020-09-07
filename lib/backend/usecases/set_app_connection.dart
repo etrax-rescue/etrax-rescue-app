@@ -7,8 +7,9 @@ import '../repositories/app_connection_repository.dart';
 import '../types/usecase.dart';
 
 class SetAppConnection extends UseCase<None, AppConnectionParams> {
-  final AppConnectionRepository repository;
   SetAppConnection(this.repository);
+
+  final AppConnectionRepository repository;
 
   @override
   Future<Either<Failure, None>> call(AppConnectionParams param) async {

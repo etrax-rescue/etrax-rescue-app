@@ -763,6 +763,16 @@ class S {
     );
   }
 
+  /// `Sent`
+  String get SENT {
+    return Intl.message(
+      'Sent',
+      name: 'SENT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Center`
   String get CENTER {
     return Intl.message(

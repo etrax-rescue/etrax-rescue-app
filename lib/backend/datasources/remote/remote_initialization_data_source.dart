@@ -27,7 +27,7 @@ class RemoteInitializationDataSourceImpl
 
     final response = await request.timeout(const Duration(seconds: 2));
 
-    if (response.statusCode == 403) {
+    if (response.statusCode == 401) {
       throw AuthenticationException();
     }
 
@@ -36,16 +36,7 @@ class RemoteInitializationDataSourceImpl
     }
     final body = json.decode(response.body);
 
-    //AppConfiguration appConfiguration;
-    //UserRoleCollection userRoleCollection;
-    //UserStateCollection userStateCollection;
-    //MissionCollection missionCollection;
-
     try {
-      //appConfiguration = AppConfiguration.fromJson(body['appConfiguration']);
-      //userRoleCollection = UserRoleCollection.fromJson(body);
-      //userStateCollection = UserStateCollection.fromJson(body);
-      //missionCollection = MissionCollection.fromJson(body);
       final initializationData = InitializationData.fromJson(body);
       return initializationData;
     } on NoSuchMethodError {
@@ -53,11 +44,5 @@ class RemoteInitializationDataSourceImpl
     } on FormatException {
       throw ServerException();
     }
-
-    //return InitializationData(
-    //    appConfiguration: appConfiguration,
-    //    missionCollection: missionCollection,
-    //    userStateCollection: userStateCollection,
-    //    userRoleCollection: userRoleCollection);
   }
 }

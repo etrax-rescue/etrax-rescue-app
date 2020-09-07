@@ -78,7 +78,7 @@ class InitializationRepositoryImpl implements InitializationRepository {
     } on AuthenticationException {
       return Left(AuthenticationFailure());
     } on HttpException {
-      return Left(AuthenticationFailure());
+      return Left(ServerFailure());
     } on Exception {
       return Left(UnknownFailure());
     }

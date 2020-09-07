@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "RETRIEVING_SETTINGS_DONE" : MessageLookupByLibrary.simpleMessage("App settings loaded."),
     "RETRIEVING_SETTINGS_ERROR" : MessageLookupByLibrary.simpleMessage("Error while loading app settings"),
     "RETRY" : MessageLookupByLibrary.simpleMessage("Retry"),
+    "SENT" : MessageLookupByLibrary.simpleMessage("Sent"),
     "SERVER_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("The server is not reachable at the moment."),
     "SERVER_URL_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Either the provided URI doesn\'t point to a valid eTrax|rescue Server,\n or the server is not reachable at the moment."),
     "SERVICES_DISABLED" : MessageLookupByLibrary.simpleMessage("Location services are disabled"),

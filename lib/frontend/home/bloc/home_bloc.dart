@@ -161,6 +161,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       yield* getMissionDetailsEither.fold((failure) async* {
         // TODO: handle failure
+        print('failed to load details');
+        print(failure);
       }, (missionDetailCollection) async* {
         yield state.copyWith(
             status: HomeStatus.ready,

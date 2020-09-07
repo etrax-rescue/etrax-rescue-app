@@ -28,6 +28,7 @@ class MissionDetailText extends MissionDetail {
   @override
   Map<String, String> toJson() {
     return {
+      'type': 'text',
       'title': this.title,
       'body': this.body,
     };
@@ -50,6 +51,7 @@ class MissionDetailImage extends MissionDetail {
   @override
   Map<String, String> toJson() {
     return {
+      'type': 'image',
       'title': this.title,
       'uid': this.uid,
     };
@@ -80,7 +82,7 @@ class MissionDetailCollection extends Equatable {
   }
 
   List<Map<String, String>> toJson() {
-    final jsonList = List<Map<String, dynamic>>.from(details
+    final jsonList = List<Map<String, String>>.from(details
         .map((e) => e is MissionDetail ? e.toJson() : throw FormatException())
         .toList());
     return jsonList;
