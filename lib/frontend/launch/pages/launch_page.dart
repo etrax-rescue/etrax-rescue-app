@@ -27,11 +27,7 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
               ExtendedNavigator.of(context)
                   .popAndPush(Routes.appConnectionPage);
             } else if (state is LaunchLoginPage) {
-              ExtendedNavigator.of(context).popAndPush(Routes.loginPage,
-                  arguments: LoginPageArguments(
-                      organizations: state.organizations,
-                      username: state.username,
-                      organizationID: state.organizationID));
+              ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
             } else if (state is LaunchHomePage) {
               ExtendedNavigator.of(context).popAndPush(Routes.homePage,
                   arguments:

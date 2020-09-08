@@ -12,7 +12,7 @@ import '../bloc/home_bloc.dart';
 import '../widgets/details_screen.dart';
 import '../widgets/gps_screen.dart';
 import '../widgets/map_screen.dart';
-import '../widgets/popup_menu.dart';
+import '../../widgets/popup_menu.dart';
 
 class HomePage extends StatefulWidget implements AutoRouteWrapper {
   final UserState state;
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           actions: <Widget>[
-            HomePopupMenu(),
+            PopupMenu(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

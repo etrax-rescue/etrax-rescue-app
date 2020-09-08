@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../../generated/l10n.dart';
+import '../../generated/l10n.dart';
 
 enum PopupChoices {
-  settings,
   about,
 }
 
-class HomePopupMenu extends StatelessWidget {
-  const HomePopupMenu({Key key}) : super(key: key);
+class PopupMenu extends StatelessWidget {
+  const PopupMenu({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
       onSelected: (value) {
         switch (value) {
-          case PopupChoices.settings:
-            print('opening settings...');
-            break;
           case PopupChoices.about:
             showAboutDialog(
               context: context,
@@ -31,10 +27,6 @@ class HomePopupMenu extends StatelessWidget {
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<PopupChoices>>[
-        /*PopupMenuItem<PopupChoices>(
-          value: PopupChoices.settings,
-          child: Text(S.of(context).SETTINGS),
-        ),*/
         PopupMenuItem<PopupChoices>(
           value: PopupChoices.about,
           child: Text(S.of(context).ABOUT),

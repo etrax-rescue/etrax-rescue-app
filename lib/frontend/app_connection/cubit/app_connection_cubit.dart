@@ -43,6 +43,7 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
           status: AppConnectionStatus.error,
           messageKey: _mapFailureToMessage(failure)));
     }, (connectionString) async {
+      print(connectionString);
       emit(state.copyWith(
         status: AppConnectionStatus.ready,
         connectionString: connectionString,

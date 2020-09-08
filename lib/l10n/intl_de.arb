@@ -106,7 +106,7 @@
     "SERVER_URL_FAILURE_MESSAGE": "Der angegebene URL zeigt zu keinem eTrax|rescue Server, bzw. dieser ist derzeit nicht erreichbar.",
     "SERVER_FAILURE_MESSAGE": "Der Server ist derzeit nicht erreichbar.",
     "CACHE_FAILURE_MESSAGE": "Beim Speichern des Links ist ein Fehler aufgetreten.",
-    "INVALID_INPUT_FAILURE_MESSAGE": "Der eingegebene URL entspricht nicht dem erwarteten Format.\n Beispiel für das richtige Format: https://app.etrax.at",
-    "LOGIN_FAILURE_MESSAGE": "Der eingegebene Username oder das Passwort ist falsch",
+    "INVALID_INPUT_FAILURE_MESSAGE": "Der eingegebene URL entspricht nicht dem erwarteten Format.\nBeispiel für das richtige Format: https://app.etrax.at",
+    "LOGIN_FAILURE_MESSAGE": "Der eingegebene Username oder das Passwort sind falsch",
     "AUTHENTICATION_FAILURE_MESSAGE": "Die Zugriffsrechte auf die Ressourcen am Server sind abgelaufen. Bitte erneut anmelden."
 }

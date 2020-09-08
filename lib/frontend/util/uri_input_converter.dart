@@ -17,6 +17,12 @@ class UriInputConverter {
       return Left(InvalidInputFailure());
     }
 
+    print(uri.host);
+
+    if (uri.host == '' || uri.host == null) {
+      return Left(InvalidInputFailure());
+    }
+
     if (Uri.encodeFull(uri.authority) != uri.authority) {
       return Left(InvalidInputFailure());
     }

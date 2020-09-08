@@ -62,7 +62,6 @@ import 'backend/usecases/set_selected_user_state.dart';
 import 'backend/usecases/start_location_updates.dart';
 import 'backend/usecases/stop_location_updates.dart';
 import 'core/network/network_info.dart';
-import 'frontend/app_connection/bloc/app_connection_bloc.dart';
 import 'frontend/app_connection/cubit/app_connection_cubit.dart';
 import 'frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'frontend/confirmation/bloc/confirmation_bloc.dart';
@@ -128,11 +127,6 @@ Future<void> init() async {
 
   //! Features - App Connection
   // BLoC
-  sl.registerFactory<AppConnectionBloc>(() => AppConnectionBloc(
-        inputConverter: sl(),
-        setAppConnection: sl(),
-      ));
-
   sl.registerFactory<AppConnectionCubit>(() => AppConnectionCubit(
         inputConverter: sl(),
         setAppConnection: sl(),
@@ -168,6 +162,7 @@ Future<void> init() async {
         getAppConnection: sl(),
         getOrganizations: sl(),
         deleteAppConnection: sl(),
+        getAuthenticationData: sl(),
       ));
 
   // Use Cases

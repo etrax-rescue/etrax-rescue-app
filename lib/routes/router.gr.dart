@@ -10,7 +10,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../backend/types/missions.dart';
-import '../backend/types/organizations.dart';
 import '../backend/types/user_roles.dart';
 import '../backend/types/user_states.dart';
 import '../frontend/app_connection/pages/app_connection_page.dart';
@@ -70,20 +69,18 @@ class Router extends RouterBase {
       );
     },
     AppConnectionPage: (data) {
+      final args = data.getArgs<AppConnectionPageArguments>(
+        orElse: () => AppConnectionPageArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const AppConnectionPage().wrappedRoute(context),
+        builder: (context) =>
+            AppConnectionPage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
     LoginPage: (data) {
-      final args = data.getArgs<LoginPageArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LoginPage(
-          key: args.key,
-          organizations: args.organizations,
-          username: args.username,
-          organizationID: args.organizationID,
-        ).wrappedRoute(context),
+        builder: (context) => LoginPage().wrappedRoute(context),
         settings: data,
       );
     },
@@ -152,17 +149,10 @@ class Router extends RouterBase {
 /// Arguments holder classes
 /// *************************************************************************
 
-/// LoginPage arguments holder class
-class LoginPageArguments {
+/// AppConnectionPage arguments holder class
+class AppConnectionPageArguments {
   final Key key;
-  final OrganizationCollection organizations;
-  final String username;
-  final String organizationID;
-  LoginPageArguments(
-      {this.key,
-      @required this.organizations,
-      @required this.username,
-      @required this.organizationID});
+  AppConnectionPageArguments({this.key});
 }
 
 /// ConfirmationPage arguments holder class

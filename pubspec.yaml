@@ -79,6 +79,7 @@ flutter:
       fonts:
         - asset: fonts/custom_material_icons.ttf
   assets:
+    - assets/images/etrax_rescue_logo.png
     - assets/images/background.jpg
     - assets/images/etrax_rescue_icon.png
     - assets/images/leitstelle.png
