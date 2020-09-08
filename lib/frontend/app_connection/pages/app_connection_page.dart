@@ -37,7 +37,7 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
           _controller.text = _connectionString;
 
           if (state.status == AppConnectionStatus.success) {
-            ExtendedNavigator.root.popAndPush(Routes.loginPage);
+            ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
           }
         },
         child: CustomScrollView(
@@ -68,10 +68,6 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                   padding: EdgeInsets.all(16),
                   child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
                     builder: (context, state) {
-                      if (state.status == AppConnectionStatus.loading ||
-                          state.status == AppConnectionStatus.success) {
-                        return CircularProgressIndicator();
-                      }
                       return Form(
                         key: _formKey,
                         child: Column(
@@ -80,19 +76,6 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                           children: [
                             Text(S.of(context).APP_CONNECTION_HEADING,
                                 style: Theme.of(context).textTheme.headline5),
-                            BlocBuilder<AppConnectionCubit, AppConnectionState>(
-                                builder: (context, state) {
-                              if (state.status == AppConnectionStatus.error) {
-                                return Text(
-                                  translateErrorMessage(
-                                      context, state.messageKey),
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: Theme.of(context).accentColor),
-                                );
-                              }
-                              return Container();
-                            }),
                             TextFormField(
                               controller: _controller,
                               keyboardType: TextInputType.url,
@@ -118,6 +101,26 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                                   ? S.of(context).FIELD_REQUIRED
                                   : null,
                             ),
+                            SizedBox(height: 16),
+                            BlocBuilder<AppConnectionCubit, AppConnectionState>(
+                              builder: (context, state) {
+                                print(state.messageKey);
+                                return AnimatedOpacity(
+                                  opacity:
+                                      state.status == AppConnectionStatus.error
+                                          ? 1.0
+                                          : 0.0,
+                                  duration: Duration(milliseconds: 250),
+                                  child: Text(
+                                    translateErrorMessage(
+                                        context, state.messageKey),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Theme.of(context).accentColor),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       );
@@ -128,19 +131,44 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
             ),
             SliverFillRemaining(
               hasScrollBody: false,
-              child: WidthLimiter(
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      textColor: Colors.white,
-                      onPressed: submit,
-                      child: Text(S.of(context).CONNECT),
-                    ),
-                  ),
-                ),
+              child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
+                builder: (context, state) {
+                  return Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      IgnorePointer(
+                        ignoring: state.status == AppConnectionStatus.loading,
+                        child: AnimatedOpacity(
+                          opacity: state.status == AppConnectionStatus.loading
+                              ? 0.0
+                              : 1.0,
+                          duration: Duration(milliseconds: 250),
+                          child: WidthLimiter(
+                            child: Container(
+                              color: Theme.of(context).backgroundColor,
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: MaterialButton(
+                                  color: Theme.of(context).accentColor,
+                                  textColor: Colors.white,
+                                  onPressed: submit,
+                                  child: Text(S.of(context).CONNECT),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],

@@ -39,12 +39,6 @@ class _LoginPageState extends State<LoginPage> {
             ExtendedNavigator.of(context).popAndPush(Routes.missionPage);
           } else if (state is OpenAppConnectionPage) {
             ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
-          } else if (state is LoginError) {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(
-                translateErrorMessage(context, state.messageKey),
-              ),
-            ));
           }
         },
         child: CustomScrollView(
@@ -77,8 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                     builder: (context, state) {
                       if (state is LoginInitial ||
                           state is LoginSuccess ||
-                          state is OpenAppConnectionPage ||
-                          state is LoginInProgress) {
+                          state is OpenAppConnectionPage) {
                         return CircularProgressIndicator();
                       } else if (state is LoginInitializationError) {
                         return Column(
@@ -116,19 +109,6 @@ class _LoginPageState extends State<LoginPage> {
                                 Text(S.of(context).LOGIN_HEADING,
                                     style:
                                         Theme.of(context).textTheme.headline5),
-                                BlocBuilder<LoginBloc, LoginState>(
-                                    builder: (context, state) {
-                                  if (state is LoginError) {
-                                    return Text(
-                                      translateErrorMessage(
-                                          context, state.messageKey),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(context).accentColor),
-                                    );
-                                  }
-                                  return Container();
-                                }),
                                 Visibility(
                                   child: DropdownButtonFormField<String>(
                                     isExpanded: true,
@@ -179,30 +159,20 @@ class _LoginPageState extends State<LoginPage> {
                                       : null,
                                   obscureText: true,
                                 ),
-                                /*
                                 SizedBox(height: 16),
-                                
-                                AnimatedCrossFade(
-                                  firstChild: ButtonTheme(
-                                    minWidth: double.infinity,
-                                    child: RaisedButton(
-                                      color: Theme.of(context).accentColor,
-                                      textTheme: ButtonTextTheme.primary,
-                                      onPressed: submit,
-                                      child: Text(S.of(context).LOGIN),
-                                    ),
-                                  ),
-                                  secondChild: Center(
-                                    child: Padding(
-                                        padding: EdgeInsets.all(4),
-                                        child: CircularProgressIndicator()),
-                                  ),
-                                  crossFadeState: state is LoginInProgress
-                                      ? CrossFadeState.showSecond
-                                      : CrossFadeState.showFirst,
-                                  duration: const Duration(milliseconds: 250),
-                                ),
-                                */
+                                BlocBuilder<LoginBloc, LoginState>(
+                                    builder: (context, state) {
+                                  if (state is LoginError) {
+                                    return Text(
+                                      translateErrorMessage(
+                                          context, state.messageKey),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context).accentColor),
+                                    );
+                                  }
+                                  return Container();
+                                }),
                               ],
                             ),
                           ),
@@ -215,32 +185,60 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SliverFillRemaining(
               hasScrollBody: false,
-              child: WidthLimiter(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MaterialButton(
-                            onPressed: () {
-                              context
-                                  .bloc<LoginBloc>()
-                                  .add(RequestAppConnectionUpdate());
-                            },
-                            child: Text(S.of(context).RECONNECT)),
-                        MaterialButton(
-                          color: Theme.of(context).accentColor,
-                          textColor: Colors.white,
-                          onPressed: submit,
-                          child: Text(S.of(context).LOGIN),
+              child: BlocBuilder<LoginBloc, LoginState>(
+                builder: (context, state) {
+                  if (state is LoginInitial) {
+                    return Container();
+                  }
+                  return Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
+                      IgnorePointer(
+                        ignoring: state is LoginInProgress,
+                        child: AnimatedOpacity(
+                          opacity: state is LoginInProgress ? 0.0 : 1.0,
+                          duration: Duration(milliseconds: 250),
+                          child: Container(
+                            color: Theme.of(context).backgroundColor,
+                            child: WidthLimiter(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      MaterialButton(
+                                          onPressed: () {
+                                            context.bloc<LoginBloc>().add(
+                                                RequestAppConnectionUpdate());
+                                          },
+                                          child: Text(S.of(context).RECONNECT)),
+                                      MaterialButton(
+                                        color: Theme.of(context).accentColor,
+                                        textColor: Colors.white,
+                                        onPressed: submit,
+                                        child: Text(S.of(context).LOGIN),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],

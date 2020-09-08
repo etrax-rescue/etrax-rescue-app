@@ -233,6 +233,16 @@ class S {
     );
   }
 
+  /// `Active Missions`
+  String get ACTIVE_MISSIONS {
+    return Intl.message(
+      'Active Missions',
+      name: 'ACTIVE_MISSIONS',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mission`
   String get MISSION {
     return Intl.message(

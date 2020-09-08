@@ -79,27 +79,35 @@ class Router extends RouterBase {
       );
     },
     LoginPage: (data) {
+      final args = data.getArgs<LoginPageArguments>(
+        orElse: () => LoginPageArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => LoginPage().wrappedRoute(context),
+        builder: (context) => LoginPage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
     MissionPage: (data) {
+      final args = data.getArgs<MissionPageArguments>(
+        orElse: () => MissionPageArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const MissionPage().wrappedRoute(context),
+        builder: (context) => MissionPage(key: args.key).wrappedRoute(context),
         settings: data,
       );
     },
     ConfirmationPage: (data) {
       final args = data.getArgs<ConfirmationPageArguments>(nullOk: false);
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => ConfirmationPage(
-          key: args.key,
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            ConfirmationPage(
           mission: args.mission,
           roles: args.roles,
           states: args.states,
         ).wrappedRoute(context),
         settings: data,
+        transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+        transitionDuration: const Duration(milliseconds: 300),
       );
     },
     CheckRequirementsPage: (data) {
@@ -155,17 +163,25 @@ class AppConnectionPageArguments {
   AppConnectionPageArguments({this.key});
 }
 
+/// LoginPage arguments holder class
+class LoginPageArguments {
+  final Key key;
+  LoginPageArguments({this.key});
+}
+
+/// MissionPage arguments holder class
+class MissionPageArguments {
+  final Key key;
+  MissionPageArguments({this.key});
+}
+
 /// ConfirmationPage arguments holder class
 class ConfirmationPageArguments {
-  final Key key;
   final Mission mission;
   final UserRoleCollection roles;
   final UserStateCollection states;
   ConfirmationPageArguments(
-      {this.key,
-      @required this.mission,
-      @required this.roles,
-      @required this.states});
+      {@required this.mission, @required this.roles, @required this.states});
 }
 
 /// CheckRequirementsPage arguments holder class

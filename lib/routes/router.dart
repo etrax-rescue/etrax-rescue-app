@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route_annotations.dart';
+import 'package:auto_route/auto_route.dart';
 
 import '../frontend/app_connection/pages/app_connection_page.dart';
 import '../frontend/confirmation/pages/confirmation_page.dart';
@@ -16,7 +17,10 @@ import '../frontend/state_update/pages/state_update_page.dart';
     MaterialRoute(page: AppConnectionPage),
     MaterialRoute(page: LoginPage),
     MaterialRoute(page: MissionPage),
-    MaterialRoute(page: ConfirmationPage),
+    CustomRoute(
+        transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+        durationInMilliseconds: 300,
+        page: ConfirmationPage),
     MaterialRoute(page: CheckRequirementsPage),
     MaterialRoute(page: HomePage),
     MaterialRoute(page: SubmitPoiPage),

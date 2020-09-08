@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
-import '../../widgets/background.dart';
 import '../bloc/launch_bloc.dart';
 
 class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
@@ -19,25 +18,21 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Background(
-        child: BlocConsumer<LaunchBloc, LaunchState>(
-          listener: (context, state) {
-            print(state);
-            if (state is LaunchAppConnectionPage) {
-              ExtendedNavigator.of(context)
-                  .popAndPush(Routes.appConnectionPage);
-            } else if (state is LaunchLoginPage) {
-              ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
-            } else if (state is LaunchHomePage) {
-              ExtendedNavigator.of(context).popAndPush(Routes.homePage,
-                  arguments:
-                      HomePageArguments(state: state.missionState.state));
-            }
-          },
-          builder: (context, state) {
-            return Center(child: CircularProgressIndicator());
-          },
-        ),
+      body: BlocConsumer<LaunchBloc, LaunchState>(
+        listener: (context, state) {
+          print(state);
+          if (state is LaunchAppConnectionPage) {
+            ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
+          } else if (state is LaunchLoginPage) {
+            ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
+          } else if (state is LaunchHomePage) {
+            ExtendedNavigator.of(context).popAndPush(Routes.homePage,
+                arguments: HomePageArguments(state: state.missionState.state));
+          }
+        },
+        builder: (context, state) {
+          return Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

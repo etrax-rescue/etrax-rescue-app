@@ -22,6 +22,8 @@ class LocalBarcodeDataSourceImpl implements LocalBarcodeDataSource {
 
     if (result.type == ResultType.Barcode) {
       return result.rawContent;
+    } else if (result.type == ResultType.Cancelled) {
+      return '';
     } else {
       throw PlatformException(code: result.rawContent);
     }

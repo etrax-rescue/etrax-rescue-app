@@ -1,18 +1,21 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
-import '../../../routes/router.gr.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
-import '../../widgets/background.dart';
-import '../bloc/missions_bloc.dart';
+import '../../../routes/router.gr.dart';
+import '../../util/translate_error_messages.dart';
 import '../../widgets/custom_material_icons.dart';
-import '../widgets/missions_list.dart';
+import '../../widgets/popup_menu.dart';
+import '../bloc/missions_bloc.dart';
 
-class MissionPage extends StatelessWidget implements AutoRouteWrapper {
-  const MissionPage({Key key}) : super(key: key);
+class MissionPage extends StatefulWidget implements AutoRouteWrapper {
+  MissionPage({Key key}) : super(key: key);
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -23,12 +26,26 @@ class MissionPage extends StatelessWidget implements AutoRouteWrapper {
   }
 
   @override
+  _MissionPageState createState() => _MissionPageState();
+}
+
+class _MissionPageState extends State<MissionPage> {
+  Completer<void> _refreshCompleter;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCompleter = Completer<void>();
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      this._refreshIndicatorKey.currentState.show();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).MISSIONS),
-      ),
-      backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           BlocProvider.of<InitializationBloc>(context).add(LogoutEvent());
@@ -37,16 +54,168 @@ class MissionPage extends StatelessWidget implements AutoRouteWrapper {
         icon: Icon(CustomMaterialIcons.logout),
         backgroundColor: Theme.of(context).accentColor,
       ),
-      body: BlocListener<InitializationBloc, InitializationState>(
-        listener: (context, state) {
-          if (state is InitializationLogoutSuccess) {
-            ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
-          }
+      body: Builder(
+        builder: (context) {
+          return BlocListener<InitializationBloc, InitializationState>(
+            listener: (context, state) {
+              if (state is InitializationInitial ||
+                  state is InitializationInProgress) {
+                return;
+              }
+              if (state is InitializationLogoutSuccess) {
+                ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
+              }
+
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
+              if (state is InitializationRecoverableError) {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text(translateErrorMessage(context, state.messageKey)),
+                    duration: const Duration(days: 365),
+                    action: SnackBarAction(
+                      label: S.of(context).RETRY,
+                      onPressed: () {
+                        BlocProvider.of<InitializationBloc>(context)
+                            .add(StartFetchingInitializationData());
+                        Scaffold.of(context).hideCurrentSnackBar();
+                        _refreshIndicatorKey.currentState.show();
+                      },
+                    ),
+                  ),
+                );
+              } else if (state is InitializationUnrecoverableError) {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text(translateErrorMessage(context, state.messageKey)),
+                    duration: const Duration(days: 365),
+                  ),
+                );
+              }
+            },
+            child: RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: () async {
+                BlocProvider.of<InitializationBloc>(context)
+                    .add(StartFetchingInitializationData());
+                Scaffold.of(context).hideCurrentSnackBar();
+                return _refreshCompleter.future;
+              },
+              child: CustomScrollView(
+                physics: RangeMaintainingScrollPhysics()
+                    .applyTo(AlwaysScrollableScrollPhysics()),
+                slivers: [
+                  SliverAppBar(
+                    elevation: 0,
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    actions: <Widget>[
+                      PopupMenu(),
+                    ],
+                    expandedHeight: MediaQuery.of(context).size.height / 3,
+                    flexibleSpace: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Image(
+                          image:
+                              AssetImage('assets/images/etrax_rescue_logo.png'),
+                          width: 200,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(S.of(context).ACTIVE_MISSIONS,
+                          style: Theme.of(context).textTheme.headline5),
+                    ),
+                  ),
+                  MissionsList(),
+                ],
+              ),
+            ),
+          );
         },
-        child: Background(
-          child: MissionList(),
-        ),
       ),
+    );
+  }
+}
+
+class MissionsList extends StatelessWidget {
+  const MissionsList({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<InitializationBloc, InitializationState>(
+      builder: (context, state) {
+        if (state.initializationData != null) {
+          final initializationData = state.initializationData;
+          final missions = state.initializationData.missionCollection.missions;
+          if (missions.length > 0) {
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index == missions.length)
+                    return Divider(height: 1, color: Colors.grey[400]);
+                  return InkWell(
+                    onTap: () {
+                      ExtendedNavigator.of(context).push(
+                        '/confirmation-page',
+                        arguments: ConfirmationPageArguments(
+                          mission: missions[index],
+                          states: initializationData.userStateCollection,
+                          roles: initializationData.userRoleCollection,
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Divider(height: 1, color: Colors.grey[400]),
+                        ListTile(
+                          title: Text(initializationData
+                              .missionCollection.missions[index].name),
+                          subtitle: Text(
+                            DateFormat.yMd(Intl.systemLocale).format(
+                                initializationData
+                                    .missionCollection.missions[index].start),
+                          ),
+                          trailing: Icon(Icons.chevron_right),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                childCount: missions.length + 1,
+              ),
+            );
+          }
+        }
+        return SliverToBoxAdapter(
+          child: Container(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    CustomMaterialIcons.noList,
+                    size: 72,
+                    color: Theme.of(context).textTheme.bodyText2.color,
+                  ),
+                  Text(
+                    S.of(context).NO_MISSIONS,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

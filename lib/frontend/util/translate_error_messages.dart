@@ -12,6 +12,8 @@ const LOGIN_FAILURE_MESSAGE_KEY = 'LOGIN_FAILURE_MESSAGE';
 const AUTHENTICATION_FAILURE_MESSAGE_KEY = 'AUTHENTICATION_FAILURE_MESSAGE';
 
 String translateErrorMessage(BuildContext context, String key) {
+  key = key ?? '';
+
   switch (key) {
     case UNEXPECTED_FAILURE_MESSAGE_KEY:
       return S.of(context).UNEXPECTED_FAILURE_MESSAGE;
@@ -29,6 +31,8 @@ String translateErrorMessage(BuildContext context, String key) {
       return S.of(context).LOGIN_FAILURE_MESSAGE;
     case AUTHENTICATION_FAILURE_MESSAGE_KEY:
       return S.of(context).AUTHENTICATION_FAILURE_MESSAGE;
+    case '':
+      return '';
   }
   return S.of(context).UNEXPECTED_FAILURE_MESSAGE;
 }

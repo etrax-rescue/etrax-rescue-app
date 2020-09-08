@@ -22,6 +22,7 @@
     "AUTHENTICATION_SUCCESS": "Success!",
 
     "MISSIONS": "Missions",
+    "ACTIVE_MISSIONS": "Active Missions",
     "MISSION": "Mission",
     "MISSION_NAME": "Mission Name",
     "LOGOUT": "Logout",

@@ -22,6 +22,7 @@
     "AUTHENTICATION_SUCCESS": "Erfolg!",
 
     "MISSIONS": "Einsätze",
+    "ACTIVE_MISSIONS": "Aktive Einsätze",
     "MISSION": "Einsatz",
     "MISSION_NAME": "Einsatzbezeichnung",
     "LOGOUT": "Abmelden",
