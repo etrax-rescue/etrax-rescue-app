@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
               .applyTo(AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverAppBar(
+              automaticallyImplyLeading: false,
               elevation: 0,
               backgroundColor: Theme.of(context).backgroundColor,
               actions: <Widget>[

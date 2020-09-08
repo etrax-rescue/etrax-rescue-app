@@ -1,7 +1,7 @@
 name: etrax_rescue_app
 description: The official app of the eTrax|rescue project.
 
-version: 1.0.0+1
+version: 0.2.1+1
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -62,6 +62,8 @@ dependencies:
   # For caching images retrieved by the server
   cached_network_image: ^2.3.1
   flutter_cache_manager: ^1.4.1
+  # To retrieve the app version
+  package_info: ^0.4.3
 
 dev_dependencies:
   flutter_test:

@@ -45,6 +45,7 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
               .applyTo(AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverAppBar(
+              automaticallyImplyLeading: false,
               elevation: 0,
               backgroundColor: Theme.of(context).backgroundColor,
               expandedHeight: MediaQuery.of(context).size.height / 3,

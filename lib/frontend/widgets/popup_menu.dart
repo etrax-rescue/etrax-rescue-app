@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 import '../../generated/l10n.dart';
 
@@ -12,15 +13,16 @@ class PopupMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      onSelected: (value) {
+      onSelected: (value) async {
         switch (value) {
           case PopupChoices.about:
+            PackageInfo packageInfo = await PackageInfo.fromPlatform();
             showAboutDialog(
               context: context,
               applicationName: S.of(context).APP_NAME,
               applicationIcon:
                   Image.asset('assets/images/etrax_rescue_icon.png'),
-              applicationVersion: '0.2',
+              applicationVersion: packageInfo.version,
               applicationLegalese: 'Hi there!',
             );
             break;

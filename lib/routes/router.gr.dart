@@ -72,28 +72,36 @@ class Router extends RouterBase {
       final args = data.getArgs<AppConnectionPageArguments>(
         orElse: () => AppConnectionPageArguments(),
       );
-      return MaterialPageRoute<dynamic>(
-        builder: (context) =>
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
             AppConnectionPage(key: args.key).wrappedRoute(context),
         settings: data,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        transitionDuration: const Duration(milliseconds: 300),
       );
     },
     LoginPage: (data) {
       final args = data.getArgs<LoginPageArguments>(
         orElse: () => LoginPageArguments(),
       );
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => LoginPage(key: args.key).wrappedRoute(context),
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            LoginPage(key: args.key).wrappedRoute(context),
         settings: data,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        transitionDuration: const Duration(milliseconds: 300),
       );
     },
     MissionPage: (data) {
       final args = data.getArgs<MissionPageArguments>(
         orElse: () => MissionPageArguments(),
       );
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => MissionPage(key: args.key).wrappedRoute(context),
+      return PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            MissionPage(key: args.key).wrappedRoute(context),
         settings: data,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        transitionDuration: const Duration(milliseconds: 300),
       );
     },
     ConfirmationPage: (data) {

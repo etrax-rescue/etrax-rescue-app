@@ -14,9 +14,18 @@ import '../frontend/state_update/pages/state_update_page.dart';
 @MaterialAutoRouter(
   routes: <AutoRoute>[
     MaterialRoute(page: LaunchPage, initial: true),
-    MaterialRoute(page: AppConnectionPage),
-    MaterialRoute(page: LoginPage),
-    MaterialRoute(page: MissionPage),
+    CustomRoute(
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        durationInMilliseconds: 300,
+        page: AppConnectionPage),
+    CustomRoute(
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        durationInMilliseconds: 300,
+        page: LoginPage),
+    CustomRoute(
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        durationInMilliseconds: 300,
+        page: MissionPage),
     CustomRoute(
         transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
         durationInMilliseconds: 300,
