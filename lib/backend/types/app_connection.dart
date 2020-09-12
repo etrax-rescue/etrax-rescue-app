@@ -21,6 +21,7 @@ class AppConnection extends Equatable {
   }
 
   factory AppConnection.fromJson(Map<String, dynamic> json) {
+    if(json['host'] == null || json['basePath'] == null) throw FormatException();
     return AppConnection(host: json['host'], basePath: json['basePath']);
   }
 

@@ -58,9 +58,14 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
         appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
         headers: authenticationData.generateAuthHeader(),
         body: {'state_id': state.id.toString()});
-
-    final response = await request.timeout(const Duration(seconds: 2));
-
+    
+    http.Response response;
+    try {
+        response = await request.timeout(const Duration(seconds: 2));
+    } on Exception {
+        throw ServerException();
+    }
+        
     if (response.statusCode == 403) {
       throw AuthenticationException();
     }
@@ -78,8 +83,13 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
         headers: authenticationData.generateAuthHeader(),
         body: {'role_id': role.id.toString()});
 
-    final response = await request.timeout(const Duration(seconds: 2));
-    print(response.statusCode);
+    http.Response response;
+    try {
+        response = await request.timeout(const Duration(seconds: 2));
+    } on Exception {
+        throw ServerException();
+    }
+        
     if (response.statusCode == 403) {
       throw AuthenticationException();
     }

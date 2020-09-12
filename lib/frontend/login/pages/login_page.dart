@@ -140,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onChanged: (val) {
                                     _username = val;
                                   },
+                                  onSaved: (val) { _username = val; },
                                   validator: (val) => val.length < 1
                                       ? S.of(context).FIELD_REQUIRED
                                       : null,
@@ -155,6 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onChanged: (val) {
                                     _password = val;
                                   },
+                                  onSaved: (val) { _password = val; },
                                   validator: (val) => val.length < 1
                                       ? S.of(context).FIELD_REQUIRED
                                       : null,
@@ -251,6 +253,7 @@ class _LoginPageState extends State<LoginPage> {
   void submit() {
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
+      print('username: $_username , password: $_password');
       context.bloc<LoginBloc>().add(SubmitLogin(
           username: _username,
           password: _password,

@@ -43,6 +43,8 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
       return Right(cachedAppConnection);
     } on CacheException {
       return Left(CacheFailure());
+    } on FormatException {
+      return Left(CacheFailure());
     }
   }
 
