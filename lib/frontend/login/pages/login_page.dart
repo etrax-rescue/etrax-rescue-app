@@ -16,8 +16,13 @@ class LoginPage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-        create: (_) => sl<LoginBloc>()..add(InitializeLogin()), child: this);
+    return Theme(
+        data: ThemeData(
+          appBarTheme: AppBarTheme(brightness: Brightness.light),
+        ),
+        child: BlocProvider(
+            create: (_) => sl<LoginBloc>()..add(InitializeLogin()),
+            child: this));
   }
 
   @override
@@ -140,7 +145,9 @@ class _LoginPageState extends State<LoginPage> {
                                   onChanged: (val) {
                                     _username = val;
                                   },
-                                  onSaved: (val) { _username = val; },
+                                  onSaved: (val) {
+                                    _username = val;
+                                  },
                                   validator: (val) => val.length < 1
                                       ? S.of(context).FIELD_REQUIRED
                                       : null,
@@ -156,7 +163,9 @@ class _LoginPageState extends State<LoginPage> {
                                   onChanged: (val) {
                                     _password = val;
                                   },
-                                  onSaved: (val) { _password = val; },
+                                  onSaved: (val) {
+                                    _password = val;
+                                  },
                                   validator: (val) => val.length < 1
                                       ? S.of(context).FIELD_REQUIRED
                                       : null,

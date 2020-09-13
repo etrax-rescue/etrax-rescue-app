@@ -19,10 +19,14 @@ class MissionPage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-        create: (_) =>
-            sl<InitializationBloc>()..add(StartFetchingInitializationData()),
-        child: this);
+    return Theme(
+        data: ThemeData(
+          appBarTheme: AppBarTheme(brightness: Brightness.light),
+        ),
+        child: BlocProvider(
+            create: (_) => sl<InitializationBloc>()
+              ..add(StartFetchingInitializationData()),
+            child: this));
   }
 
   @override

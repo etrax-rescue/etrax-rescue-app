@@ -11,8 +11,12 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-        create: (_) => sl<LaunchBloc>()..add(Launch()), child: this);
+    return Theme(
+        data: ThemeData(
+          appBarTheme: AppBarTheme(brightness: Brightness.light),
+        ),
+        child: BlocProvider(
+            create: (_) => sl<LaunchBloc>()..add(Launch()), child: this));
   }
 
   @override
