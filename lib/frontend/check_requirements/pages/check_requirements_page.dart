@@ -101,6 +101,10 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
                           return AbsorbPointer(
                             absorbing: !enabled,
                             child: MaterialButton(
+                              color: enabled
+                                  ? Theme.of(context).accentColor
+                                  : Colors.grey,
+                              textColor: Colors.white,
                               onPressed: () {
                                 ExtendedNavigator.of(context)
                                     .pushAndRemoveUntil(
@@ -110,23 +114,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
                                       HomePageArguments(state: widget.state),
                                 );
                               },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    S.of(context).CONTINUE,
-                                    style: TextStyle(
-                                      color: enabled
-                                          ? Theme.of(context).accentColor
-                                          : Colors.grey,
-                                    ),
-                                  ),
-                                  Icon(Icons.chevron_right,
-                                      color: enabled
-                                          ? Theme.of(context).accentColor
-                                          : Colors.grey),
-                                ],
-                              ),
+                              child: Text(S.of(context).CONTINUE),
                             ),
                           );
                         },

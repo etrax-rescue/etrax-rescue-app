@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
-import 'package:etrax_rescue_app/frontend/widgets/custom_material_icons.dart';
-import 'package:etrax_rescue_app/frontend/widgets/popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../util/translate_error_messages.dart';
+import '../../widgets/custom_material_icons.dart';
+import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
 import '../cubit/app_connection_cubit.dart';
 

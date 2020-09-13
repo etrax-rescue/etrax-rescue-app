@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage>
       child: Scaffold(
         appBar: AppBar(
           title: Text(_title),
+          iconTheme: IconThemeData(color: Colors.white),
           bottom: PreferredSize(
             preferredSize: Size(
               double.infinity,

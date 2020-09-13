@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/widgets/width_limiter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +11,7 @@ import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../util/translate_error_messages.dart';
+import '../../widgets/width_limiter.dart';
 import '../bloc/confirmation_bloc.dart';
 
 class ConfirmationPage extends StatefulWidget implements AutoRouteWrapper {
@@ -138,14 +138,14 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               hasScrollBody: false,
               child: WidthLimiter(
                 child: Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
-                        builder: (context, state) {
-                          return AnimatedCrossFade(
-                            firstChild: ButtonTheme(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
+                      builder: (context, state) {
+                        return AnimatedCrossFade(
+                          firstChild: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: ButtonTheme(
                               minWidth: double.infinity,
                               child: MaterialButton(
                                 height: 48,
@@ -158,14 +158,18 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                                 color: Theme.of(context).accentColor,
                               ),
                             ),
-                            secondChild: SizedBox(),
-                            crossFadeState: state is ConfirmationInProgress
-                                ? CrossFadeState.showSecond
-                                : CrossFadeState.showFirst,
-                            duration: const Duration(milliseconds: 250),
-                          );
-                        },
-                      ),
+                          ),
+                          secondChild: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: CircularProgressIndicator(),
+                          ),
+                          crossFadeState: (state is ConfirmationInProgress ||
+                                  state is ConfirmationSuccess)
+                              ? CrossFadeState.showSecond
+                              : CrossFadeState.showFirst,
+                          duration: const Duration(milliseconds: 500),
+                        );
+                      },
                     ),
                   ),
                 ),
