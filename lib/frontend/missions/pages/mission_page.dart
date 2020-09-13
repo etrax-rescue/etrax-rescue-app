@@ -206,11 +206,12 @@ class MissionsList extends StatelessWidget {
                   Icon(
                     CustomMaterialIcons.noList,
                     size: 72,
-                    color: Theme.of(context).textTheme.bodyText2.color,
+                    color: Colors.grey,
                   ),
                   Text(
                     S.of(context).NO_MISSIONS,
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
