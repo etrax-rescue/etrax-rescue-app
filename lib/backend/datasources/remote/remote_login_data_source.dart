@@ -19,25 +19,19 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   @override
   Future<AuthenticationData> login(AppConnection appConnection,
       String organizationID, String username, String password) async {
-    final body = {
+    final request = client.post(
+        appConnection.generateUri(subPath: EtraxServerEndpoints.login),
+        body: {
           'organization_id': organizationID,
           'username': username,
           'password': password
-        };
-    final url = appConnection.generateUri(subPath: EtraxServerEndpoints.login);
-    final request = client.post(
-        url,
-	body: body);
-
-    print(body);
-    print(url);
+        });
     http.Response response;
     try {
       response = await request.timeout(const Duration(seconds: 2));
     } on Exception {
       throw ServerException();
     }
-    print('response: ${response.body}');
 
     if (response.statusCode == 200) {
       if (response.body == null || response.body == '') {
