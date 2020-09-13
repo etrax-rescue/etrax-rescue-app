@@ -80,7 +80,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           cacheManager: _cacheManager,
                           imageUrl: imageUrl,
                           placeholder: (context, url) =>
-                              CircularProgressIndicator(),
+                              Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => Container(
                             color: Colors.grey[300],
                             child: Column(
