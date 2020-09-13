@@ -16,7 +16,11 @@ class AppConnectionPage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(create: (_) => sl<AppConnectionCubit>(), child: this);
+    return Theme(
+        data: ThemeData(
+            appBarTheme: AppBarTheme(color: Theme.of(context).backgroundColor)),
+        child:
+            BlocProvider(create: (_) => sl<AppConnectionCubit>(), child: this));
   }
 
   @override
