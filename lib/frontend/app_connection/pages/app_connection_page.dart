@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,9 +18,7 @@ class AppConnectionPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: ThemeData(
-          appBarTheme: AppBarTheme(brightness: Brightness.light),
-        ),
+        data: themeData[AppTheme.LightStatusBar],
         child:
             BlocProvider(create: (_) => sl<AppConnectionCubit>(), child: this));
   }

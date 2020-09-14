@@ -6,6 +6,7 @@ import '../../../backend/types/organizations.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
@@ -17,9 +18,7 @@ class LoginPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: ThemeData(
-          appBarTheme: AppBarTheme(brightness: Brightness.light),
-        ),
+        data: themeData[AppTheme.LightStatusBar],
         child: BlocProvider(
             create: (_) => sl<LoginBloc>()..add(InitializeLogin()),
             child: this));

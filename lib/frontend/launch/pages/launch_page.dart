@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../../themes.dart';
 import '../bloc/launch_bloc.dart';
 
 class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
@@ -12,9 +13,7 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: ThemeData(
-          appBarTheme: AppBarTheme(brightness: Brightness.light),
-        ),
+        data: themeData[AppTheme.LightStatusBar],
         child: BlocProvider(
             create: (_) => sl<LaunchBloc>()..add(Launch()), child: this));
   }
