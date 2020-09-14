@@ -20,6 +20,10 @@ final themeData = {
     primaryColor: textColor,
     accentColor: const Color(0xffd32f2f),
     textTheme: textTheme,
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(color: Colors.grey),
+      hintStyle: TextStyle(color: Colors.grey),
+    ),
     appBarTheme: AppBarTheme(
       brightness: Brightness.dark,
       color: Color(0xFF465a64),
@@ -33,6 +37,10 @@ final themeData = {
     primaryColor: textColor,
     accentColor: const Color(0xffd32f2f),
     textTheme: textTheme,
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(color: Colors.grey),
+      hintStyle: TextStyle(color: Colors.grey),
+    ),
     appBarTheme: AppBarTheme(
       brightness: Brightness.light,
       color: Color(0xFFFAFAFA),
