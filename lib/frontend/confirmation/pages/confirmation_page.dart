@@ -26,7 +26,7 @@ class ConfirmationPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.DarkStatusBar],
+      data: themeData[AppTheme.LightStatusBar],
       child: BlocProvider(create: (_) => sl<ConfirmationBloc>(), child: this),
     );
   }
@@ -43,10 +43,7 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).CONFIRMATION_HEADING,
-            style:
-                TextStyle(color: Theme.of(context).textTheme.bodyText2.color)),
-        backgroundColor: Theme.of(context).backgroundColor,
+        title: Text(S.of(context).CONFIRMATION_HEADING),
         elevation: 0,
       ),
       body: BlocListener<ConfirmationBloc, ConfirmationState>(
