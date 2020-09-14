@@ -36,8 +36,7 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
         },
         builder: (context, state) {
           return CustomScrollView(
-            physics: RangeMaintainingScrollPhysics()
-                .applyTo(AlwaysScrollableScrollPhysics()),
+            physics: NeverScrollableScrollPhysics(),
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,

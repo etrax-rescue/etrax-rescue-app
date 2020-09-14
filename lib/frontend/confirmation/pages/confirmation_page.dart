@@ -137,41 +137,52 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             ),
             SliverFillRemaining(
               hasScrollBody: false,
-              child: WidthLimiter(
-                child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
-                      builder: (context, state) {
-                        return AnimatedCrossFade(
-                          firstChild: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: ButtonTheme(
-                              minWidth: double.infinity,
-                              child: MaterialButton(
-                                height: 48,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
+              child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
+                builder: (context, state) {
+                  return Stack(
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      IgnorePointer(
+                        ignoring: state is ConfirmationInProgress,
+                        child: AnimatedOpacity(
+                          opacity: state is ConfirmationInProgress ? 0.0 : 1.0,
+                          duration: Duration(milliseconds: 250),
+                          child: Container(
+                            color: Theme.of(context).backgroundColor,
+                            child: WidthLimiter(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: ButtonTheme(
+                                    minWidth: double.infinity,
+                                    child: MaterialButton(
+                                      height: 48,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(24.0),
+                                      ),
+                                      onPressed: submit,
+                                      textTheme: ButtonTextTheme.primary,
+                                      child: Text(S.of(context).ACCEPT_MISSION),
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                  ),
                                 ),
-                                onPressed: submit,
-                                textTheme: ButtonTextTheme.primary,
-                                child: Text(S.of(context).ACCEPT_MISSION),
-                                color: Theme.of(context).accentColor,
                               ),
                             ),
                           ),
-                          secondChild: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: CircularProgressIndicator(),
-                          ),
-                          crossFadeState: (state is ConfirmationInProgress ||
-                                  state is ConfirmationSuccess)
-                              ? CrossFadeState.showSecond
-                              : CrossFadeState.showFirst,
-                          duration: const Duration(milliseconds: 500),
-                        );
-                      },
-                    ),
-                ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],
