@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 enum AppTheme {
   LightStatusBar,
   DarkStatusBar,
+  Black,
 }
 
 final textColor = const Color(0xFF465a64);
@@ -48,5 +49,22 @@ final themeData = {
         color: Color(0xFF465a64),
       ),
     ),
-  )
+  ),
+  AppTheme.Black: ThemeData(
+    backgroundColor: Colors.black,
+    primaryColor: textColor,
+    accentColor: const Color(0xffd32f2f),
+    textTheme: textTheme,
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(color: Colors.grey),
+      hintStyle: TextStyle(color: Colors.grey),
+    ),
+    appBarTheme: AppBarTheme(
+      brightness: Brightness.light,
+      color: Color.fromARGB(128, 0, 0, 0),
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+    ),
+  ),
 };

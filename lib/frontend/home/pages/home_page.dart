@@ -8,6 +8,7 @@ import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../../themes.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/details_screen.dart';
 import '../widgets/gps_screen.dart';
@@ -24,9 +25,12 @@ class HomePage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider<HomeBloc>(
-        create: (_) => sl<HomeBloc>()..add(Startup(userState: state)),
-        child: this);
+    return Theme(
+      data: themeData[AppTheme.DarkStatusBar],
+      child: BlocProvider<HomeBloc>(
+          create: (_) => sl<HomeBloc>()..add(Startup(userState: state)),
+          child: this),
+    );
   }
 }
 

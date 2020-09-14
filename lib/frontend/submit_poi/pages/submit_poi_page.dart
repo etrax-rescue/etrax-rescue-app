@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
+import '../../../themes.dart';
 import '../cubit/submit_poi_cubit.dart';
 import '../widgets/image_view.dart';
 import '../widgets/submit_poi_controls.dart';
@@ -18,9 +19,12 @@ class SubmitPoiPage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<SubmitPoiCubit>(),
-      child: this,
+    return Theme(
+      data: themeData[AppTheme.Black],
+      child: BlocProvider(
+        create: (_) => sl<SubmitPoiCubit>(),
+        child: this,
+      ),
     );
   }
 

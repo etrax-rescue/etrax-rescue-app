@@ -6,6 +6,7 @@ import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/circular_progress_indicator_icon.dart';
 import '../../widgets/width_limiter.dart';
@@ -18,9 +19,12 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<CheckRequirementsCubit>(),
-      child: this,
+    return Theme(
+      data: themeData[AppTheme.DarkStatusBar],
+      child: BlocProvider(
+        create: (_) => sl<CheckRequirementsCubit>(),
+        child: this,
+      ),
     );
   }
 

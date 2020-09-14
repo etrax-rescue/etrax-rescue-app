@@ -7,6 +7,7 @@ import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../../themes.dart';
 
 class StateUpdatePage extends StatefulWidget implements AutoRouteWrapper {
   StateUpdatePage({Key key, @required this.currentState}) : super(key: key);
@@ -18,9 +19,12 @@ class StateUpdatePage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<StateUpdateBloc>()..add(FetchStates()),
-      child: this,
+    return Theme(
+      data: themeData[AppTheme.DarkStatusBar],
+      child: BlocProvider(
+        create: (_) => sl<StateUpdateBloc>()..add(FetchStates()),
+        child: this,
+      ),
     );
   }
 }
