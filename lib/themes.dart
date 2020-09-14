@@ -5,8 +5,21 @@ enum AppTheme {
   DarkStatusBar,
 }
 
+final textColor = const Color(0xFF465a64);
+
+final textTheme = TextTheme(
+  headline5: TextStyle(color: textColor),
+  bodyText1: TextStyle(color: textColor),
+  bodyText2: TextStyle(color: textColor),
+  subtitle1: TextStyle(color: textColor),
+);
+
 final themeData = {
   AppTheme.DarkStatusBar: ThemeData(
+    backgroundColor: const Color(0xFFFAFAFA),
+    primaryColor: textColor,
+    accentColor: const Color(0xffd32f2f),
+    textTheme: textTheme,
     appBarTheme: AppBarTheme(
       brightness: Brightness.dark,
       color: Color(0xFF465a64),
@@ -16,9 +29,13 @@ final themeData = {
     ),
   ),
   AppTheme.LightStatusBar: ThemeData(
+    backgroundColor: const Color(0xFFFAFAFA),
+    primaryColor: textColor,
+    accentColor: const Color(0xffd32f2f),
+    textTheme: textTheme,
     appBarTheme: AppBarTheme(
       brightness: Brightness.light,
-      color: Colors.white,
+      color: Color(0xFFFAFAFA),
       iconTheme: IconThemeData(
         color: Color(0xFF465a64),
       ),
