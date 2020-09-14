@@ -61,8 +61,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: edc7c4044876cd7c18c85463f79fa1b90f093676
+      ref: main
+      resolved-ref: a73ff922715910b9628d411f275719138a06ad87
       url: "git@github.com:yozoon/background_location.git"
     source: git
     version: "0.0.2"
