@@ -62,7 +62,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b42d78ebb5a6ea2e2792b1cf08a8a243307555df
+      resolved-ref: edc7c4044876cd7c18c85463f79fa1b90f093676
       url: "git@github.com:yozoon/background_location.git"
     source: git
     version: "0.0.2"
