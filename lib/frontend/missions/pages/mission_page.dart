@@ -113,7 +113,6 @@ class _MissionPageState extends State<MissionPage> {
                   SliverAppBar(
                     automaticallyImplyLeading: false,
                     elevation: 0,
-                    backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
                       PopupMenu(),
                     ],
@@ -139,6 +138,7 @@ class _MissionPageState extends State<MissionPage> {
                     ),
                   ),
                   MissionsList(),
+		  SliverToBoxAdapter(child: SizedBox(height: 64)),
                 ],
               ),
             ),

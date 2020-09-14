@@ -29,7 +29,7 @@ final themeData = {
       brightness: Brightness.dark,
       color: Color(0xFF465a64),
       textTheme: TextTheme(
-        bodyText2: TextStyle(color: Colors.white),
+	headline6: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
       ),
       iconTheme: IconThemeData(
         color: Colors.white,
@@ -48,9 +48,11 @@ final themeData = {
     appBarTheme: AppBarTheme(
       brightness: Brightness.light,
       color: Color(0xFFFAFAFA),
-      textTheme: textTheme,
+      textTheme: TextTheme(
+	headline6: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.w500),
+      ),
       iconTheme: IconThemeData(
-        color: Color(0xFF465a64),
+        color: textColor,
       ),
     ),
   ),
@@ -67,7 +69,7 @@ final themeData = {
       brightness: Brightness.light,
       color: Color.fromARGB(128, 0, 0, 0),
       textTheme: TextTheme(
-        bodyText2: TextStyle(color: Colors.white),
+	headline6: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
       ),
       iconTheme: IconThemeData(
         color: Colors.white,

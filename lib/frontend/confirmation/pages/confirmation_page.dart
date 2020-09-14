@@ -139,7 +139,6 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               hasScrollBody: false,
               child: WidthLimiter(
                 child: Container(
-                  child: Align(
                     alignment: Alignment.bottomCenter,
                     child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
                       builder: (context, state) {
@@ -172,7 +171,6 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                         );
                       },
                     ),
-                  ),
                 ),
               ),
             ),
