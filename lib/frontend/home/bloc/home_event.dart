@@ -16,6 +16,8 @@ class Startup extends HomeEvent {
   List<Object> get props => [userState];
 }
 
+class Refresh extends HomeEvent {}
+
 class LocationUpdate extends HomeEvent {}
 
 class UpdateMissionDetails extends HomeEvent {}

@@ -106,6 +106,7 @@ class _MapScreenState extends State<MapScreen> {
               options: MapOptions(
                 center: centerPosition,
                 zoom: 14.0,
+                maxZoom: 17.0,
               ),
               mapController: _mapController,
               layers: [

@@ -1,12 +1,13 @@
 import 'package:background_location/background_location.dart';
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_location_data_source.dart';
-import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../core/error/failures.dart';
+import '../datasources/local/local_location_data_source.dart';
+import '../types/app_configuration.dart';
+import '../types/app_connection.dart';
+import '../types/authentication_data.dart';
 
 abstract class LocationRepository {
   Future<Either<Failure, PermissionStatus>> hasPermission();
@@ -162,7 +163,7 @@ class LocationRepositoryImpl implements LocationRepository {
   @override
   Future<Either<Failure, None>> clearLocationCache() async {
     try {
-      final result = await localLocationDataSource.clearLocationCache();
+      await localLocationDataSource.clearLocationCache();
       return Right(None());
     } on PlatformException {
       return Left(PlatformFailure());

@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:background_location/background_location.dart';
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/types/etrax_server_endpoints.dart';
+
+import '../../types/app_connection.dart';
+import '../../types/authentication_data.dart';
+import '../../types/etrax_server_endpoints.dart';
 
 abstract class LocalLocationDataSource {
   Future<bool> serviceEnabled(
