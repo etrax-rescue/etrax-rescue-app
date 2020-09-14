@@ -34,7 +34,30 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
           }
         },
         builder: (context, state) {
-          return Center(child: CircularProgressIndicator());
+          return CustomScrollView(
+            physics: RangeMaintainingScrollPhysics()
+                .applyTo(AlwaysScrollableScrollPhysics()),
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                elevation: 0,
+                expandedHeight: MediaQuery.of(context).size.height / 3,
+                flexibleSpace: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Image(
+                      image: AssetImage('assets/images/etrax_rescue_logo.png'),
+                      width: 200,
+                    ),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          );
         },
       ),
     );
