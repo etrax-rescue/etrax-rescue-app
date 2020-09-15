@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "LAST_UPDATE" : MessageLookupByLibrary.simpleMessage("Letzte Aktualisierung"),
     "LATITUDE" : MessageLookupByLibrary.simpleMessage("Latitude"),
     "LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Einsatz verlassen"),
+    "LEGALESE" : MessageLookupByLibrary.simpleMessage("Die offizielle eTrax|rescue App"),
     "LOCATION_PERMISSION_DENIED" : MessageLookupByLibrary.simpleMessage("Standortberechtigung verweigert"),
     "LOCATION_PERMISSION_DENIED_FOREVER" : MessageLookupByLibrary.simpleMessage("Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben."),
     "LOCATION_UPDATES_ACTIVE" : MessageLookupByLibrary.simpleMessage("Standortdienst aktiv"),

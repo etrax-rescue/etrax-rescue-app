@@ -113,6 +113,16 @@ class S {
     );
   }
 
+  /// `The official eTrax|rescue app`
+  String get LEGALESE {
+    return Intl.message(
+      'The official eTrax|rescue app',
+      name: 'LEGALESE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connect App:`
   String get APP_CONNECTION_HEADING {
     return Intl.message(

@@ -80,8 +80,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _getLocationUpdate(event);
     } else if (event is UpdateMissionDetails) {
       yield* _updateMissionDetails(event);
-    } else if (event is Refresh) {
-      yield* _refresh(event);
     } else if (event is Shutdown) {
       yield* _shutdown(event);
     }
@@ -136,7 +134,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                     locationStream.listen((_) => add(LocationUpdate()));
               });
             }
-            //! NOTE: this could have the potiential of causing problems when the user did not grant location permissions yet
             // Trigger an initial location update so that we can collect the
             // location history even if location updates are not active
             add(LocationUpdate());
@@ -179,13 +176,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             missionDetailCollection: missionDetailCollection);
       });
     }
-  }
-
-  Stream<HomeState> _refresh(
-    HomeEvent event,
-  ) async* {
-    print('refreshing');
-    yield state.copyWith(status: HomeStatus.ready);
   }
 
   Stream<HomeState> _shutdown(

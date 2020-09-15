@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "LAST_UPDATE" : MessageLookupByLibrary.simpleMessage("Last Update"),
     "LATITUDE" : MessageLookupByLibrary.simpleMessage("Latitude"),
     "LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Leave"),
+    "LEGALESE" : MessageLookupByLibrary.simpleMessage("The official eTrax|rescue app"),
     "LOCATION_PERMISSION_DENIED" : MessageLookupByLibrary.simpleMessage("Location permission denied"),
     "LOCATION_PERMISSION_DENIED_FOREVER" : MessageLookupByLibrary.simpleMessage("Location permission permanently denied. Open settings to resolve this."),
     "LOCATION_UPDATES_ACTIVE" : MessageLookupByLibrary.simpleMessage("Location updates active"),

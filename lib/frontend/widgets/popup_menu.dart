@@ -23,7 +23,7 @@ class PopupMenu extends StatelessWidget {
               applicationIcon:
                   Image.asset('assets/images/etrax_rescue_icon.png'),
               applicationVersion: packageInfo.version,
-              applicationLegalese: 'Hi there!',
+              applicationLegalese: S.of(context).LEGALESE,
             );
             break;
         }

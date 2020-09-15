@@ -82,7 +82,8 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.bloc<HomeBloc>().add(Refresh());
+      // Check for new locations that were recorded while the app was in the background
+      context.bloc<HomeBloc>().add(LocationUpdate());
     }
   }
 
