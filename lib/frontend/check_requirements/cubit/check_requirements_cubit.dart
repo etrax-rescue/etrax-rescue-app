@@ -270,6 +270,9 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
   LocationAccuracy _mapUserStateLocationAccuracy(int accuracy) {
     switch (accuracy) {
+      case 0:
+        return LocationAccuracy.powerSave;
+        break;
       case 1:
         return LocationAccuracy.low;
         break;
@@ -277,6 +280,9 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         return LocationAccuracy.balanced;
         break;
       case 3:
+        return LocationAccuracy.high;
+        break;
+      case 4:
         return LocationAccuracy.high;
         break;
       default:

@@ -19,7 +19,6 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   MapController _mapController;
-  final GlobalKey _key = GlobalKey();
   bool centerButtonVisible = true;
   StreamSubscription<MapPosition> _streamSubscription;
   List<Marker> _markers = [];
@@ -42,7 +41,8 @@ class _MapScreenState extends State<MapScreen> {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         LatLng centerPosition;
-        List<LatLng> points;
+        List<LatLng> points = [];
+
         if (state.locationHistory.length > 0) {
           centerPosition = LatLng(state.locationHistory.last.latitude,
               state.locationHistory.last.longitude);
@@ -102,7 +102,6 @@ class _MapScreenState extends State<MapScreen> {
         return Stack(
           children: [
             FlutterMap(
-              key: _key,
               options: MapOptions(
                 center: centerPosition,
                 zoom: 14.0,

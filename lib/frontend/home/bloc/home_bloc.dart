@@ -214,7 +214,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   @override
   Future<void> close() {
-    _streamSubscription?.cancel();
     _tickerSubscription?.cancel();
     return super.close();
   }

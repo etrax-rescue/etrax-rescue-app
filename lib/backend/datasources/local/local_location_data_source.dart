@@ -84,7 +84,7 @@ class LocalLocationDataSourceImpl implements LocalLocationDataSource {
       String label) async {
     return await backgroundLocation.startUpdates(
       accuracy: accuracy,
-      interval: interval,
+      interval: interval * 1000,
       distanceFilter: distanceFilter,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,

@@ -28,7 +28,7 @@ class EtraxApp extends StatelessWidget {
         accentColor: const Color(0xffd32f2f), //const Color(0xFFD3302F),
 
         appBarTheme: AppBarTheme(
-            iconTheme: IconThemeData(color: Color(0xFF465a64)),
+            iconTheme: IconThemeData(color: Colors.white),
             color: Color(0xFF465a64)),
         textTheme: TextTheme(
           headline5: const TextStyle(color: Color(0xFF465a64)),

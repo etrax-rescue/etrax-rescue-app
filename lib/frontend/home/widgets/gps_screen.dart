@@ -1,8 +1,8 @@
 import 'package:background_location/background_location.dart';
-import 'package:etrax_rescue_app/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../generated/l10n.dart';
 import '../bloc/home_bloc.dart';
 
 class GPSScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class GPSScreen extends StatelessWidget {
               return Container(
                 child: SingleChildScrollView(
                   child: LocationDataWidget(
-                      locationData: state.locationHistory[0]),
+                      locationData: state.locationHistory.last),
                 ),
               );
             }

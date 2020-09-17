@@ -28,14 +28,14 @@ class HomePage extends StatefulWidget implements AutoRouteWrapper {
     return Theme(
       data: themeData[AppTheme.DarkStatusBar],
       child: BlocProvider<HomeBloc>(
+          lazy: false,
           create: (_) => sl<HomeBloc>()..add(Startup(userState: state)),
           child: this),
     );
   }
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   PreloadPageController _pageController;
   String _title;
   int _pageIndex = 0;
