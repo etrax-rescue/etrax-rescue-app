@@ -62,26 +62,34 @@ class LocationDataWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final DateTime dateTime =
         DateTime.fromMillisecondsSinceEpoch(locationData.time.toInt());
+    List<Widget> children = [
+      DataEntry(label: S.of(context).LAST_UPDATE, data: '$dateTime'),
+      DataEntry(
+          label: S.of(context).LATITUDE, data: '${locationData.latitude}'),
+      DataEntry(
+          label: S.of(context).LONGITUDE, data: '${locationData.longitude}'),
+      DataEntry(
+          label: S.of(context).ACCURACY, data: '${locationData.accuracy}'),
+      DataEntry(
+          label: S.of(context).ALTITUDE, data: '${locationData.altitude}'),
+    ];
+
+    if (locationData.speed >= 0.0) {
+      children.add(
+          DataEntry(label: S.of(context).SPEED, data: '${locationData.speed}'));
+    }
+    if (locationData.speedAccuracy >= 0.0) {
+      children.add(DataEntry(
+          label: S.of(context).SPEED_ACCURACY,
+          data: '${locationData.speedAccuracy}'));
+    }
+    if (locationData.heading >= 0.0) {
+      children.add(DataEntry(
+          label: S.of(context).HEADING, data: '${locationData.heading}'));
+    }
     return Container(
       child: Column(
-        children: <Widget>[
-          DataEntry(label: S.of(context).LAST_UPDATE, data: '$dateTime'),
-          DataEntry(
-              label: S.of(context).LATITUDE, data: '${locationData.latitude}'),
-          DataEntry(
-              label: S.of(context).LONGITUDE,
-              data: '${locationData.longitude}'),
-          DataEntry(
-              label: S.of(context).ACCURACY, data: '${locationData.accuracy}'),
-          DataEntry(
-              label: S.of(context).ALTITUDE, data: '${locationData.altitude}'),
-          DataEntry(label: S.of(context).SPEED, data: '${locationData.speed}'),
-          DataEntry(
-              label: S.of(context).SPEED_ACCURACY,
-              data: '${locationData.speedAccuracy}'),
-          DataEntry(
-              label: S.of(context).HEADING, data: '${locationData.heading}'),
-        ],
+        children: children,
       ),
     );
   }

@@ -138,7 +138,7 @@ class _MissionPageState extends State<MissionPage> {
                     ),
                   ),
                   MissionsList(),
-		  SliverToBoxAdapter(child: SizedBox(height: 64)),
+                  SliverToBoxAdapter(child: SizedBox(height: 72)),
                 ],
               ),
             ),
