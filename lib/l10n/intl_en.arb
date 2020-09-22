@@ -45,26 +45,32 @@
     "ACTIVE_STATE": "Currently active state", 
     "UPDATE_STATE": "Update",
 
+    "RETRIEVE_SETTINGS_TITLE": "Load app settings",
     "RETRIEVING_SETTINGS": "Loading app settings...",
     "RETRIEVING_SETTINGS_DONE": "App settings loaded.",
     "RETRIEVING_SETTINGS_ERROR": "Error while loading app settings",
 
+    "CHECK_PERMISSIONS_TITLE": "Location permission check",
     "CHECKING_PERMISSIONS": "Checking location permission...",
     "CHECKING_PERMISSIONS_DONE": "Location permission granted",
     "LOCATION_PERMISSION_DENIED": "Location permission denied",
     "LOCATION_PERMISSION_DENIED_FOREVER": "Location permission permanently denied. Open settings to resolve this.",
 
+    "CHECK_SERVICES_TITLE": "Location services check",
     "CHECKING_SERVICES": "Checking services...",
     "CHECKING_SERVICES_DONE": "Location services successfully activated",
     "CHECKING_SERVICES_ERROR": "Error while activating location services",
     "SERVICES_DISABLED": "Location services are disabled",
 
+    "UPDATE_STATE_TITLE": "Status update",
     "UPDATING_STATE": "Updating status...",
     "UPDATING_STATE_DONE": "Status updated",
 
+    "START_UPDATES_TITLE": "Start location updates",
     "STARTING_UPDATES": "Starting location updates...",
     "STARTING_UPDATES_DONE": "Location updates started successfully",
 
+    "STOP_UPDATES_TITLE": "Stop location updates",
     "STOPPING_UPDATES": "Stopping location updates...",
     "STOPPING_UPDATES_DONE": "Location updates stopped successfully",
 

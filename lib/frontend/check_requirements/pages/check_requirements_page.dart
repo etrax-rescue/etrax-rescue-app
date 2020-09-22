@@ -594,6 +594,7 @@ class SequenceItem extends StatefulWidget {
     Key key,
     @required this.widgetState,
     @required this.title,
+    this.subtitle = 'hello world',
     @required this.buttonLabel,
     @required this.onPressed,
     this.index = 2,
@@ -601,6 +602,7 @@ class SequenceItem extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
+  final String subtitle;
   final WidgetState widgetState;
   final String buttonLabel;
   final VoidCallback onPressed;
@@ -697,15 +699,32 @@ class _SequenceItemState extends State<SequenceItem> {
   }
 
   Widget _buildHeading() {
+    List<Widget> children = [
+      Text(
+        widget.title,
+        style: TextStyle(
+          fontSize: Theme.of(context).textTheme.subtitle1.fontSize,
+          color: _currentColor(),
+        ),
+      ),
+    ];
+    if (widget.widgetState != WidgetState.inactive) {
+      children.add(
+        Text(
+          widget.subtitle,
+          style: TextStyle(
+            color: Theme.of(context).primaryColorLight,
+          ),
+        ),
+      );
+    }
     return Expanded(
       child: AnimatedSwitcher(
         duration: kThemeAnimationDuration,
-        child: Text(
-          widget.title,
+        child: Column(
           key: ValueKey(widget.title.hashCode),
-          style: TextStyle(
-            color: _currentColor(),
-          ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
         ),
         transitionBuilder: (widget, animation) {
           return Container(
@@ -731,7 +750,7 @@ class _SequenceItemState extends State<SequenceItem> {
           ),
           Container(
             alignment: Alignment.center,
-            constraints: BoxConstraints(minHeight: 12),
+            constraints: BoxConstraints(minHeight: 18),
             margin: EdgeInsets.only(left: 16),
             decoration: widget.last
                 ? BoxDecoration()

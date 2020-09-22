@@ -423,6 +423,16 @@ class S {
     );
   }
 
+  /// `Load app settings`
+  String get RETRIEVE_SETTINGS_TITLE {
+    return Intl.message(
+      'Load app settings',
+      name: 'RETRIEVE_SETTINGS_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Loading app settings...`
   String get RETRIEVING_SETTINGS {
     return Intl.message(
@@ -448,6 +458,16 @@ class S {
     return Intl.message(
       'Error while loading app settings',
       name: 'RETRIEVING_SETTINGS_ERROR',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission check`
+  String get CHECK_PERMISSIONS_TITLE {
+    return Intl.message(
+      'Location permission check',
+      name: 'CHECK_PERMISSIONS_TITLE',
       desc: '',
       args: [],
     );
@@ -493,6 +513,16 @@ class S {
     );
   }
 
+  /// `Location services check`
+  String get CHECK_SERVICES_TITLE {
+    return Intl.message(
+      'Location services check',
+      name: 'CHECK_SERVICES_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Checking services...`
   String get CHECKING_SERVICES {
     return Intl.message(
@@ -533,6 +563,16 @@ class S {
     );
   }
 
+  /// `Status update`
+  String get UPDATE_STATE_TITLE {
+    return Intl.message(
+      'Status update',
+      name: 'UPDATE_STATE_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Updating status...`
   String get UPDATING_STATE {
     return Intl.message(
@@ -553,6 +593,16 @@ class S {
     );
   }
 
+  /// `Start location updates`
+  String get START_UPDATES_TITLE {
+    return Intl.message(
+      'Start location updates',
+      name: 'START_UPDATES_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Starting location updates...`
   String get STARTING_UPDATES {
     return Intl.message(
@@ -568,6 +618,16 @@ class S {
     return Intl.message(
       'Location updates started successfully',
       name: 'STARTING_UPDATES_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop location updates`
+  String get STOP_UPDATES_TITLE {
+    return Intl.message(
+      'Stop location updates',
+      name: 'STOP_UPDATES_TITLE',
       desc: '',
       args: [],
     );

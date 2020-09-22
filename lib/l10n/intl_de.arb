@@ -45,26 +45,32 @@
     "ACTIVE_STATE": "Derzeit aktiver Status", 
     "UPDATE_STATE": "Aktualisieren",
     
+    "RETRIEVE_SETTINGS_TITLE": "Einstellungen laden",
     "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",
     "RETRIEVING_SETTINGS_DONE": "Einstellungen geladen",
     "RETRIEVING_SETTINGS_ERROR": "Fehler beim Laden der Einstellungen",
 
+    "CHECK_PERMISSIONS_TITLE": "Berechtigungen prüfen",
     "CHECKING_PERMISSIONS": "Berechtigungen werden überprüft...",
     "CHECKING_PERMISSIONS_DONE": "Standortberechtigung gewährt",
     "LOCATION_PERMISSION_DENIED": "Standortberechtigung verweigert",
     "LOCATION_PERMISSION_DENIED_FOREVER": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
 
+    "CHECK_SERVICES_TITLE": "Ortungsdienste überprüfen",
     "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
     "CHECKING_SERVICES_DONE": "Ortungsdienste erforlgreich aktiviert",
     "SERVICES_DISABLED": "Ortungsdienste sind deaktiviert",
     "CHECKING_SERVICES_ERROR": "Fehler beim Anfordern von Ortungsdiensten",
 
+    "UPDATE_STATE_TITLE": "Status aktualisieren",
     "UPDATING_STATE": "Status wird aktualisiert...",
     "UPDATING_STATE_DONE": "Status wurde aktualisiert",
 
+    "START_UPDATES_TITLE": "Standortdienst starten",
     "STARTING_UPDATES": "Standortdienst wird gestartet...",
     "STARTING_UPDATES_DONE": "Standortdienst erfolgreich gestartet",
 
+    "STOP_UPDATES_TITLE": "Standortdienst anhalten",
     "STOPPING_UPDATES": "Standortdienst wird angehalten...",
     "STOPPING_UPDATES_DONE": "Standortdienst erfolgreich angehalten",
 

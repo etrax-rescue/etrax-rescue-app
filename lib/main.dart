@@ -23,10 +23,10 @@ class EtraxApp extends StatelessWidget {
     return MaterialApp(
       title: 'eTrax|rescue',
       theme: ThemeData(
-        backgroundColor: const Color(0xFFFAFAFA), //const Color(0xFF718792),
-        primaryColor: const Color(0xFF465a64), //const Color(0xFF1c313a),
-        accentColor: const Color(0xffd32f2f), //const Color(0xFFD3302F),
-
+        backgroundColor: const Color(0xFFFAFAFA),
+        primaryColor: const Color(0xFF465a64),
+        primaryColorLight: const Color(0xFFa3adb2),
+        accentColor: const Color(0xffd32f2f),
         appBarTheme: AppBarTheme(
             iconTheme: IconThemeData(color: Colors.white),
             color: Color(0xFF465a64)),
