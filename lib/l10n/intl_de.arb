@@ -65,8 +65,8 @@
     "STARTING_UPDATES": "Standortdienst wird gestartet...",
     "STARTING_UPDATES_DONE": "Standortdienst erfolgreich gestartet",
 
-    "STOPPING_UPDATES": "Standortdienst wird gestoppt...",
-    "STOPPING_UPDATES_DONE": "Standortdienst erfolgreich gestoppt",
+    "STOPPING_UPDATES": "Standortdienst wird angehalten...",
+    "STOPPING_UPDATES_DONE": "Standortdienst erfolgreich angehalten",
 
     "RESOLVE": "Beheben",
     "OPEN_LOCATION_SETTINGS": "Öffnen",

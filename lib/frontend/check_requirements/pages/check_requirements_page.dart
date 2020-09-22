@@ -88,8 +88,16 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
           ),
           body: CustomScrollView(
             slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildListDelegate(_sequenceWidgets),
+              SliverPadding(
+                padding: EdgeInsets.all(8),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return _sequenceWidgets[index];
+                    },
+                    childCount: _sequenceWidgets.length,
+                  ),
+                ),
               ),
               SliverFillRemaining(
                 hasScrollBody: false,
@@ -559,67 +567,158 @@ class StartUpdatesWidget extends StatelessWidget {
   }
 }
 
-class SequenceItem extends StatelessWidget {
-  const SequenceItem(
-      {Key key,
-      @required this.widgetState,
-      @required this.title,
-      @required this.buttonLabel,
-      @required this.onPressed})
-      : super(key: key);
+class SequenceItem extends StatefulWidget {
+  SequenceItem({
+    Key key,
+    @required this.widgetState,
+    @required this.title,
+    @required this.buttonLabel,
+    @required this.onPressed,
+    this.index = 2,
+    this.last = false,
+  }) : super(key: key);
 
   final String title;
   final WidgetState widgetState;
   final String buttonLabel;
   final VoidCallback onPressed;
+  final int index;
+  final bool last;
+
+  @override
+  _SequenceItemState createState() => _SequenceItemState();
+}
+
+class _SequenceItemState extends State<SequenceItem> {
+  Color _currentColor() {
+    switch (widget.widgetState) {
+      case WidgetState.inactive:
+        return Theme.of(context).disabledColor;
+        break;
+      case WidgetState.loading:
+        break;
+      case WidgetState.error:
+        return Theme.of(context).errorColor;
+        break;
+      case WidgetState.success:
+        break;
+    }
+    return Theme.of(context).primaryColor;
+  }
+
+  Widget _buildIcon() {
+    Widget icon = Text(widget.index.toString(),
+        style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor));
+    switch (widget.widgetState) {
+      case WidgetState.inactive:
+        break;
+      case WidgetState.loading:
+        icon = CircularProgressIndicatorIcon(
+            size: 24, color: Theme.of(context).scaffoldBackgroundColor);
+        break;
+      case WidgetState.error:
+        icon = Icon(Icons.warning,
+            size: 20, color: Theme.of(context).scaffoldBackgroundColor);
+        break;
+      case WidgetState.success:
+        icon = Icon(Icons.check,
+            size: 24, color: Theme.of(context).scaffoldBackgroundColor);
+        break;
+    }
+    return icon;
+  }
+
+  Widget _buildCircle() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: AnimatedContainer(
+        duration: kThemeAnimationDuration,
+        height: 32,
+        width: 32,
+        decoration: BoxDecoration(
+          color: _currentColor(),
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: AnimatedSwitcher(
+            duration: kThemeAnimationDuration,
+            child: _buildIcon(),
+            transitionBuilder: (child, animation) {
+              return ScaleTransition(scale: animation, child: child);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    Widget button = SizedBox();
+    if (widget.widgetState == WidgetState.error) {
+      button = MaterialButton(
+        onPressed: widget.onPressed,
+        color: Theme.of(context).errorColor,
+        child: Text(widget.buttonLabel,
+            style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor)),
+      );
+    }
+    return AnimatedSwitcher(
+      duration: kThemeAnimationDuration,
+      child: button,
+      transitionBuilder: (child, animation) {
+        return SizeTransition(sizeFactor: animation, child: child);
+      },
+    );
+  }
+
+  Widget _buildHeading() {
+    return Expanded(
+      child: AnimatedSwitcher(
+        duration: kThemeAnimationDuration,
+        child: Text(
+          widget.title,
+          key: ValueKey(widget.title.hashCode),
+          style: TextStyle(
+            color: _currentColor(),
+          ),
+        ),
+        transitionBuilder: (widget, animation) {
+          return Container(
+            alignment: Alignment.centerLeft,
+            child: FadeTransition(opacity: animation, child: widget),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return WidthLimiter(
-      child: Opacity(
-        opacity: widgetState == WidgetState.inactive ? 0.4 : 1.0,
-        child: ListTile(
-          title: Text(
-            title,
-            style: TextStyle(
-                fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _buildCircle(),
+              SizedBox(width: 8),
+              _buildHeading(),
+            ],
           ),
-          leading: Builder(
-            builder: (context) {
-              switch (widgetState) {
-                case WidgetState.inactive:
-                  return SizedBox(
-                    height: Theme.of(context).textTheme.bodyText1.fontSize,
-                  );
-                  break;
-                case WidgetState.loading:
-                  return CircularProgressIndicatorIcon();
-                  break;
-                case WidgetState.error:
-                  return Icon(Icons.warning, color: Colors.yellow[700]);
-                  break;
-                case WidgetState.success:
-                  return Icon(Icons.check, color: Colors.green);
-                  break;
-              }
-              return SizedBox(
-                height: Theme.of(context).textTheme.bodyText1.fontSize,
-              );
-            },
+          Container(
+            alignment: Alignment.center,
+            constraints: BoxConstraints(minHeight: 12),
+            margin: EdgeInsets.only(left: 16),
+            decoration: widget.last
+                ? BoxDecoration()
+                : BoxDecoration(
+                    border: Border(
+                      left: BorderSide(color: Theme.of(context).disabledColor),
+                    ),
+                  ),
+            padding: EdgeInsets.only(left: 20),
+            child: _buildContent(),
           ),
-          trailing: Builder(
-            builder: (context) {
-              if (widgetState == WidgetState.error) {
-                return MaterialButton(
-                  onPressed: onPressed,
-                  child: Text(buttonLabel,
-                      style: TextStyle(color: Colors.yellow[700])),
-                );
-              }
-              return SizedBox();
-            },
-          ),
-        ),
+        ],
       ),
     );
   }
