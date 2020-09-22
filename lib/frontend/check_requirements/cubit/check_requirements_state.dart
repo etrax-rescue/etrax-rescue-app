@@ -1,5 +1,6 @@
 part of 'check_requirements_cubit.dart';
 
+/*
 enum CheckRequirementsStatus {
   initial,
 
@@ -46,11 +47,38 @@ enum CheckRequirementsStatus {
 
   success,
   logout,
+}*/
+
+enum CheckRequirementsStatus {
+  initial,
+  started,
+  settings,
+  locationPermission,
+  locationServices,
+  getLastLocation,
+  setState,
+  logout,
+  stopUpdates,
+  startUpdates,
+  clearState,
+  complete,
+}
+
+enum CheckRequirementsSubStatus {
+  loading,
+  failure,
+  result1,
+  result2,
+  success,
 }
 
 extension CheckRequirementsStatusExtension on CheckRequirementsStatus {
   bool operator <(CheckRequirementsStatus other) {
     return this.index < other.index;
+  }
+
+  bool operator >(CheckRequirementsStatus other) {
+    return this.index > other.index;
   }
 
   bool operator >=(CheckRequirementsStatus other) {
@@ -61,6 +89,7 @@ extension CheckRequirementsStatusExtension on CheckRequirementsStatus {
 class CheckRequirementsState extends Equatable {
   const CheckRequirementsState({
     this.status = CheckRequirementsStatus.initial,
+    this.subStatus = CheckRequirementsSubStatus.loading,
     this.messageKey = '',
     @required this.userState,
     @required this.appConfiguration,
@@ -73,6 +102,7 @@ class CheckRequirementsState extends Equatable {
   });
 
   final CheckRequirementsStatus status;
+  final CheckRequirementsSubStatus subStatus;
 
   final String messageKey;
 
@@ -88,9 +118,6 @@ class CheckRequirementsState extends Equatable {
   final String notificationBody;
   final String label;
 
-  @override
-  List<Object> get props => [status.index];
-
   const CheckRequirementsState.initial()
       : this(
           userState: null,
@@ -105,6 +132,7 @@ class CheckRequirementsState extends Equatable {
 
   CheckRequirementsState copyWith({
     @required CheckRequirementsStatus status,
+    @required CheckRequirementsSubStatus subStatus,
     String messageKey = '',
     UserState userState,
     AppConfiguration appConfiguration,
@@ -117,6 +145,7 @@ class CheckRequirementsState extends Equatable {
   }) {
     return CheckRequirementsState(
       status: status ?? this.status,
+      subStatus: subStatus ?? this.subStatus,
       messageKey: messageKey ?? '',
       userState: userState ?? this.userState,
       appConfiguration: appConfiguration ?? this.appConfiguration,
@@ -128,4 +157,19 @@ class CheckRequirementsState extends Equatable {
       label: label ?? this.label,
     );
   }
+
+  @override
+  List<Object> get props => [
+        status,
+        subStatus,
+        messageKey,
+        userState,
+        appConnection,
+        authenticationData,
+        appConfiguration,
+        currentLocation,
+        notificationTitle,
+        notificationBody,
+        label,
+      ];
 }

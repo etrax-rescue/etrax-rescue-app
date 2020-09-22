@@ -75,7 +75,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
       },
       child: BlocListener<CheckRequirementsCubit, CheckRequirementsState>(
         listener: (context, state) {
-          if (state.status >= CheckRequirementsStatus.setStateSuccess) {
+          if (state.status > CheckRequirementsStatus.setState) {
             setState(() {
               _goingBackPossible = false;
             });
@@ -100,7 +100,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
                           CheckRequirementsState>(
                         builder: (context, state) {
                           bool enabled = state.status.index ==
-                                  CheckRequirementsStatus.success.index
+                                  CheckRequirementsStatus.complete.index
                               ? true
                               : false;
                           return AbsorbPointer(
@@ -165,19 +165,19 @@ class FetchSettingsWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.settingsLoading) {
+      if (state.status < CheckRequirementsStatus.settings) {
         widgetState = WidgetState.inactive;
         title = S.of(context).RETRIEVING_SETTINGS;
-      } else if (state.status >= CheckRequirementsStatus.settingsSuccess) {
+      } else if (state.status > CheckRequirementsStatus.settings) {
         widgetState = WidgetState.success;
         title = S.of(context).RETRIEVING_SETTINGS_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.settingsLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).RETRIEVING_SETTINGS;
             break;
-          case CheckRequirementsStatus.settingsFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;
@@ -218,21 +218,20 @@ class CheckLocationPermissionWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.locationPermissionLoading) {
+      if (state.status < CheckRequirementsStatus.locationPermission) {
         widgetState = WidgetState.inactive;
         title = S.of(context).CHECKING_PERMISSIONS;
-      } else if (state.status >=
-          CheckRequirementsStatus.locationPermissionSuccess) {
+      } else if (state.status > CheckRequirementsStatus.locationPermission) {
         widgetState = WidgetState.success;
         title = S.of(context).CHECKING_PERMISSIONS_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.locationPermissionLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).CHECKING_PERMISSIONS;
             break;
 
-          case CheckRequirementsStatus.locationPermissionFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;
@@ -241,7 +240,7 @@ class CheckLocationPermissionWidget extends StatelessWidget {
             };
             break;
 
-          case CheckRequirementsStatus.locationPermissionDenied:
+          case CheckRequirementsSubStatus.result1:
             widgetState = WidgetState.error;
             title = S.of(context).LOCATION_PERMISSION_DENIED;
             buttonLabel = S.of(context).RESOLVE;
@@ -250,7 +249,8 @@ class CheckLocationPermissionWidget extends StatelessWidget {
             };
             break;
 
-          case CheckRequirementsStatus.locationPermissionDeniedForever:
+          case CheckRequirementsSubStatus.result2:
+            // TODO: add link to settings
             widgetState = WidgetState.error;
             title = S.of(context).LOCATION_PERMISSION_DENIED;
             buttonLabel = S.of(context).RETRY;
@@ -292,20 +292,19 @@ class CheckLocationServicesWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.locationServicesLoading) {
+      if (state.status < CheckRequirementsStatus.locationServices) {
         widgetState = WidgetState.inactive;
         title = S.of(context).CHECKING_SERVICES;
-      } else if (state.status >=
-          CheckRequirementsStatus.locationServicesSuccess) {
+      } else if (state.status > CheckRequirementsStatus.locationServices) {
         widgetState = WidgetState.success;
         title = S.of(context).CHECKING_SERVICES_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.locationServicesLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).CHECKING_SERVICES;
             break;
-          case CheckRequirementsStatus.locationServicesFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;
@@ -313,7 +312,7 @@ class CheckLocationServicesWidget extends StatelessWidget {
               context.bloc<CheckRequirementsCubit>().locationServicesCheck();
             };
             break;
-          case CheckRequirementsStatus.locationServicesDisabled:
+          case CheckRequirementsSubStatus.result1:
             widgetState = WidgetState.error;
             title = S.of(context).SERVICES_DISABLED;
             buttonLabel = S.of(context).RETRY;
@@ -355,19 +354,19 @@ class SetStateWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.setStateLoading) {
+      if (state.status < CheckRequirementsStatus.setState) {
         widgetState = WidgetState.inactive;
         title = S.of(context).UPDATING_STATE;
-      } else if (state.status >= CheckRequirementsStatus.setStateSuccess) {
+      } else if (state.status > CheckRequirementsStatus.setState) {
         widgetState = WidgetState.success;
         title = S.of(context).UPDATING_STATE_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.setStateLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).UPDATING_STATE;
             break;
-          case CheckRequirementsStatus.setStateFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;
@@ -409,19 +408,19 @@ class LogoutWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.logoutLoading) {
+      if (state.status < CheckRequirementsStatus.logout) {
         widgetState = WidgetState.inactive;
         title = S.of(context).RETRIEVING_SETTINGS;
-      } else if (state.status >= CheckRequirementsStatus.logoutSuccess) {
+      } else if (state.status > CheckRequirementsStatus.logout) {
         widgetState = WidgetState.success;
         title = S.of(context).RETRIEVING_SETTINGS_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.logoutLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).LOGOUT;
             break;
-          case CheckRequirementsStatus.logoutFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;
@@ -462,19 +461,19 @@ class StopUpdatesWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.stopUpdatesLoading) {
+      if (state.status < CheckRequirementsStatus.stopUpdates) {
         widgetState = WidgetState.inactive;
         title = S.of(context).STOPPING_UPDATES;
-      } else if (state.status >= CheckRequirementsStatus.stopUpdatesSuccess) {
+      } else if (state.status > CheckRequirementsStatus.stopUpdates) {
         widgetState = WidgetState.success;
         title = S.of(context).STOPPING_UPDATES_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.stopUpdatesLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).STOPPING_UPDATES;
             break;
-          case CheckRequirementsStatus.stopUpdatesFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;
@@ -516,19 +515,19 @@ class StartUpdatesWidget extends StatelessWidget {
       String buttonLabel = '';
       Function onPressed = () {};
 
-      if (state.status < CheckRequirementsStatus.startUpdatesLoading) {
+      if (state.status < CheckRequirementsStatus.startUpdates) {
         widgetState = WidgetState.inactive;
         title = S.of(context).STARTING_UPDATES;
-      } else if (state.status >= CheckRequirementsStatus.startUpdatesSuccess) {
+      } else if (state.status > CheckRequirementsStatus.startUpdates) {
         widgetState = WidgetState.success;
         title = S.of(context).STARTING_UPDATES_DONE;
       } else {
-        switch (state.status) {
-          case CheckRequirementsStatus.startUpdatesLoading:
+        switch (state.subStatus) {
+          case CheckRequirementsSubStatus.loading:
             widgetState = WidgetState.loading;
             title = S.of(context).STARTING_UPDATES;
             break;
-          case CheckRequirementsStatus.startUpdatesFailure:
+          case CheckRequirementsSubStatus.failure:
             widgetState = WidgetState.error;
             title = translateErrorMessage(context, state.messageKey);
             buttonLabel = S.of(context).RETRY;

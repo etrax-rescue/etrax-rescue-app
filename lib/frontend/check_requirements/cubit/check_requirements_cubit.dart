@@ -1,8 +1,6 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_last_location.dart';
-import '../../../backend/usecases/logout.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -16,7 +14,9 @@ import '../../../backend/usecases/clear_mission_state.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
+import '../../../backend/usecases/get_last_location.dart';
 import '../../../backend/usecases/get_selected_mission.dart';
+import '../../../backend/usecases/logout.dart';
 import '../../../backend/usecases/request_location_permission.dart';
 import '../../../backend/usecases/request_location_service.dart';
 import '../../../backend/usecases/set_selected_user_state.dart';
@@ -78,6 +78,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       String notificationBody) async {
     emit(state.copyWith(
       status: CheckRequirementsStatus.started,
+      subStatus: CheckRequirementsSubStatus.loading,
       userState: desiredState,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
@@ -86,12 +87,15 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   }
 
   void retrieveSettings() async {
-    emit(state.copyWith(status: CheckRequirementsStatus.settingsLoading));
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.settings,
+        subStatus: CheckRequirementsSubStatus.loading));
 
     final getAppConnectionEither = await getAppConnection(NoParams());
     getAppConnectionEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.settingsFailure,
+        status: CheckRequirementsStatus.settings,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (appConnection) async {
@@ -100,7 +104,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
       getAuthenticationDataEither.fold((failure) async {
         emit(state.copyWith(
-          status: CheckRequirementsStatus.settingsFailure,
+          status: CheckRequirementsStatus.settings,
+          subStatus: CheckRequirementsSubStatus.failure,
           messageKey: _mapFailureToMessageKey(failure),
         ));
       }, (authenticationData) async {
@@ -108,19 +113,22 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
         getAppConfigurationEither.fold((failure) async {
           emit(state.copyWith(
-            status: CheckRequirementsStatus.settingsFailure,
+            status: CheckRequirementsStatus.settings,
+            subStatus: CheckRequirementsSubStatus.failure,
             messageKey: _mapFailureToMessageKey(failure),
           ));
         }, (appConfiguration) async {
           final getSelectedMissionEither = await getSelectedMission(NoParams());
           getSelectedMissionEither.fold((failure) async {
             emit(state.copyWith(
-              status: CheckRequirementsStatus.settingsFailure,
+              status: CheckRequirementsStatus.settings,
+              subStatus: CheckRequirementsSubStatus.failure,
               messageKey: _mapFailureToMessageKey(failure),
             ));
           }, (selectedMission) async {
             emit(state.copyWith(
-              status: CheckRequirementsStatus.settingsSuccess,
+              status: CheckRequirementsStatus.settings,
+              subStatus: CheckRequirementsSubStatus.success,
               appConnection: appConnection,
               authenticationData: authenticationData,
               appConfiguration: appConfiguration,
@@ -140,29 +148,34 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
   void locationPermissionCheck() async {
     emit(state.copyWith(
-        status: CheckRequirementsStatus.locationPermissionLoading));
+        status: CheckRequirementsStatus.locationPermission,
+        subStatus: CheckRequirementsSubStatus.loading));
     final locationPermissionRequestEither =
         await requestLocationPermission(NoParams());
 
     locationPermissionRequestEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.locationPermissionFailure,
+        status: CheckRequirementsStatus.locationPermission,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (permissionStatus) async {
       switch (permissionStatus) {
         case PermissionStatus.granted:
           emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermissionSuccess));
+              status: CheckRequirementsStatus.locationPermission,
+              subStatus: CheckRequirementsSubStatus.success));
           locationServicesCheck();
           break;
         case PermissionStatus.denied:
           emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermissionDenied));
+              status: CheckRequirementsStatus.locationPermission,
+              subStatus: CheckRequirementsSubStatus.result1));
           break;
         case PermissionStatus.deniedForever:
           emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermissionDeniedForever));
+              status: CheckRequirementsStatus.locationPermission,
+              subStatus: CheckRequirementsSubStatus.result2));
           break;
       }
     });
@@ -170,7 +183,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
   void locationServicesCheck() async {
     emit(state.copyWith(
-        status: CheckRequirementsStatus.locationServicesLoading));
+        status: CheckRequirementsStatus.locationServices,
+        subStatus: CheckRequirementsSubStatus.loading));
 
     final locationServicesRequestEither = await requestLocationService(
         RequestLocationServiceParams(
@@ -180,17 +194,20 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     locationServicesRequestEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.locationServicesFailure,
+        status: CheckRequirementsStatus.locationServices,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (enabled) async {
       if (enabled == true) {
         emit(state.copyWith(
-            status: CheckRequirementsStatus.locationServicesSuccess));
+            status: CheckRequirementsStatus.locationServices,
+            subStatus: CheckRequirementsSubStatus.success));
         getLocation();
       } else {
         emit(state.copyWith(
-            status: CheckRequirementsStatus.locationServicesDisabled));
+            status: CheckRequirementsStatus.locationServices,
+            subStatus: CheckRequirementsSubStatus.result1));
       }
     });
   }
@@ -200,20 +217,24 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     getLastLocationEither.fold((failure) {
       // TODO: handle failure
       emit(state.copyWith(
-          status: CheckRequirementsStatus.getLastLocationFailure,
+          status: CheckRequirementsStatus.getLastLocation,
+          subStatus: CheckRequirementsSubStatus.failure,
           messageKey: _mapFailureToMessageKey(failure)));
       print(failure);
     }, (locationData) {
       print(locationData);
       emit(state.copyWith(
-          status: CheckRequirementsStatus.getLastLocationSuccess,
+          status: CheckRequirementsStatus.getLastLocation,
+          subStatus: CheckRequirementsSubStatus.success,
           currentLocation: locationData));
       updateState();
     });
   }
 
   void updateState() async {
-    emit(state.copyWith(status: CheckRequirementsStatus.setStateLoading));
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.setState,
+        subStatus: CheckRequirementsSubStatus.loading));
 
     final setStateEither =
         await setSelectedUserState(SetSelectedUserStateParams(
@@ -225,57 +246,74 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     setStateEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.setStateFailure,
+        status: CheckRequirementsStatus.setState,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (_) async {
-      emit(state.copyWith(status: CheckRequirementsStatus.setStateSuccess));
+      emit(state.copyWith(
+          status: CheckRequirementsStatus.setState,
+          subStatus: CheckRequirementsSubStatus.success));
       stopUpdates();
     });
   }
 
   void signout() async {
-    emit(state.copyWith(status: CheckRequirementsStatus.logoutLoading));
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.logout,
+        subStatus: CheckRequirementsSubStatus.loading));
     final logoutEither = await logout(NoParams());
     logoutEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.logoutFailure,
+        status: CheckRequirementsStatus.logout,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (_) async {
-      emit(state.copyWith(status: CheckRequirementsStatus.logoutSuccess));
+      emit(state.copyWith(
+          status: CheckRequirementsStatus.logout,
+          subStatus: CheckRequirementsSubStatus.success));
       stopUpdates();
     });
   }
 
   void stopUpdates() async {
-    emit(state.copyWith(status: CheckRequirementsStatus.stopUpdatesLoading));
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.stopUpdates,
+        subStatus: CheckRequirementsSubStatus.loading));
 
     final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
     stopLocationUpdatesEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.stopUpdatesFailure,
+        status: CheckRequirementsStatus.stopUpdates,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (stopped) async {
       if (stopped == true) {
-        emit(
-            state.copyWith(status: CheckRequirementsStatus.stopUpdatesSuccess));
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.stopUpdates,
+            subStatus: CheckRequirementsSubStatus.success));
         if (state.userState.locationAccuracy == 0) {
-          emit(state.copyWith(status: CheckRequirementsStatus.success));
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.complete,
+              subStatus: CheckRequirementsSubStatus.success));
         } else {
           startUpdates();
         }
       } else {
         // TODO: add proper message key
-        emit(
-            state.copyWith(status: CheckRequirementsStatus.stopUpdatesFailure));
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.stopUpdates,
+            subStatus: CheckRequirementsSubStatus.failure));
       }
     });
   }
 
   void startUpdates() async {
-    emit(state.copyWith(status: CheckRequirementsStatus.startUpdatesLoading));
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.startUpdates,
+        subStatus: CheckRequirementsSubStatus.loading));
     final startLocationUpdatesEither = await startLocationUpdates(
       StartLocationUpdatesParams(
         accuracy:
@@ -291,24 +329,31 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     startLocationUpdatesEither.fold((failure) async {
       emit(state.copyWith(
-        status: CheckRequirementsStatus.startUpdatesFailure,
+        status: CheckRequirementsStatus.startUpdates,
+        subStatus: CheckRequirementsSubStatus.failure,
         messageKey: _mapFailureToMessageKey(failure),
       ));
     }, (success) async {
       if (success == true) {
         emit(state.copyWith(
-            status: CheckRequirementsStatus.startUpdatesSuccess));
-        emit(state.copyWith(status: CheckRequirementsStatus.success));
+            status: CheckRequirementsStatus.startUpdates,
+            subStatus: CheckRequirementsSubStatus.success));
+        emit(state.copyWith(
+            status: CheckRequirementsStatus.complete,
+            subStatus: CheckRequirementsSubStatus.success));
       } else {
         // TODO: add proper message key
         emit(state.copyWith(
-            status: CheckRequirementsStatus.startUpdatesFailure));
+            status: CheckRequirementsStatus.startUpdates,
+            subStatus: CheckRequirementsSubStatus.failure));
       }
     });
   }
 
   void clearState() async {
-    emit(state.copyWith(status: CheckRequirementsStatus.clearStateLoading));
+    emit(state.copyWith(
+        status: CheckRequirementsStatus.clearState,
+        subStatus: CheckRequirementsSubStatus.loading));
 
     final clearMissionStateEither = await clearMissionState(NoParams());
     clearMissionStateEither.fold((failure) async {
@@ -325,8 +370,11 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           // TODO: handle failure
         }, (_) async {
           emit(state.copyWith(
-              status: CheckRequirementsStatus.clearStateSuccess));
-          emit(state.copyWith(status: CheckRequirementsStatus.logout));
+              status: CheckRequirementsStatus.clearState,
+              subStatus: CheckRequirementsSubStatus.success));
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.complete,
+              subStatus: CheckRequirementsSubStatus.success));
         });
       });
     });
