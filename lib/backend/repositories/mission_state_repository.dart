@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:background_location/background_location.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,8 @@ abstract class MissionStateRepository {
   Future<Either<Failure, None>> setSelectedUserState(
       AppConnection appConnection,
       AuthenticationData authenticationData,
-      UserState state);
+      UserState state,
+      LocationData currentLocation);
 
   // Selected UserRole
   Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
@@ -80,13 +82,14 @@ class MissionStateRepositoryImpl implements MissionStateRepository {
   Future<Either<Failure, None>> setSelectedUserState(
       AppConnection appConnection,
       AuthenticationData authenticationData,
-      UserState state) async {
+      UserState state,
+      LocationData currentLocation) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
     try {
       await remoteMissionStateDataSource.selectUserState(
-          appConnection, authenticationData, state);
+          appConnection, authenticationData, state, currentLocation);
     } on ServerException {
       return Left(ServerFailure());
     } on TimeoutException {

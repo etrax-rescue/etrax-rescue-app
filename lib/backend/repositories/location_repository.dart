@@ -145,9 +145,13 @@ class LocationRepositoryImpl implements LocationRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> updatesActive() {
-    // TODO: implement updatesActive
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> updatesActive() async {
+    try {
+      final result = await localLocationDataSource.updatesActive();
+      return Right(result);
+    } on PlatformException {
+      return Left(PlatformFailure());
+    }
   }
 
   @override

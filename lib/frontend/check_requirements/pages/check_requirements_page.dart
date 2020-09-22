@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,6 +40,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
   @override
   void initState() {
     super.initState();
+
     if (widget.state.locationAccuracy == 0) {
       _sequenceWidgets = <Widget>[
         FetchSettingsWidget(),
@@ -55,6 +57,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
         StartUpdatesWidget(),
       ];
     }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.bloc<CheckRequirementsCubit>().start(
             widget.state,
@@ -133,6 +136,21 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
       ),
     );
   }
+}
+
+class ErrorAction extends Equatable {
+  ErrorAction({
+    @required this.message,
+    @required this.buttonLabel,
+    @required this.onPressed,
+  });
+
+  final String message;
+  final String buttonLabel;
+  final Function(BuildContext context) onPressed;
+
+  @override
+  List<Object> get props => [message, buttonLabel, onPressed];
 }
 
 enum WidgetState { inactive, loading, error, success }
@@ -367,6 +385,59 @@ class SetStateWidget extends StatelessWidget {
             buttonLabel = S.of(context).RETRY;
             onPressed = () {
               context.bloc<CheckRequirementsCubit>().updateState();
+            };
+            break;
+        }
+      }
+      return SequenceItem(
+        title: title,
+        widgetState: widgetState,
+        buttonLabel: buttonLabel,
+        onPressed: onPressed,
+      );
+    });
+  }
+}
+
+class LogoutWidget extends StatelessWidget {
+  const LogoutWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+        builder: (context, state) {
+      WidgetState widgetState;
+      String title;
+      String buttonLabel = '';
+      Function onPressed = () {};
+
+      if (state.status < CheckRequirementsStatus.logoutLoading) {
+        widgetState = WidgetState.inactive;
+        title = S.of(context).RETRIEVING_SETTINGS;
+      } else if (state.status >= CheckRequirementsStatus.logoutSuccess) {
+        widgetState = WidgetState.success;
+        title = S.of(context).RETRIEVING_SETTINGS_DONE;
+      } else {
+        switch (state.status) {
+          case CheckRequirementsStatus.logoutLoading:
+            widgetState = WidgetState.loading;
+            title = S.of(context).LOGOUT;
+            break;
+          case CheckRequirementsStatus.logoutFailure:
+            widgetState = WidgetState.error;
+            title = translateErrorMessage(context, state.messageKey);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().signout();
+            };
+            break;
+          default:
+            widgetState = WidgetState.error;
+            title =
+                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
+            buttonLabel = S.of(context).RETRY;
+            onPressed = () {
+              context.bloc<CheckRequirementsCubit>().signout();
             };
             break;
         }

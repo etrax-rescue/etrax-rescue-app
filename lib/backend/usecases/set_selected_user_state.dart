@@ -1,3 +1,4 @@
+import 'package:background_location/background_location.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -15,8 +16,8 @@ class SetSelectedUserState extends UseCase<None, SetSelectedUserStateParams> {
 
   @override
   Future<Either<Failure, None>> call(SetSelectedUserStateParams param) async {
-    return await repository.setSelectedUserState(
-        param.appConnection, param.authenticationData, param.state);
+    return await repository.setSelectedUserState(param.appConnection,
+        param.authenticationData, param.state, param.currentLocation);
   }
 }
 
@@ -24,13 +25,16 @@ class SetSelectedUserStateParams extends Equatable {
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
   final UserState state;
+  final LocationData currentLocation;
 
   SetSelectedUserStateParams({
     @required this.appConnection,
     @required this.authenticationData,
     @required this.state,
+    @required this.currentLocation,
   });
 
   @override
-  List<Object> get props => [state];
+  List<Object> get props =>
+      [state, appConnection, authenticationData, currentLocation];
 }

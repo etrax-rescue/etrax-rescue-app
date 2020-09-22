@@ -1,6 +1,8 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_last_location.dart';
+import '../../../backend/usecases/logout.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -8,6 +10,9 @@ import '../../../backend/types/app_connection.dart';
 import '../../../backend/types/authentication_data.dart';
 import '../../../backend/types/usecase.dart';
 import '../../../backend/types/user_states.dart';
+import '../../../backend/usecases/clear_location_cache.dart';
+import '../../../backend/usecases/clear_mission_details.dart';
+import '../../../backend/usecases/clear_mission_state.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
@@ -23,36 +28,51 @@ import '../../util/translate_error_messages.dart';
 part 'check_requirements_state.dart';
 
 class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
-  final GetAppConnection getAppConnection;
-  final GetAuthenticationData getAuthenticationData;
-  final GetAppConfiguration getAppConfiguration;
-  final GetSelectedMission getSelectedMission;
-  final SetSelectedUserState setSelectedUserState;
-  final RequestLocationPermission requestLocationPermission;
-  final RequestLocationService requestLocationService;
-  final StopLocationUpdates stopLocationUpdates;
-  final StartLocationUpdates startLocationUpdates;
-
   CheckRequirementsCubit({
     @required this.setSelectedUserState,
     @required this.getAppConnection,
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
     @required this.getSelectedMission,
+    @required this.getLastLocation,
     @required this.requestLocationPermission,
     @required this.requestLocationService,
     @required this.stopLocationUpdates,
     @required this.startLocationUpdates,
+    @required this.logout,
+    @required this.clearMissionState,
+    @required this.clearMissionDetails,
+    @required this.clearLocationCache,
   })  : assert(setSelectedUserState != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
         assert(getAppConfiguration != null),
         assert(getSelectedMission != null),
+        assert(getLastLocation != null),
         assert(requestLocationPermission != null),
         assert(requestLocationService != null),
         assert(stopLocationUpdates != null),
         assert(startLocationUpdates != null),
+        assert(logout != null),
+        assert(clearMissionState != null),
+        assert(clearMissionDetails != null),
+        assert(clearLocationCache != null),
         super(CheckRequirementsState.initial());
+
+  final GetAppConnection getAppConnection;
+  final GetAuthenticationData getAuthenticationData;
+  final GetAppConfiguration getAppConfiguration;
+  final GetSelectedMission getSelectedMission;
+  final GetLastLocation getLastLocation;
+  final SetSelectedUserState setSelectedUserState;
+  final RequestLocationPermission requestLocationPermission;
+  final RequestLocationService requestLocationService;
+  final StopLocationUpdates stopLocationUpdates;
+  final StartLocationUpdates startLocationUpdates;
+  final Logout logout;
+  final ClearMissionState clearMissionState;
+  final ClearMissionDetails clearMissionDetails;
+  final ClearLocationCache clearLocationCache;
 
   void start(UserState desiredState, String notificationTitle,
       String notificationBody) async {
@@ -167,11 +187,28 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       if (enabled == true) {
         emit(state.copyWith(
             status: CheckRequirementsStatus.locationServicesSuccess));
-        updateState();
+        getLocation();
       } else {
         emit(state.copyWith(
             status: CheckRequirementsStatus.locationServicesDisabled));
       }
+    });
+  }
+
+  void getLocation() async {
+    final getLastLocationEither = await getLastLocation(NoParams());
+    getLastLocationEither.fold((failure) {
+      // TODO: handle failure
+      emit(state.copyWith(
+          status: CheckRequirementsStatus.getLastLocationFailure,
+          messageKey: _mapFailureToMessageKey(failure)));
+      print(failure);
+    }, (locationData) {
+      print(locationData);
+      emit(state.copyWith(
+          status: CheckRequirementsStatus.getLastLocationSuccess,
+          currentLocation: locationData));
+      updateState();
     });
   }
 
@@ -183,6 +220,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       appConnection: state.appConnection,
       authenticationData: state.authenticationData,
       state: state.userState,
+      currentLocation: state.currentLocation,
     ));
 
     setStateEither.fold((failure) async {
@@ -192,6 +230,20 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       ));
     }, (_) async {
       emit(state.copyWith(status: CheckRequirementsStatus.setStateSuccess));
+      stopUpdates();
+    });
+  }
+
+  void signout() async {
+    emit(state.copyWith(status: CheckRequirementsStatus.logoutLoading));
+    final logoutEither = await logout(NoParams());
+    logoutEither.fold((failure) async {
+      emit(state.copyWith(
+        status: CheckRequirementsStatus.logoutFailure,
+        messageKey: _mapFailureToMessageKey(failure),
+      ));
+    }, (_) async {
+      emit(state.copyWith(status: CheckRequirementsStatus.logoutSuccess));
       stopUpdates();
     });
   }
@@ -252,6 +304,31 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         emit(state.copyWith(
             status: CheckRequirementsStatus.startUpdatesFailure));
       }
+    });
+  }
+
+  void clearState() async {
+    emit(state.copyWith(status: CheckRequirementsStatus.clearStateLoading));
+
+    final clearMissionStateEither = await clearMissionState(NoParams());
+    clearMissionStateEither.fold((failure) async {
+      // TODO: handle failure
+    }, (_) async {
+      final clearMissionDetailsEither = await clearMissionDetails(NoParams());
+
+      clearMissionDetailsEither.fold((failure) async {
+        // TODO: handle failure
+      }, (_) async {
+        final clearLocationCacheEither = await clearLocationCache(NoParams());
+
+        clearLocationCacheEither.fold((failure) async {
+          // TODO: handle failure
+        }, (_) async {
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.clearStateSuccess));
+          emit(state.copyWith(status: CheckRequirementsStatus.logout));
+        });
+      });
     });
   }
 

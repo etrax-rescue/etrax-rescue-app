@@ -1,19 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:etrax_rescue_app/backend/types/etrax_server_endpoints.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:background_location/background_location.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../core/error/exceptions.dart';
 import '../../types/app_connection.dart';
 import '../../types/authentication_data.dart';
+import '../../types/etrax_server_endpoints.dart';
 import '../../types/missions.dart';
 import '../../types/user_roles.dart';
 import '../../types/user_states.dart';
 
 abstract class RemoteMissionStateDataSource {
-  Future<void> selectUserState(AppConnection appConnection,
-      AuthenticationData authenticationData, UserState state);
+  Future<void> selectUserState(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState state,
+      LocationData currentLocation);
 
   Future<void> selectMission(AppConnection appConnection,
       AuthenticationData authenticationData, Mission mission);
@@ -52,20 +56,33 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   }
 
   @override
-  Future<void> selectUserState(AppConnection appConnection,
-      AuthenticationData authenticationData, UserState state) async {
+  Future<void> selectUserState(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState state,
+      LocationData currentLocation) async {
+    Map<String, dynamic> requestBody = {'state_id': state.id.toString()};
+    if (currentLocation != null) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        requestBody['location'] = currentLocation.toMap();
+      }
+    }
+    Map<String, String> headers = authenticationData.generateAuthHeader();
+    headers[HttpHeaders.contentTypeHeader] = 'application/json';
+
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
-        headers: authenticationData.generateAuthHeader(),
-        body: {'state_id': state.id.toString()});
-    
+        headers: headers,
+        body: json.encode(requestBody));
+
     http.Response response;
     try {
-        response = await request.timeout(const Duration(seconds: 2));
+      response = await request.timeout(const Duration(seconds: 2));
     } on Exception {
-        throw ServerException();
+      throw ServerException();
     }
-        
+
     if (response.statusCode == 403) {
       throw AuthenticationException();
     }
@@ -85,11 +102,11 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
 
     http.Response response;
     try {
-        response = await request.timeout(const Duration(seconds: 2));
+      response = await request.timeout(const Duration(seconds: 2));
     } on Exception {
-        throw ServerException();
+      throw ServerException();
     }
-        
+
     if (response.statusCode == 403) {
       throw AuthenticationException();
     }

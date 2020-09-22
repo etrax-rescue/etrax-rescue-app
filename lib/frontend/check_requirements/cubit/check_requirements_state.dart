@@ -20,9 +20,17 @@ enum CheckRequirementsStatus {
   locationServicesFailure,
   locationServicesSuccess,
 
+  getLastLocationLoading,
+  getLastLocationFailure,
+  getLastLocationSuccess,
+
   setStateLoading,
   setStateFailure,
   setStateSuccess,
+
+  logoutLoading,
+  logoutFailure,
+  logoutSuccess,
 
   stopUpdatesLoading,
   stopUpdatesFailure,
@@ -32,7 +40,12 @@ enum CheckRequirementsStatus {
   startUpdatesFailure,
   startUpdatesSuccess,
 
+  clearStateLoading,
+  clearStateFailure,
+  clearStateSuccess,
+
   success,
+  logout,
 }
 
 extension CheckRequirementsStatusExtension on CheckRequirementsStatus {
@@ -53,6 +66,7 @@ class CheckRequirementsState extends Equatable {
     @required this.appConfiguration,
     @required this.appConnection,
     @required this.authenticationData,
+    @required this.currentLocation,
     @required this.notificationTitle,
     @required this.notificationBody,
     @required this.label,
@@ -68,6 +82,8 @@ class CheckRequirementsState extends Equatable {
   final AuthenticationData authenticationData;
   final AppConfiguration appConfiguration;
 
+  final LocationData currentLocation;
+
   final String notificationTitle;
   final String notificationBody;
   final String label;
@@ -81,21 +97,23 @@ class CheckRequirementsState extends Equatable {
           appConfiguration: null,
           appConnection: null,
           authenticationData: null,
+          currentLocation: null,
           notificationTitle: '',
           notificationBody: '',
           label: '',
         );
 
   CheckRequirementsState copyWith({
-    @required status,
-    messageKey = '',
-    userState,
-    appConfiguration,
-    appConnection,
-    authenticationData,
-    notificationTitle,
-    notificationBody,
-    label,
+    @required CheckRequirementsStatus status,
+    String messageKey = '',
+    UserState userState,
+    AppConfiguration appConfiguration,
+    AppConnection appConnection,
+    AuthenticationData authenticationData,
+    LocationData currentLocation,
+    String notificationTitle,
+    String notificationBody,
+    String label,
   }) {
     return CheckRequirementsState(
       status: status ?? this.status,
@@ -104,6 +122,7 @@ class CheckRequirementsState extends Equatable {
       appConfiguration: appConfiguration ?? this.appConfiguration,
       appConnection: appConnection ?? this.appConnection,
       authenticationData: authenticationData ?? this.authenticationData,
+      currentLocation: currentLocation ?? this.currentLocation,
       notificationTitle: notificationTitle ?? this.notificationTitle,
       notificationBody: notificationBody ?? this.notificationBody,
       label: label ?? this.label,

@@ -73,8 +73,7 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                           items: stateList.map((UserState userState) {
                             return DropdownMenuItem<UserState>(
                               value: userState,
-                              child: Text(
-                                  '${userState.id.toString()} - ${userState.name}'),
+                              child: Text(userState.name),
                             );
                           }).toList(),
                           onChanged: (val) {

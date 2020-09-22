@@ -1,6 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_last_location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -237,6 +238,11 @@ Future<void> init() async {
         stopLocationUpdates: sl(),
         startLocationUpdates: sl(),
         getSelectedMission: sl(),
+        clearLocationCache: sl(),
+        clearMissionDetails: sl(),
+        clearMissionState: sl(),
+        logout: sl(),
+        getLastLocation: sl(),
       ));
 
   // Use Cases
@@ -256,6 +262,15 @@ Future<void> init() async {
 
   sl.registerLazySingleton<StartLocationUpdates>(
       () => StartLocationUpdates(sl()));
+
+  sl.registerLazySingleton<ClearLocationCache>(() => ClearLocationCache(sl()));
+
+  sl.registerLazySingleton<ClearMissionDetails>(
+      () => ClearMissionDetails(sl()));
+
+  sl.registerLazySingleton<ClearMissionState>(() => ClearMissionState(sl()));
+
+  sl.registerLazySingleton<GetLastLocation>(() => GetLastLocation(sl()));
 
   // Repositories
   sl.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
@@ -292,14 +307,9 @@ Future<void> init() async {
       ));
 
   // Use Cases
-  sl.registerLazySingleton<ClearMissionState>(() => ClearMissionState(sl()));
   sl.registerLazySingleton<GetLocationUpdateStream>(
       () => GetLocationUpdateStream(sl()));
   sl.registerLazySingleton<GetLocationHistory>(() => GetLocationHistory(sl()));
-  sl.registerLazySingleton<ClearLocationCache>(() => ClearLocationCache(sl()));
-  sl.registerLazySingleton<ClearMissionDetails>(
-      () => ClearMissionDetails(sl()));
-
   sl.registerLazySingleton<GetMissionDetails>(() => GetMissionDetails(sl()));
 
   // Repositories
