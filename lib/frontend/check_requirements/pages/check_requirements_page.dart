@@ -88,17 +88,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
           ),
           body: CustomScrollView(
             slivers: <Widget>[
-              SliverPadding(
-                padding: EdgeInsets.all(8),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return _sequenceWidgets[index];
-                    },
-                    childCount: _sequenceWidgets.length,
-                  ),
-                ),
-              ),
+              SequenceSliver(steps: _sequenceWidgets),
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: WidthLimiter(
@@ -567,6 +557,39 @@ class StartUpdatesWidget extends StatelessWidget {
   }
 }
 
+class SequenceState {
+  SequenceState({
+    @required this.title,
+    @required this.state,
+    this.content,
+  });
+
+  final String title;
+  final Widget content;
+  final WidgetState state;
+}
+
+class SequenceSliver extends StatelessWidget {
+  const SequenceSliver({Key key, @required this.steps}) : super(key: key);
+
+  final List<Widget> steps;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.all(8),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return steps[index];
+          },
+          childCount: steps.length,
+        ),
+      ),
+    );
+  }
+}
+
 class SequenceItem extends StatefulWidget {
   SequenceItem({
     Key key,
@@ -590,6 +613,8 @@ class SequenceItem extends StatefulWidget {
 }
 
 class _SequenceItemState extends State<SequenceItem> {
+  Widget content;
+
   Color _currentColor() {
     switch (widget.widgetState) {
       case WidgetState.inactive:
@@ -653,18 +678,19 @@ class _SequenceItemState extends State<SequenceItem> {
   }
 
   Widget _buildContent() {
-    Widget button = SizedBox();
     if (widget.widgetState == WidgetState.error) {
-      button = MaterialButton(
+      content = MaterialButton(
         onPressed: widget.onPressed,
         color: Theme.of(context).errorColor,
         child: Text(widget.buttonLabel,
             style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor)),
       );
+    } else {
+      content = SizedBox();
     }
     return AnimatedSwitcher(
       duration: kThemeAnimationDuration,
-      child: button,
+      child: content,
       transitionBuilder: (child, animation) {
         return SizeTransition(sizeFactor: animation, child: child);
       },
