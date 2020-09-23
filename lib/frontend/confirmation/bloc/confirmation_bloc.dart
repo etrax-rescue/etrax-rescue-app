@@ -76,16 +76,16 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
     }
   }
 
-  String _mapFailureToMessage(Failure failure) {
+  FailureMessageKey _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.network;
       case ServerFailure:
-        return SERVER_URL_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.serverUrl;
       case CacheFailure:
-        return CACHE_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.cache;
       default:
-        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.unexpected;
     }
   }
 }

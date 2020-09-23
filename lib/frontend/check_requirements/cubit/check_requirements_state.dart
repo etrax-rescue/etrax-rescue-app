@@ -1,54 +1,5 @@
 part of 'check_requirements_cubit.dart';
 
-/*
-enum CheckRequirementsStatus {
-  initial,
-
-  started,
-
-  settingsLoading,
-  settingsFailure,
-  settingsSuccess,
-
-  locationPermissionLoading,
-  locationPermissionDenied,
-  locationPermissionDeniedForever,
-  locationPermissionFailure,
-  locationPermissionSuccess,
-
-  locationServicesLoading,
-  locationServicesDisabled,
-  locationServicesFailure,
-  locationServicesSuccess,
-
-  getLastLocationLoading,
-  getLastLocationFailure,
-  getLastLocationSuccess,
-
-  setStateLoading,
-  setStateFailure,
-  setStateSuccess,
-
-  logoutLoading,
-  logoutFailure,
-  logoutSuccess,
-
-  stopUpdatesLoading,
-  stopUpdatesFailure,
-  stopUpdatesSuccess,
-
-  startUpdatesLoading,
-  startUpdatesFailure,
-  startUpdatesSuccess,
-
-  clearStateLoading,
-  clearStateFailure,
-  clearStateSuccess,
-
-  success,
-  logout,
-}*/
-
 enum CheckRequirementsStatus {
   initial,
   started,
@@ -88,31 +39,35 @@ extension CheckRequirementsStatusExtension on CheckRequirementsStatus {
 
 class CheckRequirementsState extends Equatable {
   const CheckRequirementsState({
+    this.currentStep = 0,
+    this.sequence = const [],
     this.status = CheckRequirementsStatus.initial,
     this.subStatus = CheckRequirementsSubStatus.loading,
-    this.messageKey = '',
-    @required this.userState,
+    this.messageKey,
+    @required this.currentState,
+    @required this.desiredState,
     @required this.appConfiguration,
     @required this.appConnection,
     @required this.authenticationData,
-    @required this.currentLocation,
     @required this.notificationTitle,
     @required this.notificationBody,
     @required this.label,
   });
 
+  final List<SequenceStep> sequence;
+  final int currentStep;
+
   final CheckRequirementsStatus status;
   final CheckRequirementsSubStatus subStatus;
 
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
-  final UserState userState;
+  final UserState currentState;
+  final UserState desiredState;
 
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
   final AppConfiguration appConfiguration;
-
-  final LocationData currentLocation;
 
   final String notificationTitle;
   final String notificationBody;
@@ -120,38 +75,43 @@ class CheckRequirementsState extends Equatable {
 
   const CheckRequirementsState.initial()
       : this(
-          userState: null,
+          currentStep: null,
+          currentState: null,
+          desiredState: null,
           appConfiguration: null,
           appConnection: null,
           authenticationData: null,
-          currentLocation: null,
           notificationTitle: '',
           notificationBody: '',
           label: '',
         );
 
   CheckRequirementsState copyWith({
+    List<SequenceStep> sequence,
+    int currentStep,
     @required CheckRequirementsStatus status,
     @required CheckRequirementsSubStatus subStatus,
-    String messageKey = '',
-    UserState userState,
+    FailureMessageKey messageKey,
+    UserState currentState,
+    UserState desiredState,
     AppConfiguration appConfiguration,
     AppConnection appConnection,
     AuthenticationData authenticationData,
-    LocationData currentLocation,
     String notificationTitle,
     String notificationBody,
     String label,
   }) {
     return CheckRequirementsState(
+      sequence: sequence ?? this.sequence,
+      currentStep: currentStep ?? this.currentStep,
       status: status ?? this.status,
       subStatus: subStatus ?? this.subStatus,
-      messageKey: messageKey ?? '',
-      userState: userState ?? this.userState,
+      messageKey: messageKey,
+      currentState: currentState ?? this.currentState,
+      desiredState: desiredState ?? this.desiredState,
       appConfiguration: appConfiguration ?? this.appConfiguration,
       appConnection: appConnection ?? this.appConnection,
       authenticationData: authenticationData ?? this.authenticationData,
-      currentLocation: currentLocation ?? this.currentLocation,
       notificationTitle: notificationTitle ?? this.notificationTitle,
       notificationBody: notificationBody ?? this.notificationBody,
       label: label ?? this.label,
@@ -163,11 +123,11 @@ class CheckRequirementsState extends Equatable {
         status,
         subStatus,
         messageKey,
-        userState,
+        currentState,
+        desiredState,
         appConnection,
         authenticationData,
         appConfiguration,
-        currentLocation,
         notificationTitle,
         notificationBody,
         label,

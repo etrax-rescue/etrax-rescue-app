@@ -17,24 +17,24 @@ class AppConnectionState extends Equatable {
 
   final AppConnectionStatus status;
   final String connectionString;
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   AppConnectionState.initial()
       : this(
             status: AppConnectionStatus.initial,
             connectionString: null,
-            messageKey: '');
+            messageKey: null);
 
   AppConnectionState.success()
       : this(
             status: AppConnectionStatus.success,
             connectionString: null,
-            messageKey: '');
+            messageKey: null);
 
   AppConnectionState copyWith({
     AppConnectionStatus status,
     String connectionString,
-    String messageKey,
+    FailureMessageKey messageKey,
   }) {
     return AppConnectionState(
         status: status ?? this.status,

@@ -38,7 +38,7 @@ class LaunchHomePage extends LaunchState {
 }
 
 class LaunchRecoverableError extends LaunchState {
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   LaunchRecoverableError({@required this.messageKey});
 
@@ -47,7 +47,7 @@ class LaunchRecoverableError extends LaunchState {
 }
 
 class LaunchUnecoverableError extends LaunchState {
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   LaunchUnecoverableError({@required this.messageKey});
 

@@ -45,6 +45,7 @@
     "STATE": "State",
     "ACTIVE_STATE": "Currently active state", 
     "UPDATE_STATE": "Update",
+    "CONFIRM_LOGOUT": "Would you like to log out?",
 
     "RETRIEVE_SETTINGS_TITLE": "Load app settings",
     "RETRIEVING_SETTINGS": "Loading app settings...",
@@ -54,14 +55,11 @@
     "CHECK_PERMISSIONS_TITLE": "Location permission check",
     "CHECKING_PERMISSIONS": "Checking location permission...",
     "CHECKING_PERMISSIONS_DONE": "Location permission granted",
-    "LOCATION_PERMISSION_DENIED": "Location permission denied",
-    "LOCATION_PERMISSION_DENIED_FOREVER": "Location permission permanently denied. Open settings to resolve this.",
-
+    
     "CHECK_SERVICES_TITLE": "Location services check",
     "CHECKING_SERVICES": "Checking services...",
     "CHECKING_SERVICES_DONE": "Location services successfully activated",
-    "CHECKING_SERVICES_ERROR": "Error while activating location services",
-    "SERVICES_DISABLED": "Location services are disabled",
+    
 
     "UPDATE_STATE_TITLE": "Status update",
     "UPDATING_STATE": "Updating status...",
@@ -71,7 +69,6 @@
     "STARTING_UPDATES": "Starting location updates...",
     "STARTING_UPDATES_DONE": "Location updates started successfully",
 
-    "CONFIRM_LOGOUT": "Would you like to log out?",
     "STOP_UPDATES_TITLE": "Stop location updates",
     "STOPPING_UPDATES": "Stopping location updates...",
     "STOPPING_UPDATES_DONE": "Location updates stopped successfully",
@@ -120,5 +117,9 @@
     "CACHE_FAILURE_MESSAGE": "An error occured during the URI storage process.",
     "INVALID_INPUT_FAILURE_MESSAGE": "The provided URL does not resemble a valid format.\n Example for a valid URL: https://app.etrax.at",
     "LOGIN_FAILURE_MESSAGE": "Invalid username or password",
-    "AUTHENTICATION_FAILURE_MESSAGE": "Access rights to the ressources on the server expired. Please log in again."
+    "AUTHENTICATION_FAILURE_MESSAGE": "Access rights to the ressources on the server expired. Please log in again.",
+
+    "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Location permission denied",
+    "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Location permission permanently denied. Open settings to resolve this.",
+    "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled"
 }

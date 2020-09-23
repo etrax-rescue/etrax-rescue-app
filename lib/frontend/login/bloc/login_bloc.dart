@@ -50,7 +50,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         yield* organizationsEither.fold((failure) async* {
           yield LoginInitializationError(
-              messageKey: _mapFailureToMessage(failure));
+              messageKey: _mapFailureToMessageKey(failure));
         }, (organizations) async* {
           final authenticationDataEither =
               await getAuthenticationData(NoParams());
@@ -82,7 +82,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             organizations: state.organizations,
             username: state.username,
             organizationID: state.organizationID,
-            messageKey: CACHE_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.cache);
       }, (appConnection) async* {
         final loginEither = await login(LoginParams(
           appConnection: appConnection,
@@ -95,7 +95,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               organizations: state.organizations,
               username: state.username,
               organizationID: state.organizationID,
-              messageKey: _mapFailureToMessage(failure));
+              messageKey: _mapFailureToMessageKey(failure));
         }, (_) async* {
           yield LoginSuccess();
         });
@@ -107,25 +107,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             organizations: state.organizations,
             username: state.username,
             organizationID: state.organizationID,
-            messageKey: _mapFailureToMessage(failure));
+            messageKey: _mapFailureToMessageKey(failure));
       }, (_) async* {
         yield OpenAppConnectionPage();
       });
     }
   }
 
-  String _mapFailureToMessage(Failure failure) {
+  FailureMessageKey _mapFailureToMessageKey(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.network;
       case ServerFailure:
-        return SERVER_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.server;
       case CacheFailure:
-        return CACHE_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.cache;
       case LoginFailure:
-        return LOGIN_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.login;
       default:
-        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.unexpected;
     }
   }
 }

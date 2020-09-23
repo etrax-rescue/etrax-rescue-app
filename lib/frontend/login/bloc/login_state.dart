@@ -20,7 +20,7 @@ class LoginInitial extends LoginState {}
 class LoginInitializationError extends LoginState {
   LoginInitializationError({@required this.messageKey});
 
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   @override
   List<Object> get props =>
@@ -62,7 +62,7 @@ class LoginError extends LoginState {
             username: username,
             organizationID: organizationID);
 
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   @override
   List<Object> get props =>

@@ -24,7 +24,7 @@ class SubmitPoiError extends SubmitPoiState {
     @required this.messageKey,
   }) : super(imagePath: imagePath, currentLocation: currentLocation);
 
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   @override
   List<Object> get props => [imagePath, currentLocation, messageKey];

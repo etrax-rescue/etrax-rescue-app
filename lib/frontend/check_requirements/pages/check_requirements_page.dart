@@ -81,7 +81,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             CheckLocationServicesWidget(listIndex: 2),
             StartUpdatesWidget(listIndex: 5, last: true),
           ];
-        }
+        } else {}
         break;
       case StatusPageAction.logout:
         _sequenceWidgets = <Widget>[

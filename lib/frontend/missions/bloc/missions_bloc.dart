@@ -46,14 +46,14 @@ class InitializationBloc
 
       yield* appConnectionEither.fold((failure) async* {
         yield InitializationUnrecoverableError(
-            messageKey: CACHE_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.cache);
       }, (appConnection) async* {
         final authenticationDataEither =
             await getAuthenticationData(NoParams());
 
         yield* authenticationDataEither.fold((failure) async* {
           yield InitializationUnrecoverableError(
-              messageKey: CACHE_FAILURE_MESSAGE_KEY);
+              messageKey: FailureMessageKey.cache);
         }, (authenticationData) async* {
           final initializationEither = await fetchInitializationData(
               FetchInitializationDataParams(
@@ -83,23 +83,23 @@ class InitializationBloc
       case NetworkFailure:
         return InitializationRecoverableError(
             initializationData: state.initializationData,
-            messageKey: NETWORK_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.network);
       case ServerFailure:
         return InitializationRecoverableError(
             initializationData: state.initializationData,
-            messageKey: SERVER_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.server);
       case CacheFailure:
         return InitializationUnrecoverableError(
-            messageKey: CACHE_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.cache);
       case LoginFailure:
         return InitializationUnrecoverableError(
-            messageKey: LOGIN_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.login);
       case AuthenticationFailure:
         return InitializationUnrecoverableError(
-            messageKey: AUTHENTICATION_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.authentication);
       default:
         return InitializationUnrecoverableError(
-            messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY);
+            messageKey: FailureMessageKey.unexpected);
     }
   }
 }

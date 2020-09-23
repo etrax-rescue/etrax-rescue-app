@@ -80,7 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                       } else if (state is LoginInitializationError) {
                         return Column(
                           children: [
-                            Text(state.messageKey),
+                            Text(translateErrorMessage(
+                                context, state.messageKey)),
                             RaisedButton(
                               onPressed: () {
                                 BlocProvider.of<LoginBloc>(context)
@@ -164,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onSaved: (val) {
                                     _password = val;
                                   },
-				  onFieldSubmitted: (val) => submit(),
+                                  onFieldSubmitted: (val) => submit(),
                                   validator: (val) => val.length < 1
                                       ? S.of(context).FIELD_REQUIRED
                                       : null,

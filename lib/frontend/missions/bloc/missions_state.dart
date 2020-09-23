@@ -24,7 +24,7 @@ class InitializationSuccess extends InitializationState {
 class InitializationLogoutSuccess extends InitializationState {}
 
 class InitializationRecoverableError extends InitializationState {
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   InitializationRecoverableError(
       {@required InitializationData initializationData,
@@ -36,7 +36,7 @@ class InitializationRecoverableError extends InitializationState {
 }
 
 class InitializationUnrecoverableError extends InitializationState {
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   InitializationUnrecoverableError({@required this.messageKey});
 

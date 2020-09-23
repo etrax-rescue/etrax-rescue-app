@@ -433,6 +433,16 @@ class S {
     );
   }
 
+  /// `Would you like to log out?`
+  String get CONFIRM_LOGOUT {
+    return Intl.message(
+      'Would you like to log out?',
+      name: 'CONFIRM_LOGOUT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Load app settings`
   String get RETRIEVE_SETTINGS_TITLE {
     return Intl.message(
@@ -503,26 +513,6 @@ class S {
     );
   }
 
-  /// `Location permission denied`
-  String get LOCATION_PERMISSION_DENIED {
-    return Intl.message(
-      'Location permission denied',
-      name: 'LOCATION_PERMISSION_DENIED',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Location permission permanently denied. Open settings to resolve this.`
-  String get LOCATION_PERMISSION_DENIED_FOREVER {
-    return Intl.message(
-      'Location permission permanently denied. Open settings to resolve this.',
-      name: 'LOCATION_PERMISSION_DENIED_FOREVER',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Location services check`
   String get CHECK_SERVICES_TITLE {
     return Intl.message(
@@ -548,26 +538,6 @@ class S {
     return Intl.message(
       'Location services successfully activated',
       name: 'CHECKING_SERVICES_DONE',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Error while activating location services`
-  String get CHECKING_SERVICES_ERROR {
-    return Intl.message(
-      'Error while activating location services',
-      name: 'CHECKING_SERVICES_ERROR',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Location services are disabled`
-  String get SERVICES_DISABLED {
-    return Intl.message(
-      'Location services are disabled',
-      name: 'SERVICES_DISABLED',
       desc: '',
       args: [],
     );
@@ -628,16 +598,6 @@ class S {
     return Intl.message(
       'Location updates started successfully',
       name: 'STARTING_UPDATES_DONE',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Would you like to log out?`
-  String get CONFIRM_LOGOUT {
-    return Intl.message(
-      'Would you like to log out?',
-      name: 'CONFIRM_LOGOUT',
       desc: '',
       args: [],
     );
@@ -1048,6 +1008,36 @@ class S {
     return Intl.message(
       'Access rights to the ressources on the server expired. Please log in again.',
       name: 'AUTHENTICATION_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission denied`
+  String get LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE {
+    return Intl.message(
+      'Location permission denied',
+      name: 'LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission permanently denied. Open settings to resolve this.`
+  String get LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE {
+    return Intl.message(
+      'Location permission permanently denied. Open settings to resolve this.',
+      name: 'LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location services are disabled`
+  String get LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE {
+    return Intl.message(
+      'Location services are disabled',
+      name: 'LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE',
       desc: '',
       args: [],
     );

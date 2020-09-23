@@ -91,18 +91,18 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
     }
   }
 
-  String _mapFailureToMessage(Failure failure) {
+  FailureMessageKey _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.network;
       case ServerFailure:
-        return SERVER_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.server;
       case CacheFailure:
-        return CACHE_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.cache;
       case LoginFailure:
-        return LOGIN_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.login;
       default:
-        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.unexpected;
     }
   }
 }

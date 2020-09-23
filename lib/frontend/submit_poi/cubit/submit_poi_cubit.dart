@@ -92,7 +92,7 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
               emit(SubmitPoiError(
                   imagePath: state.imagePath,
                   currentLocation: state.currentLocation,
-                  messageKey: UNEXPECTED_FAILURE_MESSAGE_KEY));
+                  messageKey: FailureMessageKey.unexpected));
             }
           });
         });
@@ -112,16 +112,16 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
     }
   }
 
-  String _mapFailureToMessage(Failure failure) {
+  FailureMessageKey _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.network;
       case ServerFailure:
-        return SERVER_URL_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.server;
       case CacheFailure:
-        return CACHE_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.cache;
       default:
-        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.unexpected;
     }
   }
 

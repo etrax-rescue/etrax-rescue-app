@@ -15,7 +15,7 @@ class ConfirmationSuccess extends ConfirmationState {}
 class ConfirmationError extends ConfirmationState {
   ConfirmationError({@required this.messageKey});
 
-  final String messageKey;
+  final FailureMessageKey messageKey;
 
   @override
   List<Object> get props => [messageKey];

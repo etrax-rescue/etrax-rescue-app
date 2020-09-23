@@ -59,7 +59,7 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
     inputEither.fold((failure) {
       emit(state.copyWith(
           status: AppConnectionStatus.error,
-          messageKey: INVALID_INPUT_FAILURE_MESSAGE_KEY));
+          messageKey: _mapFailureToMessage(failure)));
     }, (connectionString) async {
       emit(state.copyWith(
         status: AppConnectionStatus.loading,
@@ -79,16 +79,18 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
     });
   }
 
-  String _mapFailureToMessage(Failure failure) {
+  FailureMessageKey _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.network;
       case ServerFailure:
-        return SERVER_URL_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.serverUrl;
       case CacheFailure:
-        return CACHE_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.cache;
+      case InvalidInputFailure:
+        return FailureMessageKey.invalidInput;
       default:
-        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.unexpected;
     }
   }
 }

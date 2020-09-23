@@ -2,6 +2,7 @@ import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import '../../../backend/types/app_configuration.dart';
 import '../../../backend/types/app_connection.dart';
@@ -26,6 +27,23 @@ import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'check_requirements_state.dart';
+
+enum SequenceStep {
+  getSettings,
+  checkPermissions,
+  checkServices,
+  updateState,
+  logout,
+  stopUpdates,
+  clearState,
+  startUpdates,
+}
+
+enum StatusAction {
+  change,
+  refresh,
+  logout,
+}
 
 class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   CheckRequirementsCubit({
@@ -57,7 +75,19 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         assert(clearMissionState != null),
         assert(clearMissionDetails != null),
         assert(clearLocationCache != null),
-        super(CheckRequirementsState.initial());
+        super(CheckRequirementsState.initial()) {
+    // Initialize the map that translates sequence step positions to functions
+    _stepMap = {
+      SequenceStep.getSettings: retrieveSettings,
+      SequenceStep.checkPermissions: locationPermissionCheck,
+      SequenceStep.checkServices: locationServicesCheck,
+      SequenceStep.updateState: updateState,
+      SequenceStep.logout: signout,
+      SequenceStep.stopUpdates: stopUpdates,
+      SequenceStep.clearState: clearState,
+      SequenceStep.startUpdates: startUpdates,
+    };
+  }
 
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
@@ -74,16 +104,92 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   final ClearMissionDetails clearMissionDetails;
   final ClearLocationCache clearLocationCache;
 
-  void start(UserState desiredState, String notificationTitle,
+  Map<SequenceStep, Function> _stepMap;
+
+  List<SequenceStep> generateSequence(
+      StatusAction action, UserState currentState, UserState desiredState) {
+    if (action == StatusAction.change) {
+      if (currentState.locationAccuracy > 0) {
+        if (desiredState.locationAccuracy > 0) {
+          return [
+            SequenceStep.getSettings,
+            SequenceStep.checkPermissions,
+            SequenceStep.checkServices,
+            SequenceStep.updateState,
+            SequenceStep.stopUpdates,
+            SequenceStep.startUpdates,
+          ];
+        } else {
+          return [
+            SequenceStep.getSettings,
+            SequenceStep.updateState,
+            SequenceStep.stopUpdates,
+          ];
+        }
+      } else {
+        if (desiredState.locationAccuracy > 0) {
+          return [
+            SequenceStep.getSettings,
+            SequenceStep.checkPermissions,
+            SequenceStep.checkServices,
+            SequenceStep.updateState,
+            SequenceStep.startUpdates,
+          ];
+        } else {
+          return [
+            SequenceStep.getSettings,
+            SequenceStep.updateState,
+          ];
+        }
+      }
+    } else if (action == StatusAction.refresh) {
+      if (currentState.locationAccuracy > 0) {
+        return [
+          SequenceStep.checkPermissions,
+          SequenceStep.checkServices,
+          SequenceStep.startUpdates,
+        ];
+      } else {
+        // This only happens when we are sent here to refresh a state that
+        // doesn't require location updates. Therefore we don't have to do
+        // anything. Ideally send the users back to the page they came from.
+        return [];
+      }
+    } else {
+      if (currentState.locationAccuracy > 0) {
+        return [
+          SequenceStep.getSettings,
+          SequenceStep.logout,
+          SequenceStep.stopUpdates,
+          SequenceStep.clearState,
+        ];
+      } else {
+        return [
+          SequenceStep.getSettings,
+          SequenceStep.logout,
+          SequenceStep.clearState,
+        ];
+      }
+    }
+  }
+
+  void start(
+      StatusAction action,
+      UserState currentState,
+      UserState desiredState,
+      String notificationTitle,
       String notificationBody) async {
+    final sequence = generateSequence(action, currentState, desiredState);
     emit(state.copyWith(
+      sequence: sequence,
       status: CheckRequirementsStatus.started,
       subStatus: CheckRequirementsSubStatus.loading,
-      userState: desiredState,
+      currentState: currentState,
+      desiredState: desiredState,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
     ));
-    retrieveSettings();
+    _next();
   }
 
   void retrieveSettings() async {
@@ -134,12 +240,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
               appConfiguration: appConfiguration,
               label: selectedMission.id.toString(),
             ));
-
-            if (state.userState.locationAccuracy == 0) {
-              updateState();
-            } else {
-              locationPermissionCheck();
-            }
+            _next();
           });
         });
       });
@@ -161,12 +262,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       ));
     }, (permissionStatus) async {
       switch (permissionStatus) {
-        case PermissionStatus.granted:
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermission,
-              subStatus: CheckRequirementsSubStatus.success));
-          locationServicesCheck();
-          break;
         case PermissionStatus.denied:
           emit(state.copyWith(
               status: CheckRequirementsStatus.locationPermission,
@@ -176,6 +271,12 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           emit(state.copyWith(
               status: CheckRequirementsStatus.locationPermission,
               subStatus: CheckRequirementsSubStatus.result2));
+          break;
+        case PermissionStatus.granted:
+          emit(state.copyWith(
+              status: CheckRequirementsStatus.locationPermission,
+              subStatus: CheckRequirementsSubStatus.success));
+          _next();
           break;
       }
     });
@@ -188,8 +289,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     final locationServicesRequestEither = await requestLocationService(
         RequestLocationServiceParams(
-            accuracy:
-                _mapUserStateLocationAccuracy(state.userState.locationAccuracy),
+            accuracy: _mapUserStateLocationAccuracy(
+                state.desiredState.locationAccuracy),
             appConfiguration: state.appConfiguration));
 
     locationServicesRequestEither.fold((failure) async {
@@ -203,7 +304,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         emit(state.copyWith(
             status: CheckRequirementsStatus.locationServices,
             subStatus: CheckRequirementsSubStatus.success));
-        getLocation();
+
+        _next();
       } else {
         emit(state.copyWith(
             status: CheckRequirementsStatus.locationServices,
@@ -212,6 +314,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     });
   }
 
+  /*
   void getLocation() async {
     final getLastLocationEither = await getLastLocation(NoParams());
     getLastLocationEither.fold((failure) {
@@ -227,9 +330,10 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           status: CheckRequirementsStatus.getLastLocation,
           subStatus: CheckRequirementsSubStatus.success,
           currentLocation: locationData));
-      updateState();
+
+      _next();
     });
-  }
+  }*/
 
   void updateState() async {
     emit(state.copyWith(
@@ -240,8 +344,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         await setSelectedUserState(SetSelectedUserStateParams(
       appConnection: state.appConnection,
       authenticationData: state.authenticationData,
-      state: state.userState,
-      currentLocation: state.currentLocation,
+      state: state.desiredState,
+      currentLocation: null,
     ));
 
     setStateEither.fold((failure) async {
@@ -254,7 +358,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
           status: CheckRequirementsStatus.setState,
           subStatus: CheckRequirementsSubStatus.success));
-      stopUpdates();
+
+      _next();
     });
   }
 
@@ -273,7 +378,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
           status: CheckRequirementsStatus.logout,
           subStatus: CheckRequirementsSubStatus.success));
-      stopUpdates();
+
+      _next();
     });
   }
 
@@ -294,13 +400,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         emit(state.copyWith(
             status: CheckRequirementsStatus.stopUpdates,
             subStatus: CheckRequirementsSubStatus.success));
-        if (state.userState.locationAccuracy == 0) {
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.complete,
-              subStatus: CheckRequirementsSubStatus.success));
-        } else {
-          startUpdates();
-        }
+
+        _next();
       } else {
         // TODO: add proper message key
         emit(state.copyWith(
@@ -317,7 +418,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     final startLocationUpdatesEither = await startLocationUpdates(
       StartLocationUpdatesParams(
         accuracy:
-            _mapUserStateLocationAccuracy(state.userState.locationAccuracy),
+            _mapUserStateLocationAccuracy(state.desiredState.locationAccuracy),
         appConfiguration: state.appConfiguration,
         notificationTitle: state.notificationTitle,
         notificationBody: state.notificationBody,
@@ -338,9 +439,8 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         emit(state.copyWith(
             status: CheckRequirementsStatus.startUpdates,
             subStatus: CheckRequirementsSubStatus.success));
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.complete,
-            subStatus: CheckRequirementsSubStatus.success));
+
+        _next();
       } else {
         // TODO: add proper message key
         emit(state.copyWith(
@@ -372,24 +472,38 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           emit(state.copyWith(
               status: CheckRequirementsStatus.clearState,
               subStatus: CheckRequirementsSubStatus.success));
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.complete,
-              subStatus: CheckRequirementsSubStatus.success));
+
+          _next();
         });
       });
     });
   }
 
-  String _mapFailureToMessageKey(Failure failure) {
+  void _next() {
+    final nextStep = state.currentStep + 1;
+    if (nextStep >= state.sequence.length) {
+      emit(state.copyWith(
+          status: CheckRequirementsStatus.complete,
+          subStatus: CheckRequirementsSubStatus.success));
+      return;
+    }
+
+    final nextAction = state.sequence[nextStep];
+    _stepMap[nextAction]();
+  }
+
+  FailureMessageKey _mapFailureToMessageKey(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.network;
       case ServerFailure:
-        return SERVER_URL_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.serverUrl;
       case CacheFailure:
-        return CACHE_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.cache;
+      case AuthenticationFailure:
+        return FailureMessageKey.authentication;
       default:
-        return UNEXPECTED_FAILURE_MESSAGE_KEY;
+        return FailureMessageKey.unexpected;
     }
   }
 
