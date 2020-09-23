@@ -5,6 +5,7 @@
     "RETRY": "Erneut versuchen",
     "DROPDOWN_HINT": "-- Bitte Auswählen --",
     "OK": "Ok",
+    "YES": "Ja",
     "CONTINUE": "Weiter",
     "ABOUT": "App Info",
 
@@ -44,6 +45,7 @@
     "STATE": "Status",
     "ACTIVE_STATE": "Derzeit aktiver Status", 
     "UPDATE_STATE": "Aktualisieren",
+    "CONFIRM_LOGOUT": "Wirklich abmelden?",
     
     "RETRIEVE_SETTINGS_TITLE": "Einstellungen laden",
     "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",
@@ -84,6 +86,7 @@
     "TAKE_PHOTO": "Foto aufnehmen",
     "CHANGE_STATUS": "Status ändern",
     "LEAVE_MISSION": "Einsatz verlassen",
+    "CONFIRM_LEAVE_MISSION": "Einsatz wirklich verlassen?",
     "HEADING_INFO": "Informationen",
     "HEADING_GPS": "GPS Details",
     "HEADING_MAP": "Kartenansicht",

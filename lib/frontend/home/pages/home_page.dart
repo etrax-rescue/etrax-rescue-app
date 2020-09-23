@@ -77,15 +77,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
 
     WidgetsBinding.instance.addObserver(this);
-
-    // Do some checks when the Homepage is launched for the first time
-    context.bloc<HomeBloc>().add(CheckStatus());
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      print('resumed');
       // Check for new locations that were recorded while the app was in the background
       context.bloc<HomeBloc>().add(CheckStatus());
     }
@@ -103,7 +99,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _title = _mapIndexToTitle(_pageIndex);
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        print(state.renewStatus);
         if (state.status == HomeStatus.closed) {
           ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
         } else if (state.renewStatus) {
@@ -196,7 +191,29 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void _leaveMission() {
-    BlocProvider.of<HomeBloc>(context).add(Shutdown());
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(S.of(context).LEAVE_MISSION),
+          content: Text(S.of(context).CONFIRM_LEAVE_MISSION),
+          actions: [
+            FlatButton(
+              child: Text(S.of(context).CANCEL),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(S.of(context).YES),
+              onPressed: () {
+                BlocProvider.of<HomeBloc>(context).add(Shutdown());
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _updateState() {

@@ -5,6 +5,7 @@
     "RETRY": "Retry",
     "DROPDOWN_HINT": "-- Please Select --",
     "OK": "Ok",
+    "YES": "Yes",
     "CONTINUE": "Continue",
     "ABOUT": "About",
 
@@ -70,6 +71,7 @@
     "STARTING_UPDATES": "Starting location updates...",
     "STARTING_UPDATES_DONE": "Location updates started successfully",
 
+    "CONFIRM_LOGOUT": "Would you like to log out?",
     "STOP_UPDATES_TITLE": "Stop location updates",
     "STOPPING_UPDATES": "Stopping location updates...",
     "STOPPING_UPDATES_DONE": "Location updates stopped successfully",
@@ -84,6 +86,7 @@
     "TAKE_PHOTO": "Take a photo",
     "CHANGE_STATUS": "Change status",
     "LEAVE_MISSION": "Leave",
+    "CONFIRM_LEAVE_MISSION": "Would you like to leave the mission?",
     "HEADING_INFO": "Informationen",
     "HEADING_GPS": "GPS Details",
     "HEADING_MAP": "Map View",

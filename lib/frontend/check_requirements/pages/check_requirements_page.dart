@@ -10,13 +10,27 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/circular_progress_indicator_icon.dart';
+import '../../widgets/custom_material_icons.dart';
 import '../../widgets/width_limiter.dart';
 import '../cubit/check_requirements_cubit.dart';
 
+enum StatusPageAction {
+  change,
+  refresh,
+  logout,
+}
+
 class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
-  CheckRequirementsPage({Key key, @required this.state}) : super(key: key);
+  CheckRequirementsPage({
+    Key key,
+    @required this.state,
+    @required this.currentState,
+    this.action = StatusPageAction.change,
+  }) : super(key: key);
 
   final UserState state;
+  final UserState currentState;
+  final StatusPageAction action;
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -40,22 +54,50 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
   @override
   void initState() {
     super.initState();
-
-    if (widget.state.locationAccuracy == 0) {
-      _sequenceWidgets = <Widget>[
-        FetchSettingsWidget(listIndex: 0),
-        SetStateWidget(listIndex: 1),
-        StopUpdatesWidget(listIndex: 2, last: true),
-      ];
-    } else {
-      _sequenceWidgets = <Widget>[
-        FetchSettingsWidget(listIndex: 0),
-        CheckLocationPermissionWidget(listIndex: 1),
-        CheckLocationServicesWidget(listIndex: 2),
-        SetStateWidget(listIndex: 3),
-        StopUpdatesWidget(listIndex: 4, last: false),
-        StartUpdatesWidget(listIndex: 5, last: true),
-      ];
+    switch (widget.action) {
+      case StatusPageAction.change:
+        if (widget.state.locationAccuracy == 0) {
+          _sequenceWidgets = <Widget>[
+            FetchSettingsWidget(listIndex: 0),
+            SetStateWidget(listIndex: 1),
+            StopUpdatesWidget(listIndex: 2, last: true),
+          ];
+        } else {
+          _sequenceWidgets = <Widget>[
+            FetchSettingsWidget(listIndex: 0),
+            CheckLocationPermissionWidget(listIndex: 1),
+            CheckLocationServicesWidget(listIndex: 2),
+            SetStateWidget(listIndex: 3),
+            StopUpdatesWidget(listIndex: 4),
+            StartUpdatesWidget(listIndex: 5, last: true),
+          ];
+        }
+        break;
+      case StatusPageAction.refresh:
+        if (widget.state.locationAccuracy == 0) {
+          _sequenceWidgets = <Widget>[
+            FetchSettingsWidget(listIndex: 0),
+            CheckLocationPermissionWidget(listIndex: 1),
+            CheckLocationServicesWidget(listIndex: 2),
+            StartUpdatesWidget(listIndex: 5, last: true),
+          ];
+        }
+        break;
+      case StatusPageAction.logout:
+        _sequenceWidgets = <Widget>[
+          FetchSettingsWidget(listIndex: 0),
+        ];
+        if (widget.currentState.locationAccuracy > 0) {
+          _sequenceWidgets.addAll([
+            LogoutWidget(listIndex: 1),
+            StopUpdatesWidget(listIndex: 2, last: true),
+          ]);
+        } else {
+          _sequenceWidgets.add(
+            LogoutWidget(listIndex: 1, last: true),
+          );
+        }
+        break;
     }
 
     WidgetsBinding.instance.addPostFrameCallback(
@@ -87,6 +129,36 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
           appBar: AppBar(
             title: Text(S.of(context).STATE_HEADING),
             automaticallyImplyLeading: _goingBackPossible,
+            actions: [
+              IconButton(
+                icon: Icon(CustomMaterialIcons.logout),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text(S.of(context).LOGOUT),
+                        content: Text(S.of(context).CONFIRM_LOGOUT),
+                        actions: [
+                          FlatButton(
+                            child: Text(S.of(context).CANCEL),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          FlatButton(
+                            child: Text(S.of(context).YES),
+                            onPressed: () {
+                              print('logout');
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              )
+            ],
           ),
           body: CustomScrollView(
             slivers: <Widget>[
@@ -387,9 +459,12 @@ class SetStateWidget extends StatelessWidget {
 }
 
 class LogoutWidget extends StatelessWidget {
-  const LogoutWidget({Key key, @required this.listIndex}) : super(key: key);
+  const LogoutWidget({Key key, @required this.listIndex, this.last = false})
+      : super(key: key);
 
   final int listIndex;
+  final bool last;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
@@ -428,6 +503,7 @@ class LogoutWidget extends StatelessWidget {
         currentStatus: state.status,
         subStatus: state.subStatus,
         listIndex: listIndex,
+        last: last,
       );
     });
   }
@@ -435,7 +511,7 @@ class LogoutWidget extends StatelessWidget {
 
 class StopUpdatesWidget extends StatelessWidget {
   const StopUpdatesWidget(
-      {Key key, @required this.listIndex, @required this.last})
+      {Key key, @required this.listIndex, this.last = false})
       : super(key: key);
 
   final int listIndex;

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_location_updates_status.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -21,6 +20,7 @@ import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/get_location_history.dart';
 import '../../../backend/usecases/get_location_update_stream.dart';
+import '../../../backend/usecases/get_location_updates_status.dart';
 import '../../../backend/usecases/get_mission_details.dart';
 import '../../../backend/usecases/get_mission_state.dart';
 import '../../../backend/usecases/stop_location_updates.dart';
@@ -142,7 +142,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
             // Trigger an initial location update so that we can collect the
             // location history even if location updates are not active
-            add(LocationUpdate());
+            add(CheckStatus());
           });
         });
       });
@@ -193,7 +193,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* locationUpdatesStatusEither.fold((failure) async* {
         yield state.copyWith(renewStatus: true);
       }, (active) async* {
-        print('status: $active');
         if (active) {
           add(LocationUpdate());
         } else {

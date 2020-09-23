@@ -44,6 +44,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "CHECK_PERMISSIONS_TITLE" : MessageLookupByLibrary.simpleMessage("Berechtigungen prüfen"),
     "CHECK_SERVICES_TITLE" : MessageLookupByLibrary.simpleMessage("Ortungsdienste prüfen"),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Rückmelden"),
+    "CONFIRM_LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Einsatz wirklich verlassen?"),
+    "CONFIRM_LOGOUT" : MessageLookupByLibrary.simpleMessage("Wirklich abmelden?"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Verbinden"),
     "CONTINUE" : MessageLookupByLibrary.simpleMessage("Weiter"),
     "DATETIME" : MessageLookupByLibrary.simpleMessage("Zeitpunkt"),
@@ -119,6 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "UPDATE_STATE_TITLE" : MessageLookupByLibrary.simpleMessage("Status aktualisieren"),
     "UPDATING_STATE" : MessageLookupByLibrary.simpleMessage("Status wird aktualisiert..."),
     "UPDATING_STATE_DONE" : MessageLookupByLibrary.simpleMessage("Status wurde aktualisiert"),
-    "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername")
+    "USERNAME" : MessageLookupByLibrary.simpleMessage("Benutzername"),
+    "YES" : MessageLookupByLibrary.simpleMessage("Ja")
   };
 }

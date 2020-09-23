@@ -44,6 +44,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "CHECK_PERMISSIONS_TITLE" : MessageLookupByLibrary.simpleMessage("Location permission check"),
     "CHECK_SERVICES_TITLE" : MessageLookupByLibrary.simpleMessage("Location services check"),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Confirmation"),
+    "CONFIRM_LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Would you like to leave the mission?"),
+    "CONFIRM_LOGOUT" : MessageLookupByLibrary.simpleMessage("Would you like to log out?"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Connect"),
     "CONTINUE" : MessageLookupByLibrary.simpleMessage("Continue"),
     "DATETIME" : MessageLookupByLibrary.simpleMessage("Datetime"),
@@ -119,6 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "UPDATE_STATE_TITLE" : MessageLookupByLibrary.simpleMessage("Status update"),
     "UPDATING_STATE" : MessageLookupByLibrary.simpleMessage("Updating status..."),
     "UPDATING_STATE_DONE" : MessageLookupByLibrary.simpleMessage("Status updated"),
-    "USERNAME" : MessageLookupByLibrary.simpleMessage("Username")
+    "USERNAME" : MessageLookupByLibrary.simpleMessage("Username"),
+    "YES" : MessageLookupByLibrary.simpleMessage("Yes")
   };
 }

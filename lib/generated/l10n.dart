@@ -93,6 +93,16 @@ class S {
     );
   }
 
+  /// `Yes`
+  String get YES {
+    return Intl.message(
+      'Yes',
+      name: 'YES',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Continue`
   String get CONTINUE {
     return Intl.message(
@@ -623,6 +633,16 @@ class S {
     );
   }
 
+  /// `Would you like to log out?`
+  String get CONFIRM_LOGOUT {
+    return Intl.message(
+      'Would you like to log out?',
+      name: 'CONFIRM_LOGOUT',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Stop location updates`
   String get STOP_UPDATES_TITLE {
     return Intl.message(
@@ -728,6 +748,16 @@ class S {
     return Intl.message(
       'Leave',
       name: 'LEAVE_MISSION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Would you like to leave the mission?`
+  String get CONFIRM_LEAVE_MISSION {
+    return Intl.message(
+      'Would you like to leave the mission?',
+      name: 'CONFIRM_LEAVE_MISSION',
       desc: '',
       args: [],
     );
