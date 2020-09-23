@@ -56,7 +56,7 @@
     "LOCATION_PERMISSION_DENIED": "Standortberechtigung verweigert",
     "LOCATION_PERMISSION_DENIED_FOREVER": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
 
-    "CHECK_SERVICES_TITLE": "Ortungsdienste überprüfen",
+    "CHECK_SERVICES_TITLE": "Ortungsdienste prüfen",
     "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
     "CHECKING_SERVICES_DONE": "Ortungsdienste erforlgreich aktiviert",
     "SERVICES_DISABLED": "Ortungsdienste sind deaktiviert",

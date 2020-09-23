@@ -77,13 +77,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
 
     WidgetsBinding.instance.addObserver(this);
+
+    // Do some checks when the Homepage is launched for the first time
+    context.bloc<HomeBloc>().add(CheckStatus());
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      print('resumed');
       // Check for new locations that were recorded while the app was in the background
-      context.bloc<HomeBloc>().add(LocationUpdate());
+      context.bloc<HomeBloc>().add(CheckStatus());
     }
   }
 
@@ -99,8 +103,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _title = _mapIndexToTitle(_pageIndex);
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
+        print(state.renewStatus);
         if (state.status == HomeStatus.closed) {
           ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
+        } else if (state.renewStatus) {
+          ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage,
+              arguments: CheckRequirementsPageArguments(state: widget.state));
         }
       },
       child: Scaffold(

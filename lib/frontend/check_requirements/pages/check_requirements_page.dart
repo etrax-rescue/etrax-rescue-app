@@ -707,7 +707,6 @@ class _SequenceItemState extends State<SequenceItem> {
   }
 
   Widget _buildHeading() {
-    print('${widget.ownStatus}: $state, $subStatus, $title, $subtitle');
     List<Widget> children = [
       Text(
         title,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_location_updates_status.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -37,6 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     @required this.getAppConfiguration,
     @required this.getMissionDetails,
     @required this.getLocationHistory,
+    @required this.getLocationUpdatesStatus,
     @required this.clearMissionState,
     @required this.clearLocationCache,
     @required this.stopLocationUpdates,
@@ -48,6 +50,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         assert(getAuthenticationData != null),
         assert(getMissionDetails != null),
         assert(getLocationHistory != null),
+        assert(getLocationUpdatesStatus != null),
         assert(clearMissionState != null),
         assert(clearMissionDetails != null),
         assert(clearLocationCache != null),
@@ -65,6 +68,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ClearLocationCache clearLocationCache;
   final ClearMissionState clearMissionState;
   final StopLocationUpdates stopLocationUpdates;
+  final GetLocationUpdatesStatus getLocationUpdatesStatus;
   final ClearMissionDetails clearMissionDetails;
 
   StreamSubscription<LocationData> _streamSubscription;
@@ -80,6 +84,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _getLocationUpdate(event);
     } else if (event is UpdateMissionDetails) {
       yield* _updateMissionDetails(event);
+    } else if (event is CheckStatus) {
+      yield* _checkStatus(event);
     } else if (event is Shutdown) {
       yield* _shutdown(event);
     }
@@ -174,6 +180,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield state.copyWith(
             status: HomeStatus.ready,
             missionDetailCollection: missionDetailCollection);
+      });
+    }
+  }
+
+  Stream<HomeState> _checkStatus(
+    HomeEvent event,
+  ) async* {
+    if (state.missionState.state.locationAccuracy > 0) {
+      final locationUpdatesStatusEither =
+          await getLocationUpdatesStatus(NoParams());
+      yield* locationUpdatesStatusEither.fold((failure) async* {
+        yield state.copyWith(renewStatus: true);
+      }, (active) async* {
+        print('status: $active');
+        if (active) {
+          add(LocationUpdate());
+        } else {
+          yield state.copyWith(renewStatus: true);
+        }
       });
     }
   }

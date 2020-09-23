@@ -38,6 +38,7 @@
         <!-- This is the location background service -->
         <service
             android:name="at.etrax.background_location.BackgroundService"
+            android:foregroundServiceType="location"
             android:exported="false"/>
 
         <!-- Don't delete the meta-data below.

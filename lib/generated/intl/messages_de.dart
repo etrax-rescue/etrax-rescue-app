@@ -42,7 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "CHECKING_SERVICES_DONE" : MessageLookupByLibrary.simpleMessage("Ortungsdienste erforlgreich aktiviert"),
     "CHECKING_SERVICES_ERROR" : MessageLookupByLibrary.simpleMessage("Fehler beim Anfordern von Ortungsdiensten"),
     "CHECK_PERMISSIONS_TITLE" : MessageLookupByLibrary.simpleMessage("Berechtigungen prüfen"),
-    "CHECK_SERVICES_TITLE" : MessageLookupByLibrary.simpleMessage("Ortungsdienste überprüfen"),
+    "CHECK_SERVICES_TITLE" : MessageLookupByLibrary.simpleMessage("Ortungsdienste prüfen"),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Rückmelden"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Verbinden"),
     "CONTINUE" : MessageLookupByLibrary.simpleMessage("Weiter"),

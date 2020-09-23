@@ -1,7 +1,6 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_last_location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -43,8 +42,10 @@ import 'backend/usecases/fetch_initialization_data.dart';
 import 'backend/usecases/get_app_configuration.dart';
 import 'backend/usecases/get_app_connection.dart';
 import 'backend/usecases/get_authentication_data.dart';
+import 'backend/usecases/get_last_location.dart';
 import 'backend/usecases/get_location_history.dart';
 import 'backend/usecases/get_location_update_stream.dart';
+import 'backend/usecases/get_location_updates_status.dart';
 import 'backend/usecases/get_mission_details.dart';
 import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
@@ -304,6 +305,7 @@ Future<void> init() async {
         getAuthenticationData: sl(),
         getAppConfiguration: sl(),
         clearMissionDetails: sl(),
+        getLocationUpdatesStatus: sl(),
       ));
 
   // Use Cases
@@ -311,6 +313,8 @@ Future<void> init() async {
       () => GetLocationUpdateStream(sl()));
   sl.registerLazySingleton<GetLocationHistory>(() => GetLocationHistory(sl()));
   sl.registerLazySingleton<GetMissionDetails>(() => GetMissionDetails(sl()));
+  sl.registerLazySingleton<GetLocationUpdatesStatus>(
+      () => GetLocationUpdatesStatus(sl()));
 
   // Repositories
   sl.registerLazySingleton<MissionDetailsRepository>(
@@ -373,3 +377,5 @@ Future<void> init() async {
   sl.registerLazySingleton<ImagePicker>(() => ImagePicker());
   sl.registerLazySingleton<Dio>(() => dio);
 }
+
+class GetLocationUpdateStatus {}
