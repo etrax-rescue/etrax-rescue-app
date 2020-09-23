@@ -43,28 +43,30 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
 
     if (widget.state.locationAccuracy == 0) {
       _sequenceWidgets = <Widget>[
-        FetchSettingsWidget(),
-        SetStateWidget(),
-        StopUpdatesWidget(),
+        FetchSettingsWidget(listIndex: 0),
+        SetStateWidget(listIndex: 1),
+        StopUpdatesWidget(listIndex: 2, last: true),
       ];
     } else {
       _sequenceWidgets = <Widget>[
-        FetchSettingsWidget(),
-        CheckLocationPermissionWidget(),
-        CheckLocationServicesWidget(),
-        SetStateWidget(),
-        StopUpdatesWidget(),
-        StartUpdatesWidget(),
+        FetchSettingsWidget(listIndex: 0),
+        CheckLocationPermissionWidget(listIndex: 1),
+        CheckLocationServicesWidget(listIndex: 2),
+        SetStateWidget(listIndex: 3),
+        StopUpdatesWidget(listIndex: 4, last: false),
+        StartUpdatesWidget(listIndex: 5, last: true),
       ];
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.bloc<CheckRequirementsCubit>().start(
-            widget.state,
-            S.of(context).LOCATION_UPDATES_ACTIVE,
-            S.of(context).ETRAX_LOCATION_NOTIFICATION,
-          );
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        context.bloc<CheckRequirementsCubit>().start(
+              widget.state,
+              S.of(context).LOCATION_UPDATES_ACTIVE,
+              S.of(context).ETRAX_LOCATION_NOTIFICATION,
+            );
+      },
+    );
   }
 
   @override
@@ -151,406 +153,386 @@ class ErrorAction extends Equatable {
   List<Object> get props => [message, buttonLabel, onPressed];
 }
 
-enum WidgetState { inactive, loading, error, success }
-
 class FetchSettingsWidget extends StatelessWidget {
-  const FetchSettingsWidget({Key key}) : super(key: key);
+  const FetchSettingsWidget({Key key, @required this.listIndex})
+      : super(key: key);
+
+  final int listIndex;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.settings) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).RETRIEVING_SETTINGS;
-      } else if (state.status > CheckRequirementsStatus.settings) {
-        widgetState = WidgetState.success;
-        title = S.of(context).RETRIEVING_SETTINGS_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).RETRIEVING_SETTINGS;
-            break;
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final settingsSequenceMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).RETRIEVE_SETTINGS_TITLE,
+          subtitle: S.of(context).RETRIEVING_SETTINGS,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).RETRIEVE_SETTINGS_TITLE,
+          subtitle: S.of(context).RETRIEVING_SETTINGS_ERROR,
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().retrieveSettings();
-            };
-            break;
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().retrieveSettings();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).RETRIEVE_SETTINGS_TITLE,
+          subtitle: S.of(context).RETRIEVING_SETTINGS_DONE,
+          state: WidgetState.success,
+        ),
+      };
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        ownStatus: CheckRequirementsStatus.settings,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
+        sequenceStateMap: settingsSequenceMap,
       );
     });
   }
 }
 
 class CheckLocationPermissionWidget extends StatelessWidget {
-  const CheckLocationPermissionWidget({Key key}) : super(key: key);
+  const CheckLocationPermissionWidget({Key key, @required this.listIndex})
+      : super(key: key);
+
+  final int listIndex;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.locationPermission) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).CHECKING_PERMISSIONS;
-      } else if (state.status > CheckRequirementsStatus.locationPermission) {
-        widgetState = WidgetState.success;
-        title = S.of(context).CHECKING_PERMISSIONS_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).CHECKING_PERMISSIONS;
-            break;
-
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final locationPermissionMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).CHECK_PERMISSIONS_TITLE,
+          subtitle: S.of(context).CHECKING_PERMISSIONS,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).CHECK_PERMISSIONS_TITLE,
+          subtitle: translateErrorMessage(context, state.messageKey),
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
-            };
-            break;
-
-          case CheckRequirementsSubStatus.result1:
-            widgetState = WidgetState.error;
-            title = S.of(context).LOCATION_PERMISSION_DENIED;
-            buttonLabel = S.of(context).RESOLVE;
-            onPressed = () {
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.result1: SequenceState(
+          title: S.of(context).CHECK_PERMISSIONS_TITLE,
+          subtitle: S.of(context).LOCATION_PERMISSION_DENIED,
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
-            };
-            break;
-
-          case CheckRequirementsSubStatus.result2:
-            // TODO: add link to settings
-            widgetState = WidgetState.error;
-            title = S.of(context).LOCATION_PERMISSION_DENIED;
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
-            };
-            break;
-
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.result2: SequenceState(
+          title: S.of(context).CHECK_PERMISSIONS_TITLE,
+          subtitle: S.of(context).LOCATION_PERMISSION_DENIED_FOREVER,
+          state: WidgetState.error,
+          // TODO: add link to settings
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).CHECK_PERMISSIONS_TITLE,
+          subtitle: S.of(context).CHECKING_PERMISSIONS_DONE,
+          state: WidgetState.success,
+        ),
+      };
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        sequenceStateMap: locationPermissionMap,
+        ownStatus: CheckRequirementsStatus.locationPermission,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
       );
     });
   }
 }
 
 class CheckLocationServicesWidget extends StatelessWidget {
-  const CheckLocationServicesWidget({Key key}) : super(key: key);
+  const CheckLocationServicesWidget({Key key, @required this.listIndex})
+      : super(key: key);
+
+  final int listIndex;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.locationServices) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).CHECKING_SERVICES;
-      } else if (state.status > CheckRequirementsStatus.locationServices) {
-        widgetState = WidgetState.success;
-        title = S.of(context).CHECKING_SERVICES_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).CHECKING_SERVICES;
-            break;
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final locationServicesMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).CHECK_SERVICES_TITLE,
+          subtitle: S.of(context).CHECKING_SERVICES,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).CHECK_SERVICES_TITLE,
+          subtitle: translateErrorMessage(context, state.messageKey),
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().locationServicesCheck();
-            };
-            break;
-          case CheckRequirementsSubStatus.result1:
-            widgetState = WidgetState.error;
-            title = S.of(context).SERVICES_DISABLED;
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.result1: SequenceState(
+          title: S.of(context).CHECK_SERVICES_TITLE,
+          subtitle: S.of(context).CHECKING_SERVICES_ERROR,
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().locationServicesCheck();
-            };
-            break;
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().locationServicesCheck();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).CHECK_SERVICES_TITLE,
+          subtitle: S.of(context).CHECKING_SERVICES_DONE,
+          state: WidgetState.success,
+        ),
+      };
 
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        sequenceStateMap: locationServicesMap,
+        ownStatus: CheckRequirementsStatus.locationServices,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
       );
     });
   }
 }
 
 class SetStateWidget extends StatelessWidget {
-  const SetStateWidget({Key key}) : super(key: key);
+  const SetStateWidget({Key key, @required this.listIndex}) : super(key: key);
 
+  final int listIndex;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.setState) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).UPDATING_STATE;
-      } else if (state.status > CheckRequirementsStatus.setState) {
-        widgetState = WidgetState.success;
-        title = S.of(context).UPDATING_STATE_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).UPDATING_STATE;
-            break;
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final setStateMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).UPDATE_STATE_TITLE,
+          subtitle: S.of(context).UPDATING_STATE,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).UPDATE_STATE_TITLE,
+          subtitle: translateErrorMessage(context, state.messageKey),
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().updateState();
-            };
-            break;
-
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().updateState();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).UPDATE_STATE_TITLE,
+          subtitle: S.of(context).UPDATING_STATE_DONE,
+          state: WidgetState.success,
+        ),
+      };
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        sequenceStateMap: setStateMap,
+        ownStatus: CheckRequirementsStatus.setState,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
       );
     });
   }
 }
 
 class LogoutWidget extends StatelessWidget {
-  const LogoutWidget({Key key}) : super(key: key);
+  const LogoutWidget({Key key, @required this.listIndex}) : super(key: key);
 
+  final int listIndex;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.logout) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).RETRIEVING_SETTINGS;
-      } else if (state.status > CheckRequirementsStatus.logout) {
-        widgetState = WidgetState.success;
-        title = S.of(context).RETRIEVING_SETTINGS_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).LOGOUT;
-            break;
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final logoutMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).LOGOUT,
+          subtitle: S.of(context).LOGOUT,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).LOGOUT,
+          subtitle: translateErrorMessage(context, state.messageKey),
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().signout();
-            };
-            break;
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().signout();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).LOGOUT,
+          subtitle: S.of(context).LOGOUT,
+          state: WidgetState.success,
+        ),
+      };
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        sequenceStateMap: logoutMap,
+        ownStatus: CheckRequirementsStatus.logout,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
       );
     });
   }
 }
 
 class StopUpdatesWidget extends StatelessWidget {
-  const StopUpdatesWidget({Key key}) : super(key: key);
+  const StopUpdatesWidget(
+      {Key key, @required this.listIndex, @required this.last})
+      : super(key: key);
+
+  final int listIndex;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.stopUpdates) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).STOPPING_UPDATES;
-      } else if (state.status > CheckRequirementsStatus.stopUpdates) {
-        widgetState = WidgetState.success;
-        title = S.of(context).STOPPING_UPDATES_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).STOPPING_UPDATES;
-            break;
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final stopUpdatesMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).STOP_UPDATES_TITLE,
+          subtitle: S.of(context).STOPPING_UPDATES,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).STOP_UPDATES_TITLE,
+          subtitle: translateErrorMessage(context, state.messageKey),
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().stopUpdates();
-            };
-            break;
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().stopUpdates();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).STOP_UPDATES_TITLE,
+          subtitle: S.of(context).STOPPING_UPDATES_DONE,
+          state: WidgetState.loading,
+        ),
+      };
 
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        sequenceStateMap: stopUpdatesMap,
+        ownStatus: CheckRequirementsStatus.stopUpdates,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
+        last: last,
       );
     });
   }
 }
 
 class StartUpdatesWidget extends StatelessWidget {
-  const StartUpdatesWidget({Key key}) : super(key: key);
+  const StartUpdatesWidget(
+      {Key key, @required this.listIndex, @required this.last})
+      : super(key: key);
+
+  final int listIndex;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
         builder: (context, state) {
-      WidgetState widgetState;
-      String title;
-      String buttonLabel = '';
-      Function onPressed = () {};
-
-      if (state.status < CheckRequirementsStatus.startUpdates) {
-        widgetState = WidgetState.inactive;
-        title = S.of(context).STARTING_UPDATES;
-      } else if (state.status > CheckRequirementsStatus.startUpdates) {
-        widgetState = WidgetState.success;
-        title = S.of(context).STARTING_UPDATES_DONE;
-      } else {
-        switch (state.subStatus) {
-          case CheckRequirementsSubStatus.loading:
-            widgetState = WidgetState.loading;
-            title = S.of(context).STARTING_UPDATES;
-            break;
-          case CheckRequirementsSubStatus.failure:
-            widgetState = WidgetState.error;
-            title = translateErrorMessage(context, state.messageKey);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
+      final startUpdatesMap = {
+        CheckRequirementsSubStatus.loading: SequenceState(
+          title: S.of(context).START_UPDATES_TITLE,
+          subtitle: S.of(context).STARTING_UPDATES,
+          state: WidgetState.loading,
+        ),
+        CheckRequirementsSubStatus.failure: SequenceState(
+          title: S.of(context).START_UPDATES_TITLE,
+          subtitle: translateErrorMessage(context, state.messageKey),
+          state: WidgetState.error,
+          content: MaterialButton(
+            onPressed: () {
               context.bloc<CheckRequirementsCubit>().startUpdates();
-            };
-            break;
-          default:
-            widgetState = WidgetState.error;
-            title =
-                translateErrorMessage(context, UNEXPECTED_FAILURE_MESSAGE_KEY);
-            buttonLabel = S.of(context).RETRY;
-            onPressed = () {
-              context.bloc<CheckRequirementsCubit>().startUpdates();
-            };
-            break;
-        }
-      }
+            },
+            color: Theme.of(context).errorColor,
+            child: Text(
+              S.of(context).RETRY,
+              style:
+                  TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+            ),
+          ),
+        ),
+        CheckRequirementsSubStatus.success: SequenceState(
+          title: S.of(context).START_UPDATES_TITLE,
+          subtitle: S.of(context).STARTING_UPDATES_DONE,
+          state: WidgetState.success,
+        ),
+      };
       return SequenceItem(
-        title: title,
-        widgetState: widgetState,
-        buttonLabel: buttonLabel,
-        onPressed: onPressed,
+        sequenceStateMap: startUpdatesMap,
+        ownStatus: CheckRequirementsStatus.startUpdates,
+        currentStatus: state.status,
+        subStatus: state.subStatus,
+        listIndex: listIndex,
+        last: last,
       );
     });
   }
@@ -559,11 +541,13 @@ class StartUpdatesWidget extends StatelessWidget {
 class SequenceState {
   SequenceState({
     @required this.title,
+    @required this.subtitle,
     @required this.state,
     this.content,
   });
 
   final String title;
+  final String subtitle;
   final Widget content;
   final WidgetState state;
 }
@@ -589,24 +573,26 @@ class SequenceSliver extends StatelessWidget {
   }
 }
 
+enum WidgetState { inactive, loading, error, success }
+
 class SequenceItem extends StatefulWidget {
   SequenceItem({
     Key key,
-    @required this.widgetState,
-    @required this.title,
-    this.subtitle = 'hello world',
-    @required this.buttonLabel,
-    @required this.onPressed,
-    this.index = 2,
+    @required this.ownStatus,
+    @required this.currentStatus,
+    @required this.sequenceStateMap,
+    @required this.subStatus,
+    @required this.listIndex,
     this.last = false,
   }) : super(key: key);
 
-  final String title;
-  final String subtitle;
-  final WidgetState widgetState;
-  final String buttonLabel;
-  final VoidCallback onPressed;
-  final int index;
+  final CheckRequirementsStatus ownStatus;
+  final CheckRequirementsStatus currentStatus;
+  final CheckRequirementsSubStatus subStatus;
+
+  final Map<CheckRequirementsSubStatus, SequenceState> sequenceStateMap;
+
+  final int listIndex;
   final bool last;
 
   @override
@@ -614,10 +600,42 @@ class SequenceItem extends StatefulWidget {
 }
 
 class _SequenceItemState extends State<SequenceItem> {
-  Widget content;
+  CheckRequirementsSubStatus get subStatus {
+    if (widget.ownStatus < widget.currentStatus) {
+      return CheckRequirementsSubStatus.success;
+    } else if (widget.ownStatus > widget.currentStatus) {
+      return CheckRequirementsSubStatus.loading;
+    }
+    return widget.subStatus;
+  }
+
+  SequenceState get sequenceState {
+    return widget.sequenceStateMap[subStatus];
+  }
+
+  String get title {
+    return sequenceState?.title ?? '';
+  }
+
+  String get subtitle {
+    return sequenceState?.subtitle ?? '';
+  }
+
+  Widget get content {
+    return sequenceState?.content ?? SizedBox();
+  }
+
+  WidgetState get state {
+    if (widget.ownStatus < widget.currentStatus) {
+      return WidgetState.success;
+    } else if (widget.ownStatus > widget.currentStatus) {
+      return WidgetState.inactive;
+    }
+    return sequenceState?.state ?? WidgetState.error;
+  }
 
   Color _currentColor() {
-    switch (widget.widgetState) {
+    switch (state) {
       case WidgetState.inactive:
         return Theme.of(context).disabledColor;
         break;
@@ -633,9 +651,9 @@ class _SequenceItemState extends State<SequenceItem> {
   }
 
   Widget _buildIcon() {
-    Widget icon = Text(widget.index.toString(),
+    Widget icon = Text((widget.listIndex + 1).toString(),
         style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor));
-    switch (widget.widgetState) {
+    switch (state) {
       case WidgetState.inactive:
         break;
       case WidgetState.loading:
@@ -679,16 +697,6 @@ class _SequenceItemState extends State<SequenceItem> {
   }
 
   Widget _buildContent() {
-    if (widget.widgetState == WidgetState.error) {
-      content = MaterialButton(
-        onPressed: widget.onPressed,
-        color: Theme.of(context).errorColor,
-        child: Text(widget.buttonLabel,
-            style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor)),
-      );
-    } else {
-      content = SizedBox();
-    }
     return AnimatedSwitcher(
       duration: kThemeAnimationDuration,
       child: content,
@@ -699,19 +707,20 @@ class _SequenceItemState extends State<SequenceItem> {
   }
 
   Widget _buildHeading() {
+    print('${widget.ownStatus}: $state, $subStatus, $title, $subtitle');
     List<Widget> children = [
       Text(
-        widget.title,
+        title,
         style: TextStyle(
           fontSize: Theme.of(context).textTheme.subtitle1.fontSize,
           color: _currentColor(),
         ),
       ),
     ];
-    if (widget.widgetState != WidgetState.inactive) {
+    if (state != WidgetState.inactive) {
       children.add(
         Text(
-          widget.subtitle,
+          subtitle,
           style: TextStyle(
             color: Theme.of(context).primaryColorLight,
           ),
@@ -722,7 +731,7 @@ class _SequenceItemState extends State<SequenceItem> {
       child: AnimatedSwitcher(
         duration: kThemeAnimationDuration,
         child: Column(
-          key: ValueKey(widget.title.hashCode),
+          key: ValueKey(title.hashCode),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
         ),
