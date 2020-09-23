@@ -39,6 +39,18 @@ enum SequenceStep {
   startUpdates,
 }
 
+// Just for convenience: we define the > and < operators for this enum, so that
+// we don't have to write .index all the time.
+extension SequenceStepExtension on SequenceStep {
+  bool operator <(SequenceStep other) {
+    return this.index < other.index;
+  }
+
+  bool operator >(SequenceStep other) {
+    return this.index > other.index;
+  }
+}
+
 enum StatusAction {
   change,
   refresh,
@@ -106,7 +118,324 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
   Map<SequenceStep, Function> _stepMap;
 
-  List<SequenceStep> generateSequence(
+  void start(
+      StatusAction action,
+      UserState currentState,
+      UserState desiredState,
+      String notificationTitle,
+      String notificationBody) async {
+    final sequence = _generateSequence(action, currentState, desiredState);
+
+    emit(state.copyWith(
+      sequence: sequence,
+      sequenceStatus:
+          _generateSequenceStatus(currentStatus: StepStatus.disabled),
+      currentState: currentState,
+      desiredState: desiredState,
+      notificationTitle: notificationTitle,
+      notificationBody: notificationBody,
+    ));
+    _next();
+  }
+
+  void retrieveSettings() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+
+    final getAppConnectionEither = await getAppConnection(NoParams());
+    getAppConnectionEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (appConnection) async {
+      final getAuthenticationDataEither =
+          await getAuthenticationData(NoParams());
+
+      getAuthenticationDataEither.fold((failure) async {
+        emit(state.copyWith(
+          sequenceStatus:
+              _generateSequenceStatus(currentStatus: StepStatus.failure),
+          messageKey: mapFailureToMessageKey(failure),
+        ));
+      }, (authenticationData) async {
+        final getAppConfigurationEither = await getAppConfiguration(NoParams());
+
+        getAppConfigurationEither.fold((failure) async {
+          emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.failure),
+            messageKey: mapFailureToMessageKey(failure),
+          ));
+        }, (appConfiguration) async {
+          final getSelectedMissionEither = await getSelectedMission(NoParams());
+          getSelectedMissionEither.fold((failure) async {
+            emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.failure),
+              messageKey: mapFailureToMessageKey(failure),
+            ));
+          }, (selectedMission) async {
+            emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.complete),
+              appConnection: appConnection,
+              authenticationData: authenticationData,
+              appConfiguration: appConfiguration,
+              label: selectedMission.id.toString(),
+            ));
+            _next();
+          });
+        });
+      });
+    });
+  }
+
+  void locationPermissionCheck() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+    final locationPermissionRequestEither =
+        await requestLocationPermission(NoParams());
+
+    locationPermissionRequestEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (permissionStatus) async {
+      switch (permissionStatus) {
+        case PermissionStatus.denied:
+          emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.failure),
+              messageKey: FailureMessageKey.locationPermissionDenied));
+          break;
+        case PermissionStatus.deniedForever:
+          emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.failure),
+              messageKey:
+                  FailureMessageKey.locationPermissionPermanentlyDenied));
+          break;
+        case PermissionStatus.granted:
+          emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.complete),
+          ));
+          _next();
+          break;
+      }
+    });
+  }
+
+  void locationServicesCheck() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+
+    final locationServicesRequestEither = await requestLocationService(
+        RequestLocationServiceParams(
+            accuracy: _mapUserStateLocationAccuracy(
+                state.desiredState.locationAccuracy),
+            appConfiguration: state.appConfiguration));
+
+    locationServicesRequestEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (enabled) async {
+      if (enabled == true) {
+        emit(state.copyWith(
+          sequenceStatus:
+              _generateSequenceStatus(currentStatus: StepStatus.complete),
+        ));
+
+        _next();
+      } else {
+        emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.failure),
+            messageKey: FailureMessageKey.locationServicesDisabled));
+      }
+    });
+  }
+
+  /*
+  void getLocation() async {
+    final getLastLocationEither = await getLastLocation(NoParams());
+    getLastLocationEither.fold((failure) {
+      // TODO: handle failure
+      emit(state.copyWith(
+          sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+          messageKey: mapFailureToMessageKey(failure)));
+      print(failure);
+    }, (locationData) {
+      print(locationData);
+      emit(state.copyWith(
+          sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.complete),
+          currentLocation: locationData));
+
+      _next();
+    });
+  }*/
+
+  void updateState() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+
+    final setStateEither =
+        await setSelectedUserState(SetSelectedUserStateParams(
+      appConnection: state.appConnection,
+      authenticationData: state.authenticationData,
+      state: state.desiredState,
+      currentLocation: null,
+    ));
+
+    setStateEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (_) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.complete),
+      ));
+
+      _next();
+    });
+  }
+
+  void signout() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+    final logoutEither = await logout(NoParams());
+    logoutEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (_) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.complete),
+      ));
+
+      _next();
+    });
+  }
+
+  void stopUpdates() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+
+    final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
+    stopLocationUpdatesEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (stopped) async {
+      if (stopped == true) {
+        emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.complete)));
+
+        _next();
+      } else {
+        // TODO: add proper message key
+        emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.failure),
+            messageKey: FailureMessageKey.unexpected));
+      }
+    });
+  }
+
+  void startUpdates() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+    final startLocationUpdatesEither = await startLocationUpdates(
+      StartLocationUpdatesParams(
+        accuracy:
+            _mapUserStateLocationAccuracy(state.desiredState.locationAccuracy),
+        appConfiguration: state.appConfiguration,
+        notificationTitle: state.notificationTitle,
+        notificationBody: state.notificationBody,
+        appConnection: state.appConnection,
+        authenticationData: state.authenticationData,
+        label: state.label,
+      ),
+    );
+
+    startLocationUpdatesEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (success) async {
+      if (success == true) {
+        emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.complete)));
+
+        _next();
+      } else {
+        // TODO: add proper message key
+        emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.failure),
+            messageKey: FailureMessageKey.unexpected));
+      }
+    });
+  }
+
+  void clearState() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+
+    final clearMissionStateEither = await clearMissionState(NoParams());
+    clearMissionStateEither.fold((failure) async {
+      // TODO: handle failure
+    }, (_) async {
+      final clearMissionDetailsEither = await clearMissionDetails(NoParams());
+
+      clearMissionDetailsEither.fold((failure) async {
+        // TODO: handle failure
+      }, (_) async {
+        final clearLocationCacheEither = await clearLocationCache(NoParams());
+
+        clearLocationCacheEither.fold((failure) async {
+          // TODO: handle failure
+        }, (_) async {
+          emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.complete)));
+
+          _next();
+        });
+      });
+    });
+  }
+
+  List<SequenceStep> _generateSequence(
       StatusAction action, UserState currentState, UserState desiredState) {
     if (action == StatusAction.change) {
       if (currentState.locationAccuracy > 0) {
@@ -173,323 +502,39 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     }
   }
 
-  void start(
-      StatusAction action,
-      UserState currentState,
-      UserState desiredState,
-      String notificationTitle,
-      String notificationBody) async {
-    final sequence = generateSequence(action, currentState, desiredState);
-    emit(state.copyWith(
-      sequence: sequence,
-      status: CheckRequirementsStatus.started,
-      subStatus: CheckRequirementsSubStatus.loading,
-      currentState: currentState,
-      desiredState: desiredState,
-      notificationTitle: notificationTitle,
-      notificationBody: notificationBody,
-    ));
-    _next();
-  }
-
-  void retrieveSettings() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.settings,
-        subStatus: CheckRequirementsSubStatus.loading));
-
-    final getAppConnectionEither = await getAppConnection(NoParams());
-    getAppConnectionEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.settings,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (appConnection) async {
-      final getAuthenticationDataEither =
-          await getAuthenticationData(NoParams());
-
-      getAuthenticationDataEither.fold((failure) async {
-        emit(state.copyWith(
-          status: CheckRequirementsStatus.settings,
-          subStatus: CheckRequirementsSubStatus.failure,
-          messageKey: mapFailureToMessageKey(failure),
-        ));
-      }, (authenticationData) async {
-        final getAppConfigurationEither = await getAppConfiguration(NoParams());
-
-        getAppConfigurationEither.fold((failure) async {
-          emit(state.copyWith(
-            status: CheckRequirementsStatus.settings,
-            subStatus: CheckRequirementsSubStatus.failure,
-            messageKey: mapFailureToMessageKey(failure),
-          ));
-        }, (appConfiguration) async {
-          final getSelectedMissionEither = await getSelectedMission(NoParams());
-          getSelectedMissionEither.fold((failure) async {
-            emit(state.copyWith(
-              status: CheckRequirementsStatus.settings,
-              subStatus: CheckRequirementsSubStatus.failure,
-              messageKey: mapFailureToMessageKey(failure),
-            ));
-          }, (selectedMission) async {
-            emit(state.copyWith(
-              status: CheckRequirementsStatus.settings,
-              subStatus: CheckRequirementsSubStatus.success,
-              appConnection: appConnection,
-              authenticationData: authenticationData,
-              appConfiguration: appConfiguration,
-              label: selectedMission.id.toString(),
-            ));
-            _next();
-          });
-        });
-      });
-    });
-  }
-
-  void locationPermissionCheck() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.locationPermission,
-        subStatus: CheckRequirementsSubStatus.loading));
-    final locationPermissionRequestEither =
-        await requestLocationPermission(NoParams());
-
-    locationPermissionRequestEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.locationPermission,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (permissionStatus) async {
-      switch (permissionStatus) {
-        case PermissionStatus.denied:
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermission,
-              subStatus: CheckRequirementsSubStatus.result1));
-          break;
-        case PermissionStatus.deniedForever:
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermission,
-              subStatus: CheckRequirementsSubStatus.result2));
-          break;
-        case PermissionStatus.granted:
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.locationPermission,
-              subStatus: CheckRequirementsSubStatus.success));
-          _next();
-          break;
-      }
-    });
-  }
-
-  void locationServicesCheck() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.locationServices,
-        subStatus: CheckRequirementsSubStatus.loading));
-
-    final locationServicesRequestEither = await requestLocationService(
-        RequestLocationServiceParams(
-            accuracy: _mapUserStateLocationAccuracy(
-                state.desiredState.locationAccuracy),
-            appConfiguration: state.appConfiguration));
-
-    locationServicesRequestEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.locationServices,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (enabled) async {
-      if (enabled == true) {
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.locationServices,
-            subStatus: CheckRequirementsSubStatus.success));
-
-        _next();
-      } else {
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.locationServices,
-            subStatus: CheckRequirementsSubStatus.result1));
-      }
-    });
-  }
-
-  /*
-  void getLocation() async {
-    final getLastLocationEither = await getLastLocation(NoParams());
-    getLastLocationEither.fold((failure) {
-      // TODO: handle failure
-      emit(state.copyWith(
-          status: CheckRequirementsStatus.getLastLocation,
-          subStatus: CheckRequirementsSubStatus.failure,
-          messageKey: mapFailureToMessageKey(failure)));
-      print(failure);
-    }, (locationData) {
-      print(locationData);
-      emit(state.copyWith(
-          status: CheckRequirementsStatus.getLastLocation,
-          subStatus: CheckRequirementsSubStatus.success,
-          currentLocation: locationData));
-
-      _next();
-    });
-  }*/
-
-  void updateState() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.setState,
-        subStatus: CheckRequirementsSubStatus.loading));
-
-    final setStateEither =
-        await setSelectedUserState(SetSelectedUserStateParams(
-      appConnection: state.appConnection,
-      authenticationData: state.authenticationData,
-      state: state.desiredState,
-      currentLocation: null,
-    ));
-
-    setStateEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.setState,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (_) async {
-      emit(state.copyWith(
-          status: CheckRequirementsStatus.setState,
-          subStatus: CheckRequirementsSubStatus.success));
-
-      _next();
-    });
-  }
-
-  void signout() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.logout,
-        subStatus: CheckRequirementsSubStatus.loading));
-    final logoutEither = await logout(NoParams());
-    logoutEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.logout,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (_) async {
-      emit(state.copyWith(
-          status: CheckRequirementsStatus.logout,
-          subStatus: CheckRequirementsSubStatus.success));
-
-      _next();
-    });
-  }
-
-  void stopUpdates() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.stopUpdates,
-        subStatus: CheckRequirementsSubStatus.loading));
-
-    final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
-    stopLocationUpdatesEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.stopUpdates,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (stopped) async {
-      if (stopped == true) {
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.stopUpdates,
-            subStatus: CheckRequirementsSubStatus.success));
-
-        _next();
-      } else {
-        // TODO: add proper message key
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.stopUpdates,
-            subStatus: CheckRequirementsSubStatus.failure));
-      }
-    });
-  }
-
-  void startUpdates() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.startUpdates,
-        subStatus: CheckRequirementsSubStatus.loading));
-    final startLocationUpdatesEither = await startLocationUpdates(
-      StartLocationUpdatesParams(
-        accuracy:
-            _mapUserStateLocationAccuracy(state.desiredState.locationAccuracy),
-        appConfiguration: state.appConfiguration,
-        notificationTitle: state.notificationTitle,
-        notificationBody: state.notificationBody,
-        appConnection: state.appConnection,
-        authenticationData: state.authenticationData,
-        label: state.label,
+  List<StepStatus> _generateSequenceStatus({
+    @required StepStatus currentStatus,
+  }) {
+    return List<StepStatus>.from(
+      state.sequence.map(
+        (SequenceStep step) {
+          if (step.index < state.currentStepIndex) {
+            return StepStatus.complete;
+          } else if (step.index > state.currentStepIndex) {
+            return StepStatus.disabled;
+          } else {
+            return currentStatus;
+          }
+        },
       ),
     );
-
-    startLocationUpdatesEither.fold((failure) async {
-      emit(state.copyWith(
-        status: CheckRequirementsStatus.startUpdates,
-        subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: mapFailureToMessageKey(failure),
-      ));
-    }, (success) async {
-      if (success == true) {
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.startUpdates,
-            subStatus: CheckRequirementsSubStatus.success));
-
-        _next();
-      } else {
-        // TODO: add proper message key
-        emit(state.copyWith(
-            status: CheckRequirementsStatus.startUpdates,
-            subStatus: CheckRequirementsSubStatus.failure));
-      }
-    });
-  }
-
-  void clearState() async {
-    emit(state.copyWith(
-        status: CheckRequirementsStatus.clearState,
-        subStatus: CheckRequirementsSubStatus.loading));
-
-    final clearMissionStateEither = await clearMissionState(NoParams());
-    clearMissionStateEither.fold((failure) async {
-      // TODO: handle failure
-    }, (_) async {
-      final clearMissionDetailsEither = await clearMissionDetails(NoParams());
-
-      clearMissionDetailsEither.fold((failure) async {
-        // TODO: handle failure
-      }, (_) async {
-        final clearLocationCacheEither = await clearLocationCache(NoParams());
-
-        clearLocationCacheEither.fold((failure) async {
-          // TODO: handle failure
-        }, (_) async {
-          emit(state.copyWith(
-              status: CheckRequirementsStatus.clearState,
-              subStatus: CheckRequirementsSubStatus.success));
-
-          _next();
-        });
-      });
-    });
   }
 
   void _next() {
-    final nextStep = state.currentStep + 1;
-    if (nextStep >= state.sequence.length) {
+    final nextStepIndex = state.currentStepIndex + 1;
+    // If we reached the end of the sequence, emit the final state
+    if (nextStepIndex >= state.sequence.length) {
       emit(state.copyWith(
-          status: CheckRequirementsStatus.complete,
-          subStatus: CheckRequirementsSubStatus.success));
+          sequenceStatus:
+              _generateSequenceStatus(currentStatus: StepStatus.complete)));
       return;
     }
+    // Increase the current step index
+    emit(state.copyWith(currentStepIndex: nextStepIndex));
 
-    final nextAction = state.sequence[nextStep];
-    _stepMap[nextAction]();
+    // Execute the next step
+    final nextStep = state.sequence[nextStepIndex];
+    _stepMap[nextStep]();
   }
 
   LocationAccuracy _mapUserStateLocationAccuracy(int accuracy) {

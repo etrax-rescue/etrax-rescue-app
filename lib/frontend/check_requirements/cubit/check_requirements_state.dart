@@ -1,64 +1,32 @@
 part of 'check_requirements_cubit.dart';
 
-enum CheckRequirementsStatus {
-  initial,
-  started,
-  settings,
-  locationPermission,
-  locationServices,
-  getLastLocation,
-  setState,
-  logout,
-  stopUpdates,
-  startUpdates,
-  clearState,
-  complete,
-}
-
-enum CheckRequirementsSubStatus {
+enum StepStatus {
+  disabled,
   loading,
   failure,
-  result1,
-  result2,
-  success,
-}
-
-extension CheckRequirementsStatusExtension on CheckRequirementsStatus {
-  bool operator <(CheckRequirementsStatus other) {
-    return this.index < other.index;
-  }
-
-  bool operator >(CheckRequirementsStatus other) {
-    return this.index > other.index;
-  }
-
-  bool operator >=(CheckRequirementsStatus other) {
-    return this.index >= other.index;
-  }
+  complete,
 }
 
 class CheckRequirementsState extends Equatable {
   const CheckRequirementsState({
-    this.currentStep = 0,
-    this.sequence = const [],
-    this.status = CheckRequirementsStatus.initial,
-    this.subStatus = CheckRequirementsSubStatus.loading,
-    this.messageKey,
+    @required this.currentStepIndex,
+    @required this.sequence,
+    @required this.sequenceStatus,
     @required this.currentState,
     @required this.desiredState,
     @required this.appConfiguration,
     @required this.appConnection,
     @required this.authenticationData,
-    @required this.notificationTitle,
-    @required this.notificationBody,
-    @required this.label,
+    this.messageKey = FailureMessageKey.unexpected,
+    this.notificationTitle = '',
+    this.notificationBody = '',
+    this.label = '',
   });
 
   final List<SequenceStep> sequence;
-  final int currentStep;
+  final List<StepStatus> sequenceStatus;
 
-  final CheckRequirementsStatus status;
-  final CheckRequirementsSubStatus subStatus;
+  final int currentStepIndex;
 
   final FailureMessageKey messageKey;
 
@@ -75,22 +43,20 @@ class CheckRequirementsState extends Equatable {
 
   const CheckRequirementsState.initial()
       : this(
-          currentStep: null,
+          sequence: const [],
+          sequenceStatus: const [],
+          currentStepIndex: 0,
           currentState: null,
           desiredState: null,
           appConfiguration: null,
           appConnection: null,
           authenticationData: null,
-          notificationTitle: '',
-          notificationBody: '',
-          label: '',
         );
 
   CheckRequirementsState copyWith({
     List<SequenceStep> sequence,
-    int currentStep,
-    @required CheckRequirementsStatus status,
-    @required CheckRequirementsSubStatus subStatus,
+    List<StepStatus> sequenceStatus,
+    int currentStepIndex,
     FailureMessageKey messageKey,
     UserState currentState,
     UserState desiredState,
@@ -103,10 +69,9 @@ class CheckRequirementsState extends Equatable {
   }) {
     return CheckRequirementsState(
       sequence: sequence ?? this.sequence,
-      currentStep: currentStep ?? this.currentStep,
-      status: status ?? this.status,
-      subStatus: subStatus ?? this.subStatus,
-      messageKey: messageKey,
+      sequenceStatus: sequenceStatus ?? this.sequenceStatus,
+      currentStepIndex: currentStepIndex ?? this.currentStepIndex,
+      messageKey: messageKey ?? this.messageKey,
       currentState: currentState ?? this.currentState,
       desiredState: desiredState ?? this.desiredState,
       appConfiguration: appConfiguration ?? this.appConfiguration,
@@ -118,10 +83,12 @@ class CheckRequirementsState extends Equatable {
     );
   }
 
+  // currentStep is intentionally left out, so that increasing the currentStep
+  // without changing the sequence status does not trigger bloc state updates.
   @override
   List<Object> get props => [
-        status,
-        subStatus,
+        sequence,
+        sequenceStatus,
         messageKey,
         currentState,
         desiredState,
