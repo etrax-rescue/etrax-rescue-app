@@ -72,7 +72,7 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
           emit(SubmitPoiError(
               imagePath: state.imagePath,
               currentLocation: state.currentLocation,
-              messageKey: _mapFailureToMessage(failure)));
+              messageKey: mapFailureToMessageKey(failure)));
         }, (progressStream) async {
           // TODO: subscribe to stream
           await _streamSubscription?.cancel();
@@ -87,7 +87,7 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
               emit(SubmitPoiError(
                   imagePath: state.imagePath,
                   currentLocation: state.currentLocation,
-                  messageKey: _mapFailureToMessage(failure)));
+                  messageKey: mapFailureToMessageKey(failure)));
             } else {
               emit(SubmitPoiError(
                   imagePath: state.imagePath,
@@ -109,19 +109,6 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
     } else {
       emit(SubmitPoiSuccess(
           imagePath: state.imagePath, currentLocation: state.currentLocation));
-    }
-  }
-
-  FailureMessageKey _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure:
-        return FailureMessageKey.network;
-      case ServerFailure:
-        return FailureMessageKey.server;
-      case CacheFailure:
-        return FailureMessageKey.cache;
-      default:
-        return FailureMessageKey.unexpected;
     }
   }
 

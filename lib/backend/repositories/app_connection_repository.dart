@@ -59,15 +59,12 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
       model = await remoteAppConnectionDataSource.verifyRemoteEndpoint(
           authority, basePath);
     } on ServerException {
-      return Left(ServerFailure());
+      return Left(ServerConnectionFailure());
     } on SocketException {
       return Left(ServerFailure());
     } on TimeoutException {
       return Left(ServerFailure());
     } on HandshakeException {
-      return Left(ServerFailure());
-    } on Exception {
-      // TODO: handle empty header error!
       return Left(ServerFailure());
     }
     try {

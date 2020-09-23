@@ -2,16 +2,15 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_authentication_data.dart';
 import 'package:flutter/material.dart';
 
+import '../../../backend/types/organizations.dart';
+import '../../../backend/types/usecase.dart';
+import '../../../backend/usecases/delete_app_connection.dart';
 import '../../../backend/usecases/get_app_connection.dart';
+import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/get_organizations.dart';
 import '../../../backend/usecases/login.dart';
-import '../../../backend/usecases/delete_app_connection.dart';
-import '../../../backend/types/organizations.dart';
-import '../../../core/error/failures.dart';
-import '../../../backend/types/usecase.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'login_event.dart';
@@ -50,7 +49,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         yield* organizationsEither.fold((failure) async* {
           yield LoginInitializationError(
-              messageKey: _mapFailureToMessageKey(failure));
+              messageKey: mapFailureToMessageKey(failure));
         }, (organizations) async* {
           final authenticationDataEither =
               await getAuthenticationData(NoParams());
@@ -95,7 +94,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               organizations: state.organizations,
               username: state.username,
               organizationID: state.organizationID,
-              messageKey: _mapFailureToMessageKey(failure));
+              messageKey: mapFailureToMessageKey(failure));
         }, (_) async* {
           yield LoginSuccess();
         });
@@ -107,25 +106,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             organizations: state.organizations,
             username: state.username,
             organizationID: state.organizationID,
-            messageKey: _mapFailureToMessageKey(failure));
+            messageKey: mapFailureToMessageKey(failure));
       }, (_) async* {
         yield OpenAppConnectionPage();
       });
-    }
-  }
-
-  FailureMessageKey _mapFailureToMessageKey(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure:
-        return FailureMessageKey.network;
-      case ServerFailure:
-        return FailureMessageKey.server;
-      case CacheFailure:
-        return FailureMessageKey.cache;
-      case LoginFailure:
-        return FailureMessageKey.login;
-      default:
-        return FailureMessageKey.unexpected;
     }
   }
 }

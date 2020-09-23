@@ -202,7 +202,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.settings,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (appConnection) async {
       final getAuthenticationDataEither =
@@ -212,7 +212,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         emit(state.copyWith(
           status: CheckRequirementsStatus.settings,
           subStatus: CheckRequirementsSubStatus.failure,
-          messageKey: _mapFailureToMessageKey(failure),
+          messageKey: mapFailureToMessageKey(failure),
         ));
       }, (authenticationData) async {
         final getAppConfigurationEither = await getAppConfiguration(NoParams());
@@ -221,7 +221,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           emit(state.copyWith(
             status: CheckRequirementsStatus.settings,
             subStatus: CheckRequirementsSubStatus.failure,
-            messageKey: _mapFailureToMessageKey(failure),
+            messageKey: mapFailureToMessageKey(failure),
           ));
         }, (appConfiguration) async {
           final getSelectedMissionEither = await getSelectedMission(NoParams());
@@ -229,7 +229,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
             emit(state.copyWith(
               status: CheckRequirementsStatus.settings,
               subStatus: CheckRequirementsSubStatus.failure,
-              messageKey: _mapFailureToMessageKey(failure),
+              messageKey: mapFailureToMessageKey(failure),
             ));
           }, (selectedMission) async {
             emit(state.copyWith(
@@ -258,7 +258,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.locationPermission,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (permissionStatus) async {
       switch (permissionStatus) {
@@ -297,7 +297,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.locationServices,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (enabled) async {
       if (enabled == true) {
@@ -322,7 +322,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
           status: CheckRequirementsStatus.getLastLocation,
           subStatus: CheckRequirementsSubStatus.failure,
-          messageKey: _mapFailureToMessageKey(failure)));
+          messageKey: mapFailureToMessageKey(failure)));
       print(failure);
     }, (locationData) {
       print(locationData);
@@ -352,7 +352,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.setState,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (_) async {
       emit(state.copyWith(
@@ -372,7 +372,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.logout,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (_) async {
       emit(state.copyWith(
@@ -393,7 +393,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.stopUpdates,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (stopped) async {
       if (stopped == true) {
@@ -432,7 +432,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       emit(state.copyWith(
         status: CheckRequirementsStatus.startUpdates,
         subStatus: CheckRequirementsSubStatus.failure,
-        messageKey: _mapFailureToMessageKey(failure),
+        messageKey: mapFailureToMessageKey(failure),
       ));
     }, (success) async {
       if (success == true) {
@@ -490,21 +490,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     final nextAction = state.sequence[nextStep];
     _stepMap[nextAction]();
-  }
-
-  FailureMessageKey _mapFailureToMessageKey(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure:
-        return FailureMessageKey.network;
-      case ServerFailure:
-        return FailureMessageKey.serverUrl;
-      case CacheFailure:
-        return FailureMessageKey.cache;
-      case AuthenticationFailure:
-        return FailureMessageKey.authentication;
-      default:
-        return FailureMessageKey.unexpected;
-    }
   }
 
   LocationAccuracy _mapUserStateLocationAccuracy(int accuracy) {

@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 
 import '../../generated/l10n.dart';
@@ -11,9 +12,33 @@ enum FailureMessageKey {
   invalidInput,
   login,
   authentication,
+  platform,
   locationPermissionDenied,
   locationPermissionPermanentlyDenied,
   locationServicesDisabled,
+}
+
+FailureMessageKey mapFailureToMessageKey(Failure failure) {
+  switch (failure.runtimeType) {
+    case NetworkFailure:
+      return FailureMessageKey.network;
+    case ServerConnectionFailure:
+      return FailureMessageKey.serverUrl;
+    case ServerFailure:
+      return FailureMessageKey.server;
+    case CacheFailure:
+      return FailureMessageKey.cache;
+    case InvalidInputFailure:
+      return FailureMessageKey.invalidInput;
+    case LoginFailure:
+      return FailureMessageKey.login;
+    case AuthenticationFailure:
+      return FailureMessageKey.authentication;
+    case PlatformFailure:
+      return FailureMessageKey.platform;
+    default:
+      return FailureMessageKey.unexpected;
+  }
 }
 
 String translateErrorMessage(BuildContext context, FailureMessageKey key) {
@@ -44,6 +69,8 @@ String translateErrorMessage(BuildContext context, FailureMessageKey key) {
           .LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE;
     case FailureMessageKey.locationServicesDisabled:
       return S.of(context).LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE;
+    case FailureMessageKey.platform:
+      return S.of(context).PLATFORM_FAILURE_MESSAGE;
     default:
       return S.of(context).UNEXPECTED_FAILURE_MESSAGE;
   }

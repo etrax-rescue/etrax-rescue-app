@@ -12,7 +12,6 @@ import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/get_mission_state.dart';
 import '../../../backend/usecases/get_organizations.dart';
-import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'launch_event.dart';
@@ -52,7 +51,7 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
 
         yield* organizationsEither.fold((failure) async* {
           yield LaunchRecoverableError(
-              messageKey: _mapFailureToMessage(failure));
+              messageKey: mapFailureToMessageKey(failure));
         }, (organizations) async* {
           final authenticationDataEither =
               await getAuthenticationData(NoParams());
@@ -88,21 +87,6 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
           });
         });
       });
-    }
-  }
-
-  FailureMessageKey _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure:
-        return FailureMessageKey.network;
-      case ServerFailure:
-        return FailureMessageKey.server;
-      case CacheFailure:
-        return FailureMessageKey.cache;
-      case LoginFailure:
-        return FailureMessageKey.login;
-      default:
-        return FailureMessageKey.unexpected;
     }
   }
 }

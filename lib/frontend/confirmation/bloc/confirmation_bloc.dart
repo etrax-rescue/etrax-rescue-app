@@ -41,13 +41,13 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
       final appConnectionEither = await getAppConnection(NoParams());
 
       yield* appConnectionEither.fold((failure) async* {
-        yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
+        yield ConfirmationError(messageKey: mapFailureToMessageKey(failure));
       }, (appConnection) async* {
         final authenticationDataEither =
             await getAuthenticationData(NoParams());
 
         yield* authenticationDataEither.fold((failure) async* {
-          yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
+          yield ConfirmationError(messageKey: mapFailureToMessageKey(failure));
         }, (authenticationData) async* {
           final setMissionEither = await setSelectedMission(
               SetSelectedMissionParams(
@@ -56,7 +56,8 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
                   mission: event.mission));
 
           yield* setMissionEither.fold((failure) async* {
-            yield ConfirmationError(messageKey: _mapFailureToMessage(failure));
+            yield ConfirmationError(
+                messageKey: mapFailureToMessageKey(failure));
           }, (_) async* {
             final setUserRoleEither = await setSelectedUserRole(
                 SetSelectedUserRoleParams(
@@ -66,26 +67,13 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
 
             yield* setUserRoleEither.fold((failure) async* {
               yield ConfirmationError(
-                  messageKey: _mapFailureToMessage(failure));
+                  messageKey: mapFailureToMessageKey(failure));
             }, (_) async* {
               yield ConfirmationSuccess();
             });
           });
         });
       });
-    }
-  }
-
-  FailureMessageKey _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case NetworkFailure:
-        return FailureMessageKey.network;
-      case ServerFailure:
-        return FailureMessageKey.serverUrl;
-      case CacheFailure:
-        return FailureMessageKey.cache;
-      default:
-        return FailureMessageKey.unexpected;
     }
   }
 }

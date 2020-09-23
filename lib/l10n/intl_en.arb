@@ -121,5 +121,6 @@
 
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Location permission denied",
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Location permission permanently denied. Open settings to resolve this.",
-    "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled"
+    "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled",
+    "PLATFORM_FAILURE_MESSAGE": "A plugin raised an error"
 }

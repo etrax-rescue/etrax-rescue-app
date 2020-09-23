@@ -78,6 +78,7 @@ class InitializationBloc
     }
   }
 
+  //! TODO: Update to mapFailureToMessageKey
   InitializationState _mapFailureToErrorState(Failure failure) {
     switch (failure.runtimeType) {
       case NetworkFailure:

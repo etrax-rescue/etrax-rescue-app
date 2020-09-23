@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "OPEN_LOCATION_SETTINGS" : MessageLookupByLibrary.simpleMessage("Open"),
     "ORGANIZATION" : MessageLookupByLibrary.simpleMessage("Organization"),
     "PASSWORD" : MessageLookupByLibrary.simpleMessage("Password"),
+    "PLATFORM_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("A plugin raised an error"),
     "POI_DESCRIPTION" : MessageLookupByLibrary.simpleMessage("POI Description"),
     "RECONNECT" : MessageLookupByLibrary.simpleMessage("Reconnect App"),
     "RESOLVE" : MessageLookupByLibrary.simpleMessage("Resolve"),

@@ -119,6 +119,7 @@
 
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Standortberechtigung verweigert",
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
-    "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Ortungsdienste sind deaktiviert"
+    "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Ortungsdienste sind deaktiviert",
+    "PLATFORM_FAILURE_MESSAGE": "Ein plugin hat einen Fehler verursacht"
     
 }

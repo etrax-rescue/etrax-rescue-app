@@ -1042,6 +1042,16 @@ class S {
       args: [],
     );
   }
+
+  /// `A plugin raised an error`
+  String get PLATFORM_FAILURE_MESSAGE {
+    return Intl.message(
+      'A plugin raised an error',
+      name: 'PLATFORM_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
