@@ -13,6 +13,7 @@ import '../backend/types/missions.dart';
 import '../backend/types/user_roles.dart';
 import '../backend/types/user_states.dart';
 import '../frontend/app_connection/pages/app_connection_page.dart';
+import '../frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import '../frontend/check_requirements/pages/check_requirements_page.dart';
 import '../frontend/confirmation/pages/confirmation_page.dart';
 import '../frontend/home/pages/home_page.dart';
@@ -123,7 +124,9 @@ class Router extends RouterBase {
       return MaterialPageRoute<dynamic>(
         builder: (context) => CheckRequirementsPage(
           key: args.key,
-          state: args.state,
+          desiredState: args.desiredState,
+          currentState: args.currentState,
+          action: args.action,
         ).wrappedRoute(context),
         settings: data,
       );
@@ -195,8 +198,14 @@ class ConfirmationPageArguments {
 /// CheckRequirementsPage arguments holder class
 class CheckRequirementsPageArguments {
   final Key key;
-  final UserState state;
-  CheckRequirementsPageArguments({this.key, @required this.state});
+  final UserState desiredState;
+  final UserState currentState;
+  final StatusAction action;
+  CheckRequirementsPageArguments(
+      {this.key,
+      @required this.desiredState,
+      @required this.currentState,
+      this.action = StatusAction.change});
 }
 
 /// HomePage arguments holder class

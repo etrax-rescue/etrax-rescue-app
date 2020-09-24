@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'package:etrax_rescue_app/frontend/state_update/bloc/state_update_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -109,8 +110,14 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
   void submit() {
     // TODO: implement logic to update mission data
     if (_formKey.currentState.validate()) {
-      ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage,
-          arguments: CheckRequirementsPageArguments(state: _selectedState));
+      ExtendedNavigator.of(context).popAndPush(
+        Routes.checkRequirementsPage,
+        arguments: CheckRequirementsPageArguments(
+          currentState: widget.currentState,
+          desiredState: _selectedState,
+          action: StatusAction.change,
+        ),
+      );
     }
   }
 }

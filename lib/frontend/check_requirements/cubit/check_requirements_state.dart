@@ -17,18 +17,16 @@ class CheckRequirementsState extends Equatable {
     @required this.appConfiguration,
     @required this.appConnection,
     @required this.authenticationData,
+    this.complete = false,
     this.messageKey = FailureMessageKey.unexpected,
     this.notificationTitle = '',
     this.notificationBody = '',
-    this.label = '',
   });
 
   final List<SequenceStep> sequence;
   final List<StepStatus> sequenceStatus;
 
   final int currentStepIndex;
-
-  final FailureMessageKey messageKey;
 
   final UserState currentState;
   final UserState desiredState;
@@ -37,21 +35,38 @@ class CheckRequirementsState extends Equatable {
   final AuthenticationData authenticationData;
   final AppConfiguration appConfiguration;
 
+  final bool complete;
+
+  final FailureMessageKey messageKey;
+
   final String notificationTitle;
   final String notificationBody;
-  final String label;
 
   const CheckRequirementsState.initial()
       : this(
           sequence: const [],
           sequenceStatus: const [],
-          currentStepIndex: 0,
+          currentStepIndex: -1,
           currentState: null,
           desiredState: null,
           appConfiguration: null,
           appConnection: null,
           authenticationData: null,
         );
+
+  CheckRequirementsState markComplete() {
+    return CheckRequirementsState(
+      sequence: this.sequence,
+      sequenceStatus: this.sequenceStatus,
+      currentStepIndex: this.currentStepIndex,
+      currentState: this.currentState,
+      desiredState: this.desiredState,
+      appConfiguration: this.appConfiguration,
+      appConnection: this.appConnection,
+      authenticationData: this.authenticationData,
+      complete: true,
+    );
+  }
 
   CheckRequirementsState copyWith({
     List<SequenceStep> sequence,
@@ -71,7 +86,7 @@ class CheckRequirementsState extends Equatable {
       sequence: sequence ?? this.sequence,
       sequenceStatus: sequenceStatus ?? this.sequenceStatus,
       currentStepIndex: currentStepIndex ?? this.currentStepIndex,
-      messageKey: messageKey ?? this.messageKey,
+      messageKey: messageKey ?? FailureMessageKey.unexpected,
       currentState: currentState ?? this.currentState,
       desiredState: desiredState ?? this.desiredState,
       appConfiguration: appConfiguration ?? this.appConfiguration,
@@ -79,24 +94,22 @@ class CheckRequirementsState extends Equatable {
       authenticationData: authenticationData ?? this.authenticationData,
       notificationTitle: notificationTitle ?? this.notificationTitle,
       notificationBody: notificationBody ?? this.notificationBody,
-      label: label ?? this.label,
     );
   }
 
-  // currentStep is intentionally left out, so that increasing the currentStep
-  // without changing the sequence status does not trigger bloc state updates.
   @override
   List<Object> get props => [
         sequence,
         sequenceStatus,
-        messageKey,
+        currentStepIndex,
         currentState,
         desiredState,
         appConnection,
         authenticationData,
         appConfiguration,
+        complete,
+        messageKey,
         notificationTitle,
         notificationBody,
-        label,
       ];
 }

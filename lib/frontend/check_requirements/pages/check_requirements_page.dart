@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,27 +9,22 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/circular_progress_indicator_icon.dart';
-import '../../widgets/custom_material_icons.dart';
 import '../../widgets/width_limiter.dart';
 import '../cubit/check_requirements_cubit.dart';
-
-enum StatusPageAction {
-  change,
-  refresh,
-  logout,
-}
+import '../widgets/continue_button_sliver.dart';
+import '../widgets/logout_button.dart';
 
 class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
   CheckRequirementsPage({
     Key key,
-    @required this.state,
+    @required this.desiredState,
     @required this.currentState,
-    this.action = StatusPageAction.change,
+    this.action = StatusAction.change,
   }) : super(key: key);
 
-  final UserState state;
+  final UserState desiredState;
   final UserState currentState;
-  final StatusPageAction action;
+  final StatusAction action;
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -48,65 +42,88 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
-  List<Widget> _sequenceWidgets;
   bool _goingBackPossible = true;
+  Map<SequenceStep, StepContent> _sequenceMap;
 
   @override
   void initState() {
     super.initState();
-    switch (widget.action) {
-      case StatusPageAction.change:
-        if (widget.state.locationAccuracy == 0) {
-          _sequenceWidgets = <Widget>[
-            FetchSettingsWidget(listIndex: 0),
-            SetStateWidget(listIndex: 1),
-            StopUpdatesWidget(listIndex: 2, last: true),
-          ];
-        } else {
-          _sequenceWidgets = <Widget>[
-            FetchSettingsWidget(listIndex: 0),
-            CheckLocationPermissionWidget(listIndex: 1),
-            CheckLocationServicesWidget(listIndex: 2),
-            SetStateWidget(listIndex: 3),
-            StopUpdatesWidget(listIndex: 4),
-            StartUpdatesWidget(listIndex: 5, last: true),
-          ];
-        }
-        break;
-      case StatusPageAction.refresh:
-        if (widget.state.locationAccuracy == 0) {
-          _sequenceWidgets = <Widget>[
-            FetchSettingsWidget(listIndex: 0),
-            CheckLocationPermissionWidget(listIndex: 1),
-            CheckLocationServicesWidget(listIndex: 2),
-            StartUpdatesWidget(listIndex: 5, last: true),
-          ];
-        } else {}
-        break;
-      case StatusPageAction.logout:
-        _sequenceWidgets = <Widget>[
-          FetchSettingsWidget(listIndex: 0),
-        ];
-        if (widget.currentState.locationAccuracy > 0) {
-          _sequenceWidgets.addAll([
-            LogoutWidget(listIndex: 1),
-            StopUpdatesWidget(listIndex: 2, last: true),
-          ]);
-        } else {
-          _sequenceWidgets.add(
-            LogoutWidget(listIndex: 1, last: true),
-          );
-        }
-        break;
-    }
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         context.bloc<CheckRequirementsCubit>().start(
-              widget.state,
-              S.of(context).LOCATION_UPDATES_ACTIVE,
-              S.of(context).ETRAX_LOCATION_NOTIFICATION,
+              action: widget.action,
+              currentState: widget.currentState,
+              desiredState: widget.desiredState,
+              notificationTitle: S.of(context).LOCATION_UPDATES_ACTIVE,
+              notificationBody: S.of(context).ETRAX_LOCATION_NOTIFICATION,
             );
+        _sequenceMap = {
+          SequenceStep.getSettings: StepContent(
+            title: S.of(context).RETRIEVE_SETTINGS_TITLE,
+            loadingMessage: S.of(context).RETRIEVING_SETTINGS,
+            completeMessage: S.of(context).RETRIEVING_SETTINGS_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().retrieveSettings();
+            },
+          ),
+          SequenceStep.checkPermissions: StepContent(
+            title: S.of(context).CHECK_PERMISSIONS_TITLE,
+            loadingMessage: S.of(context).CHECKING_PERMISSIONS,
+            completeMessage: S.of(context).CHECKING_PERMISSIONS_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
+            },
+          ),
+          SequenceStep.checkServices: StepContent(
+            title: S.of(context).CHECK_SERVICES_TITLE,
+            loadingMessage: S.of(context).CHECKING_SERVICES,
+            completeMessage: S.of(context).CHECKING_SERVICES_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().locationServicesCheck();
+            },
+          ),
+          SequenceStep.updateState: StepContent(
+            title: S.of(context).UPDATE_STATE_TITLE,
+            loadingMessage: S.of(context).UPDATING_STATE,
+            completeMessage: S.of(context).UPDATING_STATE_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().updateState();
+            },
+          ),
+          SequenceStep.logout: StepContent(
+            title: S.of(context).LOGOUT,
+            loadingMessage: 'Logging out...',
+            completeMessage: 'Logged out',
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().signout();
+            },
+          ),
+          SequenceStep.stopUpdates: StepContent(
+            title: S.of(context).STOP_UPDATES_TITLE,
+            loadingMessage: S.of(context).STOPPING_UPDATES,
+            completeMessage: S.of(context).STOPPING_UPDATES_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().stopUpdates();
+            },
+          ),
+          SequenceStep.clearState: StepContent(
+            title: 'clearState',
+            loadingMessage: 'Clearing state...',
+            completeMessage: 'State cleared',
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().clearState();
+            },
+          ),
+          SequenceStep.startUpdates: StepContent(
+            title: S.of(context).START_UPDATES_TITLE,
+            loadingMessage: S.of(context).STARTING_UPDATES,
+            completeMessage: S.of(context).STARTING_UPDATES_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().startUpdates();
+            },
+          ),
+        };
       },
     );
   }
@@ -117,114 +134,141 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
       onWillPop: () async {
         return _goingBackPossible;
       },
-      child: BlocListener<CheckRequirementsCubit, CheckRequirementsState>(
-        listener: (context, state) {
-          if (state.status > CheckRequirementsStatus.setState) {
-            setState(() {
-              _goingBackPossible = false;
-            });
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(S.of(context).STATE_HEADING),
-            automaticallyImplyLeading: _goingBackPossible,
-            actions: [
-              IconButton(
-                icon: Icon(CustomMaterialIcons.logout),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(S.of(context).LOGOUT),
-                        content: Text(S.of(context).CONFIRM_LOGOUT),
-                        actions: [
-                          FlatButton(
-                            child: Text(S.of(context).CANCEL),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          FlatButton(
-                            child: Text(S.of(context).YES),
-                            onPressed: () {
-                              print('logout');
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              )
-            ],
-          ),
-          body: CustomScrollView(
-            slivers: <Widget>[
-              SequenceSliver(steps: _sequenceWidgets),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: WidthLimiter(
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: BlocBuilder<CheckRequirementsCubit,
-                          CheckRequirementsState>(
-                        builder: (context, state) {
-                          bool enabled = state.status.index ==
-                                  CheckRequirementsStatus.complete.index
-                              ? true
-                              : false;
-                          return AbsorbPointer(
-                            absorbing: !enabled,
-                            child: MaterialButton(
-                              color: enabled
-                                  ? Theme.of(context).accentColor
-                                  : Colors.grey,
-                              textColor: Colors.white,
-                              onPressed: () {
-                                ExtendedNavigator.of(context)
-                                    .pushAndRemoveUntil(
-                                  Routes.homePage,
-                                  (route) => false,
-                                  arguments:
-                                      HomePageArguments(state: widget.state),
-                                );
-                              },
-                              child: Text(S.of(context).CONTINUE),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(S.of(context).STATE_HEADING),
+          automaticallyImplyLeading: _goingBackPossible,
+          actions: [LogoutButton()],
+        ),
+        body: CustomScrollView(
+          slivers: <Widget>[
+            BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+              builder: (context, state) {
+                final stepContent = List<StepContent>.from(
+                    state.sequence.map((item) => _sequenceMap[item]));
+                return SequenceSliver(steps: stepContent);
+              },
+            ),
+            ContinueButtonSliver(
+              onPressed: () {
+                ExtendedNavigator.of(context).pushAndRemoveUntil(
+                  Routes.homePage,
+                  (route) => false,
+                  arguments: HomePageArguments(state: widget.desiredState),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class ErrorAction extends Equatable {
-  ErrorAction({
-    @required this.message,
-    @required this.buttonLabel,
-    @required this.onPressed,
-  });
+class SequenceWidget extends StatelessWidget {
+  const SequenceWidget({
+    Key key,
+    @required this.index,
+    @required this.stepContent,
+  }) : super(key: key);
 
-  final String message;
-  final String buttonLabel;
-  final Function(BuildContext context) onPressed;
+  final int index;
+  final StepContent stepContent;
 
   @override
-  List<Object> get props => [message, buttonLabel, onPressed];
+  Widget build(BuildContext context) {
+    return BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+      builder: (context, state) {
+        final status = state.sequenceStatus[index];
+        String subtitle;
+        switch (status) {
+          case StepStatus.disabled:
+            break;
+          case StepStatus.loading:
+            subtitle = stepContent.loadingMessage;
+            break;
+          case StepStatus.failure:
+            subtitle = translateErrorMessage(context, state.messageKey);
+            break;
+          case StepStatus.complete:
+            subtitle = stepContent.completeMessage;
+            break;
+        }
+
+        return Column(
+          children: [
+            Text(stepContent.title,
+                style: Theme.of(context).textTheme.subtitle2),
+            Text(subtitle ?? ''),
+            SizedBox(height: 24),
+          ],
+        );
+      },
+    );
+  }
 }
 
+class RetryButton extends StatelessWidget {
+  const RetryButton({Key key, @required this.onPressed}) : super(key: key);
+
+  final Function(BuildContext) onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: () => onPressed(context),
+      color: Theme.of(context).errorColor,
+      child: Text(
+        S.of(context).RETRY,
+        style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+      ),
+    );
+  }
+}
+
+class StepContent {
+  const StepContent({
+    @required this.title,
+    @required this.onRetry,
+    @required this.loadingMessage,
+    @required this.completeMessage,
+  });
+
+  final String title;
+  final Function(BuildContext) onRetry;
+  final String loadingMessage;
+  final String completeMessage;
+}
+
+class SequenceSliver extends StatelessWidget {
+  const SequenceSliver({Key key, @required this.steps}) : super(key: key);
+
+  final List<StepContent> steps;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.all(8),
+      sliver: BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+        builder: (context, state) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return SequenceWidget(
+                  index: index,
+                  stepContent: steps[index],
+                );
+              },
+              childCount: state.sequence.length,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/*
 class FetchSettingsWidget extends StatelessWidget {
   const FetchSettingsWidget({Key key, @required this.listIndex})
       : super(key: key);
@@ -628,27 +672,6 @@ class SequenceState {
   final WidgetState state;
 }
 
-class SequenceSliver extends StatelessWidget {
-  const SequenceSliver({Key key, @required this.steps}) : super(key: key);
-
-  final List<Widget> steps;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: EdgeInsets.all(8),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return steps[index];
-          },
-          childCount: steps.length,
-        ),
-      ),
-    );
-  }
-}
-
 enum WidgetState { inactive, loading, error, success }
 
 class SequenceItem extends StatefulWidget {
@@ -851,3 +874,4 @@ class _SequenceItemState extends State<SequenceItem> {
     );
   }
 }
+*/

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -49,9 +50,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
       body: BlocListener<ConfirmationBloc, ConfirmationState>(
         listener: (context, state) {
           if (state is ConfirmationSuccess) {
-            ExtendedNavigator.of(context).push(Routes.checkRequirementsPage,
-                arguments: CheckRequirementsPageArguments(
-                    state: widget.states.states[0]));
+            // We set current and desired state to the first state of the supplied states.
+            ExtendedNavigator.of(context).push(
+              Routes.checkRequirementsPage,
+              arguments: CheckRequirementsPageArguments(
+                currentState: widget.states.states[0],
+                desiredState: widget.states.states[0],
+                action: StatusAction.change,
+              ),
+            );
           } else if (state is ConfirmationError) {
             Scaffold.of(context).showSnackBar(
               SnackBar(

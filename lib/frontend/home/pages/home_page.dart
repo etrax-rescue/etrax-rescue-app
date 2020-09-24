@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -102,8 +103,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         if (state.status == HomeStatus.closed) {
           ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
         } else if (state.renewStatus) {
-          ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage,
-              arguments: CheckRequirementsPageArguments(state: widget.state));
+          ExtendedNavigator.of(context).popAndPush(
+            Routes.checkRequirementsPage,
+            arguments: CheckRequirementsPageArguments(
+              currentState: widget.state,
+              desiredState: widget.state,
+              action: StatusAction.refresh,
+            ),
+          );
         }
       },
       child: Scaffold(

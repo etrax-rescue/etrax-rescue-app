@@ -39,18 +39,6 @@ enum SequenceStep {
   startUpdates,
 }
 
-// Just for convenience: we define the > and < operators for this enum, so that
-// we don't have to write .index all the time.
-extension SequenceStepExtension on SequenceStep {
-  bool operator <(SequenceStep other) {
-    return this.index < other.index;
-  }
-
-  bool operator >(SequenceStep other) {
-    return this.index > other.index;
-  }
-}
-
 enum StatusAction {
   change,
   refresh,
@@ -118,16 +106,15 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
   Map<SequenceStep, Function> _stepMap;
 
-  void start(
-      StatusAction action,
-      UserState currentState,
-      UserState desiredState,
-      String notificationTitle,
-      String notificationBody) async {
-    final sequence = _generateSequence(action, currentState, desiredState);
-
+  void start({
+    @required StatusAction action,
+    @required UserState currentState,
+    @required UserState desiredState,
+    @required String notificationTitle,
+    @required String notificationBody,
+  }) async {
     emit(state.copyWith(
-      sequence: sequence,
+      sequence: _generateSequence(action, currentState, desiredState),
       sequenceStatus:
           _generateSequenceStatus(currentStatus: StepStatus.disabled),
       currentState: currentState,
@@ -170,24 +157,14 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
             messageKey: mapFailureToMessageKey(failure),
           ));
         }, (appConfiguration) async {
-          final getSelectedMissionEither = await getSelectedMission(NoParams());
-          getSelectedMissionEither.fold((failure) async {
-            emit(state.copyWith(
-              sequenceStatus:
-                  _generateSequenceStatus(currentStatus: StepStatus.failure),
-              messageKey: mapFailureToMessageKey(failure),
-            ));
-          }, (selectedMission) async {
-            emit(state.copyWith(
-              sequenceStatus:
-                  _generateSequenceStatus(currentStatus: StepStatus.complete),
-              appConnection: appConnection,
-              authenticationData: authenticationData,
-              appConfiguration: appConfiguration,
-              label: selectedMission.id.toString(),
-            ));
-            _next();
-          });
+          emit(state.copyWith(
+            sequenceStatus:
+                _generateSequenceStatus(currentStatus: StepStatus.complete),
+            appConnection: appConnection,
+            authenticationData: authenticationData,
+            appConfiguration: appConfiguration,
+          ));
+          _next();
         });
       });
     });
@@ -370,39 +347,49 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     emit(state.copyWith(
         sequenceStatus:
             _generateSequenceStatus(currentStatus: StepStatus.loading)));
-    final startLocationUpdatesEither = await startLocationUpdates(
-      StartLocationUpdatesParams(
-        accuracy:
-            _mapUserStateLocationAccuracy(state.desiredState.locationAccuracy),
-        appConfiguration: state.appConfiguration,
-        notificationTitle: state.notificationTitle,
-        notificationBody: state.notificationBody,
-        appConnection: state.appConnection,
-        authenticationData: state.authenticationData,
-        label: state.label,
-      ),
-    );
 
-    startLocationUpdatesEither.fold((failure) async {
+    final getSelectedMissionEither = await getSelectedMission(NoParams());
+    getSelectedMissionEither.fold((failure) async {
       emit(state.copyWith(
         sequenceStatus:
             _generateSequenceStatus(currentStatus: StepStatus.failure),
         messageKey: mapFailureToMessageKey(failure),
       ));
-    }, (success) async {
-      if (success == true) {
-        emit(state.copyWith(
-            sequenceStatus:
-                _generateSequenceStatus(currentStatus: StepStatus.complete)));
+    }, (selectedMission) async {
+      final startLocationUpdatesEither = await startLocationUpdates(
+        StartLocationUpdatesParams(
+          accuracy: _mapUserStateLocationAccuracy(
+              state.desiredState.locationAccuracy),
+          appConfiguration: state.appConfiguration,
+          notificationTitle: state.notificationTitle,
+          notificationBody: state.notificationBody,
+          appConnection: state.appConnection,
+          authenticationData: state.authenticationData,
+          label: selectedMission.id.toString(),
+        ),
+      );
 
-        _next();
-      } else {
-        // TODO: add proper message key
+      startLocationUpdatesEither.fold((failure) async {
         emit(state.copyWith(
-            sequenceStatus:
-                _generateSequenceStatus(currentStatus: StepStatus.failure),
-            messageKey: FailureMessageKey.unexpected));
-      }
+          sequenceStatus:
+              _generateSequenceStatus(currentStatus: StepStatus.failure),
+          messageKey: mapFailureToMessageKey(failure),
+        ));
+      }, (success) async {
+        if (success == true) {
+          emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.complete)));
+
+          _next();
+        } else {
+          // TODO: add proper message key
+          emit(state.copyWith(
+              sequenceStatus:
+                  _generateSequenceStatus(currentStatus: StepStatus.failure),
+              messageKey: FailureMessageKey.unexpected));
+        }
+      });
     });
   }
 
@@ -474,6 +461,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     } else if (action == StatusAction.refresh) {
       if (currentState.locationAccuracy > 0) {
         return [
+          SequenceStep.getSettings,
           SequenceStep.checkPermissions,
           SequenceStep.checkServices,
           SequenceStep.startUpdates,
@@ -481,7 +469,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       } else {
         // This only happens when we are sent here to refresh a state that
         // doesn't require location updates. Therefore we don't have to do
-        // anything. Ideally send the users back to the page they came from.
+        // anything. Ideally we send the users back to the page they came from.
         return [];
       }
     } else {
@@ -521,12 +509,13 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   }
 
   void _next() {
+    print(state.sequence);
+    print(state.appConfiguration);
+    print('Current step: ${state.currentStepIndex}');
     final nextStepIndex = state.currentStepIndex + 1;
     // If we reached the end of the sequence, emit the final state
     if (nextStepIndex >= state.sequence.length) {
-      emit(state.copyWith(
-          sequenceStatus:
-              _generateSequenceStatus(currentStatus: StepStatus.complete)));
+      emit(state.markComplete());
       return;
     }
     // Increase the current step index
