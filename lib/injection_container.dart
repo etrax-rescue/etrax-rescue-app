@@ -243,7 +243,6 @@ Future<void> init() async {
         clearMissionDetails: sl(),
         clearMissionState: sl(),
         logout: sl(),
-        getLastLocation: sl(),
       ));
 
   // Use Cases

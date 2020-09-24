@@ -52,7 +52,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
     @required this.getSelectedMission,
-    @required this.getLastLocation,
     @required this.requestLocationPermission,
     @required this.requestLocationService,
     @required this.stopLocationUpdates,
@@ -66,7 +65,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         assert(getAuthenticationData != null),
         assert(getAppConfiguration != null),
         assert(getSelectedMission != null),
-        assert(getLastLocation != null),
         assert(requestLocationPermission != null),
         assert(requestLocationService != null),
         assert(stopLocationUpdates != null),
@@ -93,7 +91,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   final GetAuthenticationData getAuthenticationData;
   final GetAppConfiguration getAppConfiguration;
   final GetSelectedMission getSelectedMission;
-  final GetLastLocation getLastLocation;
   final SetSelectedUserState setSelectedUserState;
   final RequestLocationPermission requestLocationPermission;
   final RequestLocationService requestLocationService;
@@ -242,27 +239,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       }
     });
   }
-
-  /*
-  void getLocation() async {
-    final getLastLocationEither = await getLastLocation(NoParams());
-    getLastLocationEither.fold((failure) {
-      // TODO: handle failure
-      emit(state.copyWith(
-          sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-          messageKey: mapFailureToMessageKey(failure)));
-      print(failure);
-    }, (locationData) {
-      print(locationData);
-      emit(state.copyWith(
-          sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.complete),
-          currentLocation: locationData));
-
-      _next();
-    });
-  }*/
 
   void updateState() async {
     emit(state.copyWith(

@@ -141,7 +141,13 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
         ),
         body: CustomScrollView(
           slivers: <Widget>[
-            BlocBuilder<CheckRequirementsCubit, CheckRequirementsState>(
+            BlocConsumer<CheckRequirementsCubit, CheckRequirementsState>(
+              listener: (context, state) {
+                setState(() {
+                  _goingBackPossible = (state.currentStep?.index ?? 0) <=
+                      SequenceStep.updateState.index;
+                });
+              },
               builder: (context, state) {
                 final stepContent = List<StepContent>.from(
                     state.sequence.map((item) => _sequenceMap[item]));
