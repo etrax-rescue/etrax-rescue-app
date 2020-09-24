@@ -473,16 +473,6 @@ class S {
     );
   }
 
-  /// `Error while loading app settings`
-  String get RETRIEVING_SETTINGS_ERROR {
-    return Intl.message(
-      'Error while loading app settings',
-      name: 'RETRIEVING_SETTINGS_ERROR',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Location permission check`
   String get CHECK_PERMISSIONS_TITLE {
     return Intl.message(
@@ -573,31 +563,31 @@ class S {
     );
   }
 
-  /// `Start location updates`
-  String get START_UPDATES_TITLE {
+  /// `Logout`
+  String get LOGOUT_TITLE {
     return Intl.message(
-      'Start location updates',
-      name: 'START_UPDATES_TITLE',
+      'Logout',
+      name: 'LOGOUT_TITLE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Starting location updates...`
-  String get STARTING_UPDATES {
+  /// `Logging out...`
+  String get LOGGING_OUT {
     return Intl.message(
-      'Starting location updates...',
-      name: 'STARTING_UPDATES',
+      'Logging out...',
+      name: 'LOGGING_OUT',
       desc: '',
       args: [],
     );
   }
 
-  /// `Location updates started successfully`
-  String get STARTING_UPDATES_DONE {
+  /// `Logged out`
+  String get LOGGING_OUT_DONE {
     return Intl.message(
-      'Location updates started successfully',
-      name: 'STARTING_UPDATES_DONE',
+      'Logged out',
+      name: 'LOGGING_OUT_DONE',
       desc: '',
       args: [],
     );
@@ -628,6 +618,66 @@ class S {
     return Intl.message(
       'Location updates stopped successfully',
       name: 'STOPPING_UPDATES_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finalize`
+  String get CLEAR_STATE_TITLE {
+    return Intl.message(
+      'Finalize',
+      name: 'CLEAR_STATE_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `App state is being cleared...`
+  String get CLEARING_STATE {
+    return Intl.message(
+      'App state is being cleared...',
+      name: 'CLEARING_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finalizing done`
+  String get CLEARING_STATE_DONE {
+    return Intl.message(
+      'Finalizing done',
+      name: 'CLEARING_STATE_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start location updates`
+  String get START_UPDATES_TITLE {
+    return Intl.message(
+      'Start location updates',
+      name: 'START_UPDATES_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Starting location updates...`
+  String get STARTING_UPDATES {
+    return Intl.message(
+      'Starting location updates...',
+      name: 'STARTING_UPDATES',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location updates started successfully`
+  String get STARTING_UPDATES_DONE {
+    return Intl.message(
+      'Location updates started successfully',
+      name: 'STARTING_UPDATES_DONE',
       desc: '',
       args: [],
     );

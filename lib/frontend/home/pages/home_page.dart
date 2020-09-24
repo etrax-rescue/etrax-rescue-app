@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -10,11 +9,12 @@ import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
+import '../../check_requirements/cubit/check_requirements_cubit.dart';
+import '../../widgets/popup_menu.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/details_screen.dart';
 import '../widgets/gps_screen.dart';
 import '../widgets/map_screen.dart';
-import '../../widgets/popup_menu.dart';
 
 class HomePage extends StatefulWidget implements AutoRouteWrapper {
   final UserState state;
@@ -100,9 +100,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _title = _mapIndexToTitle(_pageIndex);
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        if (state.status == HomeStatus.closed) {
-          ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
-        } else if (state.renewStatus) {
+        if (state.renewStatus) {
           ExtendedNavigator.of(context).popAndPush(
             Routes.checkRequirementsPage,
             arguments: CheckRequirementsPageArguments(
@@ -214,7 +212,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             FlatButton(
               child: Text(S.of(context).YES),
               onPressed: () {
-                BlocProvider.of<HomeBloc>(context).add(Shutdown());
+                ExtendedNavigator.of(context).pushAndRemoveUntil(
+                  Routes.checkRequirementsPage,
+                  (route) => false,
+                  arguments: CheckRequirementsPageArguments(
+                      desiredState: widget.state,
+                      currentState: widget.state,
+                      action: StatusAction.logout),
+                );
               },
             ),
           ],

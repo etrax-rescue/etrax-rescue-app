@@ -50,7 +50,6 @@
     "RETRIEVE_SETTINGS_TITLE": "Load app settings",
     "RETRIEVING_SETTINGS": "Loading app settings...",
     "RETRIEVING_SETTINGS_DONE": "App settings loaded.",
-    "RETRIEVING_SETTINGS_ERROR": "Error while loading app settings",
 
     "CHECK_PERMISSIONS_TITLE": "Location permission check",
     "CHECKING_PERMISSIONS": "Checking location permission...",
@@ -59,19 +58,26 @@
     "CHECK_SERVICES_TITLE": "Location services check",
     "CHECKING_SERVICES": "Checking services...",
     "CHECKING_SERVICES_DONE": "Location services successfully activated",
-    
 
     "UPDATE_STATE_TITLE": "Status update",
     "UPDATING_STATE": "Updating status...",
     "UPDATING_STATE_DONE": "Status updated",
 
-    "START_UPDATES_TITLE": "Start location updates",
-    "STARTING_UPDATES": "Starting location updates...",
-    "STARTING_UPDATES_DONE": "Location updates started successfully",
+    "LOGOUT_TITLE": "Logout",
+    "LOGGING_OUT": "Logging out...",
+    "LOGGING_OUT_DONE": "Logged out",
 
     "STOP_UPDATES_TITLE": "Stop location updates",
     "STOPPING_UPDATES": "Stopping location updates...",
     "STOPPING_UPDATES_DONE": "Location updates stopped successfully",
+
+    "CLEAR_STATE_TITLE": "Finalize",
+    "CLEARING_STATE": "App state is being cleared...",
+    "CLEARING_STATE_DONE": "Finalizing done",
+
+    "START_UPDATES_TITLE": "Start location updates",
+    "STARTING_UPDATES": "Starting location updates...",
+    "STARTING_UPDATES_DONE": "Location updates started successfully",
 
     "RESOLVE": "Resolve",
     "OPEN_LOCATION_SETTINGS": "Open",

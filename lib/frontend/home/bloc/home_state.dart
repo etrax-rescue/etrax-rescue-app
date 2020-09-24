@@ -3,7 +3,6 @@ part of 'home_bloc.dart';
 enum HomeStatus {
   initial,
   ready,
-  closed,
 }
 
 class HomeState extends Equatable {
@@ -30,17 +29,6 @@ class HomeState extends Equatable {
   const HomeState.initial()
       : this(
           status: HomeStatus.initial,
-          appConnection: null,
-          authenticationData: null,
-          appConfiguration: null,
-          missionState: null,
-          missionDetailCollection: null,
-          locationHistory: const [],
-        );
-
-  const HomeState.closed()
-      : this(
-          status: HomeStatus.closed,
           appConnection: null,
           authenticationData: null,
           appConfiguration: null,

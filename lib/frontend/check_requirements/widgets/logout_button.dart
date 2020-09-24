@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
@@ -29,8 +30,14 @@ class LogoutButton extends StatelessWidget {
                 FlatButton(
                   child: Text(S.of(context).YES),
                   onPressed: () {
-                    //ExtendedNavigator.of(context).popAndPush(Routes.checkRequirementsPage, arguments: CheckRequirementsPageArguments(desiredState: null, currentState: null, action: ))
-                    print('logout');
+                    ExtendedNavigator.of(context).pushAndRemoveUntil(
+                      Routes.checkRequirementsPage,
+                      (route) => false,
+                      arguments: CheckRequirementsPageArguments(
+                          desiredState: null,
+                          currentState: null,
+                          action: StatusAction.logout),
+                    );
                   },
                 ),
               ],

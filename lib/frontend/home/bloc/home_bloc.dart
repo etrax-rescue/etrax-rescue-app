@@ -86,8 +86,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _updateMissionDetails(event);
     } else if (event is CheckStatus) {
       yield* _checkStatus(event);
-    } else if (event is Shutdown) {
-      yield* _shutdown(event);
     }
   }
 
@@ -200,40 +198,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
       });
     }
-  }
-
-  Stream<HomeState> _shutdown(
-    HomeEvent event,
-  ) async* {
-    final clearMissionStateEither = await clearMissionState(NoParams());
-    yield* clearMissionStateEither.fold((failure) async* {
-      // TODO: handle failure
-    }, (_) async* {
-      // cancel the stream subscription
-      _streamSubscription?.cancel();
-      _streamSubscription = null;
-
-      final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
-
-      yield* stopLocationUpdatesEither.fold((failure) async* {
-        // TODO: handle failure
-      }, (stopped) async* {
-        final clearLocationCacheEither = await clearLocationCache(NoParams());
-
-        yield* clearLocationCacheEither.fold((failure) async* {
-          // TODO: handle failure
-        }, (_) async* {
-          final clearMissionDetailsEither =
-              await clearMissionDetails(NoParams());
-
-          yield* clearMissionDetailsEither.fold((failure) async* {
-            // TODO: handle failure
-          }, (_) async* {
-            yield HomeState.closed();
-          });
-        });
-      });
-    });
   }
 
   @override

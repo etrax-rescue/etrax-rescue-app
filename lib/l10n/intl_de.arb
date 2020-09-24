@@ -63,13 +63,21 @@
     "UPDATING_STATE": "Status wird aktualisiert...",
     "UPDATING_STATE_DONE": "Status wurde aktualisiert",
 
-    "START_UPDATES_TITLE": "Standortdienst starten",
-    "STARTING_UPDATES": "Standortdienst wird gestartet...",
-    "STARTING_UPDATES_DONE": "Standortdienst erfolgreich gestartet",
+    "LOGOUT_TITLE": "Abmelden",
+    "LOGGING_OUT": "Abmeldung im Gange...",
+    "LOGGING_OUT_DONE": "Abgemeldet",
 
     "STOP_UPDATES_TITLE": "Standortdienst anhalten",
     "STOPPING_UPDATES": "Standortdienst wird angehalten...",
     "STOPPING_UPDATES_DONE": "Standortdienst erfolgreich angehalten",
+
+    "CLEAR_STATE_TITLE": "Finalisieren",
+    "CLEARING_STATE": "App status wird finalisiert...",
+    "CLEARING_STATE_DONE": "Abgeschlossen",
+
+    "START_UPDATES_TITLE": "Standortdienst starten",
+    "STARTING_UPDATES": "Standortdienst wird gestartet...",
+    "STARTING_UPDATES_DONE": "Standortdienst erfolgreich gestartet",
 
     "RESOLVE": "Beheben",
     "OPEN_LOCATION_SETTINGS": "Öffnen",

@@ -23,7 +23,6 @@ import '../../../backend/usecases/request_location_service.dart';
 import '../../../backend/usecases/set_selected_user_state.dart';
 import '../../../backend/usecases/start_location_updates.dart';
 import '../../../backend/usecases/stop_location_updates.dart';
-import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'check_requirements_state.dart';
@@ -43,6 +42,7 @@ enum StatusAction {
   change,
   refresh,
   logout,
+  callToAction,
 }
 
 class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
@@ -473,7 +473,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         return [];
       }
     } else {
-      if (currentState.locationAccuracy > 0) {
+      if ((currentState?.locationAccuracy ?? 1) > 0) {
         return [
           SequenceStep.getSettings,
           SequenceStep.logout,
@@ -496,9 +496,9 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     return List<StepStatus>.from(
       state.sequence.map(
         (SequenceStep step) {
-          if (step.index < state.currentStepIndex) {
+          if (step.index < state.currentStep.index) {
             return StepStatus.complete;
-          } else if (step.index > state.currentStepIndex) {
+          } else if (step.index > state.currentStep.index) {
             return StepStatus.disabled;
           } else {
             return currentStatus;
@@ -509,20 +509,18 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   }
 
   void _next() {
-    print(state.sequence);
-    print(state.appConfiguration);
-    print('Current step: ${state.currentStepIndex}');
-    final nextStepIndex = state.currentStepIndex + 1;
+    final nextIndex = state.currentIndex + 1;
     // If we reached the end of the sequence, emit the final state
-    if (nextStepIndex >= state.sequence.length) {
+    if (nextIndex >= state.sequence.length) {
       emit(state.markComplete());
       return;
     }
+
+    final nextStep = state.sequence[nextIndex];
     // Increase the current step index
-    emit(state.copyWith(currentStepIndex: nextStepIndex));
+    emit(state.copyWith(currentIndex: nextIndex, currentStep: nextStep));
 
     // Execute the next step
-    final nextStep = state.sequence[nextStepIndex];
     _stepMap[nextStep]();
   }
 

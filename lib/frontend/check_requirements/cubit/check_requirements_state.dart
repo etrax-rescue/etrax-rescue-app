@@ -9,7 +9,8 @@ enum StepStatus {
 
 class CheckRequirementsState extends Equatable {
   const CheckRequirementsState({
-    @required this.currentStepIndex,
+    @required this.currentIndex,
+    @required this.currentStep,
     @required this.sequence,
     @required this.sequenceStatus,
     @required this.currentState,
@@ -26,7 +27,8 @@ class CheckRequirementsState extends Equatable {
   final List<SequenceStep> sequence;
   final List<StepStatus> sequenceStatus;
 
-  final int currentStepIndex;
+  final SequenceStep currentStep;
+  final int currentIndex;
 
   final UserState currentState;
   final UserState desiredState;
@@ -46,7 +48,8 @@ class CheckRequirementsState extends Equatable {
       : this(
           sequence: const [],
           sequenceStatus: const [],
-          currentStepIndex: -1,
+          currentStep: null,
+          currentIndex: -1,
           currentState: null,
           desiredState: null,
           appConfiguration: null,
@@ -58,7 +61,8 @@ class CheckRequirementsState extends Equatable {
     return CheckRequirementsState(
       sequence: this.sequence,
       sequenceStatus: this.sequenceStatus,
-      currentStepIndex: this.currentStepIndex,
+      currentIndex: this.currentIndex,
+      currentStep: this.currentStep,
       currentState: this.currentState,
       desiredState: this.desiredState,
       appConfiguration: this.appConfiguration,
@@ -71,7 +75,8 @@ class CheckRequirementsState extends Equatable {
   CheckRequirementsState copyWith({
     List<SequenceStep> sequence,
     List<StepStatus> sequenceStatus,
-    int currentStepIndex,
+    SequenceStep currentStep,
+    int currentIndex,
     FailureMessageKey messageKey,
     UserState currentState,
     UserState desiredState,
@@ -85,7 +90,8 @@ class CheckRequirementsState extends Equatable {
     return CheckRequirementsState(
       sequence: sequence ?? this.sequence,
       sequenceStatus: sequenceStatus ?? this.sequenceStatus,
-      currentStepIndex: currentStepIndex ?? this.currentStepIndex,
+      currentStep: currentStep ?? this.currentStep,
+      currentIndex: currentIndex ?? this.currentIndex,
       messageKey: messageKey ?? FailureMessageKey.unexpected,
       currentState: currentState ?? this.currentState,
       desiredState: desiredState ?? this.desiredState,
@@ -101,7 +107,7 @@ class CheckRequirementsState extends Equatable {
   List<Object> get props => [
         sequence,
         sequenceStatus,
-        currentStepIndex,
+        currentIndex,
         currentState,
         desiredState,
         appConnection,

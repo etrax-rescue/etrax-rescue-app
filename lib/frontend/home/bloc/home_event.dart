@@ -21,5 +21,3 @@ class CheckStatus extends HomeEvent {}
 class LocationUpdate extends HomeEvent {}
 
 class UpdateMissionDetails extends HomeEvent {}
-
-class Shutdown extends HomeEvent {}
