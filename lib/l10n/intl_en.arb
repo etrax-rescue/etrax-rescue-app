@@ -46,6 +46,7 @@
     "ACTIVE_STATE": "Currently active state", 
     "UPDATE_STATE": "Update",
     "CONFIRM_LOGOUT": "Would you like to log out?",
+    "CONFIRM_CALL_TO_ACTION": "Confirm status update",
 
     "RETRIEVE_SETTINGS_TITLE": "Load app settings",
     "RETRIEVING_SETTINGS": "Loading app settings...",

@@ -443,6 +443,16 @@ class S {
     );
   }
 
+  /// `Confirm status update`
+  String get CONFIRM_CALL_TO_ACTION {
+    return Intl.message(
+      'Confirm status update',
+      name: 'CONFIRM_CALL_TO_ACTION',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Load app settings`
   String get RETRIEVE_SETTINGS_TITLE {
     return Intl.message(

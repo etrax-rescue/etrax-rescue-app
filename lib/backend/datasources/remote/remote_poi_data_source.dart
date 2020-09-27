@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
@@ -24,9 +25,9 @@ class RemotePoiDataSourceImpl implements RemotePoiDataSource {
     final controller = StreamController<double>();
 
     FormData formData = FormData.fromMap({
-      "location_data": poi.locationData.toMap().toString(),
-      "description": poi.description,
-      "file": await MultipartFile.fromFile(poi.imagePath, filename: 'image.jpg')
+      'location_data': json.encode(poi.locationData.toMap()),
+      'description': poi.description,
+      'image': MultipartFile.fromFileSync(poi.imagePath, filename: 'image')
     });
 
     final response = dio.post(

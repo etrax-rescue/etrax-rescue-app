@@ -191,13 +191,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* locationUpdatesStatusEither.fold((failure) async* {
         yield state.copyWith(renewStatus: true);
       }, (active) async* {
-        if (active) {
-          add(LocationUpdate());
-        } else {
+        if (!active) {
           yield state.copyWith(renewStatus: true);
         }
       });
     }
+    // Trigger one location update even if the status doesn't require location
+    // tracking so that the map view gets updated with the location history
+    // from previous statuses.
+    add(LocationUpdate());
+
+    // Also update the mission details.
+    add(UpdateMissionDetails());
   }
 
   @override

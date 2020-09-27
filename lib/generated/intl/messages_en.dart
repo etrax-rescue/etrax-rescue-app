@@ -46,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "CLEARING_STATE_DONE" : MessageLookupByLibrary.simpleMessage("Finalizing done"),
     "CLEAR_STATE_TITLE" : MessageLookupByLibrary.simpleMessage("Finalize"),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Confirmation"),
+    "CONFIRM_CALL_TO_ACTION" : MessageLookupByLibrary.simpleMessage("Confirm status update"),
     "CONFIRM_LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Would you like to leave the mission?"),
     "CONFIRM_LOGOUT" : MessageLookupByLibrary.simpleMessage("Would you like to log out?"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Connect"),

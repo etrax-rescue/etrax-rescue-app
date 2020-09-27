@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
+import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
+import '../../widgets/about_menu_entry.dart';
 import '../../widgets/custom_material_icons.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
@@ -64,7 +65,9 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                 ),
               ),
               actions: [
-                PopupMenu(),
+                PopupMenu(
+                  actions: {0: generateAboutMenuEntry(context)},
+                ),
               ],
             ),
             SliverToBoxAdapter(
@@ -90,9 +93,10 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                                   icon: Icon(CustomMaterialIcons.qrCodeScanner),
                                   onPressed: () {
                                     context.bloc<AppConnectionCubit>().scanCode(
-                                        S.of(context).CANCEL,
-                                        S.of(context).FLASH_ON,
-                                        S.of(context).FLASH_OFF);
+                                          S.of(context).CANCEL,
+                                          S.of(context).FLASH_ON,
+                                          S.of(context).FLASH_OFF,
+                                        );
                                   },
                                 ),
                               ),

@@ -46,6 +46,7 @@
     "ACTIVE_STATE": "Derzeit aktiver Status", 
     "UPDATE_STATE": "Aktualisieren",
     "CONFIRM_LOGOUT": "Wirklich abmelden?",
+    "CONFIRM_CALL_TO_ACTION": "Folgenden Status Rückmelden?",
     
     "RETRIEVE_SETTINGS_TITLE": "Einstellungen laden",
     "RETRIEVING_SETTINGS": "Einstellungen werden geladen...",

@@ -46,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "CLEARING_STATE_DONE" : MessageLookupByLibrary.simpleMessage("Abgeschlossen"),
     "CLEAR_STATE_TITLE" : MessageLookupByLibrary.simpleMessage("Finalisieren"),
     "CONFIRMATION_HEADING" : MessageLookupByLibrary.simpleMessage("Rückmelden"),
+    "CONFIRM_CALL_TO_ACTION" : MessageLookupByLibrary.simpleMessage("Folgenden Status Rückmelden?"),
     "CONFIRM_LEAVE_MISSION" : MessageLookupByLibrary.simpleMessage("Einsatz wirklich verlassen?"),
     "CONFIRM_LOGOUT" : MessageLookupByLibrary.simpleMessage("Wirklich abmelden?"),
     "CONNECT" : MessageLookupByLibrary.simpleMessage("Verbinden"),

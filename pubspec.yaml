@@ -65,6 +65,10 @@ dependencies:
   flutter_cache_manager: ^1.4.1
   # To retrieve the app version
   package_info: ^0.4.3
+  # To fix image rotation on some devices
+  #exif: ^1.0.3
+  #image: ^2.1.18
+  flutter_image_compress: ^0.7.0
 
 dev_dependencies:
   flutter_test:

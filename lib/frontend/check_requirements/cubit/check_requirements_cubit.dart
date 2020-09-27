@@ -2,7 +2,6 @@ import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 import '../../../backend/types/app_configuration.dart';
 import '../../../backend/types/app_connection.dart';
@@ -15,7 +14,6 @@ import '../../../backend/usecases/clear_mission_state.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
-import '../../../backend/usecases/get_last_location.dart';
 import '../../../backend/usecases/get_selected_mission.dart';
 import '../../../backend/usecases/logout.dart';
 import '../../../backend/usecases/request_location_permission.dart';
@@ -250,7 +248,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       appConnection: state.appConnection,
       authenticationData: state.authenticationData,
       state: state.desiredState,
-      currentLocation: null,
     ));
 
     setStateEither.fold((failure) async {
@@ -448,7 +445,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         // anything. Ideally we send the users back to the page they came from.
         return [];
       }
-    } else {
+    } else if (action == StatusAction.logout) {
       if ((currentState?.locationAccuracy ?? 1) > 0) {
         return [
           SequenceStep.getSettings,
@@ -463,6 +460,11 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           SequenceStep.clearState,
         ];
       }
+    } else if (action == StatusAction.callToAction) {
+      return [
+        SequenceStep.getSettings,
+        SequenceStep.updateState,
+      ];
     }
   }
 

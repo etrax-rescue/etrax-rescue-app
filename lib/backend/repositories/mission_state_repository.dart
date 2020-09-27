@@ -28,8 +28,7 @@ abstract class MissionStateRepository {
   Future<Either<Failure, None>> setSelectedUserState(
       AppConnection appConnection,
       AuthenticationData authenticationData,
-      UserState state,
-      LocationData currentLocation);
+      UserState state);
 
   // Selected UserRole
   Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
@@ -82,14 +81,13 @@ class MissionStateRepositoryImpl implements MissionStateRepository {
   Future<Either<Failure, None>> setSelectedUserState(
       AppConnection appConnection,
       AuthenticationData authenticationData,
-      UserState state,
-      LocationData currentLocation) async {
+      UserState state) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
     try {
       await remoteMissionStateDataSource.selectUserState(
-          appConnection, authenticationData, state, currentLocation);
+          appConnection, authenticationData, state);
     } on ServerException {
       return Left(ServerFailure());
     } on TimeoutException {

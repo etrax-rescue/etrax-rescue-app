@@ -44,7 +44,6 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
         builder: (context, state) {
           if (state is FetchingStatesSuccess) {
             List<UserState> stateList = state.states.states;
-            stateList.remove(widget.currentState);
 
             return SingleChildScrollView(
               child: Form(
@@ -71,7 +70,10 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                           decoration: InputDecoration(
                             labelText: S.of(context).STATE,
                           ),
-                          items: stateList.map((UserState userState) {
+                          items: stateList
+                              .where((state) => state.id <= 11)
+                              .where((state) => state != widget.currentState)
+                              .map((UserState userState) {
                             return DropdownMenuItem<UserState>(
                               value: userState,
                               child: Text(userState.name),
@@ -85,14 +87,33 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                               : null),
                     ),
                     SizedBox(height: 16),
-                    ListTile(
-                      title: ButtonTheme(
-                        minWidth: double.infinity,
-                        child: RaisedButton(
-                          onPressed: submit,
-                          textTheme: ButtonTextTheme.primary,
-                          child: Text(S.of(context).UPDATE_STATE),
-                          color: Theme.of(context).accentColor,
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List<Widget>.from(stateList
+                            .where((state) => state.id > 11)
+                            .map((state) => CallToActionButton(state: state))),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: ButtonTheme(
+                          minWidth: double.infinity,
+                          child: MaterialButton(
+                            height: 48,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            onPressed: submit,
+                            textTheme: ButtonTextTheme.primary,
+                            child: Text(S.of(context).UPDATE_STATE),
+                            color: Theme.of(context).accentColor,
+                          ),
                         ),
                       ),
                     ),
@@ -119,5 +140,56 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
         ),
       );
     }
+  }
+}
+
+class CallToActionButton extends StatelessWidget {
+  const CallToActionButton({Key key, @required this.state}) : super(key: key);
+
+  final UserState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      height: 48,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.0),
+          side: BorderSide(color: Theme.of(context).accentColor)),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(S.of(context).CONFIRM_CALL_TO_ACTION),
+              content: Text(state.name),
+              actions: [
+                FlatButton(
+                  child: Text(S.of(context).CANCEL),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text(S.of(context).YES),
+                  onPressed: () {
+                    ExtendedNavigator.of(context).popAndPush(
+                      Routes.checkRequirementsPage,
+                      arguments: CheckRequirementsPageArguments(
+                        currentState: null,
+                        desiredState: state,
+                        action: StatusAction.callToAction,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+      textTheme: ButtonTextTheme.accent,
+      child: Text(state.name),
+      color: Theme.of(context).scaffoldBackgroundColor,
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 abstract class LocalImageDataSource {
   Future<String> takePhoto();
@@ -16,10 +18,24 @@ class LocalImageDataSourceImpl implements LocalImageDataSource {
         source: ImageSource.camera, maxWidth: 1920, imageQuality: 92);
     if (pickedFile != null) {
       String imagePath = pickedFile.path;
+      _fixRotation(imagePath);
       if (imagePath != null) {
         return imagePath;
       }
     }
     throw PlatformException(code: 'No camera photo returned');
+  }
+
+  /**
+   * On some devices the rotation is only encoded in the exif data of the image,
+   * which is properly displayed by the Image viewer plugin, but can cause
+   * problems on the server.
+   */
+  void _fixRotation(String imagePath) async {
+    final originalFile = File(imagePath);
+    List<int> imageBytes = await originalFile.readAsBytes();
+    List<int> compressedBytes =
+        await FlutterImageCompress.compressWithList(imageBytes, quality: 100);
+    await originalFile.writeAsBytes(compressedBytes);
   }
 }

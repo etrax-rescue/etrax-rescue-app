@@ -16,8 +16,8 @@ class SetSelectedUserState extends UseCase<None, SetSelectedUserStateParams> {
 
   @override
   Future<Either<Failure, None>> call(SetSelectedUserStateParams param) async {
-    return await repository.setSelectedUserState(param.appConnection,
-        param.authenticationData, param.state, param.currentLocation);
+    return await repository.setSelectedUserState(
+        param.appConnection, param.authenticationData, param.state);
   }
 }
 
@@ -25,16 +25,13 @@ class SetSelectedUserStateParams extends Equatable {
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
   final UserState state;
-  final LocationData currentLocation;
 
   SetSelectedUserStateParams({
     @required this.appConnection,
     @required this.authenticationData,
     @required this.state,
-    @required this.currentLocation,
   });
 
   @override
-  List<Object> get props =>
-      [state, appConnection, authenticationData, currentLocation];
+  List<Object> get props => [state, appConnection, authenticationData];
 }

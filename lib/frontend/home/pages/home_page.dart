@@ -10,6 +10,7 @@ import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../check_requirements/cubit/check_requirements_cubit.dart';
+import '../../widgets/about_menu_entry.dart';
 import '../../widgets/popup_menu.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/details_screen.dart';
@@ -134,7 +135,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
           ),
           actions: <Widget>[
-            PopupMenu(),
+            PopupMenu(actions: {0: generateAboutMenuEntry(context)}),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

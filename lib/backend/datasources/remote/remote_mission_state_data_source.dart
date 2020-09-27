@@ -13,11 +13,8 @@ import '../../types/user_roles.dart';
 import '../../types/user_states.dart';
 
 abstract class RemoteMissionStateDataSource {
-  Future<void> selectUserState(
-      AppConnection appConnection,
-      AuthenticationData authenticationData,
-      UserState state,
-      LocationData currentLocation);
+  Future<void> selectUserState(AppConnection appConnection,
+      AuthenticationData authenticationData, UserState state);
 
   Future<void> selectMission(AppConnection appConnection,
       AuthenticationData authenticationData, Mission mission);
@@ -56,25 +53,12 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   }
 
   @override
-  Future<void> selectUserState(
-      AppConnection appConnection,
-      AuthenticationData authenticationData,
-      UserState state,
-      LocationData currentLocation) async {
-    Map<String, dynamic> requestBody = {'state_id': state.id.toString()};
-    if (currentLocation != null) {
-      if (currentLocation.latitude != null &&
-          currentLocation.longitude != null) {
-        requestBody['location'] = currentLocation.toMap();
-      }
-    }
-    Map<String, String> headers = authenticationData.generateAuthHeader();
-    headers[HttpHeaders.contentTypeHeader] = 'application/json';
-
+  Future<void> selectUserState(AppConnection appConnection,
+      AuthenticationData authenticationData, UserState state) async {
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
-        headers: headers,
-        body: json.encode(requestBody));
+        headers: authenticationData.generateAuthHeader(),
+        body: {'state_id': state.id.toString()});
 
     http.Response response;
     try {

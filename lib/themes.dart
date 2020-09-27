@@ -116,7 +116,7 @@ final themeData = {
       hintStyle: TextStyle(color: Colors.grey),
     ),
     appBarTheme: AppBarTheme(
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       color: Color.fromARGB(128, 0, 0, 0),
       textTheme: TextTheme(
         headline6: TextStyle(

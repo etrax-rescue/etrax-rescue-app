@@ -12,6 +12,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/custom_material_icons.dart';
+import '../../widgets/about_menu_entry.dart';
 import '../../widgets/popup_menu.dart';
 import '../bloc/missions_bloc.dart';
 
@@ -21,11 +22,13 @@ class MissionPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: themeData[AppTheme.LightStatusBar],
-        child: BlocProvider(
-            create: (_) => sl<InitializationBloc>()
-              ..add(StartFetchingInitializationData()),
-            child: this));
+      data: themeData[AppTheme.LightStatusBar],
+      child: BlocProvider(
+        create: (_) =>
+            sl<InitializationBloc>()..add(StartFetchingInitializationData()),
+        child: Scaffold(body: this),
+      ),
+    );
   }
 
   @override
@@ -48,102 +51,95 @@ class _MissionPageState extends State<MissionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          BlocProvider.of<InitializationBloc>(context).add(LogoutEvent());
-        },
-        label: Text(S.of(context).LOGOUT),
-        icon: Icon(CustomMaterialIcons.logout),
-        backgroundColor: Theme.of(context).accentColor,
-      ),
-      body: Builder(
-        builder: (context) {
-          return BlocListener<InitializationBloc, InitializationState>(
-            listener: (context, state) {
-              if (state is InitializationInitial ||
-                  state is InitializationInProgress) {
-                return;
-              }
-              if (state is InitializationLogoutSuccess) {
-                ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
-              }
+    return BlocListener<InitializationBloc, InitializationState>(
+      listener: (context, state) {
+        if (state is InitializationInitial ||
+            state is InitializationInProgress) {
+          return;
+        }
+        if (state is InitializationLogoutSuccess) {
+          ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
+        }
 
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
-              if (state is InitializationRecoverableError) {
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                    content:
-                        Text(translateErrorMessage(context, state.messageKey)),
-                    duration: const Duration(days: 365),
-                    action: SnackBarAction(
-                      label: S.of(context).RETRY,
-                      onPressed: () {
-                        BlocProvider.of<InitializationBloc>(context)
-                            .add(StartFetchingInitializationData());
-                        Scaffold.of(context).hideCurrentSnackBar();
-                        _refreshIndicatorKey.currentState.show();
-                      },
-                    ),
-                  ),
-                );
-              } else if (state is InitializationUnrecoverableError) {
-                Scaffold.of(context).showSnackBar(
-                  SnackBar(
-                    content:
-                        Text(translateErrorMessage(context, state.messageKey)),
-                    duration: const Duration(days: 365),
-                  ),
-                );
-              }
-            },
-            child: RefreshIndicator(
-              key: _refreshIndicatorKey,
-              onRefresh: () async {
-                BlocProvider.of<InitializationBloc>(context)
-                    .add(StartFetchingInitializationData());
-                Scaffold.of(context).hideCurrentSnackBar();
-                return _refreshCompleter.future;
-              },
-              child: CustomScrollView(
-                physics: RangeMaintainingScrollPhysics()
-                    .applyTo(AlwaysScrollableScrollPhysics()),
-                slivers: [
-                  SliverAppBar(
-                    automaticallyImplyLeading: false,
-                    elevation: 0,
-                    actions: <Widget>[
-                      PopupMenu(),
-                    ],
-                    expandedHeight: MediaQuery.of(context).size.height / 3,
-                    flexibleSpace: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Image(
-                          // Maybe we want to replace this with the organization logo?
-                          image:
-                              AssetImage('assets/images/etrax_rescue_logo.png'),
-                          width: 200,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Text(S.of(context).ACTIVE_MISSIONS,
-                          style: Theme.of(context).textTheme.headline5),
-                    ),
-                  ),
-                  MissionsList(),
-                  SliverToBoxAdapter(child: SizedBox(height: 72)),
-                ],
+        _refreshCompleter?.complete();
+        _refreshCompleter = Completer();
+        if (state is InitializationRecoverableError) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(translateErrorMessage(context, state.messageKey)),
+              duration: const Duration(days: 365),
+              action: SnackBarAction(
+                label: S.of(context).RETRY,
+                onPressed: () {
+                  BlocProvider.of<InitializationBloc>(context)
+                      .add(StartFetchingInitializationData());
+                  Scaffold.of(context).hideCurrentSnackBar();
+                  _refreshIndicatorKey.currentState.show();
+                },
               ),
             ),
           );
+        } else if (state is InitializationUnrecoverableError) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(translateErrorMessage(context, state.messageKey)),
+              duration: const Duration(days: 365),
+            ),
+          );
+        }
+      },
+      child: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async {
+          BlocProvider.of<InitializationBloc>(context)
+              .add(StartFetchingInitializationData());
+          Scaffold.of(context).hideCurrentSnackBar();
+          return _refreshCompleter.future;
         },
+        child: CustomScrollView(
+          physics: RangeMaintainingScrollPhysics()
+              .applyTo(AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              actions: <Widget>[
+                PopupMenu(
+                  actions: {
+                    0: PopupAction(
+                      onPressed: () {
+                        BlocProvider.of<InitializationBloc>(context)
+                            .add(LogoutEvent());
+                      },
+                      child: Text(S.of(context).LOGOUT),
+                    ),
+                    1: generateAboutMenuEntry(context),
+                  },
+                ),
+              ],
+              expandedHeight: MediaQuery.of(context).size.height / 3,
+              flexibleSpace: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Image(
+                    // Maybe we want to replace this with the organization logo?
+                    image: AssetImage('assets/images/etrax_rescue_logo.png'),
+                    width: 200,
+                  ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(S.of(context).ACTIVE_MISSIONS,
+                    style: Theme.of(context).textTheme.headline5),
+              ),
+            ),
+            MissionsList(),
+          ],
+        ),
       ),
     );
   }
