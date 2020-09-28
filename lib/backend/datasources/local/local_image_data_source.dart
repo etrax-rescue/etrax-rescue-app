@@ -15,7 +15,7 @@ class LocalImageDataSourceImpl implements LocalImageDataSource {
   @override
   Future<String> takePhoto() async {
     PickedFile pickedFile = await imagePicker.getImage(
-        source: ImageSource.camera, maxWidth: 1920, imageQuality: 92);
+        source: ImageSource.camera, maxWidth: 800, imageQuality: 100);
     if (pickedFile != null) {
       String imagePath = pickedFile.path;
       _fixRotation(imagePath);
@@ -29,13 +29,14 @@ class LocalImageDataSourceImpl implements LocalImageDataSource {
   /**
    * On some devices the rotation is only encoded in the exif data of the image,
    * which is properly displayed by the Image viewer plugin, but can cause
-   * problems on the server.
+   * problems on the server. Also this step compresses the JPEG so that it takes
+   * less data when it is being sent to the server.
    */
   void _fixRotation(String imagePath) async {
     final originalFile = File(imagePath);
     List<int> imageBytes = await originalFile.readAsBytes();
     List<int> compressedBytes =
-        await FlutterImageCompress.compressWithList(imageBytes, quality: 100);
+        await FlutterImageCompress.compressWithList(imageBytes, quality: 85);
     await originalFile.writeAsBytes(compressedBytes);
   }
 }
