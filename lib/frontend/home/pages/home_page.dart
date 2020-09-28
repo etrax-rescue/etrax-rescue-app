@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_speed_dial_quickaction/flutter_speed_dial.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import '../../../backend/types/user_states.dart';
@@ -101,29 +101,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         onTap: _takePhoto,
       ));
     }
-    /*
-    speedDials.addAll(
-      List<SpeedDialChild>.from(
-        _quickActions.map(
-          (action) => SpeedDialChild(
-            child: Icon(Icons.call_to_action),
-            backgroundColor: Theme.of(context).primaryColor,
-            //labelStyle: TextStyle(fontSize: 18.0),
-            labelWidget: QuickActionButton(action: action),
-            onTap: () {
-              ExtendedNavigator.of(context).popAndPush(
-                Routes.checkRequirementsPage,
-                arguments: CheckRequirementsPageArguments(
-                  currentState: null,
-                  desiredState: action,
-                  action: StatusAction.callToAction,
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );*/
 
     return speedDials;
   }
@@ -216,6 +193,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           animatedIcon: AnimatedIcons.menu_close,
           backgroundColor: Theme.of(context).accentColor,
           children: _speedDials,
+          quickActionWidget: QuickActionsBox(actions: _quickActions),
+          maxHeight: MediaQuery.of(context).size.height -
+              AppBar().preferredSize.height -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom +
+              40 -
+              kBottomNavigationBarHeight,
         ),
       ),
     );

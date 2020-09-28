@@ -363,15 +363,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.4"
-  flutter_speed_dial:
+  flutter_speed_dial_quickaction:
     dependency: "direct main"
     description:
       path: "."
       ref: HEAD
-      resolved-ref: e18df1762ec92e48436c93825a5a13e8f6488a40
+      resolved-ref: ef7dd291a48f6fdcc9d44b044aeb58970e864749
       url: "https://github.com/yozoon/flutter_speed_dial.git"
     source: git
-    version: "1.2.5"
+    version: "1.2.8"
   flutter_test:
     dependency: "direct dev"
     description: flutter

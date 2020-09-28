@@ -42,7 +42,7 @@ dependencies:
   # Launching Maps app from coordinates
   maps_launcher: ^1.2.1
   # FAB menu for home screen
-  flutter_speed_dial: 
+  flutter_speed_dial_quickaction: 
     git:
       url: https://github.com/yozoon/flutter_speed_dial.git
   # Keeping pages loaded on home screen
