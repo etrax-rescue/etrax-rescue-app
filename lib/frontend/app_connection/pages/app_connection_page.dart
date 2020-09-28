@@ -113,7 +113,6 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                             SizedBox(height: 16),
                             BlocBuilder<AppConnectionCubit, AppConnectionState>(
                               builder: (context, state) {
-                                print(state.messageKey);
                                 return AnimatedOpacity(
                                   opacity:
                                       state.status == AppConnectionStatus.error

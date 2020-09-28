@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_user_states.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -36,6 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     @required this.getAppConnection,
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
+    @required this.getUserStates,
     @required this.getMissionDetails,
     @required this.getLocationHistory,
     @required this.getLocationUpdatesStatus,
@@ -48,6 +50,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         assert(getAppConnection != null),
         assert(getAppConfiguration != null),
         assert(getAuthenticationData != null),
+        assert(getUserStates != null),
         assert(getMissionDetails != null),
         assert(getLocationHistory != null),
         assert(getLocationUpdatesStatus != null),
@@ -62,6 +65,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final GetAppConfiguration getAppConfiguration;
+  final GetUserStates getUserStates;
   final GetMissionDetails getMissionDetails;
   final GetLocationUpdateStream getLocationUpdateStream;
   final GetLocationHistory getLocationHistory;
@@ -107,40 +111,51 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield* getAppConfigurationEither.fold((failure) async* {
           // TODO: handle failure
         }, (appConfiguration) async* {
-          final getMissionStateEither = await getMissionState(NoParams());
+          final getUserStatesEither = await getUserStates(NoParams());
 
-          yield* getMissionStateEither.fold((failure) async* {
+          yield* getUserStatesEither.fold((failure) async* {
             // TODO: handle failure
-          }, (missionState) async* {
-            yield state.copyWith(
-              appConnection: appConnection,
-              authenticationData: authenticationData,
-              appConfiguration: appConfiguration,
-              missionState: missionState,
-            );
+          }, (userStates) async* {
+            // TODO: move this logig to the server and create separate quick actions type
+            final quickActions = List<UserState>.from(
+                userStates.states.where((userState) => userState.id >= 11));
 
-            // Start the periodic updates of the mission details
-            await _tickerSubscription?.cancel();
-            _tickerSubscription = Stream.periodic(
-                    Duration(minutes: appConfiguration.infoUpdateInterval))
-                .listen((_) => add(UpdateMissionDetails()));
+            final getMissionStateEither = await getMissionState(NoParams());
 
-            final getLocationUpdateStreamEither = await getLocationUpdateStream(
-                GetLocationUpdateStreamParams(
-                    label: missionState.mission.id.toString()));
+            yield* getMissionStateEither.fold((failure) async* {
+              // TODO: handle failure
+            }, (missionState) async* {
+              yield state.copyWith(
+                appConnection: appConnection,
+                authenticationData: authenticationData,
+                appConfiguration: appConfiguration,
+                missionState: missionState,
+                quickActions: quickActions,
+              );
 
-            if (missionState.state.locationAccuracy > 0) {
-              yield* getLocationUpdateStreamEither.fold((failure) async* {
-                // TODO: handle failure
-              }, (locationStream) async* {
-                await _streamSubscription?.cancel();
-                _streamSubscription =
-                    locationStream.listen((_) => add(LocationUpdate()));
-              });
-            }
-            // Trigger an initial location update so that we can collect the
-            // location history even if location updates are not active
-            add(CheckStatus());
+              // Start the periodic updates of the mission details
+              await _tickerSubscription?.cancel();
+              _tickerSubscription = Stream.periodic(
+                      Duration(minutes: appConfiguration.infoUpdateInterval))
+                  .listen((_) => add(UpdateMissionDetails()));
+
+              final getLocationUpdateStreamEither =
+                  await getLocationUpdateStream(GetLocationUpdateStreamParams(
+                      label: missionState.mission.id.toString()));
+
+              if (missionState.state.locationAccuracy > 0) {
+                yield* getLocationUpdateStreamEither.fold((failure) async* {
+                  // TODO: handle failure
+                }, (locationStream) async* {
+                  await _streamSubscription?.cancel();
+                  _streamSubscription =
+                      locationStream.listen((_) => add(LocationUpdate()));
+                });
+              }
+              // Trigger an initial location update so that we can collect the
+              // location history even if location updates are not active
+              add(CheckStatus());
+            });
           });
         });
       });

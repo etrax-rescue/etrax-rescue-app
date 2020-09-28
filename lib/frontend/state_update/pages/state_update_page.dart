@@ -87,17 +87,6 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                               : null),
                     ),
                     SizedBox(height: 16),
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Wrap(
-                        direction: Axis.horizontal,
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: List<Widget>.from(stateList
-                            .where((state) => state.id > 11)
-                            .map((state) => CallToActionButton(state: state))),
-                      ),
-                    ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
@@ -140,56 +129,5 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
         ),
       );
     }
-  }
-}
-
-class CallToActionButton extends StatelessWidget {
-  const CallToActionButton({Key key, @required this.state}) : super(key: key);
-
-  final UserState state;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      height: 48,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24.0),
-          side: BorderSide(color: Theme.of(context).accentColor)),
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(S.of(context).CONFIRM_CALL_TO_ACTION),
-              content: Text(state.name),
-              actions: [
-                FlatButton(
-                  child: Text(S.of(context).CANCEL),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                FlatButton(
-                  child: Text(S.of(context).YES),
-                  onPressed: () {
-                    ExtendedNavigator.of(context).popAndPush(
-                      Routes.checkRequirementsPage,
-                      arguments: CheckRequirementsPageArguments(
-                        currentState: null,
-                        desiredState: state,
-                        action: StatusAction.callToAction,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-      textTheme: ButtonTextTheme.accent,
-      child: Text(state.name),
-      color: Theme.of(context).scaffoldBackgroundColor,
-    );
   }
 }

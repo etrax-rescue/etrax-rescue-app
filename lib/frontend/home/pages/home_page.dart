@@ -16,6 +16,7 @@ import '../bloc/home_bloc.dart';
 import '../widgets/details_screen.dart';
 import '../widgets/gps_screen.dart';
 import '../widgets/map_screen.dart';
+import '../widgets/quick_action_box.dart';
 
 class HomePage extends StatefulWidget implements AutoRouteWrapper {
   final UserState state;
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String _title;
   int _pageIndex = 0;
   List<SpeedDialChild> _speedDials = [];
+  List<UserState> _quickActions = [];
 
   @override
   void initState() {
@@ -49,33 +51,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _pageController = PreloadPageController(initialPage: _pageIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _speedDials = [
-        SpeedDialChild(
-          child: Icon(Icons.exit_to_app),
-          backgroundColor: Colors.red,
-          label: S.of(context).LEAVE_MISSION,
-          labelStyle: TextStyle(fontSize: 18.0),
-          onTap: _leaveMission,
-        ),
-        SpeedDialChild(
-          child: Icon(Icons.update),
-          backgroundColor: Colors.blue,
-          label: S.of(context).CHANGE_STATUS,
-          labelStyle: TextStyle(fontSize: 18.0),
-          onTap: _updateState,
-        )
-      ];
-
-      if (widget.state.locationAccuracy >= 3) {
-        _speedDials.add(SpeedDialChild(
-          child: Icon(Icons.add_a_photo),
-          backgroundColor: Colors.green,
-          label: S.of(context).TAKE_PHOTO,
-          labelStyle: TextStyle(fontSize: 18.0),
-          onTap: _takePhoto,
-        ));
-      }
-      setState(() {});
+      setState(() {
+        _speedDials = _buildSpeedDials();
+      });
     });
 
     WidgetsBinding.instance.addObserver(this);
@@ -96,6 +74,60 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  List<SpeedDialChild> _buildSpeedDials() {
+    final speedDials = [
+      SpeedDialChild(
+        child: Icon(Icons.exit_to_app),
+        backgroundColor: Colors.red,
+        label: S.of(context).LEAVE_MISSION,
+        labelStyle: TextStyle(fontSize: 18.0),
+        onTap: _leaveMission,
+      ),
+      SpeedDialChild(
+        child: Icon(Icons.update),
+        backgroundColor: Colors.blue,
+        label: S.of(context).CHANGE_STATUS,
+        labelStyle: TextStyle(fontSize: 18.0),
+        onTap: _updateState,
+      )
+    ];
+
+    if (widget.state.locationAccuracy >= 3) {
+      speedDials.add(SpeedDialChild(
+        child: Icon(Icons.add_a_photo),
+        backgroundColor: Colors.green,
+        label: S.of(context).TAKE_PHOTO,
+        labelStyle: TextStyle(fontSize: 18.0),
+        onTap: _takePhoto,
+      ));
+    }
+    /*
+    speedDials.addAll(
+      List<SpeedDialChild>.from(
+        _quickActions.map(
+          (action) => SpeedDialChild(
+            child: Icon(Icons.call_to_action),
+            backgroundColor: Theme.of(context).primaryColor,
+            //labelStyle: TextStyle(fontSize: 18.0),
+            labelWidget: QuickActionButton(action: action),
+            onTap: () {
+              ExtendedNavigator.of(context).popAndPush(
+                Routes.checkRequirementsPage,
+                arguments: CheckRequirementsPageArguments(
+                  currentState: null,
+                  desiredState: action,
+                  action: StatusAction.callToAction,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );*/
+
+    return speedDials;
+  }
+
   @override
   Widget build(BuildContext context) {
     _title = _mapIndexToTitle(_pageIndex);
@@ -110,6 +142,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               action: StatusAction.refresh,
             ),
           );
+        }
+        if (state.quickActions.length > 0) {
+          setState(() {
+            _quickActions = state.quickActions;
+            _speedDials = _buildSpeedDials();
+          });
         }
       },
       child: Scaffold(

@@ -1,6 +1,6 @@
-import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/error/failures.dart';
 import '../../generated/l10n.dart';
 
 enum FailureMessageKey {
@@ -42,7 +42,7 @@ FailureMessageKey mapFailureToMessageKey(Failure failure) {
 }
 
 String translateErrorMessage(BuildContext context, FailureMessageKey key) {
-  key = key ?? '';
+  key = key ?? FailureMessageKey.unexpected;
 
   switch (key) {
     case FailureMessageKey.unexpected:

@@ -39,12 +39,10 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
     ));
 
     await scanQrCodeEither.fold((failure) async {
-      print(failure);
       emit(state.copyWith(
           status: AppConnectionStatus.error,
           messageKey: mapFailureToMessageKey(failure)));
     }, (connectionString) async {
-      print(connectionString);
       emit(state.copyWith(
         status: AppConnectionStatus.ready,
         connectionString: connectionString,
@@ -53,7 +51,6 @@ class AppConnectionCubit extends Cubit<AppConnectionState> {
   }
 
   void submit(String connectionString) async {
-    print(connectionString);
     final inputEither = inputConverter.convert(connectionString);
 
     inputEither.fold((failure) {

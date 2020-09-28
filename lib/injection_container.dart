@@ -305,6 +305,7 @@ Future<void> init() async {
         getAppConfiguration: sl(),
         clearMissionDetails: sl(),
         getLocationUpdatesStatus: sl(),
+        getUserStates: sl(),
       ));
 
   // Use Cases

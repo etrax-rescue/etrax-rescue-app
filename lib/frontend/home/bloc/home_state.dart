@@ -11,6 +11,7 @@ class HomeState extends Equatable {
     @required this.appConnection,
     @required this.authenticationData,
     @required this.appConfiguration,
+    @required this.quickActions,
     @required this.missionState,
     @required this.missionDetailCollection,
     @required this.locationHistory,
@@ -21,6 +22,7 @@ class HomeState extends Equatable {
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
   final AppConfiguration appConfiguration;
+  final List<UserState> quickActions;
   final List<LocationData> locationHistory;
   final MissionState missionState;
   final MissionDetailCollection missionDetailCollection;
@@ -32,6 +34,7 @@ class HomeState extends Equatable {
           appConnection: null,
           authenticationData: null,
           appConfiguration: null,
+          quickActions: const [],
           missionState: null,
           missionDetailCollection: null,
           locationHistory: const [],
@@ -42,6 +45,7 @@ class HomeState extends Equatable {
     AppConnection appConnection,
     AuthenticationData authenticationData,
     AppConfiguration appConfiguration,
+    List<UserState> quickActions,
     MissionState missionState,
     MissionDetailCollection missionDetailCollection,
     List<LocationData> locationHistory,
@@ -52,6 +56,7 @@ class HomeState extends Equatable {
       appConnection: appConnection ?? this.appConnection,
       authenticationData: authenticationData ?? this.authenticationData,
       appConfiguration: appConfiguration ?? this.appConfiguration,
+      quickActions: quickActions ?? this.quickActions,
       missionState: missionState ?? this.missionState,
       locationHistory: locationHistory ?? this.locationHistory,
       missionDetailCollection:
@@ -66,6 +71,7 @@ class HomeState extends Equatable {
         appConnection,
         authenticationData,
         appConfiguration,
+        quickActions,
         locationHistory,
         missionState,
         missionDetailCollection,
