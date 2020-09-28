@@ -90,6 +90,14 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
               context.bloc<CheckRequirementsCubit>().updateState();
             },
           ),
+          SequenceStep.quickAction: StepContent(
+            title: S.of(context).QUICK_ACTION_TITLE,
+            loadingMessage: S.of(context).TRIGGERING_QUICK_ACTION,
+            completeMessage: S.of(context).TRIGGERING_QUICK_ACTION_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().quickAction();
+            },
+          ),
           SequenceStep.logout: StepContent(
             title: S.of(context).LOGOUT_TITLE,
             loadingMessage: S.of(context).LOGGING_OUT,
@@ -163,9 +171,8 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
                   );
                 } else {
                   ExtendedNavigator.of(context).pushAndRemoveUntil(
-                    Routes.homePage,
+                    Routes.launchPage,
                     (route) => false,
-                    arguments: HomePageArguments(state: widget.desiredState),
                   );
                 }
               },

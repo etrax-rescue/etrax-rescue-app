@@ -573,6 +573,36 @@ class S {
     );
   }
 
+  /// `Trigger QuickAction`
+  String get QUICK_ACTION_TITLE {
+    return Intl.message(
+      'Trigger QuickAction',
+      name: 'QUICK_ACTION_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sending QuickAction...`
+  String get TRIGGERING_QUICK_ACTION {
+    return Intl.message(
+      'Sending QuickAction...',
+      name: 'TRIGGERING_QUICK_ACTION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QuickAction sent`
+  String get TRIGGERING_QUICK_ACTION_DONE {
+    return Intl.message(
+      'QuickAction sent',
+      name: 'TRIGGERING_QUICK_ACTION_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Logout`
   String get LOGOUT_TITLE {
     return Intl.message(

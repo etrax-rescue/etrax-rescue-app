@@ -64,6 +64,10 @@
     "UPDATING_STATE": "Updating status...",
     "UPDATING_STATE_DONE": "Status updated",
 
+    "QUICK_ACTION_TITLE": "Trigger QuickAction",
+    "TRIGGERING_QUICK_ACTION": "Sending QuickAction...",
+    "TRIGGERING_QUICK_ACTION_DONE": "QuickAction sent",
+
     "LOGOUT_TITLE": "Logout",
     "LOGGING_OUT": "Logging out...",
     "LOGGING_OUT_DONE": "Logged out",

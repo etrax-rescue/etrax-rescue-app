@@ -30,6 +30,10 @@ abstract class MissionStateRepository {
       AuthenticationData authenticationData,
       UserState state);
 
+  // Trigger quick action
+  Future<Either<Failure, None>> triggerQuickAction(AppConnection appConnection,
+      AuthenticationData authenticationData, UserState action);
+
   // Selected UserRole
   Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
       AuthenticationData authenticationData, UserRole role);
@@ -101,6 +105,27 @@ class MissionStateRepositoryImpl implements MissionStateRepository {
       await localMissionStateDataSource.cacheSelectedUserState(state);
     } on CacheException {
       return Left(CacheFailure());
+    }
+    return Right(None());
+  }
+
+  @override
+  Future<Either<Failure, None>> triggerQuickAction(AppConnection appConnection,
+      AuthenticationData authenticationData, UserState action) async {
+    if (!(await networkInfo.isConnected)) {
+      return Left(NetworkFailure());
+    }
+    try {
+      await remoteMissionStateDataSource.triggerQuickAction(
+          appConnection, authenticationData, action);
+    } on ServerException {
+      return Left(ServerFailure());
+    } on TimeoutException {
+      return Left(ServerFailure());
+    } on SocketException {
+      return Left(ServerFailure());
+    } on AuthenticationException {
+      return Left(AuthenticationFailure());
     }
     return Right(None());
   }

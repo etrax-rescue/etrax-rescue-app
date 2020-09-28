@@ -1,6 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/trigger_quick_action.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -29,6 +30,7 @@ enum SequenceStep {
   getSettings,
   checkPermissions,
   checkServices,
+  quickAction,
   updateState,
   logout,
   stopUpdates,
@@ -40,7 +42,7 @@ enum StatusAction {
   change,
   refresh,
   logout,
-  callToAction,
+  quickAction,
 }
 
 class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
@@ -54,6 +56,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     @required this.requestLocationService,
     @required this.stopLocationUpdates,
     @required this.startLocationUpdates,
+    @required this.triggerQuickAction,
     @required this.logout,
     @required this.clearMissionState,
     @required this.clearMissionDetails,
@@ -67,6 +70,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         assert(requestLocationService != null),
         assert(stopLocationUpdates != null),
         assert(startLocationUpdates != null),
+        assert(triggerQuickAction != null),
         assert(logout != null),
         assert(clearMissionState != null),
         assert(clearMissionDetails != null),
@@ -77,6 +81,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       SequenceStep.getSettings: retrieveSettings,
       SequenceStep.checkPermissions: locationPermissionCheck,
       SequenceStep.checkServices: locationServicesCheck,
+      SequenceStep.quickAction: quickAction,
       SequenceStep.updateState: updateState,
       SequenceStep.logout: signout,
       SequenceStep.stopUpdates: stopUpdates,
@@ -94,6 +99,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   final RequestLocationService requestLocationService;
   final StopLocationUpdates stopLocationUpdates;
   final StartLocationUpdates startLocationUpdates;
+  final TriggerQuickAction triggerQuickAction;
   final Logout logout;
   final ClearMissionState clearMissionState;
   final ClearMissionDetails clearMissionDetails;
@@ -251,6 +257,33 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     ));
 
     setStateEither.fold((failure) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.failure),
+        messageKey: mapFailureToMessageKey(failure),
+      ));
+    }, (_) async {
+      emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.complete),
+      ));
+
+      _next();
+    });
+  }
+
+  void quickAction() async {
+    emit(state.copyWith(
+        sequenceStatus:
+            _generateSequenceStatus(currentStatus: StepStatus.loading)));
+
+    final quickActionEither = await triggerQuickAction(TriggerQuickActionParams(
+      appConnection: state.appConnection,
+      authenticationData: state.authenticationData,
+      action: state.desiredState,
+    ));
+
+    quickActionEither.fold((failure) async {
       emit(state.copyWith(
         sequenceStatus:
             _generateSequenceStatus(currentStatus: StepStatus.failure),
@@ -460,10 +493,10 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           SequenceStep.clearState,
         ];
       }
-    } else if (action == StatusAction.callToAction) {
+    } else if (action == StatusAction.quickAction) {
       return [
         SequenceStep.getSettings,
-        SequenceStep.updateState,
+        SequenceStep.quickAction,
       ];
     }
   }

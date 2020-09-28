@@ -64,6 +64,10 @@
     "UPDATING_STATE": "Status wird aktualisiert...",
     "UPDATING_STATE_DONE": "Status wurde aktualisiert",
 
+    "QUICK_ACTION_TITLE": "QuickAction auslösen",
+    "TRIGGERING_QUICK_ACTION": "QuickAction wird verschickt...",
+    "TRIGGERING_QUICK_ACTION_DONE": "QuickAction wurde verschickt",
+
     "LOGOUT_TITLE": "Abmelden",
     "LOGGING_OUT": "Abmeldung im Gange...",
     "LOGGING_OUT_DONE": "Abgemeldet",

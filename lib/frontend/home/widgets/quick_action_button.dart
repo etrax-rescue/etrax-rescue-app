@@ -42,7 +42,7 @@ class QuickActionButton extends StatelessWidget {
                         arguments: CheckRequirementsPageArguments(
                           currentState: null,
                           desiredState: action,
-                          action: StatusAction.callToAction,
+                          action: StatusAction.quickAction,
                         ),
                       );
                     },
