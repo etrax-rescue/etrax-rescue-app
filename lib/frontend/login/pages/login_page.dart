@@ -8,6 +8,7 @@ import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
+import '../../widgets/about_menu_entry.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
 import '../bloc/login_bloc.dart';
@@ -53,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               automaticallyImplyLeading: false,
               elevation: 0,
               actions: <Widget>[
-                PopupMenu(),
+                PopupMenu(actions: {0: generateAboutMenuEntry(context)}),
               ],
               expandedHeight: MediaQuery.of(context).size.height / 3,
               flexibleSpace: Align(
@@ -123,6 +124,9 @@ class _LoginPageState extends State<LoginPage> {
                                     items: _dropdownItems,
                                     value: _selectedOrganization,
                                     onChanged: (val) {
+                                      _selectedOrganization = val;
+                                    },
+                                    onSaved: (val) {
                                       _selectedOrganization = val;
                                     },
                                     validator: (val) => val == null
