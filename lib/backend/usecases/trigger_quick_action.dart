@@ -6,8 +6,8 @@ import '../../core/error/failures.dart';
 import '../repositories/mission_state_repository.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
+import '../types/quick_actions.dart';
 import '../types/usecase.dart';
-import '../types/user_states.dart';
 
 class TriggerQuickAction extends UseCase<None, TriggerQuickActionParams> {
   final MissionStateRepository repository;
@@ -23,7 +23,7 @@ class TriggerQuickAction extends UseCase<None, TriggerQuickActionParams> {
 class TriggerQuickActionParams extends Equatable {
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
-  final UserState action;
+  final QuickAction action;
 
   TriggerQuickActionParams({
     @required this.appConnection,

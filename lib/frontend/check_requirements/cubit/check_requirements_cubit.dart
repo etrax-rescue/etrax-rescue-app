@@ -1,6 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
 import 'package:etrax_rescue_app/backend/usecases/trigger_quick_action.dart';
 import 'package:flutter/material.dart';
 
@@ -111,6 +112,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     @required StatusAction action,
     @required UserState currentState,
     @required UserState desiredState,
+    @required QuickAction quickAction,
     @required String notificationTitle,
     @required String notificationBody,
   }) async {
@@ -120,6 +122,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
           _generateSequenceStatus(currentStatus: StepStatus.disabled),
       currentState: currentState,
       desiredState: desiredState,
+      quickAction: quickAction,
       notificationTitle: notificationTitle,
       notificationBody: notificationBody,
     ));
@@ -276,11 +279,12 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     emit(state.copyWith(
         sequenceStatus:
             _generateSequenceStatus(currentStatus: StepStatus.loading)));
+    print(state.quickAction);
 
     final quickActionEither = await triggerQuickAction(TriggerQuickActionParams(
       appConnection: state.appConnection,
       authenticationData: state.authenticationData,
-      action: state.desiredState,
+      action: state.quickAction,
     ));
 
     quickActionEither.fold((failure) async {

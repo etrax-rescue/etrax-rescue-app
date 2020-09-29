@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../../backend/types/user_states.dart';
+import '../../../backend/types/quick_actions.dart';
 import 'quick_action_button.dart';
 
 class QuickActionsBox extends StatelessWidget {
   const QuickActionsBox({Key key, @required this.actions}) : super(key: key);
 
-  final List<UserState> actions;
+  final QuickActionCollection actions;
 
   @override
   Widget build(BuildContext context) {
     final quickActions = List<Widget>.from(
-        actions.map((action) => QuickActionButton(action: action)));
+        actions.actions.map((action) => QuickActionButton(action: action)));
 
     return Container(
       alignment: Alignment.center,

@@ -1,7 +1,10 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_quick_actions_data_source.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_quick_actions.dart';
 import 'package:etrax_rescue_app/backend/usecases/trigger_quick_action.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -109,7 +112,8 @@ Future<void> init() async {
           localUserRolesDataSource: sl(),
           localUserStatesDataSource: sl(),
           networkInfo: sl(),
-          localAppConfigurationDataSource: sl()));
+          localAppConfigurationDataSource: sl(),
+          localQuickActionDataSource: sl()));
 
   // Data Sources
   sl.registerLazySingleton<LocalMissionStateDataSource>(
@@ -127,6 +131,8 @@ Future<void> init() async {
       () => LocalUserStatesDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalMissionsDataSource>(
       () => LocalMissionsDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalQuickActionDataSource>(
+      () => LocalQuickActionDataSourceImpl(sl()));
 
   //! Features - App Connection
   // BLoC
@@ -309,7 +315,7 @@ Future<void> init() async {
         getAppConfiguration: sl(),
         clearMissionDetails: sl(),
         getLocationUpdatesStatus: sl(),
-        getUserStates: sl(),
+        getQuickActions: sl(),
       ));
 
   // Use Cases
@@ -319,6 +325,7 @@ Future<void> init() async {
   sl.registerLazySingleton<GetMissionDetails>(() => GetMissionDetails(sl()));
   sl.registerLazySingleton<GetLocationUpdatesStatus>(
       () => GetLocationUpdatesStatus(sl()));
+  sl.registerLazySingleton<GetQuickActions>(() => GetQuickActions(sl()));
 
   // Repositories
   sl.registerLazySingleton<MissionDetailsRepository>(
@@ -326,6 +333,7 @@ Future<void> init() async {
             networkInfo: sl(),
             remoteDetailsDataSource: sl(),
             localMissionDetailsDataSource: sl(),
+            cacheManager: sl(),
           ));
 
   // Data Sources
@@ -380,6 +388,7 @@ Future<void> init() async {
   sl.registerLazySingleton<BackgroundLocation>(() => BackgroundLocation());
   sl.registerLazySingleton<ImagePicker>(() => ImagePicker());
   sl.registerLazySingleton<Dio>(() => dio);
+  sl.registerLazySingleton<DefaultCacheManager>(() => DefaultCacheManager());
 }
 
 class GetLocationUpdateStatus {}

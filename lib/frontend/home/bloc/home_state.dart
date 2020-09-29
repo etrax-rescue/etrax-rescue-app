@@ -22,7 +22,7 @@ class HomeState extends Equatable {
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
   final AppConfiguration appConfiguration;
-  final List<UserState> quickActions;
+  final QuickActionCollection quickActions;
   final List<LocationData> locationHistory;
   final MissionState missionState;
   final MissionDetailCollection missionDetailCollection;
@@ -34,7 +34,7 @@ class HomeState extends Equatable {
           appConnection: null,
           authenticationData: null,
           appConfiguration: null,
-          quickActions: const [],
+          quickActions: null,
           missionState: null,
           missionDetailCollection: null,
           locationHistory: const [],
@@ -45,7 +45,7 @@ class HomeState extends Equatable {
     AppConnection appConnection,
     AuthenticationData authenticationData,
     AppConfiguration appConfiguration,
-    List<UserState> quickActions,
+    QuickActionCollection quickActions,
     MissionState missionState,
     MissionDetailCollection missionDetailCollection,
     List<LocationData> locationHistory,

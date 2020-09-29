@@ -71,7 +71,6 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                             labelText: S.of(context).STATE,
                           ),
                           items: stateList
-                              .where((state) => state.id <= 11)
                               .where((state) => state != widget.currentState)
                               .map((UserState userState) {
                             return DropdownMenuItem<UserState>(

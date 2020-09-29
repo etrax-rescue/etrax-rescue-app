@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_quick_actions.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_user_states.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +39,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     @required this.getAppConnection,
     @required this.getAuthenticationData,
     @required this.getAppConfiguration,
-    @required this.getUserStates,
+    @required this.getQuickActions,
     @required this.getMissionDetails,
     @required this.getLocationHistory,
     @required this.getLocationUpdatesStatus,
@@ -50,7 +52,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         assert(getAppConnection != null),
         assert(getAppConfiguration != null),
         assert(getAuthenticationData != null),
-        assert(getUserStates != null),
+        assert(getQuickActions != null),
         assert(getMissionDetails != null),
         assert(getLocationHistory != null),
         assert(getLocationUpdatesStatus != null),
@@ -65,7 +67,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final GetAppConfiguration getAppConfiguration;
-  final GetUserStates getUserStates;
+  final GetQuickActions getQuickActions;
   final GetMissionDetails getMissionDetails;
   final GetLocationUpdateStream getLocationUpdateStream;
   final GetLocationHistory getLocationHistory;
@@ -111,15 +113,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield* getAppConfigurationEither.fold((failure) async* {
           // TODO: handle failure
         }, (appConfiguration) async* {
-          final getUserStatesEither = await getUserStates(NoParams());
+          final getQuickActionsEither = await getQuickActions(NoParams());
 
-          yield* getUserStatesEither.fold((failure) async* {
+          yield* getQuickActionsEither.fold((failure) async* {
             // TODO: handle failure
-          }, (userStates) async* {
-            // TODO: move this logig to the server and create separate quick actions type
-            final quickActions = List<UserState>.from(
-                userStates.states.where((userState) => userState.id >= 11));
-
+          }, (quickActions) async* {
             final getMissionStateEither = await getMissionState(NoParams());
 
             yield* getMissionStateEither.fold((failure) async* {

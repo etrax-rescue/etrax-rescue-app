@@ -1,3 +1,4 @@
+import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/error/exceptions.dart';
@@ -19,7 +20,7 @@ abstract class RemoteMissionStateDataSource {
       AuthenticationData authenticationData, UserRole role);
 
   Future<void> triggerQuickAction(AppConnection appConnection,
-      AuthenticationData authenticationData, UserState action);
+      AuthenticationData authenticationData, QuickAction action);
 }
 
 class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
@@ -101,11 +102,11 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
 
   @override
   Future<void> triggerQuickAction(AppConnection appConnection,
-      AuthenticationData authenticationData, UserState action) async {
+      AuthenticationData authenticationData, QuickAction action) async {
     final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
+        appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
         headers: authenticationData.generateAuthHeader(),
-        body: {'state_id': action.id.toString()});
+        body: {'action_id': action.id.toString()});
 
     http.Response response;
     try {

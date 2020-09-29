@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../backend/types/quick_actions.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
@@ -16,14 +17,16 @@ import '../widgets/sequence_sliver.dart';
 class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
   CheckRequirementsPage({
     Key key,
-    @required this.desiredState,
-    @required this.currentState,
+    this.desiredState,
+    this.currentState,
+    this.quickAction,
     this.action = StatusAction.change,
   }) : super(key: key);
 
   final UserState desiredState;
   final UserState currentState;
   final StatusAction action;
+  final QuickAction quickAction;
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -54,6 +57,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
               action: widget.action,
               currentState: widget.currentState,
               desiredState: widget.desiredState,
+              quickAction: widget.quickAction,
               notificationTitle: S.of(context).LOCATION_UPDATES_ACTIVE,
               notificationBody: S.of(context).ETRAX_LOCATION_NOTIFICATION,
             );

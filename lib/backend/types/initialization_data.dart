@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
 import 'package:flutter/material.dart';
 
 import 'app_configuration.dart';
@@ -10,12 +11,14 @@ class InitializationData extends Equatable {
   final AppConfiguration appConfiguration;
   final MissionCollection missionCollection;
   final UserStateCollection userStateCollection;
+  final QuickActionCollection quickActionCollection;
   final UserRoleCollection userRoleCollection;
 
   InitializationData({
     @required this.appConfiguration,
     @required this.missionCollection,
     @required this.userStateCollection,
+    @required this.quickActionCollection,
     @required this.userRoleCollection,
   });
 
@@ -25,11 +28,14 @@ class InitializationData extends Equatable {
     final missionCollection = MissionCollection.fromJson(json);
     final userRoleCollection = UserRoleCollection.fromJson(json);
     final userStateCollection = UserStateCollection.fromJson(json);
+    final quickActionCollection = QuickActionCollection.fromJson(json);
     return InitializationData(
-        appConfiguration: appConfiguration,
-        missionCollection: missionCollection,
-        userRoleCollection: userRoleCollection,
-        userStateCollection: userStateCollection);
+      appConfiguration: appConfiguration,
+      missionCollection: missionCollection,
+      userRoleCollection: userRoleCollection,
+      userStateCollection: userStateCollection,
+      quickActionCollection: quickActionCollection,
+    );
   }
 
   @override
@@ -37,6 +43,7 @@ class InitializationData extends Equatable {
         appConfiguration,
         missionCollection,
         userStateCollection,
-        userRoleCollection
+        userRoleCollection,
+        quickActionCollection,
       ];
 }

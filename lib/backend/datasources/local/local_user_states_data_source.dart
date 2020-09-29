@@ -20,8 +20,7 @@ class LocalUserStatesDataSourceImpl implements LocalUserStatesDataSource {
 
   @override
   Future<void> clearUserStates() async {
-    // TODO: implement clearUserStates
-    throw UnimplementedError();
+    await sharedPreferences.remove(SharedPreferencesKeys.userStates);
   }
 
   @override

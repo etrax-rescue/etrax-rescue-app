@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_mission_details_data_source.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
@@ -25,11 +26,13 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
     @required this.networkInfo,
     @required this.remoteDetailsDataSource,
     @required this.localMissionDetailsDataSource,
+    @required this.cacheManager,
   });
 
   final NetworkInfo networkInfo;
   final RemoteMissionDetailsDataSource remoteDetailsDataSource;
   final LocalMissionDetailsDataSource localMissionDetailsDataSource;
+  final DefaultCacheManager cacheManager;
 
   @override
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
@@ -78,6 +81,7 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
 
   @override
   Future<Either<Failure, None>> clearMissionDetails() async {
+    await cacheManager.emptyCache();
     try {
       await localMissionDetailsDataSource.deleteCachedMissionDetails();
       return Right(None());

@@ -20,8 +20,7 @@ class LocalUserRolesDataSourceImpl implements LocalUserRolesDataSource {
 
   @override
   Future<void> clearUserRoles() async {
-    // TODO: implement clearUserRoles
-    throw UnimplementedError();
+    await sharedPreferences.remove(SharedPreferencesKeys.userRoles);
   }
 
   @override

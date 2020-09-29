@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial_quickaction/flutter_speed_dial.dart';
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String _title;
   int _pageIndex = 0;
   List<SpeedDialChild> _speedDials = [];
-  List<UserState> _quickActions = [];
+  QuickActionCollection _quickActions = QuickActionCollection(actions: []);
 
   @override
   void initState() {
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
           );
         }
-        if (state.quickActions.length > 0) {
+        if (state.quickActions.actions.length > 0) {
           setState(() {
             _quickActions = state.quickActions;
             _speedDials = _buildSpeedDials();
