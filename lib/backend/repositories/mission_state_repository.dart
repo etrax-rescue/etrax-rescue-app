@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:background_location/background_location.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
@@ -31,8 +32,11 @@ abstract class MissionStateRepository {
       UserState state);
 
   // Trigger quick action
-  Future<Either<Failure, None>> triggerQuickAction(AppConnection appConnection,
-      AuthenticationData authenticationData, QuickAction action);
+  Future<Either<Failure, None>> triggerQuickAction(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState action,
+      LocationData currentLocation);
 
   // Selected UserRole
   Future<Either<Failure, None>> setSelectedUserRole(AppConnection appConnection,
@@ -110,14 +114,17 @@ class MissionStateRepositoryImpl implements MissionStateRepository {
   }
 
   @override
-  Future<Either<Failure, None>> triggerQuickAction(AppConnection appConnection,
-      AuthenticationData authenticationData, QuickAction action) async {
+  Future<Either<Failure, None>> triggerQuickAction(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState action,
+      LocationData currentLocation) async {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
     try {
       await remoteMissionStateDataSource.triggerQuickAction(
-          appConnection, authenticationData, action);
+          appConnection, authenticationData, action, currentLocation);
     } on ServerException {
       return Left(ServerFailure());
     } on TimeoutException {

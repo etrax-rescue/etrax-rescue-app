@@ -177,8 +177,17 @@ class LocationRepositoryImpl implements LocationRepository {
   @override
   Future<Either<Failure, LocationData>> getLastLocation() async {
     try {
-      final result = await localLocationDataSource.getLastLocation();
-      return Right(result);
+      LocationData location;
+      // Get the last known location. If the platform returns null, retry up to
+      // ten times, then return a failure.
+      for (int i = 0; i < 10; i++) {
+        location = await localLocationDataSource.getLastLocation();
+        if (location.latitude != null && location.longitude != null) {
+          return Right(location);
+        }
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+      return Left(NoLockOnLocationFailure());
     } on PlatformException {
       return Left(PlatformFailure());
     }

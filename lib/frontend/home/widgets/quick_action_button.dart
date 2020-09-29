@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../../../backend/types/quick_actions.dart';
+import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/router.gr.dart';
 import '../../check_requirements/cubit/check_requirements_cubit.dart';
@@ -9,7 +9,7 @@ import '../../check_requirements/cubit/check_requirements_cubit.dart';
 class QuickActionButton extends StatelessWidget {
   const QuickActionButton({Key key, @required this.action}) : super(key: key);
 
-  final QuickAction action;
+  final UserState action;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +41,7 @@ class QuickActionButton extends StatelessWidget {
                         Routes.checkRequirementsPage,
                         arguments: CheckRequirementsPageArguments(
                           currentState: null,
-                          desiredState: null,
-                          quickAction: action,
+                          desiredState: action,
                           action: StatusAction.quickAction,
                         ),
                       );

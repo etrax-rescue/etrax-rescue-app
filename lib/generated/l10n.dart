@@ -543,6 +543,36 @@ class S {
     );
   }
 
+  /// `Acquire Current Location`
+  String get GET_LOCATION_TITLE {
+    return Intl.message(
+      'Acquire Current Location',
+      name: 'GET_LOCATION_TITLE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Acquiring current location...`
+  String get GETTING_CURRENT_LOCATION {
+    return Intl.message(
+      'Acquiring current location...',
+      name: 'GETTING_CURRENT_LOCATION',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current location acquired`
+  String get GETTING_CURRENT_LOCATION_DONE {
+    return Intl.message(
+      'Current location acquired',
+      name: 'GETTING_CURRENT_LOCATION_DONE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Status update`
   String get UPDATE_STATE_TITLE {
     return Intl.message(
@@ -1138,6 +1168,16 @@ class S {
     return Intl.message(
       'A plugin raised an error',
       name: 'PLATFORM_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Couldn't acquire current location`
+  String get NO_LOCK_ON_LOCATION_FAILURE_MESSAGE {
+    return Intl.message(
+      'Couldn\'t acquire current location',
+      name: 'NO_LOCK_ON_LOCATION_FAILURE_MESSAGE',
       desc: '',
       args: [],
     );

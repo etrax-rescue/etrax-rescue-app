@@ -16,6 +16,7 @@ enum FailureMessageKey {
   locationPermissionDenied,
   locationPermissionPermanentlyDenied,
   locationServicesDisabled,
+  noLockOnLocation,
 }
 
 FailureMessageKey mapFailureToMessageKey(Failure failure) {
@@ -36,6 +37,8 @@ FailureMessageKey mapFailureToMessageKey(Failure failure) {
       return FailureMessageKey.authentication;
     case PlatformFailure:
       return FailureMessageKey.platform;
+    case NoLockOnLocationFailure:
+      return FailureMessageKey.noLockOnLocation;
     default:
       return FailureMessageKey.unexpected;
   }
@@ -69,6 +72,8 @@ String translateErrorMessage(BuildContext context, FailureMessageKey key) {
           .LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE;
     case FailureMessageKey.locationServicesDisabled:
       return S.of(context).LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE;
+    case FailureMessageKey.noLockOnLocation:
+      return S.of(context).NO_LOCK_ON_LOCATION_FAILURE_MESSAGE;
     case FailureMessageKey.platform:
       return S.of(context).PLATFORM_FAILURE_MESSAGE;
     default:

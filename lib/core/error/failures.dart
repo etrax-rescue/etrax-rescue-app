@@ -22,3 +22,5 @@ class AuthenticationFailure extends Failure {}
 class PlatformFailure extends Failure {}
 
 class UnknownFailure extends Failure {}
+
+class NoLockOnLocationFailure extends Failure {}

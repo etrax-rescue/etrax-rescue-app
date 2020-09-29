@@ -1,4 +1,7 @@
-import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:background_location/background_location.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/error/exceptions.dart';
@@ -19,8 +22,12 @@ abstract class RemoteMissionStateDataSource {
   Future<void> selectUserRole(AppConnection appConnection,
       AuthenticationData authenticationData, UserRole role);
 
-  Future<void> triggerQuickAction(AppConnection appConnection,
-      AuthenticationData authenticationData, QuickAction action);
+  Future<void> triggerQuickAction(
+    AppConnection appConnection,
+    AuthenticationData authenticationData,
+    UserState action,
+    LocationData currentLocation,
+  );
 }
 
 class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
@@ -101,12 +108,23 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   }
 
   @override
-  Future<void> triggerQuickAction(AppConnection appConnection,
-      AuthenticationData authenticationData, QuickAction action) async {
+  Future<void> triggerQuickAction(
+      AppConnection appConnection,
+      AuthenticationData authenticationData,
+      UserState action,
+      LocationData currentLocation) async {
+    final bodyMap = {
+      'action_id': action.id.toString(),
+      if (currentLocation != null) 'location': currentLocation.toMap(),
+    };
+
+    final headers = authenticationData.generateAuthHeader()
+      ..addAll({HttpHeaders.contentTypeHeader: 'application/json'});
+
     final request = client.post(
         appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
-        headers: authenticationData.generateAuthHeader(),
-        body: {'action_id': action.id.toString()});
+        headers: headers,
+        body: json.encode(bodyMap));
 
     http.Response response;
     try {

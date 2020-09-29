@@ -15,10 +15,10 @@ class CheckRequirementsState extends Equatable {
     @required this.sequenceStatus,
     @required this.currentState,
     @required this.desiredState,
-    @required this.quickAction,
     @required this.appConfiguration,
     @required this.appConnection,
     @required this.authenticationData,
+    @required this.currentLocation,
     this.complete = false,
     this.messageKey = FailureMessageKey.unexpected,
     this.notificationTitle = '',
@@ -33,11 +33,12 @@ class CheckRequirementsState extends Equatable {
 
   final UserState currentState;
   final UserState desiredState;
-  final QuickAction quickAction;
 
   final AppConnection appConnection;
   final AuthenticationData authenticationData;
   final AppConfiguration appConfiguration;
+
+  final LocationData currentLocation;
 
   final bool complete;
 
@@ -54,10 +55,10 @@ class CheckRequirementsState extends Equatable {
           currentIndex: -1,
           currentState: null,
           desiredState: null,
-          quickAction: null,
           appConfiguration: null,
           appConnection: null,
           authenticationData: null,
+          currentLocation: null,
         );
 
   CheckRequirementsState markComplete() {
@@ -68,10 +69,10 @@ class CheckRequirementsState extends Equatable {
       currentStep: this.currentStep,
       currentState: this.currentState,
       desiredState: this.desiredState,
-      quickAction: this.quickAction,
       appConfiguration: this.appConfiguration,
       appConnection: this.appConnection,
       authenticationData: this.authenticationData,
+      currentLocation: this.currentLocation,
       complete: true,
     );
   }
@@ -84,13 +85,13 @@ class CheckRequirementsState extends Equatable {
     FailureMessageKey messageKey,
     UserState currentState,
     UserState desiredState,
-    QuickAction quickAction,
     AppConfiguration appConfiguration,
     AppConnection appConnection,
     AuthenticationData authenticationData,
     String notificationTitle,
     String notificationBody,
     String label,
+    LocationData currentLocation,
   }) {
     return CheckRequirementsState(
       sequence: sequence ?? this.sequence,
@@ -100,12 +101,12 @@ class CheckRequirementsState extends Equatable {
       messageKey: messageKey ?? FailureMessageKey.unexpected,
       currentState: currentState ?? this.currentState,
       desiredState: desiredState ?? this.desiredState,
-      quickAction: quickAction ?? this.quickAction,
       appConfiguration: appConfiguration ?? this.appConfiguration,
       appConnection: appConnection ?? this.appConnection,
       authenticationData: authenticationData ?? this.authenticationData,
       notificationTitle: notificationTitle ?? this.notificationTitle,
       notificationBody: notificationBody ?? this.notificationBody,
+      currentLocation: currentLocation ?? this.currentLocation,
     );
   }
 
@@ -123,5 +124,6 @@ class CheckRequirementsState extends Equatable {
         messageKey,
         notificationTitle,
         notificationBody,
+        currentLocation,
       ];
 }

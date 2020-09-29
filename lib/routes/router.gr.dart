@@ -10,7 +10,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../backend/types/missions.dart';
-import '../backend/types/quick_actions.dart';
 import '../backend/types/user_roles.dart';
 import '../backend/types/user_states.dart';
 import '../frontend/app_connection/pages/app_connection_page.dart';
@@ -129,7 +128,6 @@ class Router extends RouterBase {
           key: args.key,
           desiredState: args.desiredState,
           currentState: args.currentState,
-          quickAction: args.quickAction,
           action: args.action,
         ).wrappedRoute(context),
         settings: data,
@@ -204,13 +202,11 @@ class CheckRequirementsPageArguments {
   final Key key;
   final UserState desiredState;
   final UserState currentState;
-  final QuickAction quickAction;
   final StatusAction action;
   CheckRequirementsPageArguments(
       {this.key,
       this.desiredState,
       this.currentState,
-      this.quickAction,
       this.action = StatusAction.change});
 }
 

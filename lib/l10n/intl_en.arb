@@ -60,6 +60,10 @@
     "CHECKING_SERVICES": "Checking services...",
     "CHECKING_SERVICES_DONE": "Location services successfully activated",
 
+    "GET_LOCATION_TITLE": "Acquire Current Location",
+    "GETTING_CURRENT_LOCATION": "Acquiring current location...",
+    "GETTING_CURRENT_LOCATION_DONE": "Current location acquired",
+
     "UPDATE_STATE_TITLE": "Status update",
     "UPDATING_STATE": "Updating status...",
     "UPDATING_STATE_DONE": "Status updated",
@@ -133,5 +137,6 @@
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Location permission denied",
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Location permission permanently denied. Open settings to resolve this.",
     "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled",
-    "PLATFORM_FAILURE_MESSAGE": "A plugin raised an error"
+    "PLATFORM_FAILURE_MESSAGE": "A plugin raised an error",
+    "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Couldn't acquire current location"
 }

@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../backend/types/quick_actions.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
@@ -19,14 +18,12 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
     Key key,
     this.desiredState,
     this.currentState,
-    this.quickAction,
     this.action = StatusAction.change,
   }) : super(key: key);
 
   final UserState desiredState;
   final UserState currentState;
   final StatusAction action;
-  final QuickAction quickAction;
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -57,7 +54,6 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
               action: widget.action,
               currentState: widget.currentState,
               desiredState: widget.desiredState,
-              quickAction: widget.quickAction,
               notificationTitle: S.of(context).LOCATION_UPDATES_ACTIVE,
               notificationBody: S.of(context).ETRAX_LOCATION_NOTIFICATION,
             );
@@ -84,6 +80,14 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             completeMessage: S.of(context).CHECKING_SERVICES_DONE,
             onRetry: (context) {
               context.bloc<CheckRequirementsCubit>().locationServicesCheck();
+            },
+          ),
+          SequenceStep.getLastLocation: StepContent(
+            title: S.of(context).GET_LOCATION_TITLE,
+            loadingMessage: S.of(context).GETTING_CURRENT_LOCATION,
+            completeMessage: S.of(context).GETTING_CURRENT_LOCATION_DONE,
+            onRetry: (context) {
+              context.bloc<CheckRequirementsCubit>().getLocation();
             },
           ),
           SequenceStep.updateState: StepContent(

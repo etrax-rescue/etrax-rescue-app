@@ -60,6 +60,10 @@
     "CHECKING_SERVICES": "Ortungsdienste werden überprüft...",
     "CHECKING_SERVICES_DONE": "Ortungsdienste erforlgreich aktiviert",
 
+    "GET_LOCATION_TITLE": "Standort abrufen",
+    "GETTING_CURRENT_LOCATION": "Standort wird abgerufen...",
+    "GETTING_CURRENT_LOCATION_DONE": "Standort erfasst",
+
     "UPDATE_STATE_TITLE": "Status aktualisieren",
     "UPDATING_STATE": "Status wird aktualisiert...",
     "UPDATING_STATE_DONE": "Status wurde aktualisiert",
@@ -133,6 +137,7 @@
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Standortberechtigung verweigert",
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
     "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Ortungsdienste sind deaktiviert",
-    "PLATFORM_FAILURE_MESSAGE": "Ein plugin hat einen Fehler verursacht"
+    "PLATFORM_FAILURE_MESSAGE": "Ein plugin hat einen Fehler verursacht",
+    "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Der aktuelle Standort konnte nicht erfasst werden"
     
 }

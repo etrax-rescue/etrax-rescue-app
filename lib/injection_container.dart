@@ -251,6 +251,7 @@ Future<void> init() async {
         clearMissionState: sl(),
         logout: sl(),
         triggerQuickAction: sl(),
+        getLastLocation: sl(),
       ));
 
   // Use Cases
