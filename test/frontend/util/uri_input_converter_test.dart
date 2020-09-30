@@ -3,13 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../lib/core/error/failures.dart';
 import '../../../lib/frontend/util/uri_input_converter.dart';
+import '../../reference_types.dart';
 
 void main() {
   UriInputConverter inputConverter;
   setUp(() {
     inputConverter = UriInputConverter();
   });
-  final tAuthority = 'etrax.at';
 
   // TODO: handle the case where the eTrax server is installed in a subdirectory. Thus the uri would look something like: organization.org/etrax/appdata
   group('convert', () {
@@ -17,38 +17,28 @@ void main() {
       'should return the the input string if a valid authority string is given',
       () async {
         // act
-        final result = inputConverter.convert(tAuthority);
+        final result = inputConverter.convert(tHost);
         // assert
-        expect(result, Right(tAuthority));
+        expect(result, Right(tHost));
       },
     );
     test(
       'should return a InvalidInputFailure when an authority string with query param is given',
       () async {
         // arrange
-        final tBadUri = 'etrax.at/?test=foo';
+        final tBadUri = 'https://etrax.at/?test=foo';
         // act
         final result = inputConverter.convert(tBadUri);
         // assert
         expect(result, equals(Left(InvalidInputFailure())));
       },
     );
-    test(
-      'should return a InvalidInputFailure when an authority string with schema is given',
-      () async {
-        // arrange
-        final tBadAuthority = 'https://www.etrax.at';
-        // act
-        final result = inputConverter.convert(tBadAuthority);
-        // assert
-        expect(result, equals(Left(InvalidInputFailure())));
-      },
-    );
+
     test(
       'should return a InvalidInputFailure when the provided authority string contains whitespaces',
       () async {
         // arrange
-        final tBadAuthority = 'www etrax.at/';
+        final tBadAuthority = 'https://www etrax.at/';
         // act
         final result = inputConverter.convert(tBadAuthority);
         // assert
@@ -70,18 +60,18 @@ void main() {
       'should remove trailing backslash from authority string',
       () async {
         // arrange
-        final tUri = 'etrax.at/';
+        final tUri = 'https://apptest.etrax.at/';
         // act
         final result = inputConverter.convert(tUri);
         // assert
-        expect(result, Right(tAuthority));
+        expect(result, Right(tHost));
       },
     );
     test(
       'should work with authority strings that include www',
       () async {
         // arrange
-        final tUri = 'www.etrax.at';
+        final tUri = 'https://www.etrax.at';
         // act
         final result = inputConverter.convert(tUri);
         // assert

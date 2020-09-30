@@ -1,4 +1,4 @@
 {
-    "host": "https://etrax.at",
-    "basePath": "appdata"
+    "host": "https://apptest.etrax.at",
+    "basePath": "subdir"
 }

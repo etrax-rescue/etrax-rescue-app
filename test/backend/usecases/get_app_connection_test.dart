@@ -29,7 +29,7 @@ void main() {
       // act
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tHost));
+      expect(result, Right(tAppConnection));
       verify(mockAppConnectionRepository.getAppConnection());
       verifyNoMoreInteractions(mockAppConnectionRepository);
     },

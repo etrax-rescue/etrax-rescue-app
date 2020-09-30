@@ -31,6 +31,7 @@ void main() {
             .thenReturn(fixture('app_connection/valid.json'));
         // act
         final result = await dataSource.getCachedAppConnection();
+        print('${result.host} ${result.basePath}');
         // assert
         verify(mockSharedPreferences
             .getString(SharedPreferencesKeys.appConnection));

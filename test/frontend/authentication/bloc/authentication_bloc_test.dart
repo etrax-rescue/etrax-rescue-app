@@ -1,17 +1,18 @@
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../../lib/backend/types/app_connection.dart';
-import '../../../../lib/backend/domain/usecases/get_app_connection.dart';
-import '../../../../lib/core/error/failures.dart';
-import '../../../../lib/frontend/util/translate_error_messages.dart';
-import '../../../../lib/backend/types/usecase.dart';
-import '../../../../lib/backend/domain/usecases/login.dart';
-import '../../../../lib/frontend/authentication/bloc/login_bloc.dart';
-import '../../../../lib/backend/domain/usecases/mark_app_connection_for_update.dart';
-import '../../../../lib/backend/types/organizations.dart';
-import '../../../../lib/backend/domain/usecases/get_organizations.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_app_connection.dart';
+import 'package:etrax_rescue_app/core/error/failures.dart';
+import 'package:etrax_rescue_app/backend/types/usecase.dart';
+import 'package:etrax_rescue_app/backend/usecases/login.dart';
+import 'package:etrax_rescue_app/frontend/login/bloc/login_bloc.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_organizations.dart';
+import 'package:etrax_rescue_app/backend/usecases/delete_app_connection.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_authentication_data.dart';
+
+import '../../../reference_types.dart';
 
 class MockLogin extends Mock implements Login {}
 
@@ -19,26 +20,30 @@ class MockGetAppConnection extends Mock implements GetAppConnection {}
 
 class MockGetOrganizations extends Mock implements GetOrganizations {}
 
-class MockMarkAppConnectionForUpdate extends Mock
-    implements MarkAppConnectionForUpdate {}
+class MockGetAuthenticationData extends Mock implements GetAuthenticationData {}
+
+class MockDeleteAppConnection extends Mock implements DeleteAppConnection {}
 
 void main() {
   LoginBloc bloc;
   MockLogin mockLogin;
   MockGetOrganizations mockGetOrganizations;
   MockGetAppConnection mockGetAppConnection;
-  MarkAppConnectionForUpdate mockMarkAppConnection;
+  MockDeleteAppConnection mockDeleteAppConnection;
+  MockGetAuthenticationData mockGetAuthenticationData;
 
   setUp(() {
     mockLogin = MockLogin();
     mockGetAppConnection = MockGetAppConnection();
     mockGetOrganizations = MockGetOrganizations();
-    mockMarkAppConnection = MockMarkAppConnectionForUpdate();
+    mockDeleteAppConnection = MockDeleteAppConnection();
+    mockGetAuthenticationData = MockGetAuthenticationData();
     bloc = LoginBloc(
       login: mockLogin,
       getAppConnection: mockGetAppConnection,
       getOrganizations: mockGetOrganizations,
-      markAppConnectionForUpdate: mockMarkAppConnection,
+      deleteAppConnection: mockDeleteAppConnection,
+      getAuthenticationData: mockGetAuthenticationData,
     );
   });
 
@@ -46,23 +51,8 @@ void main() {
     bloc?.close();
   });
 
-  final tUsername = 'JohnDoe';
-  final tPassword = '0123456789ABCDEF';
-  final tOrganizationID = 'DEV';
-  final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
-  final tAppConnection =
-      AppConnection(authority: tAuthority, basePath: tBasePath);
-
-  final tID = 'DEV';
-  final tName = 'Rettungshunde';
-  final tOrganization = Organization(id: tID, name: tName);
-  final tOrganizationCollection =
-      OrganizationCollection(organizations: <Organization>[tOrganization]);
-
-  void mockGetAppConnectionSuccess() =>
-      when(mockGetAppConnection(any)).thenAnswer((_) async =>
-          Right(AppConnection(authority: tAuthority, basePath: tBasePath)));
+  void mockGetAppConnectionSuccess() => when(mockGetAppConnection(any))
+      .thenAnswer((_) async => Right(tAppConnection));
 
   test(
     'should contain proper initial state',
@@ -98,8 +88,15 @@ void main() {
             .thenAnswer((_) async => Left(CacheFailure()));
         // assert
         final expected = [
-          LoginInProgress(),
-          LoginError(messageKey: CACHE_FAILURE_MESSAGE_KEY),
+          LoginInProgress(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
+          LoginError(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection,
+              messageKey: FailureMessageKey.cache),
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
@@ -139,7 +136,10 @@ void main() {
         when(mockLogin(any)).thenAnswer((_) async => Right(None()));
         // assert
         final expected = [
-          LoginInProgress(),
+          LoginInProgress(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
           LoginSuccess(),
         ];
         expectLater(bloc, emitsInOrder(expected));
@@ -159,8 +159,15 @@ void main() {
         when(mockLogin(any)).thenAnswer((_) async => Left(NetworkFailure()));
         // assert
         final expected = [
-          LoginInProgress(),
-          LoginError(messageKey: NETWORK_FAILURE_MESSAGE_KEY),
+          LoginInProgress(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
+          LoginError(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection,
+              messageKey: FailureMessageKey.network),
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
@@ -178,8 +185,15 @@ void main() {
         when(mockLogin(any)).thenAnswer((_) async => Left(LoginFailure()));
         // assert
         final expected = [
-          LoginInProgress(),
-          LoginError(messageKey: LOGIN_FAILURE_MESSAGE_KEY),
+          LoginInProgress(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
+          LoginError(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection,
+              messageKey: FailureMessageKey.login),
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
@@ -198,8 +212,15 @@ void main() {
         when(mockLogin(any)).thenAnswer((_) async => Left(ServerFailure()));
         // assert
         final expected = [
-          LoginInProgress(),
-          LoginError(messageKey: SERVER_FAILURE_MESSAGE_KEY),
+          LoginInProgress(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
+          LoginError(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection,
+              messageKey: FailureMessageKey.server),
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act
@@ -252,7 +273,10 @@ void main() {
             .thenAnswer((_) async => Right(tOrganizationCollection));
         // assert
         final expected = [
-          LoginReady(organizationCollection: tOrganizationCollection),
+          LoginReady(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
         ];
         expectLater(bloc, emitsInOrder(expected));
         // act

@@ -6,26 +6,15 @@ import 'package:matcher/matcher.dart';
 
 import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
-  final String tOrganizationID = 'DEV';
-  final String tUsername = 'JohnDoe';
-  final String tToken = '0123456789ABCDEF';
-  final DateTime tIssuingDate = DateTime.parse('2020-02-02T20:20:02');
-  final AuthenticationData tAuthenticationData = AuthenticationData(
-      organizationID: tOrganizationID,
-      username: tUsername,
-      token: tToken,
-      issuingDate: tIssuingDate);
-
   group('generateAuthHeader', () {
     test(
       'should generate a properly formated Basic authentication header',
       () async {
         // arrange
-        final tAuthString =
-            base64.encode(utf8.encode('$tOrganizationID-$tUsername:$tToken'));
-        final tHeader = {HttpHeaders.authorizationHeader: 'Basic $tAuthString'};
+        final tHeader = {HttpHeaders.authorizationHeader: 'Bearer $tToken'};
         // act
         final result = tAuthenticationData.generateAuthHeader();
         // assert
@@ -53,6 +42,30 @@ void main() {
         // arrange
         final Map<String, dynamic> jsonMap = json.decode(
             fixture('authentication_data/organization_id_missing.json'));
+        // assert
+        expect(() => AuthenticationData.fromJson(jsonMap),
+            throwsA(TypeMatcher<FormatException>()));
+      },
+    );
+
+    test(
+      'should throw a FormatException when the json map is missing the issuingDate field',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap = json
+            .decode(fixture('authentication_data/issuing_date_missing.json'));
+        // assert
+        expect(() => AuthenticationData.fromJson(jsonMap),
+            throwsA(TypeMatcher<FormatException>()));
+      },
+    );
+
+    test(
+      'should throw a FormatException when the json map is missing the issuingDate field',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap =
+            json.decode(fixture('authentication_data/issuing_date_wrong.json'));
         // assert
         expect(() => AuthenticationData.fromJson(jsonMap),
             throwsA(TypeMatcher<FormatException>()));

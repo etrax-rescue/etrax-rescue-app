@@ -40,7 +40,6 @@ class RemoteInitializationDataSourceImpl
       throw ServerException();
     }
     final body = json.decode(response.body);
-
     try {
       final initializationData = InitializationData.fromJson(body);
       return initializationData;

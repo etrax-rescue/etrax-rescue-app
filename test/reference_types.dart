@@ -12,8 +12,8 @@ import 'package:etrax_rescue_app/backend/types/user_states.dart';
 final tDate = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
 
 // App Connection
-final tHost = 'https://etrax.at';
-final tBasePath = 'appdata';
+final tHost = 'https://apptest.etrax.at';
+final tBasePath = 'subdir';
 final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
 
 // Authorization Data

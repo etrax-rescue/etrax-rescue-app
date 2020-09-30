@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 
 import 'package:etrax_rescue_app/backend/types/app_connection.dart';
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
   final tHost = 'https://apptest.etrax.at';
@@ -80,6 +81,8 @@ void main() {
             json.decode(fixture('app_connection/valid.json'));
         // act
         final result = AppConnection.fromJson(jsonMap);
+        print(
+            '${result.host} ${tAppConnection.host} ${result.basePath} ${tAppConnection.basePath}');
         // assert
         expect(result, tAppConnection);
       },

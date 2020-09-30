@@ -1,5 +1,5 @@
 {
-  "appSettings": {
+  "appConfiguration": {
     "locationUpdateInterval": 0,
     "locationUpdateMinDistance": 50,
     "infoUpdateInterval": 300
@@ -27,5 +27,13 @@
           "latitude": 48.2084114,
           "longitude": 16.3712767
       }
+    ],
+    "actions": [
+      {
+        "id": 42,
+        "name": "approaching",
+        "description": "is on their way",
+        "locationAccuracy": 2
+    }
     ]
   }

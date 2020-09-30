@@ -24,14 +24,16 @@ class AuthenticationData extends Equatable {
     final organizationID = json['organizationID'];
     final username = json['username'];
     final token = json['token'];
-    final issuingDate =
-        DateTime.fromMillisecondsSinceEpoch(int.parse(json['issuingDate']));
+
     if (username == null ||
         token == null ||
         organizationID == null ||
-        issuingDate == null) {
+        json['issuingDate'] == null) {
       throw FormatException();
     }
+    final issuingDate = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(json['issuingDate']),
+        isUtc: true);
     return AuthenticationData(
       organizationID: organizationID,
       username: username,

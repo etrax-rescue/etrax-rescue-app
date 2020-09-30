@@ -34,8 +34,12 @@ void main() {
             tAppConnection, tOrganizationID, tUsername, tPassword);
         // assert
         verify(mockedHttpClient.post(
-            Uri.parse(p.join(tHost, tBasePath, EtraxServerEndpoints.login)),
-            body: {'username': tUsername, 'password': tPassword}));
+            tAppConnection.generateUri(subPath: EtraxServerEndpoints.login),
+            body: {
+              'organization_id': tOrganizationID,
+              'username': tUsername,
+              'password': tPassword
+            }));
       },
     );
 
