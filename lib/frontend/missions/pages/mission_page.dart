@@ -84,6 +84,13 @@ class _MissionPageState extends State<MissionPage> {
             SnackBar(
               content: Text(translateErrorMessage(context, state.messageKey)),
               duration: const Duration(days: 365),
+              action: SnackBarAction(
+                label: S.of(context).LOGOUT,
+                onPressed: () {
+                  BlocProvider.of<InitializationBloc>(context)
+                      .add(LogoutEvent());
+                },
+              ),
             ),
           );
         }

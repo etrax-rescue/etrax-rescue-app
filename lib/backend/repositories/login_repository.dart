@@ -105,6 +105,8 @@ class LoginRepositoryImpl implements LoginRepository {
       return Left(ServerFailure());
     } on LoginException {
       return Left(LoginFailure());
+    } on FormatException {
+      return Left(ServerFailure());
     }
     try {
       await localLoginDataSource
