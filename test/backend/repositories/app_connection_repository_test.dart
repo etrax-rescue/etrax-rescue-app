@@ -14,6 +14,8 @@ import 'package:etrax_rescue_app/backend/datasources/local/local_app_connection_
 import 'package:etrax_rescue_app/backend/datasources/remote/remote_app_connection_data_source.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 
+import '../../reference_types.dart';
+
 class MockRemoteAppConnectionDataSource extends Mock
     implements RemoteAppConnectionDataSource {}
 
@@ -47,10 +49,6 @@ void main() {
       remoteAppConnectionDataSource: mockRemoteAppConnectionDataSource,
     );
   });
-
-  final tHost = 'https://etrax.at';
-  final tBasePath = 'appdata';
-  final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
 
   void testOnline(Function body) {
     group('device is online', () {

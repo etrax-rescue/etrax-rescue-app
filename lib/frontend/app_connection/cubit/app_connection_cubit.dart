@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../../backend/types/etrax_server_endpoints.dart';
 import '../../../backend/usecases/scan_qr_code.dart';
 import '../../../backend/usecases/set_app_connection.dart';
-import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 import '../../util/uri_input_converter.dart';
 

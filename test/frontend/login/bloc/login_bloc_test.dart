@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:etrax_rescue_app/backend/usecases/get_app_connection.dart';
+import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/backend/types/usecase.dart';
 import 'package:etrax_rescue_app/backend/usecases/login.dart';
@@ -62,6 +62,86 @@ void main() {
     },
   );
 
+  group('InitializeLogin', () {
+    test(
+      'should fetch organizations and cached username',
+      () async {
+        // arrange
+        mockGetAppConnectionSuccess();
+        when(mockGetOrganizations(any))
+            .thenAnswer((_) async => Right(tOrganizationCollection));
+        when(mockGetAuthenticationData(any))
+            .thenAnswer((_) async => Right(tAuthenticationData));
+        // assert
+        final expected = [
+          LoginReady(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(InitializeLogin());
+      },
+    );
+    test(
+      'should retrieve stored app connection',
+      () async {
+        // arrange
+        mockGetAppConnectionSuccess();
+        when(mockGetOrganizations(any))
+            .thenAnswer((_) async => Right(tOrganizationCollection));
+        when(mockGetAuthenticationData(any))
+            .thenAnswer((_) async => Right(tAuthenticationData));
+        // act
+        bloc.add(InitializeLogin());
+        await untilCalled(mockGetAppConnection(any));
+        // assert
+        verify(mockGetAppConnection(NoParams()));
+      },
+    );
+
+    test(
+      'should call usecase',
+      () async {
+        // arrange
+        mockGetAppConnectionSuccess();
+        when(mockGetOrganizations(any))
+            .thenAnswer((_) async => Right(tOrganizationCollection));
+        when(mockGetAuthenticationData(any))
+            .thenAnswer((_) async => Right(tAuthenticationData));
+        // act
+        bloc.add(InitializeLogin());
+        await untilCalled(mockGetOrganizations(any));
+        // assert
+        verify(mockGetOrganizations(
+            GetOrganizationsParams(appConnection: tAppConnection)));
+      },
+    );
+
+    test(
+      'should emit [LoginReady] when getting organizations was successful',
+      () async {
+        // arrange
+        mockGetAppConnectionSuccess();
+        when(mockGetOrganizations(any))
+            .thenAnswer((_) async => Right(tOrganizationCollection));
+        when(mockGetAuthenticationData(any))
+            .thenAnswer((_) async => Right(tAuthenticationData));
+        // assert
+        final expected = [
+          LoginReady(
+              username: tUsername,
+              organizationID: tOrganizationID,
+              organizations: tOrganizationCollection),
+        ];
+        expectLater(bloc, emitsInOrder(expected));
+        // act
+        bloc.add(InitializeLogin());
+      },
+    );
+  });
+
   group('SubmitLogin', () {
     test(
       'should retrieve stored app connection',
@@ -91,11 +171,11 @@ void main() {
           LoginInProgress(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection),
+              organizations: null),
           LoginError(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection,
+              organizations: null,
               messageKey: FailureMessageKey.cache),
         ];
         expectLater(bloc, emitsInOrder(expected));
@@ -139,7 +219,7 @@ void main() {
           LoginInProgress(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection),
+              organizations: null),
           LoginSuccess(),
         ];
         expectLater(bloc, emitsInOrder(expected));
@@ -162,11 +242,11 @@ void main() {
           LoginInProgress(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection),
+              organizations: null),
           LoginError(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection,
+              organizations: null,
               messageKey: FailureMessageKey.network),
         ];
         expectLater(bloc, emitsInOrder(expected));
@@ -188,11 +268,11 @@ void main() {
           LoginInProgress(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection),
+              organizations: null),
           LoginError(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection,
+              organizations: null,
               messageKey: FailureMessageKey.login),
         ];
         expectLater(bloc, emitsInOrder(expected));
@@ -215,11 +295,11 @@ void main() {
           LoginInProgress(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection),
+              organizations: null),
           LoginError(
               username: tUsername,
               organizationID: tOrganizationID,
-              organizations: tOrganizationCollection,
+              organizations: null,
               messageKey: FailureMessageKey.server),
         ];
         expectLater(bloc, emitsInOrder(expected));
@@ -228,59 +308,6 @@ void main() {
             username: tUsername,
             password: tPassword,
             organizationID: tOrganizationID));
-      },
-    );
-  });
-
-  group('LoginGetOrganizations', () {
-    test(
-      'should retrieve stored app connection',
-      () async {
-        // arrange
-        mockGetAppConnectionSuccess();
-        when(mockGetOrganizations(any))
-            .thenAnswer((_) async => Right(tOrganizationCollection));
-        // act
-        bloc.add(InitializeLogin());
-        await untilCalled(mockGetAppConnection(any));
-        // assert
-        verify(mockGetAppConnection(NoParams()));
-      },
-    );
-
-    test(
-      'should call usecase',
-      () async {
-        // arrange
-        mockGetAppConnectionSuccess();
-        when(mockGetOrganizations(any))
-            .thenAnswer((_) async => Right(tOrganizationCollection));
-        // act
-        bloc.add(InitializeLogin());
-        await untilCalled(mockGetOrganizations(any));
-        // assert
-        verify(mockGetOrganizations(
-            GetOrganizationsParams(appConnection: tAppConnection)));
-      },
-    );
-
-    test(
-      'should emit [LoginReady] when getting organizations was successful',
-      () async {
-        // arrange
-        mockGetAppConnectionSuccess();
-        when(mockGetOrganizations(any))
-            .thenAnswer((_) async => Right(tOrganizationCollection));
-        // assert
-        final expected = [
-          LoginReady(
-              username: tUsername,
-              organizationID: tOrganizationID,
-              organizations: tOrganizationCollection),
-        ];
-        expectLater(bloc, emitsInOrder(expected));
-        // act
-        bloc.add(InitializeLogin());
       },
     );
   });

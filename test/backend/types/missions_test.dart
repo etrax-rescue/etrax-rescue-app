@@ -6,21 +6,9 @@ import 'package:matcher/matcher.dart';
 import 'package:etrax_rescue_app/backend/types/missions.dart';
 
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
-  final tMissionID = 42;
-  final tMissionName = 'Wien';
-  final tMissionStart = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
-  final tLatitude = 48.2084114;
-  final tLongitude = 16.3712767;
-  final tMission = Mission(
-    id: tMissionID,
-    name: tMissionName,
-    start: tMissionStart,
-    latitude: tLatitude,
-    longitude: tLongitude,
-  );
-  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
   group('Mission', () {
     group('fromJson', () {
       test(

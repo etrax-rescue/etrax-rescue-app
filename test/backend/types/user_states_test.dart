@@ -6,20 +6,9 @@ import 'package:matcher/matcher.dart';
 import 'package:etrax_rescue_app/backend/types/user_states.dart';
 
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
-  final tID = 42;
-  final tName = 'approaching';
-  final tDescription = 'is on their way';
-  final tLocationAccuracy = 2;
-  final tUserState = UserState(
-      id: tID,
-      name: tName,
-      description: tDescription,
-      locationAccuracy: tLocationAccuracy);
-  final tUserStateCollection =
-      UserStateCollection(states: <UserState>[tUserState]);
-
   group('UserState', () {
     group('fromJson', () {
       test(
@@ -65,10 +54,10 @@ void main() {
           final Map<String, dynamic> jsonMap =
               json.decode(fixture('user_state/no_description.json'));
           final t = UserState(
-              id: tID,
-              name: tName,
+              id: tUserStateID,
+              name: tUserStateName,
               description: '',
-              locationAccuracy: tLocationAccuracy);
+              locationAccuracy: tUserStateLocationAccuracy);
           // act
           final result = UserState.fromJson(jsonMap);
           // assert
@@ -98,10 +87,10 @@ void main() {
           final result = tUserState.toJson();
           // assert
           final expectedJsonMap = {
-            'id': tID,
-            'name': tName,
-            'description': tDescription,
-            'locationAccuracy': tLocationAccuracy,
+            'id': tUserStateID,
+            'name': tUserStateName,
+            'description': tUserStateDescription,
+            'locationAccuracy': tUserStateLocationAccuracy,
           };
           expect(result, expectedJsonMap);
         },
@@ -170,10 +159,10 @@ void main() {
           final expectedJsonMap = {
             'states': [
               {
-                'id': tID,
-                'name': tName,
-                'description': tDescription,
-                'locationAccuracy': tLocationAccuracy,
+                'id': tUserStateID,
+                'name': tUserStateName,
+                'description': tUserStateDescription,
+                'locationAccuracy': tUserStateLocationAccuracy,
               },
             ],
           };

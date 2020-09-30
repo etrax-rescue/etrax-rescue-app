@@ -6,14 +6,9 @@ import 'package:matcher/matcher.dart';
 import 'package:etrax_rescue_app/backend/types/organizations.dart';
 
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
-  final tID = 'DEV';
-  final tName = 'Rettungshunde';
-  final tOrganization = Organization(id: tID, name: tName);
-  final tOrganizationCollection =
-      OrganizationCollection(organizations: <Organization>[tOrganization]);
-
   group('Organization', () {
     group('fromJson', () {
       test(
@@ -61,7 +56,10 @@ void main() {
           // act
           final result = tOrganization.toJson();
           // assert
-          final expectedJsonMap = {'id': tID, 'name': tName};
+          final expectedJsonMap = {
+            'id': tOrganizationID,
+            'name': tOrganizationName
+          };
           expect(result, expectedJsonMap);
         },
       );
@@ -112,7 +110,7 @@ void main() {
           final result = tOrganizationCollection.toJson();
           // assert
           final expectedJsonMap = [
-            {'id': tID, 'name': tName},
+            {'id': tOrganizationID, 'name': tOrganizationName},
           ];
           expect(result, expectedJsonMap);
         },

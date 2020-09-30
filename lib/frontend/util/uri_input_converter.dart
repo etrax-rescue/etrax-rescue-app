@@ -17,8 +17,6 @@ class UriInputConverter {
       return Left(InvalidInputFailure());
     }
 
-    print(uri.host);
-
     if (uri.host == '' || uri.host == null) {
       return Left(InvalidInputFailure());
     }

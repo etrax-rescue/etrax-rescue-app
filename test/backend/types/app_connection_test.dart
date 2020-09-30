@@ -8,10 +8,6 @@ import '../../fixtures/fixture_reader.dart';
 import '../../reference_types.dart';
 
 void main() {
-  final tHost = 'https://apptest.etrax.at';
-  final tBasePath = 'subdir';
-  final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
-
   group('generateUri', () {
     test(
       'should return a valid uri when no parameters are given',
@@ -81,8 +77,6 @@ void main() {
             json.decode(fixture('app_connection/valid.json'));
         // act
         final result = AppConnection.fromJson(jsonMap);
-        print(
-            '${result.host} ${tAppConnection.host} ${result.basePath} ${tAppConnection.basePath}');
         // assert
         expect(result, tAppConnection);
       },

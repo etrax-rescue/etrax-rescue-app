@@ -5,16 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
 
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
-  final tLocationUpdateInterval = 0;
-  final tLocationUpdateMinDistance = 50;
-  final tInfoUpdateInterval = 300;
-  final tAppConfiguration = AppConfiguration(
-      locationUpdateInterval: tLocationUpdateInterval,
-      locationUpdateMinDistance: tLocationUpdateMinDistance,
-      infoUpdateInterval: tInfoUpdateInterval);
-
   group('fromJson', () {
     test(
       'should return a valid model when the JSON is properly formatted',

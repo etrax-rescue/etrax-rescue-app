@@ -30,8 +30,9 @@ final tAuthenticationData = AuthenticationData(
 final tPassword = '0123456789ABCDEF';
 
 // Organization Collection
-final tName = 'Rettungshunde';
-final tOrganization = Organization(id: tOrganizationID, name: tName);
+final tOrganizationName = 'Rettungshunde';
+final tOrganization =
+    Organization(id: tOrganizationID, name: tOrganizationName);
 final tOrganizationCollection =
     OrganizationCollection(organizations: <Organization>[tOrganization]);
 

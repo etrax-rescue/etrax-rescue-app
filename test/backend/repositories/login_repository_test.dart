@@ -17,6 +17,8 @@ import 'package:etrax_rescue_app/backend/datasources/remote/remote_organizations
 import 'package:etrax_rescue_app/backend/repositories/login_repository.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 
+import '../../reference_types.dart';
+
 class MockRemoteOrganizationsDataSource extends Mock
     implements RemoteOrganizationsDataSource {}
 
@@ -70,27 +72,6 @@ void main() {
       body();
     });
   }
-
-  final tHost = 'etrax.at';
-  final tBasePath = 'appdata';
-  final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
-
-  final tOrganizationID = 'DEV';
-  final tName = 'Rettungshunde';
-  final tOrganization = Organization(id: tOrganizationID, name: tName);
-  final tOrganizationCollection =
-      OrganizationCollection(organizations: <Organization>[tOrganization]);
-
-  final tPassword = '0123456789ABCDEF';
-  final tUsername = 'JohnDoe';
-  final tToken = '0123456789ABCDEF';
-  final tIssuingDate = DateTime.parse('2020-02-02T20:20:02');
-  final tAuthenticationData = AuthenticationData(
-    organizationID: tOrganizationID,
-    username: tUsername,
-    token: tToken,
-    issuingDate: tIssuingDate,
-  );
 
   group('login', () {
     test(

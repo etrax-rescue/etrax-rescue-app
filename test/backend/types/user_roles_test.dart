@@ -6,14 +6,9 @@ import 'package:matcher/matcher.dart';
 import 'package:etrax_rescue_app/backend/types/user_roles.dart';
 
 import '../../fixtures/fixture_reader.dart';
+import '../../reference_types.dart';
 
 void main() {
-  final tID = 42;
-  final tName = 'operator';
-  final tDescription = 'the one who does stuff';
-  final tUserRole = UserRole(id: tID, name: tName, description: tDescription);
-  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
-
   group('UserRole', () {
     group('fromJson', () {
       test(
@@ -46,7 +41,8 @@ void main() {
           // arrange
           final Map<String, dynamic> jsonMap =
               json.decode(fixture('user_role/no_description.json'));
-          final t = UserRole(id: tID, name: tName, description: '');
+          final t =
+              UserRole(id: tUserRoleID, name: tUserRoleName, description: '');
           // act
           final result = UserRole.fromJson(jsonMap);
           // assert
@@ -76,9 +72,9 @@ void main() {
           final result = tUserRole.toJson();
           // assert
           final expectedJsonMap = {
-            'id': tID,
-            'name': tName,
-            'description': tDescription,
+            'id': tUserRoleID,
+            'name': tUserRoleName,
+            'description': tUserRoleDescription,
           };
           expect(result, expectedJsonMap);
         },
@@ -147,9 +143,9 @@ void main() {
           final expectedJsonMap = {
             'roles': [
               {
-                'id': tID,
-                'name': tName,
-                'description': tDescription,
+                'id': tUserRoleID,
+                'name': tUserRoleName,
+                'description': tUserRoleDescription,
               },
             ],
           };
