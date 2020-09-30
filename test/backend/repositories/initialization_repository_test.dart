@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_quick_actions_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -37,6 +38,9 @@ class MockLocalMissionsDataSource extends Mock
 class MockLocalAppConfigurationDataSource extends Mock
     implements LocalAppConfigurationDataSource {}
 
+class MockLocalQuickActionsDataSource extends Mock
+    implements LocalQuickActionDataSource {}
+
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
@@ -45,6 +49,7 @@ void main() {
   MockLocalUserRolesDataSource mockLocalUserRolesDataSource;
   MockLocalMissionsDataSource mockLocalMissionsDataSource;
   MockLocalAppConfigurationDataSource mockLocalAppConfigurationDataSource;
+  MockLocalQuickActionsDataSource mockLocalQuickActionsDataSource;
   MockNetworkInfo mockNetworkInfo;
   InitializationRepositoryImpl repository;
 
@@ -54,6 +59,7 @@ void main() {
     mockLocalUserRolesDataSource = MockLocalUserRolesDataSource();
     mockLocalMissionsDataSource = MockLocalMissionsDataSource();
     mockLocalAppConfigurationDataSource = MockLocalAppConfigurationDataSource();
+    mockLocalQuickActionsDataSource = MockLocalQuickActionsDataSource();
     mockNetworkInfo = MockNetworkInfo();
     repository = InitializationRepositoryImpl(
         remoteInitializationDataSource: mockRemoteDataSource,
@@ -61,19 +67,24 @@ void main() {
         localAppConfigurationDataSource: mockLocalAppConfigurationDataSource,
         localMissionsDataSource: mockLocalMissionsDataSource,
         localUserRolesDataSource: mockLocalUserRolesDataSource,
+        localQuickActionDataSource: mockLocalQuickActionsDataSource,
         networkInfo: mockNetworkInfo);
   });
 
-  final tAuthority = 'etrax.at';
+  final tHost = 'etrax.at';
   final tBasePath = 'appdata';
-  final tAppConnection =
-      AppConnection(authority: tAuthority, basePath: tBasePath);
+  final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
 
   final tOrganizationID = 'DEV';
   final tUsername = 'JohnDoe';
   final tToken = '0123456789ABCDEF';
+  final tIssuingDate = DateTime.parse('2020-02-02T20:20:02');
   final tAuthenticationData = AuthenticationData(
-      organizationID: tOrganizationID, username: tUsername, token: tToken);
+    organizationID: tOrganizationID,
+    username: tUsername,
+    token: tToken,
+    issuingDate: tIssuingDate,
+  );
 
   final tLocationUpdateInterval = 0;
   final tLocationUpdateMinDistance = 50;

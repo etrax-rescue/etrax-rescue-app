@@ -12,6 +12,8 @@ import 'package:etrax_rescue_app/backend/types/user_states.dart';
 import 'package:etrax_rescue_app/backend/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/fetch_initialization_data.dart';
 
+import '../../reference_types.dart';
+
 class MockInitializationRepository extends Mock
     implements InitializationRepository {}
 
@@ -24,72 +26,9 @@ void main() {
     usecase = FetchInitializationData(mockInitializationRepository);
   });
 
-  final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
-  final tAppConnection =
-      AppConnection(authority: tAuthority, basePath: tBasePath);
-
-  final tOrganizationID = 'DEV';
-  final tUsername = 'JohnDoe';
-  final tToken = '0123456789ABCDEF';
-  final tAuthenticationData = AuthenticationData(
-      organizationID: tOrganizationID, username: tUsername, token: tToken);
   final tFetchInitializationDataParams = FetchInitializationDataParams(
     appConnection: tAppConnection,
     authenticationData: tAuthenticationData,
-  );
-
-  // AppConfiguration
-  final tLocationUpdateInterval = 0;
-  final tLocationUpdateMinDistance = 50;
-  final tInfoUpdateInterval = 300;
-  final tAppConfiguration = AppConfiguration(
-      locationUpdateInterval: tLocationUpdateInterval,
-      locationUpdateMinDistance: tLocationUpdateMinDistance,
-      infoUpdateInterval: tInfoUpdateInterval);
-
-  // MissionCollection
-  final tMissionID = 42;
-  final tMissionName = 'TestMission';
-  final tMissionStart = DateTime.utc(2020, 1, 1);
-  final tLatitude = 48.2206635;
-  final tLongitude = 16.309849;
-  final tMission = Mission(
-    id: tMissionID,
-    name: tMissionName,
-    start: tMissionStart,
-    latitude: tLatitude,
-    longitude: tLongitude,
-  );
-  final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
-
-  // UserStateCollection
-  final tUserStateID = 42;
-  final tUserStateName = 'approaching';
-  final tUserStateDescription = 'is on their way';
-  final tUserStateLocationAccuracy = 2;
-  final tUserStateModel = UserState(
-      id: tUserStateID,
-      name: tUserStateName,
-      description: tUserStateDescription,
-      locationAccuracy: tUserStateLocationAccuracy);
-  final tUserStateCollection =
-      UserStateCollection(states: <UserState>[tUserStateModel]);
-
-  // UserRoleCollection
-  final tUserRoleID = 42;
-  final tUserRoleName = 'operator';
-  final tUserRoleDescription = 'the one who does stuff';
-  final tUserRole = UserRole(
-      id: tUserRoleID, name: tUserRoleName, description: tUserRoleDescription);
-  final tUserRoleCollection = UserRoleCollection(roles: <UserRole>[tUserRole]);
-
-  // InitializationDataModel
-  final tInitializationData = InitializationData(
-    appConfiguration: tAppConfiguration,
-    missionCollection: tMissionCollection,
-    userStateCollection: tUserStateCollection,
-    userRoleCollection: tUserRoleCollection,
   );
 
   test(

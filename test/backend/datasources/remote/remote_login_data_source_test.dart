@@ -4,14 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/backend/types/app_connection.dart';
-import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/backend/types/etrax_server_endpoints.dart';
-import '../../../../lib/backend/datasources/remote/remote_login_data_source.dart';
-import '../../../../lib/backend/types/authentication_data.dart';
-import '../../../../lib/backend/types/organizations.dart';
+import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/backend/types/etrax_server_endpoints.dart';
+import 'package:etrax_rescue_app/backend/datasources/remote/remote_login_data_source.dart';
 
 import '../../../fixtures/fixture_reader.dart';
+import '../../../reference_types.dart';
 
 class MockedHttpClient extends Mock implements http.Client {}
 
@@ -23,23 +21,6 @@ void main() {
     mockedHttpClient = MockedHttpClient();
     remoteDataSource = RemoteLoginDataSourceImpl(mockedHttpClient);
   });
-
-  final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
-  final tAppConnection =
-      AppConnection(authority: tAuthority, basePath: tBasePath);
-
-  final tOrganizationID = 'DEV';
-  final tUsername = 'JohnDoe';
-  final tPassword = '0123456789ABCDEF';
-  final tToken = '0123456789ABCDEF';
-  final AuthenticationData tAuthenticationData = AuthenticationData(
-      organizationID: tOrganizationID, username: tUsername, token: tToken);
-
-  final tName = 'Rettungshunde';
-  final tOrganization = Organization(id: tOrganizationID, name: tName);
-  final tOrganizationCollection =
-      OrganizationCollection(organizations: <Organization>[tOrganization]);
 
   group('login', () {
     test(
@@ -53,8 +34,7 @@ void main() {
             tAppConnection, tOrganizationID, tUsername, tPassword);
         // assert
         verify(mockedHttpClient.post(
-            Uri.https(
-                tAuthority, p.join(tBasePath, EtraxServerEndpoints.login)),
+            Uri.parse(p.join(tHost, tBasePath, EtraxServerEndpoints.login)),
             body: {'username': tUsername, 'password': tPassword}));
       },
     );

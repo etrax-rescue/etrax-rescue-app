@@ -5,12 +5,13 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/backend/types/shared_preferences_keys.dart';
-import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/backend/datasources/local/local_user_states_data_source.dart';
-import '../../../../lib/backend/types/user_states.dart';
+import 'package:etrax_rescue_app/backend/types/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_user_states_data_source.dart';
+import 'package:etrax_rescue_app/backend/types/user_states.dart';
 
 import '../../../fixtures/fixture_reader.dart';
+import '../../../reference_types.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
@@ -21,18 +22,6 @@ void main() {
     mockSharedPreferences = MockSharedPreferences();
     dataSource = LocalUserStatesDataSourceImpl(mockSharedPreferences);
   });
-
-  final tID = 42;
-  final tName = 'approaching';
-  final tDescription = 'is on their way';
-  final tLocationAccuracy = 2;
-  final tUserState = UserState(
-      id: tID,
-      name: tName,
-      description: tDescription,
-      locationAccuracy: tLocationAccuracy);
-  final tUserStateCollection =
-      UserStateCollection(states: <UserState>[tUserState]);
 
   group('getUserStates', () {
     test(

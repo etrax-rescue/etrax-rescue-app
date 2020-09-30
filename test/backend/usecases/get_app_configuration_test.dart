@@ -7,6 +7,8 @@ import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
 import 'package:etrax_rescue_app/backend/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_app_configuration.dart';
 
+import '../../reference_types.dart';
+
 class MockInitializationRepository extends Mock
     implements InitializationRepository {}
 
@@ -18,14 +20,6 @@ void main() {
     mockInitializationRepository = MockInitializationRepository();
     usecase = GetAppConfiguration(mockInitializationRepository);
   });
-
-  final tLocationUpdateInterval = 0;
-  final tLocationUpdateMinDistance = 50;
-  final tInfoUpdateInterval = 300;
-  final tAppConfiguration = AppConfiguration(
-      locationUpdateInterval: tLocationUpdateInterval,
-      locationUpdateMinDistance: tLocationUpdateMinDistance,
-      infoUpdateInterval: tInfoUpdateInterval);
 
   test(
     'should return AppConfiguration when they are available',

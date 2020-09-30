@@ -1,37 +1,37 @@
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/repositories/app_connection_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:etrax_rescue_app/backend/repositories/mission_state_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
 import 'package:etrax_rescue_app/backend/types/usecase.dart';
 
-class MockAppStateRepository extends Mock implements AppStateRepository {}
+import '../../reference_types.dart';
+
+class MockAppConnectionRepository extends Mock
+    implements AppConnectionRepository {}
 
 void main() {
   GetAppConnection usecase;
-  MockAppStateRepository mockAppStateRepository;
+  MockAppConnectionRepository mockAppConnectionRepository;
 
   setUp(() {
-    mockAppStateRepository = MockAppStateRepository();
-    usecase = GetAppConnection(mockAppStateRepository);
+    mockAppConnectionRepository = MockAppConnectionRepository();
+    usecase = GetAppConnection(mockAppConnectionRepository);
   });
-
-  final tBaseUri = AppConnection(authority: 'etrax.at', basePath: 'appdata');
 
   test(
     'should return a valid base uri',
     () async {
       // arrange
-      when(mockAppStateRepository.getAppConnection())
-          .thenAnswer((_) async => Right(tBaseUri));
+      when(mockAppConnectionRepository.getAppConnection())
+          .thenAnswer((_) async => Right(tAppConnection));
       // act
       final result = await usecase(NoParams());
       // assert
-      expect(result, Right(tBaseUri));
-      verify(mockAppStateRepository.getAppConnection());
-      verifyNoMoreInteractions(mockAppStateRepository);
+      expect(result, Right(tHost));
+      verify(mockAppConnectionRepository.getAppConnection());
+      verifyNoMoreInteractions(mockAppConnectionRepository);
     },
   );
 }

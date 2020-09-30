@@ -1,38 +1,37 @@
 import 'package:dartz/dartz.dart';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../lib/backend/repositories/app_state_repository.dart';
-import '../../../lib/backend/usecases/set_app_connection.dart';
+import 'package:etrax_rescue_app/backend/repositories/app_connection_repository.dart';
+import 'package:etrax_rescue_app/backend/usecases/set_app_connection.dart';
 
-class MockAppStateRepository extends Mock implements AppStateRepository {}
+import '../../reference_types.dart';
+
+class MockAppConnectionRepository extends Mock
+    implements AppConnectionRepository {}
 
 void main() {
   SetAppConnection usecase;
-  MockAppStateRepository mockAppStateRepository;
+  MockAppConnectionRepository mockAppConnectionRepository;
 
   setUp(() {
-    mockAppStateRepository = MockAppStateRepository();
-    usecase = SetAppConnection(mockAppStateRepository);
+    mockAppConnectionRepository = MockAppConnectionRepository();
+    usecase = SetAppConnection(mockAppConnectionRepository);
   });
-
-  final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
 
   test(
     'should return None when a valid uri is given',
     () async {
       // arrange
-      when(mockAppStateRepository.setAppConnection(any, any))
+      when(mockAppConnectionRepository.setAppConnection(any, any))
           .thenAnswer((_) async => Right(None()));
       // act
       final result = await usecase(
-          AppConnectionParams(authority: tAuthority, basePath: tBasePath));
+          AppConnectionParams(authority: tHost, basePath: tBasePath));
       // assert
       expect(result, Right(None()));
-      verify(mockAppStateRepository.setAppConnection(tAuthority, tBasePath));
-      verifyNoMoreInteractions(mockAppStateRepository);
+      verify(mockAppConnectionRepository.setAppConnection(tHost, tBasePath));
+      verifyNoMoreInteractions(mockAppConnectionRepository);
     },
   );
 }

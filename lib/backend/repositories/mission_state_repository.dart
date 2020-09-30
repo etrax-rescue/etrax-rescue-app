@@ -14,7 +14,6 @@ import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/mission_state.dart';
 import '../types/missions.dart';
-import '../types/quick_actions.dart';
 import '../types/user_roles.dart';
 import '../types/user_states.dart';
 

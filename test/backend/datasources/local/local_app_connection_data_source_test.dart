@@ -5,12 +5,12 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:matcher/matcher.dart';
 
-import '../../../../lib/backend/types/shared_preferences_keys.dart';
-import '../../../../lib/core/error/exceptions.dart';
-import '../../../../lib/backend/datasources/local/local_app_connection_data_source.dart';
-import '../../../../lib/backend/types/app_connection.dart';
+import 'package:etrax_rescue_app/backend/types/shared_preferences_keys.dart';
+import 'package:etrax_rescue_app/core/error/exceptions.dart';
+import 'package:etrax_rescue_app/backend/datasources/local/local_app_connection_data_source.dart';
 
 import '../../../fixtures/fixture_reader.dart';
+import '../../../reference_types.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
@@ -21,11 +21,6 @@ void main() {
     mockSharedPreferences = MockSharedPreferences();
     dataSource = LocalAppConnectionDataSourceImpl(mockSharedPreferences);
   });
-
-  final tAuthority = 'etrax.at';
-  final tBasePath = 'appdata';
-  final AppConnection tAppConnection =
-      AppConnection(authority: tAuthority, basePath: tBasePath);
 
   group('getCachedAppConnection', () {
     test(
