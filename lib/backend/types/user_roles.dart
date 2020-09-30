@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class UserRoleCollection extends Equatable {
-  final List<UserRole> roles;
-
   UserRoleCollection({
     @required this.roles,
   });
+
+  final List<UserRole> roles;
 
   factory UserRoleCollection.fromJson(Map<String, dynamic> json) {
     List<UserRole> userRoleModelList;
@@ -36,15 +36,15 @@ class UserRoleCollection extends Equatable {
 }
 
 class UserRole extends Equatable {
-  final int id;
-  final String name;
-  final String description;
-
   UserRole({
     @required this.id,
     @required this.name,
     @required this.description,
   });
+
+  final int id;
+  final String name;
+  final String description;
 
   factory UserRole.fromJson(Map<String, dynamic> json) {
     return UserRole(

@@ -3,11 +3,11 @@ import 'package:etrax_rescue_app/backend/types/user_states.dart';
 import 'package:flutter/material.dart';
 
 class QuickActionCollection extends Equatable {
-  final List<UserState> actions;
-
   QuickActionCollection({
     @required this.actions,
   });
+
+  final List<UserState> actions;
 
   factory QuickActionCollection.fromJson(Map<String, dynamic> json) {
     List<UserState> quickActionList;

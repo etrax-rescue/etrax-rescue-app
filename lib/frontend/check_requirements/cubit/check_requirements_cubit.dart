@@ -527,13 +527,20 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         ];
       }
     } else if (action == StatusAction.quickAction) {
-      return [
-        SequenceStep.getSettings,
-        SequenceStep.checkPermissions,
-        SequenceStep.checkServices,
-        SequenceStep.getLastLocation,
-        SequenceStep.quickAction,
-      ];
+      if (currentState.locationAccuracy > 0) {
+        return [
+          SequenceStep.getSettings,
+          SequenceStep.checkPermissions,
+          SequenceStep.checkServices,
+          SequenceStep.getLastLocation,
+          SequenceStep.quickAction,
+        ];
+      } else {
+        return [
+          SequenceStep.getSettings,
+          SequenceStep.quickAction,
+        ];
+      }
     }
   }
 

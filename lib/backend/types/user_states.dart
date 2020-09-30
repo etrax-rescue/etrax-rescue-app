@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class UserStateCollection extends Equatable {
-  final List<UserState> states;
-
   UserStateCollection({
     @required this.states,
   });
+
+  final List<UserState> states;
 
   factory UserStateCollection.fromJson(Map<String, dynamic> json) {
     List<UserState> userStateModelList;
@@ -36,17 +36,17 @@ class UserStateCollection extends Equatable {
 }
 
 class UserState extends Equatable {
-  final int id;
-  final String name;
-  final String description;
-  final int locationAccuracy;
-
   UserState({
     @required this.id,
     @required this.name,
     @required this.description,
     @required this.locationAccuracy,
   });
+
+  final int id;
+  final String name;
+  final String description;
+  final int locationAccuracy;
 
   factory UserState.fromJson(Map<String, dynamic> json) {
     return UserState(
