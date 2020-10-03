@@ -10,8 +10,9 @@ import '../types/usecase.dart';
 import '../types/user_roles.dart';
 
 class SetSelectedUserRole extends UseCase<None, SetSelectedUserRoleParams> {
-  final MissionStateRepository repository;
   SetSelectedUserRole(this.repository);
+
+  final MissionStateRepository repository;
 
   @override
   Future<Either<Failure, None>> call(SetSelectedUserRoleParams param) async {
@@ -21,16 +22,16 @@ class SetSelectedUserRole extends UseCase<None, SetSelectedUserRoleParams> {
 }
 
 class SetSelectedUserRoleParams extends Equatable {
-  final AppConnection appConnection;
-  final AuthenticationData authenticationData;
-  final UserRole role;
-
   SetSelectedUserRoleParams({
     @required this.appConnection,
     @required this.authenticationData,
     @required this.role,
   });
 
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
+  final UserRole role;
+
   @override
-  List<Object> get props => [role];
+  List<Object> get props => [appConnection, authenticationData, role];
 }

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'package:flutter/material.dart';
 
 import '../../../generated/l10n.dart';
-import '../../widgets/custom_material_icons.dart';
 import '../../../routes/router.gr.dart';
+import '../../widgets/custom_material_icons.dart';
+import '../cubit/check_requirements_cubit.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({Key key}) : super(key: key);

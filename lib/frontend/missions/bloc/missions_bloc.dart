@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/logout.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/initialization_data.dart';
@@ -10,6 +9,7 @@ import '../../../backend/types/usecase.dart';
 import '../../../backend/usecases/fetch_initialization_data.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
+import '../../../backend/usecases/logout.dart';
 import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 

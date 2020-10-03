@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_quick_actions_data_source.dart';
-import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/exceptions.dart';
@@ -11,6 +9,7 @@ import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
 import '../datasources/local/local_app_configuration_data_source.dart';
 import '../datasources/local/local_missions_data_source.dart';
+import '../datasources/local/local_quick_actions_data_source.dart';
 import '../datasources/local/local_user_roles_data_source.dart';
 import '../datasources/local/local_user_states_data_source.dart';
 import '../datasources/remote/remote_initialization_data_source.dart';
@@ -19,6 +18,7 @@ import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/initialization_data.dart';
 import '../types/missions.dart';
+import '../types/quick_actions.dart';
 import '../types/user_roles.dart';
 import '../types/user_states.dart';
 

@@ -2,11 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class MissionCollection extends Equatable {
-  final List<Mission> missions;
+  MissionCollection({@required this.missions});
 
-  MissionCollection({
-    @required this.missions,
-  });
+  final List<Mission> missions;
 
   factory MissionCollection.fromJson(Map<String, dynamic> json) {
     List<Mission> missionModelList;
@@ -36,12 +34,6 @@ class MissionCollection extends Equatable {
 }
 
 class Mission extends Equatable {
-  final int id;
-  final String name;
-  final DateTime start;
-  final double latitude;
-  final double longitude;
-
   Mission({
     @required this.id,
     @required this.name,
@@ -49,6 +41,12 @@ class Mission extends Equatable {
     @required this.latitude,
     @required this.longitude,
   });
+
+  final int id;
+  final String name;
+  final DateTime start;
+  final double latitude;
+  final double longitude;
 
   factory Mission.fromJson(Map<String, dynamic> json) {
     DateTime dateTime;

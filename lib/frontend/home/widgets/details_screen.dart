@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:etrax_rescue_app/backend/types/etrax_server_endpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+import '../../../backend/types/etrax_server_endpoints.dart';
 import '../../../backend/types/mission_details.dart';
 import '../../../generated/l10n.dart';
 import '../bloc/home_bloc.dart';

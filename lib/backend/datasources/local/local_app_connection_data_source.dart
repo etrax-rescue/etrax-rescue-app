@@ -13,8 +13,9 @@ abstract class LocalAppConnectionDataSource {
 }
 
 class LocalAppConnectionDataSourceImpl implements LocalAppConnectionDataSource {
-  final SharedPreferences sharedPreferences;
   LocalAppConnectionDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Future<void> cacheAppConnection(AppConnection model) async {

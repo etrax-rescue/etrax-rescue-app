@@ -4,17 +4,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class AuthenticationData extends Equatable {
-  final String organizationID;
-  final String username;
-  final String token;
-  final DateTime issuingDate;
-
   AuthenticationData({
     @required this.organizationID,
     @required this.username,
     @required this.token,
     @required this.issuingDate,
   });
+
+  final String organizationID;
+  final String username;
+  final String token;
+  final DateTime issuingDate;
 
   Map<String, String> generateAuthHeader() {
     return {HttpHeaders.authorizationHeader: 'Bearer $token'};

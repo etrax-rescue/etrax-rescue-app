@@ -17,12 +17,6 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final Login login;
-  final GetAppConnection getAppConnection;
-  final GetOrganizations getOrganizations;
-  final GetAuthenticationData getAuthenticationData;
-  final DeleteAppConnection deleteAppConnection;
-
   LoginBloc({
     @required this.login,
     @required this.getAppConnection,
@@ -34,6 +28,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         assert(getOrganizations != null),
         assert(deleteAppConnection != null),
         super(LoginInitial());
+
+  final Login login;
+  final GetAppConnection getAppConnection;
+  final GetOrganizations getOrganizations;
+  final GetAuthenticationData getAuthenticationData;
+  final DeleteAppConnection deleteAppConnection;
 
   @override
   Stream<LoginState> mapEventToState(

@@ -11,8 +11,9 @@ import '../types/authentication_data.dart';
 import '../types/usecase.dart';
 
 class StartLocationUpdates extends UseCase<bool, StartLocationUpdatesParams> {
-  final LocationRepository repository;
   StartLocationUpdates(this.repository);
+
+  final LocationRepository repository;
 
   @override
   Future<Either<Failure, bool>> call(StartLocationUpdatesParams params) async {
@@ -29,14 +30,6 @@ class StartLocationUpdates extends UseCase<bool, StartLocationUpdatesParams> {
 }
 
 class StartLocationUpdatesParams extends Equatable {
-  final LocationAccuracy accuracy;
-  final AppConfiguration appConfiguration;
-  final String notificationTitle;
-  final String notificationBody;
-  final AppConnection appConnection;
-  final AuthenticationData authenticationData;
-  final String label;
-
   StartLocationUpdatesParams({
     @required this.accuracy,
     @required this.appConfiguration,
@@ -46,6 +39,14 @@ class StartLocationUpdatesParams extends Equatable {
     @required this.authenticationData,
     @required this.label,
   });
+
+  final LocationAccuracy accuracy;
+  final AppConfiguration appConfiguration;
+  final String notificationTitle;
+  final String notificationBody;
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
+  final String label;
 
   @override
   List<Object> get props => [

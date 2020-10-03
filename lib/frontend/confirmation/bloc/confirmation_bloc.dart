@@ -11,17 +11,12 @@ import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/set_selected_mission.dart';
 import '../../../backend/usecases/set_selected_user_role.dart';
-import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'confirmation_event.dart';
 part 'confirmation_state.dart';
 
 class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
-  final GetAppConnection getAppConnection;
-  final GetAuthenticationData getAuthenticationData;
-  final SetSelectedMission setSelectedMission;
-  final SetSelectedUserRole setSelectedUserRole;
   ConfirmationBloc({
     @required this.getAppConnection,
     @required this.getAuthenticationData,
@@ -30,6 +25,11 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
   })  : assert(setSelectedMission != null),
         assert(setSelectedUserRole != null),
         super(ConfirmationInitial());
+
+  final GetAppConnection getAppConnection;
+  final GetAuthenticationData getAuthenticationData;
+  final SetSelectedMission setSelectedMission;
+  final SetSelectedUserRole setSelectedUserRole;
 
   @override
   Stream<ConfirmationState> mapEventToState(

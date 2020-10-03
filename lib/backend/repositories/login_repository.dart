@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_login_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_organizations_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/remote/remote_login_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/remote/remote_organizations_data_source.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
+import '../../core/network/network_info.dart';
+import '../datasources/local/local_login_data_source.dart';
+import '../datasources/local/local_organizations_data_source.dart';
+import '../datasources/remote/remote_login_data_source.dart';
+import '../datasources/remote/remote_organizations_data_source.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/organizations.dart';

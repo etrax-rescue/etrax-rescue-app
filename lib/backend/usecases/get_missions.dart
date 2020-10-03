@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failures.dart';
-import '../types/usecase.dart';
-import '../types/missions.dart';
 import '../repositories/initialization_repository.dart';
+import '../types/missions.dart';
+import '../types/usecase.dart';
 
 class GetMissions extends UseCase<MissionCollection, NoParams> {
   final InitializationRepository repository;

@@ -13,9 +13,9 @@ abstract class RemoteOrganizationsDataSource {
 
 class RemoteOrganizationsDataSourceImpl
     implements RemoteOrganizationsDataSource {
-  final http.Client client;
-
   RemoteOrganizationsDataSourceImpl(this.client);
+
+  final http.Client client;
 
   @override
   Future<OrganizationCollection> getOrganizations(

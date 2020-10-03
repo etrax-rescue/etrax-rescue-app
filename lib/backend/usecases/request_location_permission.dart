@@ -6,8 +6,9 @@ import '../repositories/location_repository.dart';
 import '../types/usecase.dart';
 
 class RequestLocationPermission extends UseCase<PermissionStatus, NoParams> {
-  final LocationRepository repository;
   RequestLocationPermission(this.repository);
+
+  final LocationRepository repository;
 
   @override
   Future<Either<Failure, PermissionStatus>> call(NoParams params) async {

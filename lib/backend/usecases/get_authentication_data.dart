@@ -6,9 +6,9 @@ import '../types/authentication_data.dart';
 import '../types/usecase.dart';
 
 class GetAuthenticationData extends UseCase<AuthenticationData, NoParams> {
-  final LoginRepository repository;
-
   GetAuthenticationData(this.repository);
+
+  final LoginRepository repository;
 
   @override
   Future<Either<Failure, AuthenticationData>> call(NoParams params) async {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 
@@ -13,8 +11,9 @@ abstract class RemoteAppConnectionDataSource {
 
 class RemoteAppConnectionDataSourceImpl
     implements RemoteAppConnectionDataSource {
-  final http.Client client;
   RemoteAppConnectionDataSourceImpl(this.client);
+
+  final http.Client client;
 
   @override
   Future<AppConnection> verifyRemoteEndpoint(
@@ -32,7 +31,6 @@ class RemoteAppConnectionDataSourceImpl
     }
 
     if (response.statusCode == 200) {
-      // TODO: how should we handle different versions?
       return AppConnection(host: host, basePath: basePath);
     } else {
       throw ServerException();

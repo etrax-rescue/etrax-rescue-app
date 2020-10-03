@@ -18,10 +18,10 @@ class SetAppConnection extends UseCase<None, AppConnectionParams> {
 }
 
 class AppConnectionParams extends Equatable {
+  AppConnectionParams({@required this.authority, @required this.basePath});
+
   final String authority;
   final String basePath;
-
-  AppConnectionParams({@required this.authority, @required this.basePath});
 
   @override
   List<Object> get props => [authority, basePath];

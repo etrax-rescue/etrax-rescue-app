@@ -8,8 +8,9 @@ import '../types/app_connection.dart';
 import '../types/usecase.dart';
 
 class Login extends UseCase<None, LoginParams> {
-  final LoginRepository repository;
   Login(this.repository);
+
+  final LoginRepository repository;
 
   @override
   Future<Either<Failure, None>> call(LoginParams params) async {
@@ -19,17 +20,17 @@ class Login extends UseCase<None, LoginParams> {
 }
 
 class LoginParams extends Equatable {
-  final AppConnection appConnection;
-  final String organizationID;
-  final String username;
-  final String password;
-
   LoginParams({
     @required this.appConnection,
     @required this.organizationID,
     @required this.username,
     @required this.password,
   });
+
+  final AppConnection appConnection;
+  final String organizationID;
+  final String username;
+  final String password;
 
   @override
   List<Object> get props => [appConnection, organizationID, username, password];

@@ -5,8 +5,9 @@ import '../repositories/login_repository.dart';
 import '../types/usecase.dart';
 
 class Logout extends UseCase<None, NoParams> {
-  final LoginRepository repository;
   Logout(this.repository);
+
+  final LoginRepository repository;
 
   @override
   Future<Either<Failure, None>> call(NoParams params) async {

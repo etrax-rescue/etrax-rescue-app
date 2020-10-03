@@ -20,9 +20,10 @@ abstract class LocalLoginDataSource {
 }
 
 class LocalLoginDataSourceImpl implements LocalLoginDataSource {
+  LocalLoginDataSourceImpl(this.sharedPreferences, this.secureStorage);
+
   final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;
-  LocalLoginDataSourceImpl(this.sharedPreferences, this.secureStorage);
 
   @override
   Future<void> cacheUsername(String username) async {

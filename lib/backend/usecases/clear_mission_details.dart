@@ -5,8 +5,9 @@ import '../repositories/mission_details_repository.dart';
 import '../types/usecase.dart';
 
 class ClearMissionDetails extends UseCase<None, NoParams> {
-  final MissionDetailsRepository repository;
   ClearMissionDetails(this.repository);
+
+  final MissionDetailsRepository repository;
 
   @override
   Future<Either<Failure, None>> call(NoParams param) async {

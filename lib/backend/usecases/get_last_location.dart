@@ -6,8 +6,9 @@ import '../repositories/location_repository.dart';
 import '../types/usecase.dart';
 
 class GetLastLocation extends UseCase<LocationData, NoParams> {
-  final LocationRepository repository;
   GetLastLocation(this.repository);
+
+  final LocationRepository repository;
 
   @override
   Future<Either<Failure, LocationData>> call(NoParams params) async {

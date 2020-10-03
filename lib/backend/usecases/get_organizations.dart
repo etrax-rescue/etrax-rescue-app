@@ -10,9 +10,9 @@ import '../types/usecase.dart';
 
 class GetOrganizations
     extends UseCase<OrganizationCollection, GetOrganizationsParams> {
-  final LoginRepository repository;
-
   GetOrganizations(this.repository);
+
+  final LoginRepository repository;
 
   @override
   Future<Either<Failure, OrganizationCollection>> call(
@@ -22,9 +22,9 @@ class GetOrganizations
 }
 
 class GetOrganizationsParams extends Equatable {
-  final AppConnection appConnection;
-
   GetOrganizationsParams({@required this.appConnection});
+
+  final AppConnection appConnection;
 
   @override
   List<Object> get props => [appConnection];

@@ -13,8 +13,9 @@ abstract class LocalOrganizationsDataSource {
 }
 
 class LocalOrganizationsDataSourceImpl implements LocalOrganizationsDataSource {
-  final SharedPreferences sharedPreferences;
   LocalOrganizationsDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Future<void> cacheOrganizations(OrganizationCollection model) async {

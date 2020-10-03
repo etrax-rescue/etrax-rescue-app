@@ -15,8 +15,9 @@ abstract class LocalQuickActionDataSource {
 }
 
 class LocalQuickActionDataSourceImpl implements LocalQuickActionDataSource {
-  final SharedPreferences sharedPreferences;
   LocalQuickActionDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Future<void> clearQuickActions() async {

@@ -11,8 +11,8 @@ import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
-import '../../widgets/custom_material_icons.dart';
 import '../../widgets/about_menu_entry.dart';
+import '../../widgets/custom_material_icons.dart';
 import '../../widgets/popup_menu.dart';
 import '../bloc/missions_bloc.dart';
 

@@ -9,8 +9,9 @@ import '../types/usecase.dart';
 
 class GetLocationHistory
     extends UseCase<List<LocationData>, GetLocationHistoryParams> {
-  final LocationRepository repository;
   GetLocationHistory(this.repository);
+
+  final LocationRepository repository;
 
   @override
   Future<Either<Failure, List<LocationData>>> call(

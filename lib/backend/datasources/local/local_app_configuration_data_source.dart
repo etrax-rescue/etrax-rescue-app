@@ -17,8 +17,9 @@ abstract class LocalAppConfigurationDataSource {
 
 class LocalAppConfigurationDataSourceImpl
     implements LocalAppConfigurationDataSource {
-  final SharedPreferences sharedPreferences;
   LocalAppConfigurationDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   // App Configuration
   @override
@@ -40,7 +41,6 @@ class LocalAppConfigurationDataSourceImpl
 
   @override
   Future<void> deleteAppConfiguration() async {
-    // TODO: implement clearAppSettings
-    throw UnimplementedError();
+    await sharedPreferences.remove(SharedPreferencesKeys.appConfiguration);
   }
 }

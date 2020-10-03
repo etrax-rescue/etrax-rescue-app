@@ -6,8 +6,9 @@ import '../types/initialization_data.dart';
 import '../types/usecase.dart';
 
 class GetInitializationData extends UseCase<InitializationData, NoParams> {
-  final InitializationRepository repository;
   GetInitializationData(this.repository);
+
+  final InitializationRepository repository;
 
   @override
   Future<Either<Failure, InitializationData>> call(NoParams params) async {

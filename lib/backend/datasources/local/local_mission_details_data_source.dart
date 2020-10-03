@@ -14,8 +14,9 @@ abstract class LocalMissionDetailsDataSource {
 
 class LocalMissionDetailsDataSourceImpl
     implements LocalMissionDetailsDataSource {
-  final SharedPreferences sharedPreferences;
   LocalMissionDetailsDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Future<void> cacheMissionDetails(MissionDetailCollection collection) async {

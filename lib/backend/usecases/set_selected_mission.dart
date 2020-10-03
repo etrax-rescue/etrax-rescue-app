@@ -10,8 +10,9 @@ import '../types/missions.dart';
 import '../types/usecase.dart';
 
 class SetSelectedMission extends UseCase<None, SetSelectedMissionParams> {
-  final MissionStateRepository repository;
   SetSelectedMission(this.repository);
+
+  final MissionStateRepository repository;
 
   @override
   Future<Either<Failure, None>> call(SetSelectedMissionParams param) async {
@@ -21,15 +22,15 @@ class SetSelectedMission extends UseCase<None, SetSelectedMissionParams> {
 }
 
 class SetSelectedMissionParams extends Equatable {
-  final AppConnection appConnection;
-  final AuthenticationData authenticationData;
-  final Mission mission;
-
   SetSelectedMissionParams({
     @required this.appConnection,
     @required this.authenticationData,
     @required this.mission,
   });
+
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
+  final Mission mission;
 
   @override
   List<Object> get props => [mission];

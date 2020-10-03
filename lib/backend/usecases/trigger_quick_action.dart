@@ -11,8 +11,9 @@ import '../types/usecase.dart';
 import '../types/user_states.dart';
 
 class TriggerQuickAction extends UseCase<None, TriggerQuickActionParams> {
-  final MissionStateRepository repository;
   TriggerQuickAction(this.repository);
+
+  final MissionStateRepository repository;
 
   @override
   Future<Either<Failure, None>> call(TriggerQuickActionParams param) async {
@@ -22,17 +23,17 @@ class TriggerQuickAction extends UseCase<None, TriggerQuickActionParams> {
 }
 
 class TriggerQuickActionParams extends Equatable {
-  final AppConnection appConnection;
-  final AuthenticationData authenticationData;
-  final UserState action;
-  final LocationData currentLocation;
-
   TriggerQuickActionParams({
     @required this.appConnection,
     @required this.authenticationData,
     @required this.action,
     @required this.currentLocation,
   });
+
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
+  final UserState action;
+  final LocationData currentLocation;
 
   @override
   List<Object> get props =>

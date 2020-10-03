@@ -3,16 +3,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/error/failures.dart';
+import '../repositories/initialization_repository.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
-import '../types/usecase.dart';
 import '../types/initialization_data.dart';
-import '../repositories/initialization_repository.dart';
+import '../types/usecase.dart';
 
 class FetchInitializationData
     extends UseCase<InitializationData, FetchInitializationDataParams> {
-  final InitializationRepository repository;
   FetchInitializationData(this.repository);
+
+  final InitializationRepository repository;
 
   @override
   Future<Either<Failure, InitializationData>> call(
@@ -23,13 +24,13 @@ class FetchInitializationData
 }
 
 class FetchInitializationDataParams extends Equatable {
-  final AppConnection appConnection;
-  final AuthenticationData authenticationData;
-
   FetchInitializationDataParams({
     @required this.appConnection,
     @required this.authenticationData,
   });
+
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
 
   @override
   List<Object> get props => [appConnection, authenticationData];

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial_quickaction/flutter_speed_dial.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
+import '../../../backend/types/quick_actions.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
@@ -20,9 +20,9 @@ import '../widgets/map_screen.dart';
 import '../widgets/quick_action_box.dart';
 
 class HomePage extends StatefulWidget implements AutoRouteWrapper {
-  final UserState state;
-
   HomePage({Key key, @required this.state}) : super(key: key);
+
+  final UserState state;
 
   @override
   _HomePageState createState() => _HomePageState();

@@ -31,9 +31,9 @@ abstract class RemoteMissionStateDataSource {
 }
 
 class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
-  final http.Client client;
-
   RemoteMissionStateDataSourceImpl(this.client);
+
+  final http.Client client;
 
   @override
   Future<void> selectMission(AppConnection appConnection,

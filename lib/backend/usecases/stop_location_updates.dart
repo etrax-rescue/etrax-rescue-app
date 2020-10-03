@@ -5,8 +5,9 @@ import '../repositories/location_repository.dart';
 import '../types/usecase.dart';
 
 class StopLocationUpdates extends UseCase<bool, NoParams> {
-  final LocationRepository repository;
   StopLocationUpdates(this.repository);
+
+  final LocationRepository repository;
 
   @override
   Future<Either<Failure, bool>> call(NoParams params) async {

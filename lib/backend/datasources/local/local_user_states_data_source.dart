@@ -15,8 +15,9 @@ abstract class LocalUserStatesDataSource {
 }
 
 class LocalUserStatesDataSourceImpl implements LocalUserStatesDataSource {
-  final SharedPreferences sharedPreferences;
   LocalUserStatesDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Future<void> clearUserStates() async {

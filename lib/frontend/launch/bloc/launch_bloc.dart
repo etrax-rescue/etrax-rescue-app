@@ -18,11 +18,6 @@ part 'launch_event.dart';
 part 'launch_state.dart';
 
 class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
-  final GetAppConnection getAppConnection;
-  final GetOrganizations getOrganizations;
-  final GetAuthenticationData getAuthenticationData;
-  final GetMissionState getMissionState;
-  final GetAppConfiguration getAppConfiguration;
   LaunchBloc({
     @required this.getAppConnection,
     @required this.getOrganizations,
@@ -35,6 +30,12 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
         assert(getMissionState != null),
         assert(getAppConfiguration != null),
         super(LaunchInitial());
+
+  final GetAppConnection getAppConnection;
+  final GetOrganizations getOrganizations;
+  final GetAuthenticationData getAuthenticationData;
+  final GetMissionState getMissionState;
+  final GetAppConfiguration getAppConfiguration;
 
   @override
   Stream<LaunchState> mapEventToState(

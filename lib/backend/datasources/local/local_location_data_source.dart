@@ -40,8 +40,9 @@ abstract class LocalLocationDataSource {
 }
 
 class LocalLocationDataSourceImpl implements LocalLocationDataSource {
-  final BackgroundLocation backgroundLocation;
   LocalLocationDataSourceImpl(this.backgroundLocation);
+
+  final BackgroundLocation backgroundLocation;
 
   @override
   Stream<LocationData> getLocationUpdateStream(String label) {

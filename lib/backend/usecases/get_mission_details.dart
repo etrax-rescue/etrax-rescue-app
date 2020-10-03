@@ -11,9 +11,9 @@ import '../types/usecase.dart';
 
 class GetMissionDetails
     extends UseCase<MissionDetailCollection, GetMissionDetailsParams> {
-  final MissionDetailsRepository repository;
-
   GetMissionDetails(this.repository);
+
+  final MissionDetailsRepository repository;
 
   @override
   Future<Either<Failure, MissionDetailCollection>> call(

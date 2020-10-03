@@ -13,8 +13,9 @@ abstract class RemoteLoginDataSource {
 }
 
 class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
-  final http.Client client;
   RemoteLoginDataSourceImpl(this.client);
+
+  final http.Client client;
 
   @override
   Future<AuthenticationData> login(AppConnection appConnection,

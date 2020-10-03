@@ -15,8 +15,9 @@ abstract class LocalUserRolesDataSource {
 }
 
 class LocalUserRolesDataSourceImpl implements LocalUserRolesDataSource {
-  final SharedPreferences sharedPreferences;
   LocalUserRolesDataSourceImpl(this.sharedPreferences);
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Future<void> clearUserRoles() async {

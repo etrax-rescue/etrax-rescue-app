@@ -9,8 +9,9 @@ import '../types/usecase.dart';
 
 class GetLocationUpdateStream
     extends UseCase<Stream<LocationData>, GetLocationUpdateStreamParams> {
-  final LocationRepository repository;
   GetLocationUpdateStream(this.repository);
+
+  final LocationRepository repository;
 
   @override
   Future<Either<Failure, Stream<LocationData>>> call(

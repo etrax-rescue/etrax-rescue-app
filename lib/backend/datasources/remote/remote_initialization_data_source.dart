@@ -15,8 +15,9 @@ abstract class RemoteInitializationDataSource {
 
 class RemoteInitializationDataSourceImpl
     implements RemoteInitializationDataSource {
-  final http.Client client;
   RemoteInitializationDataSourceImpl(this.client);
+
+  final http.Client client;
 
   @override
   Future<InitializationData> fetchInitialization(AppConnection appConnection,

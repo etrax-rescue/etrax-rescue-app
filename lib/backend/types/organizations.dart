@@ -2,11 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class OrganizationCollection extends Equatable {
-  final List<Organization> organizations;
+  OrganizationCollection({@required this.organizations});
 
-  OrganizationCollection({
-    @required this.organizations,
-  });
+  final List<Organization> organizations;
 
   factory OrganizationCollection.fromJson(List<dynamic> json) {
     List<Organization> organizationModelList;
@@ -34,13 +32,13 @@ class OrganizationCollection extends Equatable {
 }
 
 class Organization extends Equatable {
-  final String id;
-  final String name;
-
   Organization({
     @required this.id,
     @required this.name,
   });
+
+  final String id;
+  final String name;
 
   factory Organization.fromJson(Map<String, dynamic> json) {
     return Organization(

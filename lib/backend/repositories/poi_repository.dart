@@ -1,17 +1,16 @@
-import 'package:background_location/background_location.dart';
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_image_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_location_data_source.dart';
-import 'package:etrax_rescue_app/backend/datasources/remote/remote_poi_data_source.dart';
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/types/poi.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/core/network/network_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
+import '../../core/network/network_info.dart';
+import '../datasources/local/local_image_data_source.dart';
+import '../datasources/local/local_location_data_source.dart';
+import '../datasources/remote/remote_poi_data_source.dart';
+import '../types/app_connection.dart';
+import '../types/authentication_data.dart';
+import '../types/poi.dart';
 
 abstract class PoiRepository {
   Future<Either<Failure, Poi>> capture();

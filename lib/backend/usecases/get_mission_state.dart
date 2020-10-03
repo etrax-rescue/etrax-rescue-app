@@ -6,8 +6,9 @@ import '../types/mission_state.dart';
 import '../types/usecase.dart';
 
 class GetMissionState extends UseCase<MissionState, NoParams> {
-  final MissionStateRepository repository;
   GetMissionState(this.repository);
+
+  final MissionStateRepository repository;
 
   @override
   Future<Either<Failure, MissionState>> call(NoParams params) async {

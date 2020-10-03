@@ -9,10 +9,10 @@ enum DetailType {
 abstract class MissionDetail extends Equatable {
   MissionDetail({@required this.title, @required this.type});
 
-  Map<String, String> toJson();
-
   final String title;
   final DetailType type;
+
+  Map<String, String> toJson();
 }
 
 class MissionDetailText extends MissionDetail {

@@ -40,7 +40,7 @@ class QuickActionButton extends StatelessWidget {
                       ExtendedNavigator.of(context).popAndPush(
                         Routes.checkRequirementsPage,
                         arguments: CheckRequirementsPageArguments(
-                          currentState: null,
+                          currentState: action,
                           desiredState: action,
                           action: StatusAction.quickAction,
                         ),

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/types/user_states.dart';
 import 'package:flutter/material.dart';
+
+import 'user_states.dart';
 
 class QuickActionCollection extends Equatable {
   QuickActionCollection({
