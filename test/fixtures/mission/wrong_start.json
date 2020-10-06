@@ -3,5 +3,6 @@
     "name": "Wien",
     "start": "hello world",
     "latitude": 48.2084114,
-    "longitude": 16.3712767
+    "longitude": 16.3712767,
+    "exercise": true
 }

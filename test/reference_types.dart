@@ -5,8 +5,11 @@ import 'package:etrax_rescue_app/backend/types/initialization_data.dart';
 import 'package:etrax_rescue_app/backend/types/missions.dart';
 import 'package:etrax_rescue_app/backend/types/organizations.dart';
 import 'package:etrax_rescue_app/backend/types/quick_actions.dart';
+import 'package:etrax_rescue_app/backend/types/search_area.dart';
 import 'package:etrax_rescue_app/backend/types/user_roles.dart';
 import 'package:etrax_rescue_app/backend/types/user_states.dart';
+
+import 'package:latlong/latlong.dart';
 
 // Generic Types
 final tDate = DateTime.utc(2020, 2, 2, 20, 20, 2, 20);
@@ -51,12 +54,14 @@ final tMissionName = 'Wien';
 final tMissionStart = tDate;
 final tLatitude = 48.2084114;
 final tLongitude = 16.3712767;
+final tMissionExercise = true;
 final tMission = Mission(
   id: tMissionID,
   name: tMissionName,
   start: tMissionStart,
   latitude: tLatitude,
   longitude: tLongitude,
+  exercise: tMissionExercise,
 );
 final tMissionCollection = MissionCollection(missions: <Mission>[tMission]);
 
@@ -92,3 +97,7 @@ final tInitializationData = InitializationData(
   userRoleCollection: tUserRoleCollection,
   quickActionCollection: tQuickActionCollection,
 );
+
+// Search Area
+final tSearchArea = SearchArea(coordinates: [LatLng(48.2084114, 16.3712767)]);
+final tSearchAreaCollection = SearchAreaCollection(areas: [tSearchArea]);

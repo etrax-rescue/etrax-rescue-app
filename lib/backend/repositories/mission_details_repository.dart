@@ -2,19 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/datasources/database/daos/search_area_dao.dart';
-import 'package:etrax_rescue_app/backend/types/search_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
+import '../datasources/database/daos/geo_polygon_dao.dart';
+import '../datasources/database/daos/geo_vertex_dao.dart';
 import '../datasources/local/local_mission_details_data_source.dart';
 import '../datasources/remote/remote_mission_details_data_source.dart';
 import '../types/app_connection.dart';
 import '../types/authentication_data.dart';
 import '../types/mission_details.dart';
+import '../types/search_area.dart';
 
 abstract class MissionDetailsRepository {
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
@@ -29,14 +30,16 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
     @required this.remoteDetailsDataSource,
     @required this.localMissionDetailsDataSource,
     @required this.cacheManager,
-    @required this.searchAreaDao,
+    @required this.geoPolygonDao,
+    @required this.geoVertexDao,
   });
 
   final NetworkInfo networkInfo;
   final RemoteMissionDetailsDataSource remoteDetailsDataSource;
   final LocalMissionDetailsDataSource localMissionDetailsDataSource;
   final DefaultCacheManager cacheManager;
-  final SearchAreaDao searchAreaDao;
+  final GeoPolygonDao geoPolygonDao;
+  final GeoVertexDao geoVertexDao;
 
   @override
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
@@ -95,7 +98,9 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
   }
 
   Future<SearchAreaCollection> getSearchAreas() async {
-    final searchArea = await searchAreaDao.getSearchArea();
-    return SearchAreaCollection(areas: [searchArea]);
+    // TODO: Implement this
+    throw UnimplementedError();
+    //final searchArea = await searchAreaDao.getSearchAreas();
+    //return SearchAreaCollection(areas: sea);
   }
 }

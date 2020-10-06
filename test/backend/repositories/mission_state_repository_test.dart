@@ -6,6 +6,8 @@ import 'package:etrax_rescue_app/backend/datasources/remote/remote_mission_state
 import 'package:etrax_rescue_app/backend/repositories/mission_state_repository.dart';
 import 'package:etrax_rescue_app/core/network/network_info.dart';
 
+import '../../reference_types.dart';
+
 class MockLocalMissionStateDataSource extends Mock
     implements LocalMissionStateDataSource {}
 
@@ -49,4 +51,19 @@ void main() {
       body();
     });
   }
+
+  group('setSelectedMission', () {
+    test(
+      'should check if the device is online',
+      () async {
+        // arrange
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+        // act
+        repository.setSelectedMission(
+            tAppConnection, tAuthenticationData, tMission);
+        // assert
+        verify(mockNetworkInfo.isConnected);
+      },
+    );
+  });
 }

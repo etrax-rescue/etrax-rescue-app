@@ -83,6 +83,8 @@ dev_dependencies:
   intl_translation: ^0.17.10
   # Code generator for the database
   moor_generator: ^3.3.1
+  # Database testing
+  moor_ffi: ^0.8.0
 
 flutter:
   uses-material-design: true

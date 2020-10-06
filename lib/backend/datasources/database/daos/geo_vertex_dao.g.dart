@@ -1,11 +1,11 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_area_dao.dart';
+part of 'geo_vertex_dao.dart';
 
 // **************************************************************************
 // DaoGenerator
 // **************************************************************************
 
-mixin _$SearchAreaDaoImplMixin on DatabaseAccessor<AppDatabase> {
-  $SearchAreaModelTable get searchAreaModel => attachedDatabase.searchAreaModel;
+mixin _$GeoVertexDaoImplMixin on DatabaseAccessor<AppDatabase> {
+  $GeoVertexModelsTable get geoVertexModels => attachedDatabase.geoVertexModels;
 }

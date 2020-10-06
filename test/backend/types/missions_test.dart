@@ -69,6 +69,7 @@ void main() {
               id: tMissionID,
               name: tMissionName,
               start: tMissionStart,
+              exercise: tMissionExercise,
               latitude: null,
               longitude: null);
           // act
@@ -88,6 +89,7 @@ void main() {
               id: tMissionID,
               name: tMissionName,
               start: tMissionStart,
+              exercise: tMissionExercise,
               latitude: null,
               longitude: null);
           // act
@@ -124,6 +126,7 @@ void main() {
             'start': tMissionStart.toIso8601String(),
             'latitude': tLatitude,
             'longitude': tLongitude,
+            'exercise': tMissionExercise,
           };
           expect(result, expectedJsonMap);
         },
@@ -215,6 +218,7 @@ void main() {
                 'start': tMissionStart.toIso8601String(),
                 'latitude': tLatitude,
                 'longitude': tLongitude,
+                'exercise': tMissionExercise,
               },
             ],
           };
