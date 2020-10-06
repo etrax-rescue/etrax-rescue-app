@@ -1,6 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
+import 'package:etrax_rescue_app/backend/datasources/database/database.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'backend/datasources/database/daos/search_area_dao.dart';
 import 'backend/datasources/local/local_app_configuration_data_source.dart';
 import 'backend/datasources/local/local_app_connection_data_source.dart';
 import 'backend/datasources/local/local_barcode_data_source.dart';
@@ -336,6 +338,8 @@ Future<void> init() async {
             remoteDetailsDataSource: sl(),
             localMissionDetailsDataSource: sl(),
             cacheManager: sl(),
+            // Hand over an instance of the DAO
+            searchAreaDao: sl<AppDatabase>().searchAreaDaoImpl,
           ));
 
   // Data Sources
@@ -371,6 +375,9 @@ Future<void> init() async {
       () => LocalImageDataSourceImpl(sl()));
   sl.registerLazySingleton<RemotePoiDataSource>(
       () => RemotePoiDataSourceImpl(sl()));
+
+  //! Database
+  sl.registerLazySingleton<AppDatabase>(() => AppDatabase());
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

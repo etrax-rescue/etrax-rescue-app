@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/datasources/database/daos/search_area_dao.dart';
+import 'package:etrax_rescue_app/backend/types/search_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -27,12 +29,14 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
     @required this.remoteDetailsDataSource,
     @required this.localMissionDetailsDataSource,
     @required this.cacheManager,
+    @required this.searchAreaDao,
   });
 
   final NetworkInfo networkInfo;
   final RemoteMissionDetailsDataSource remoteDetailsDataSource;
   final LocalMissionDetailsDataSource localMissionDetailsDataSource;
   final DefaultCacheManager cacheManager;
+  final SearchAreaDao searchAreaDao;
 
   @override
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
@@ -88,5 +92,10 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
     } on CacheException {
       return Left(CacheFailure());
     }
+  }
+
+  Future<SearchAreaCollection> getSearchAreas() async {
+    final searchArea = await searchAreaDao.getSearchArea();
+    return SearchAreaCollection(areas: [searchArea]);
   }
 }
