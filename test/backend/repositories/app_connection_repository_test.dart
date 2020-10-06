@@ -183,7 +183,7 @@ void main() {
           await repository.setAppConnection(tHost, tBasePath);
           // assert
           verify(mockLocalAppConnectionDataSource
-              .cacheAppConnection(tAppConnection));
+              .setAppConnection(tAppConnection));
 
           verifyNoMoreInteractions(mockLocalAppConnectionDataSource);
         },
@@ -208,7 +208,7 @@ void main() {
           // arrange
           when(mockRemoteAppConnectionDataSource.verifyRemoteEndpoint(any, any))
               .thenAnswer((_) async => tAppConnection);
-          when(mockLocalAppConnectionDataSource.cacheAppConnection(any))
+          when(mockLocalAppConnectionDataSource.setAppConnection(any))
               .thenThrow(CacheException());
           // act
           final result = await repository.setAppConnection(tHost, tBasePath);
@@ -255,6 +255,18 @@ void main() {
         final result = await repository.getAppConnection();
         // assert
         expect(result, Left(CacheFailure()));
+      },
+    );
+  });
+
+  group('deleteAppConnection', () {
+    test(
+      'should call the local datasource to delete the app connection',
+      () async {
+        // act
+        await repository.deleteAppConnection();
+        // assert
+        verify(mockLocalAppConnectionDataSource.deleteAppConnection());
       },
     );
   });

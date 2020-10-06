@@ -79,7 +79,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                     children: [
                       ListTile(
                         title: Text(
-                          S.of(context).MISSION,
+                          widget.mission.exercise
+                              ? S.of(context).EXERCISE
+                              : S.of(context).MISSION,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 24),
                         ),

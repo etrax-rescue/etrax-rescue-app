@@ -68,6 +68,7 @@ import 'backend/usecases/start_location_updates.dart';
 import 'backend/usecases/stop_location_updates.dart';
 import 'backend/usecases/trigger_quick_action.dart';
 import 'core/network/network_info.dart';
+import 'core/qr_scanner/qr_scanner.dart';
 import 'frontend/app_connection/cubit/app_connection_cubit.dart';
 import 'frontend/check_requirements/cubit/check_requirements_cubit.dart';
 import 'frontend/confirmation/bloc/confirmation_bloc.dart';
@@ -162,7 +163,7 @@ Future<void> init() async {
   sl.registerLazySingleton<LocalAppConnectionDataSource>(
       () => LocalAppConnectionDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalBarcodeDataSource>(
-      () => LocalBarcodeDataSourceImpl());
+      () => LocalBarcodeDataSourceImpl(sl()));
 
   //! Features - Authentication
   // BLoC
@@ -373,6 +374,7 @@ Future<void> init() async {
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<QRScanner>(() => QRScannerImpl());
   sl.registerLazySingleton<UriInputConverter>(() => UriInputConverter());
 
   //! External

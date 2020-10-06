@@ -273,6 +273,16 @@ class S {
     );
   }
 
+  /// `Exercise`
+  String get EXERCISE {
+    return Intl.message(
+      'Exercise',
+      name: 'EXERCISE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mission Name`
   String get MISSION_NAME {
     return Intl.message(

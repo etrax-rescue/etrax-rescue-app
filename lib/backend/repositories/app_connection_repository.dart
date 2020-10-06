@@ -68,7 +68,7 @@ class AppConnectionRepositoryImpl implements AppConnectionRepository {
       return Left(ServerFailure());
     }
     try {
-      await localAppConnectionDataSource.cacheAppConnection(model);
+      await localAppConnectionDataSource.setAppConnection(model);
       return Right(None());
     } on CacheException {
       return Left(CacheFailure());

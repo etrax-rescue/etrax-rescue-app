@@ -9,3 +9,5 @@ class LoginException implements Exception {}
 class PermissionException implements Exception {}
 
 class AuthenticationException implements Exception {}
+
+class BarcodeException implements Exception {}

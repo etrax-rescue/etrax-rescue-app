@@ -1,5 +1,4 @@
-import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flutter/services.dart';
+import '../../../core/qr_scanner/qr_scanner.dart';
 
 abstract class LocalBarcodeDataSource {
   Future<String> scanQRCode(
@@ -7,25 +6,13 @@ abstract class LocalBarcodeDataSource {
 }
 
 class LocalBarcodeDataSourceImpl implements LocalBarcodeDataSource {
+  LocalBarcodeDataSourceImpl(this.scanner);
+
+  final QRScanner scanner;
+
   @override
   Future<String> scanQRCode(
       String cancelText, String flashOnText, String flashOffText) async {
-    final options = ScanOptions(restrictFormat: const [
-      BarcodeFormat.qr
-    ], strings: {
-      'cancel': cancelText,
-      'flash_on': flashOnText,
-      'flash_off': flashOffText,
-    });
-
-    final result = await BarcodeScanner.scan(options: options);
-
-    if (result.type == ResultType.Barcode) {
-      return result.rawContent;
-    } else if (result.type == ResultType.Cancelled) {
-      return '';
-    } else {
-      throw PlatformException(code: result.rawContent);
-    }
+    return await scanner.scan(cancelText, flashOnText, flashOffText);
   }
 }

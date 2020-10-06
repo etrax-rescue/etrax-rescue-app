@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       )
     ];
 
-    if (widget.state.locationAccuracy >= 3) {
+    if (widget.state.locationAccuracy >= 2) {
       speedDials.add(SpeedDialChild(
         child: Icon(Icons.add_a_photo),
         backgroundColor: Colors.green,

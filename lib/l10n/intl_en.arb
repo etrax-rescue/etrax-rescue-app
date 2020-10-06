@@ -27,6 +27,7 @@
     "MISSIONS": "Missions",
     "ACTIVE_MISSIONS": "Active Missions",
     "MISSION": "Mission",
+    "EXERCISE": "Exercise",
     "MISSION_NAME": "Mission Name",
     "LOGOUT": "Logout",
     "RECONNECT": "Reconnect App",

@@ -24,7 +24,6 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
     return Scaffold(
       body: BlocConsumer<LaunchBloc, LaunchState>(
         listener: (context, state) {
-          print(state);
           if (state is LaunchAppConnectionPage) {
             ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
           } else if (state is LaunchLoginPage) {

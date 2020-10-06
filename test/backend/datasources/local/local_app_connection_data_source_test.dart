@@ -51,12 +51,12 @@ void main() {
     );
   });
 
-  group('cacheAppConnection', () {
+  group('setAppConnection', () {
     test(
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.cacheAppConnection(tAppConnection);
+        dataSource.setAppConnection(tAppConnection);
         // assert
         verify(mockSharedPreferences.setString(
             SharedPreferencesKeys.appConnection,
@@ -70,7 +70,7 @@ void main() {
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.cacheAppConnection(tAppConnection);
+        dataSource.setAppConnection(tAppConnection);
         // assert
         verify(mockSharedPreferences.setString(
             SharedPreferencesKeys.appConnection,

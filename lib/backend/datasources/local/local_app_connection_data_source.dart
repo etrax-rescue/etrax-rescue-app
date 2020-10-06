@@ -8,7 +8,7 @@ import '../../types/shared_preferences_keys.dart';
 
 abstract class LocalAppConnectionDataSource {
   Future<AppConnection> getCachedAppConnection();
-  Future<void> cacheAppConnection(AppConnection model);
+  Future<void> setAppConnection(AppConnection model);
   Future<void> deleteAppConnection();
 }
 
@@ -18,7 +18,7 @@ class LocalAppConnectionDataSourceImpl implements LocalAppConnectionDataSource {
   final SharedPreferences sharedPreferences;
 
   @override
-  Future<void> cacheAppConnection(AppConnection model) async {
+  Future<void> setAppConnection(AppConnection model) async {
     await sharedPreferences.setString(
         SharedPreferencesKeys.appConnection, json.encode(model.toJson()));
   }

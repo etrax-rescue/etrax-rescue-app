@@ -54,6 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "DATETIME" : MessageLookupByLibrary.simpleMessage("Zeitpunkt"),
     "DROPDOWN_HINT" : MessageLookupByLibrary.simpleMessage("-- Bitte Auswählen --"),
     "ETRAX_LOCATION_NOTIFICATION" : MessageLookupByLibrary.simpleMessage("eTrax|rescue greift gerade auf den Gerätestandort zu"),
+    "EXERCISE" : MessageLookupByLibrary.simpleMessage("Übung"),
     "FIELD_REQUIRED" : MessageLookupByLibrary.simpleMessage("Pflichtfeld"),
     "FLASH_OFF" : MessageLookupByLibrary.simpleMessage("Blitz aus"),
     "FLASH_ON" : MessageLookupByLibrary.simpleMessage("Blitz an"),

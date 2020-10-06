@@ -40,6 +40,7 @@ class Mission extends Equatable {
     @required this.start,
     @required this.latitude,
     @required this.longitude,
+    this.exercise = false,
   });
 
   final int id;
@@ -47,6 +48,7 @@ class Mission extends Equatable {
   final DateTime start;
   final double latitude;
   final double longitude;
+  final bool exercise;
 
   factory Mission.fromJson(Map<String, dynamic> json) {
     DateTime dateTime;
@@ -65,6 +67,7 @@ class Mission extends Equatable {
       longitude: json['latitude'] == null || json['longitude'] == null
           ? null
           : json['longitude'],
+      exercise: json['exercise'] == null ? false : json['exercise'],
     );
   }
 
@@ -75,9 +78,10 @@ class Mission extends Equatable {
       'start': this.start.toIso8601String(),
       'latitude': this.latitude,
       'longitude': this.longitude,
+      'exercise': this.exercise,
     };
   }
 
   @override
-  List<Object> get props => [id, name, start, latitude, longitude];
+  List<Object> get props => [id, name, start, latitude, longitude, exercise];
 }

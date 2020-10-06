@@ -97,7 +97,6 @@ class _SubmitPoiControlsState extends State<SubmitPoiControls> {
 
   void _submit() {
     if (_formKey.currentState.validate()) {
-      print('POI submitted');
       context.bloc<SubmitPoiCubit>().submit(_description);
     }
   }

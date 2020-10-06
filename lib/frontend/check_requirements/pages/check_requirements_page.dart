@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:etrax_rescue_app/frontend/check_requirements/widgets/complete_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -155,39 +156,48 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
           automaticallyImplyLeading: _goingBackPossible,
           actions: [LogoutButton()],
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            BlocConsumer<CheckRequirementsCubit, CheckRequirementsState>(
-              listener: (context, state) {
-                setState(() {
-                  _goingBackPossible = (state.currentStep?.index ?? 0) <=
-                      SequenceStep.updateState.index;
-                });
-              },
-              builder: (context, state) {
-                final stepContent = List<StepContent>.from(
-                    state.sequence.map((item) => _sequenceMap[item]));
-                return SequenceSliver(steps: stepContent);
-              },
+        body: Stack(
+          children: [
+            CustomScrollView(
+              slivers: <Widget>[
+                BlocConsumer<CheckRequirementsCubit, CheckRequirementsState>(
+                  listener: (context, state) {
+                    setState(() {
+                      _goingBackPossible = (state.currentStep?.index ?? 0) <=
+                          SequenceStep.updateState.index;
+                    });
+                    if (state.complete) {
+                      delayedPop();
+                    }
+                  },
+                  builder: (context, state) {
+                    final stepContent = List<StepContent>.from(
+                        state.sequence.map((item) => _sequenceMap[item]));
+                    return SequenceSliver(steps: stepContent);
+                  },
+                ),
+              ],
             ),
-            ContinueButtonSliver(
-              onPressed: () {
-                if (widget.action == StatusAction.logout) {
-                  ExtendedNavigator.of(context).pushAndRemoveUntil(
-                    Routes.loginPage,
-                    (route) => false,
-                  );
-                } else {
-                  ExtendedNavigator.of(context).pushAndRemoveUntil(
-                    Routes.launchPage,
-                    (route) => false,
-                  );
-                }
-              },
-            ),
+            CompleteOverlay(),
           ],
         ),
       ),
     );
+  }
+
+  void delayedPop() async {
+    await Future.delayed(const Duration(seconds: 1)).then((_) {
+      if (widget.action == StatusAction.logout) {
+        ExtendedNavigator.of(context).pushAndRemoveUntil(
+          Routes.loginPage,
+          (route) => false,
+        );
+      } else {
+        ExtendedNavigator.of(context).pushAndRemoveUntil(
+          Routes.launchPage,
+          (route) => false,
+        );
+      }
+    });
   }
 }

@@ -8,7 +8,6 @@ import 'package:matcher/matcher.dart';
 import 'package:etrax_rescue_app/backend/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_app_configuration_data_source.dart';
-import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 import '../../../reference_types.dart';
@@ -57,11 +56,24 @@ void main() {
       'should call Shared Preferences to store the data',
       () async {
         // act
-        dataSource.setAppConfiguration(tAppConfiguration);
+        await dataSource.setAppConfiguration(tAppConfiguration);
         // assert
         verify(mockSharedPreferences.setString(
             SharedPreferencesKeys.appConfiguration,
             json.encode(tAppConfiguration.toJson())));
+      },
+    );
+  });
+
+  group('deleteAppConfiguration', () {
+    test(
+      'should delete the entry from Shared Preferences',
+      () async {
+        // act
+        await dataSource.deleteAppConfiguration();
+        // assert
+        verify(mockSharedPreferences
+            .remove(SharedPreferencesKeys.appConfiguration));
       },
     );
   });
