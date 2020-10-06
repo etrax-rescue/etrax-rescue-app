@@ -59,18 +59,21 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
             yield ConfirmationError(
                 messageKey: mapFailureToMessageKey(failure));
           }, (_) async* {
-            final setUserRoleEither = await setSelectedUserRole(
-                SetSelectedUserRoleParams(
-                    appConnection: appConnection,
-                    authenticationData: authenticationData,
-                    role: event.role));
-
-            yield* setUserRoleEither.fold((failure) async* {
-              yield ConfirmationError(
-                  messageKey: mapFailureToMessageKey(failure));
-            }, (_) async* {
+            if (event.role == null) {
               yield ConfirmationSuccess();
-            });
+            } else {
+              final setUserRoleEither = await setSelectedUserRole(
+                  SetSelectedUserRoleParams(
+                      appConnection: appConnection,
+                      authenticationData: authenticationData,
+                      role: event.role));
+              yield* setUserRoleEither.fold((failure) async* {
+                yield ConfirmationError(
+                    messageKey: mapFailureToMessageKey(failure));
+              }, (_) async* {
+                yield ConfirmationSuccess();
+              });
+            }
           });
         });
       });

@@ -9,7 +9,6 @@ import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../cubit/check_requirements_cubit.dart';
-import '../widgets/continue_button_sliver.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/sequence_item.dart';
 import '../widgets/sequence_sliver.dart';

@@ -120,25 +120,27 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                               widget.mission.longitude),
                         ),
                       ),
-                      ListTile(
-                        title: DropdownButtonFormField<UserRole>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: S.of(context).FUNCTION,
+                      if (widget.roles.roles.length > 0)
+                        ListTile(
+                          title: DropdownButtonFormField<UserRole>(
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: S.of(context).FUNCTION,
+                            ),
+                            items: widget.roles.roles.map((UserRole role) {
+                              return DropdownMenuItem<UserRole>(
+                                value: role,
+                                child: Text(role.name),
+                              );
+                            }).toList(),
+                            onChanged: (val) {
+                              _selectedRole = val;
+                            },
+                            validator: (val) => val == null
+                                ? S.of(context).FIELD_REQUIRED
+                                : null,
                           ),
-                          items: widget.roles.roles.map((UserRole role) {
-                            return DropdownMenuItem<UserRole>(
-                              value: role,
-                              child: Text(role.name),
-                            );
-                          }).toList(),
-                          onChanged: (val) {
-                            _selectedRole = val;
-                          },
-                          validator: (val) =>
-                              val == null ? S.of(context).FIELD_REQUIRED : null,
                         ),
-                      ),
                     ],
                   ),
                 ),
