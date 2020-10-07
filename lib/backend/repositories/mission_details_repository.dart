@@ -51,6 +51,8 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
         failed = true;
       } on SocketException {
         failed = true;
+      } on AuthenticationException {
+        return Left(AuthenticationFailure());
       }
 
       if (failed == true) {

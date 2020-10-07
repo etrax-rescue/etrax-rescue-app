@@ -44,6 +44,7 @@ import 'backend/usecases/capture_poi.dart';
 import 'backend/usecases/clear_location_cache.dart';
 import 'backend/usecases/clear_mission_details.dart';
 import 'backend/usecases/clear_mission_state.dart';
+import 'backend/usecases/clear_search_areas.dart';
 import 'backend/usecases/delete_app_connection.dart';
 import 'backend/usecases/fetch_initialization_data.dart';
 import 'backend/usecases/get_app_configuration.dart';
@@ -57,6 +58,7 @@ import 'backend/usecases/get_mission_details.dart';
 import 'backend/usecases/get_mission_state.dart';
 import 'backend/usecases/get_organizations.dart';
 import 'backend/usecases/get_quick_actions.dart';
+import 'backend/usecases/get_search_areas.dart';
 import 'backend/usecases/get_selected_mission.dart';
 import 'backend/usecases/get_user_states.dart';
 import 'backend/usecases/login.dart';
@@ -258,6 +260,7 @@ Future<void> init() async {
         logout: sl(),
         triggerQuickAction: sl(),
         getLastLocation: sl(),
+        clearSearchAreas: sl(),
       ));
 
   // Use Cases
@@ -288,6 +291,8 @@ Future<void> init() async {
   sl.registerLazySingleton<GetLastLocation>(() => GetLastLocation(sl()));
 
   sl.registerLazySingleton<TriggerQuickAction>(() => TriggerQuickAction(sl()));
+
+  sl.registerLazySingleton<ClearSearchAreas>(() => ClearSearchAreas(sl()));
 
   // Repositories
   sl.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl(
@@ -320,9 +325,9 @@ Future<void> init() async {
         getAppConnection: sl(),
         getAuthenticationData: sl(),
         getAppConfiguration: sl(),
-        clearMissionDetails: sl(),
         getLocationUpdatesStatus: sl(),
         getQuickActions: sl(),
+        getSearchAreas: sl(),
       ));
 
   // Use Cases
@@ -333,6 +338,7 @@ Future<void> init() async {
   sl.registerLazySingleton<GetLocationUpdatesStatus>(
       () => GetLocationUpdatesStatus(sl()));
   sl.registerLazySingleton<GetQuickActions>(() => GetQuickActions(sl()));
+  sl.registerLazySingleton<GetSearchAreas>(() => GetSearchAreas(sl()));
 
   // Repositories
   sl.registerLazySingleton<MissionDetailsRepository>(

@@ -14,6 +14,7 @@ class HomeState extends Equatable {
     @required this.quickActions,
     @required this.missionState,
     @required this.missionDetailCollection,
+    @required this.searchAreaCollection,
     @required this.locationHistory,
     this.renewStatus = false,
   });
@@ -26,6 +27,7 @@ class HomeState extends Equatable {
   final List<LocationData> locationHistory;
   final MissionState missionState;
   final MissionDetailCollection missionDetailCollection;
+  final SearchAreaCollection searchAreaCollection;
   final bool renewStatus;
 
   const HomeState.initial()
@@ -37,6 +39,7 @@ class HomeState extends Equatable {
           quickActions: null,
           missionState: null,
           missionDetailCollection: null,
+          searchAreaCollection: null,
           locationHistory: const [],
         );
 
@@ -48,6 +51,7 @@ class HomeState extends Equatable {
     QuickActionCollection quickActions,
     MissionState missionState,
     MissionDetailCollection missionDetailCollection,
+    SearchAreaCollection searchAreaCollection,
     List<LocationData> locationHistory,
     bool renewStatus,
   }) {
@@ -61,6 +65,7 @@ class HomeState extends Equatable {
       locationHistory: locationHistory ?? this.locationHistory,
       missionDetailCollection:
           missionDetailCollection ?? this.missionDetailCollection,
+      searchAreaCollection: searchAreaCollection ?? this.searchAreaCollection,
       renewStatus: renewStatus ?? false,
     );
   }
@@ -75,6 +80,7 @@ class HomeState extends Equatable {
         locationHistory,
         missionState,
         missionDetailCollection,
+        searchAreaCollection,
         renewStatus,
       ];
 }

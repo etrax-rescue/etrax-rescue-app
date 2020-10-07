@@ -11,8 +11,9 @@ class SearchAreaCollection extends Equatable {
     List<SearchArea> searchAreaList;
     try {
       Iterable it = json;
-      searchAreaList = List<SearchArea>.from(
-          it.map((el) => SearchArea.fromJson(el)).toList());
+      searchAreaList = List<SearchArea>.from(it.map((el) {
+        return SearchArea.fromJson(el);
+      }).toList());
     } on NoSuchMethodError {
       throw FormatException();
     } on TypeError {
@@ -41,11 +42,12 @@ class SearchArea extends Equatable {
   factory SearchArea.fromJson(Map<String, dynamic> json) {
     if (json['id'] == null || json['coordinates'] == null)
       throw FormatException();
-    List<LatLng> coordinates;
+
+    List<LatLng> coordinates = [];
     try {
       Iterable it = json['coordinates'];
       coordinates =
-          List<LatLng>.from(it.map((el) => LatLng(el[0], el[1])).toList());
+          List<LatLng>.from(it.map((el) => LatLng(el[1], el[0])).toList());
     } on NoSuchMethodError {
       throw FormatException();
     } on TypeError {
@@ -53,7 +55,7 @@ class SearchArea extends Equatable {
     }
     return SearchArea(
       id: json['id'] == null ? throw FormatException() : json['id'],
-      label: json['name'] == null ? throw FormatException() : json['name'],
+      label: json['label'] == null ? throw FormatException() : json['label'],
       description: json['description'] == null
           ? throw FormatException()
           : json['description'],
@@ -62,5 +64,5 @@ class SearchArea extends Equatable {
   }
 
   @override
-  List<Object> get props => [label, coordinates];
+  List<Object> get props => [id, label, description, coordinates];
 }

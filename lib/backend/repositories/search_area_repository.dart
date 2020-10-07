@@ -48,6 +48,8 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
         failed = true;
       } on SocketException {
         failed = true;
+      } on AuthenticationException {
+        return Left(AuthenticationFailure());
       }
 
       if (failed == true) {
@@ -79,6 +81,7 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
         return Right(collection);
       } else {
         try {
+          await labeledCoordinateDao.deleteAll();
           await collection.areas.map((area) async =>
               await labeledCoordinateDao.insertCoordinates(
                   area.coordinates, area.id, area.label, area.description));

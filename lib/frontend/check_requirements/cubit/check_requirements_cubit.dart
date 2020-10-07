@@ -1,6 +1,7 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/clear_search_areas.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -64,6 +65,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     @required this.clearMissionState,
     @required this.clearMissionDetails,
     @required this.clearLocationCache,
+    @required this.clearSearchAreas,
   })  : assert(setSelectedUserState != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
@@ -79,6 +81,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         assert(clearMissionState != null),
         assert(clearMissionDetails != null),
         assert(clearLocationCache != null),
+        assert(clearSearchAreas != null),
         super(CheckRequirementsState.initial()) {
     // Initialize the map that translates sequence step positions to functions
     _stepMap = {
@@ -110,6 +113,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
   final ClearMissionState clearMissionState;
   final ClearMissionDetails clearMissionDetails;
   final ClearLocationCache clearLocationCache;
+  final ClearSearchAreas clearSearchAreas;
 
   Map<SequenceStep, Function> _stepMap;
 
@@ -446,16 +450,22 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       clearMissionDetailsEither.fold((failure) async {
         // TODO: handle failure
       }, (_) async {
-        final clearLocationCacheEither = await clearLocationCache(NoParams());
+        final clearSearchAreasEither = await clearSearchAreas(NoParams());
 
-        clearLocationCacheEither.fold((failure) async {
+        clearSearchAreasEither.fold((failure) async {
           // TODO: handle failure
         }, (_) async {
-          emit(state.copyWith(
-              sequenceStatus:
-                  _generateSequenceStatus(currentStatus: StepStatus.complete)));
+          final clearLocationCacheEither = await clearLocationCache(NoParams());
 
-          _next();
+          clearLocationCacheEither.fold((failure) async {
+            // TODO: handle failure
+          }, (_) async {
+            emit(state.copyWith(
+                sequenceStatus: _generateSequenceStatus(
+                    currentStatus: StepStatus.complete)));
+
+            _next();
+          });
         });
       });
     });

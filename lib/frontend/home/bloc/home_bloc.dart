@@ -11,11 +11,12 @@ import '../../../backend/types/authentication_data.dart';
 import '../../../backend/types/mission_details.dart';
 import '../../../backend/types/mission_state.dart';
 import '../../../backend/types/quick_actions.dart';
+import '../../../backend/types/search_area.dart';
 import '../../../backend/types/usecase.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../backend/usecases/clear_location_cache.dart';
-import '../../../backend/usecases/clear_mission_details.dart';
 import '../../../backend/usecases/clear_mission_state.dart';
+import '../../../backend/usecases/get_search_areas.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
@@ -40,12 +41,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     @required this.getAppConfiguration,
     @required this.getQuickActions,
     @required this.getMissionDetails,
+    @required this.getSearchAreas,
     @required this.getLocationHistory,
     @required this.getLocationUpdatesStatus,
     @required this.clearMissionState,
     @required this.clearLocationCache,
     @required this.stopLocationUpdates,
-    @required this.clearMissionDetails,
     @required this.getLocationUpdateStream,
   })  : assert(getMissionState != null),
         assert(getAppConnection != null),
@@ -53,10 +54,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         assert(getAuthenticationData != null),
         assert(getQuickActions != null),
         assert(getMissionDetails != null),
+        assert(getSearchAreas != null),
         assert(getLocationHistory != null),
         assert(getLocationUpdatesStatus != null),
         assert(clearMissionState != null),
-        assert(clearMissionDetails != null),
         assert(clearLocationCache != null),
         assert(stopLocationUpdates != null),
         assert(getLocationUpdateStream != null),
@@ -74,7 +75,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final ClearMissionState clearMissionState;
   final StopLocationUpdates stopLocationUpdates;
   final GetLocationUpdatesStatus getLocationUpdatesStatus;
-  final ClearMissionDetails clearMissionDetails;
+  final GetSearchAreas getSearchAreas;
 
   StreamSubscription<LocationData> _streamSubscription;
   StreamSubscription<void> _tickerSubscription;
@@ -185,9 +186,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* getMissionDetailsEither.fold((failure) async* {
         // TODO: handle failure
       }, (missionDetailCollection) async* {
-        yield state.copyWith(
-            status: HomeStatus.ready,
-            missionDetailCollection: missionDetailCollection);
+        yield state.copyWith(missionDetailCollection: missionDetailCollection);
+        final getSearchAreasEither = await getSearchAreas(GetSearchAreaParams(
+            appConnection: state.appConnection,
+            authenticationData: state.authenticationData));
+
+        yield* getSearchAreasEither.fold((failure) async* {
+          // TODO: handle failure
+        }, (searchAreaCollection) async* {
+          yield state.copyWith(
+              status: HomeStatus.ready,
+              searchAreaCollection: searchAreaCollection);
+        });
       });
     }
   }
