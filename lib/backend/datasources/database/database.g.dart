@@ -7,226 +7,55 @@ part of 'database.dart';
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
-class GeoPolygonModel extends DataClass implements Insertable<GeoPolygonModel> {
-  final int id;
-  final String name;
-  GeoPolygonModel({@required this.id, @required this.name});
-  factory GeoPolygonModel.fromData(
+class LabeledCoordinateModel extends DataClass
+    implements Insertable<LabeledCoordinateModel> {
+  final int index;
+  final String id;
+  final String label;
+  final String description;
+  final double latitude;
+  final double longitude;
+  LabeledCoordinateModel(
+      {@required this.index,
+      @required this.id,
+      @required this.label,
+      @required this.description,
+      @required this.latitude,
+      @required this.longitude});
+  factory LabeledCoordinateModel.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
-    return GeoPolygonModel(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-    );
-  }
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    return map;
-  }
-
-  GeoPolygonModelsCompanion toCompanion(bool nullToAbsent) {
-    return GeoPolygonModelsCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-    );
-  }
-
-  factory GeoPolygonModel.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
-    return GeoPolygonModel(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-    };
-  }
-
-  GeoPolygonModel copyWith({int id, String name}) => GeoPolygonModel(
-        id: id ?? this.id,
-        name: name ?? this.name,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('GeoPolygonModel(')
-          ..write('id: $id, ')
-          ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => $mrjf($mrjc(id.hashCode, name.hashCode));
-  @override
-  bool operator ==(dynamic other) =>
-      identical(this, other) ||
-      (other is GeoPolygonModel &&
-          other.id == this.id &&
-          other.name == this.name);
-}
-
-class GeoPolygonModelsCompanion extends UpdateCompanion<GeoPolygonModel> {
-  final Value<int> id;
-  final Value<String> name;
-  const GeoPolygonModelsCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-  });
-  GeoPolygonModelsCompanion.insert({
-    this.id = const Value.absent(),
-    @required String name,
-  }) : name = Value(name);
-  static Insertable<GeoPolygonModel> custom({
-    Expression<int> id,
-    Expression<String> name,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    });
-  }
-
-  GeoPolygonModelsCompanion copyWith({Value<int> id, Value<String> name}) {
-    return GeoPolygonModelsCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GeoPolygonModelsCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $GeoPolygonModelsTable extends GeoPolygonModels
-    with TableInfo<$GeoPolygonModelsTable, GeoPolygonModel> {
-  final GeneratedDatabase _db;
-  final String _alias;
-  $GeoPolygonModelsTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedIntColumn _id;
-  @override
-  GeneratedIntColumn get id => _id ??= _constructId();
-  GeneratedIntColumn _constructId() {
-    return GeneratedIntColumn('id', $tableName, false,
-        hasAutoIncrement: true, declaredAsPrimaryKey: true);
-  }
-
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedTextColumn _name;
-  @override
-  GeneratedTextColumn get name => _name ??= _constructName();
-  GeneratedTextColumn _constructName() {
-    return GeneratedTextColumn(
-      'name',
-      $tableName,
-      false,
-    );
-  }
-
-  @override
-  List<GeneratedColumn> get $columns => [id, name];
-  @override
-  $GeoPolygonModelsTable get asDslTable => this;
-  @override
-  String get $tableName => _alias ?? 'geo_polygon_models';
-  @override
-  final String actualTableName = 'geo_polygon_models';
-  @override
-  VerificationContext validateIntegrity(Insertable<GeoPolygonModel> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  GeoPolygonModel map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return GeoPolygonModel.fromData(data, _db, prefix: effectivePrefix);
-  }
-
-  @override
-  $GeoPolygonModelsTable createAlias(String alias) {
-    return $GeoPolygonModelsTable(_db, alias);
-  }
-}
-
-class GeoVertexModel extends DataClass implements Insertable<GeoVertexModel> {
-  final int id;
-  final double latitude;
-  final double longitude;
-  final int polygon_id;
-  GeoVertexModel(
-      {@required this.id,
-      @required this.latitude,
-      @required this.longitude,
-      @required this.polygon_id});
-  factory GeoVertexModel.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
-    final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
     final doubleType = db.typeSystem.forDartType<double>();
-    return GeoVertexModel(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+    return LabeledCoordinateModel(
+      index: intType.mapFromDatabaseResponse(data['${effectivePrefix}index']),
+      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      label:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}label']),
+      description: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
       latitude: doubleType
           .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
       longitude: doubleType
           .mapFromDatabaseResponse(data['${effectivePrefix}longitude']),
-      polygon_id:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}polygon_id']),
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || index != null) {
+      map['index'] = Variable<int>(index);
+    }
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || label != null) {
+      map['label'] = Variable<String>(label);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
     }
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
@@ -234,133 +63,179 @@ class GeoVertexModel extends DataClass implements Insertable<GeoVertexModel> {
     if (!nullToAbsent || longitude != null) {
       map['longitude'] = Variable<double>(longitude);
     }
-    if (!nullToAbsent || polygon_id != null) {
-      map['polygon_id'] = Variable<int>(polygon_id);
-    }
     return map;
   }
 
-  GeoVertexModelsCompanion toCompanion(bool nullToAbsent) {
-    return GeoVertexModelsCompanion(
+  LabeledCoordinateModelsCompanion toCompanion(bool nullToAbsent) {
+    return LabeledCoordinateModelsCompanion(
+      index:
+          index == null && nullToAbsent ? const Value.absent() : Value(index),
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      label:
+          label == null && nullToAbsent ? const Value.absent() : Value(label),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
           : Value(latitude),
       longitude: longitude == null && nullToAbsent
           ? const Value.absent()
           : Value(longitude),
-      polygon_id: polygon_id == null && nullToAbsent
-          ? const Value.absent()
-          : Value(polygon_id),
     );
   }
 
-  factory GeoVertexModel.fromJson(Map<String, dynamic> json,
+  factory LabeledCoordinateModel.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return GeoVertexModel(
-      id: serializer.fromJson<int>(json['id']),
+    return LabeledCoordinateModel(
+      index: serializer.fromJson<int>(json['index']),
+      id: serializer.fromJson<String>(json['id']),
+      label: serializer.fromJson<String>(json['label']),
+      description: serializer.fromJson<String>(json['description']),
       latitude: serializer.fromJson<double>(json['latitude']),
       longitude: serializer.fromJson<double>(json['longitude']),
-      polygon_id: serializer.fromJson<int>(json['polygon_id']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'index': serializer.toJson<int>(index),
+      'id': serializer.toJson<String>(id),
+      'label': serializer.toJson<String>(label),
+      'description': serializer.toJson<String>(description),
       'latitude': serializer.toJson<double>(latitude),
       'longitude': serializer.toJson<double>(longitude),
-      'polygon_id': serializer.toJson<int>(polygon_id),
     };
   }
 
-  GeoVertexModel copyWith(
-          {int id, double latitude, double longitude, int polygon_id}) =>
-      GeoVertexModel(
+  LabeledCoordinateModel copyWith(
+          {int index,
+          String id,
+          String label,
+          String description,
+          double latitude,
+          double longitude}) =>
+      LabeledCoordinateModel(
+        index: index ?? this.index,
         id: id ?? this.id,
+        label: label ?? this.label,
+        description: description ?? this.description,
         latitude: latitude ?? this.latitude,
         longitude: longitude ?? this.longitude,
-        polygon_id: polygon_id ?? this.polygon_id,
       );
   @override
   String toString() {
-    return (StringBuffer('GeoVertexModel(')
+    return (StringBuffer('LabeledCoordinateModel(')
+          ..write('index: $index, ')
           ..write('id: $id, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
           ..write('latitude: $latitude, ')
-          ..write('longitude: $longitude, ')
-          ..write('polygon_id: $polygon_id')
+          ..write('longitude: $longitude')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => $mrjf($mrjc(
-      id.hashCode,
+      index.hashCode,
       $mrjc(
-          latitude.hashCode, $mrjc(longitude.hashCode, polygon_id.hashCode))));
+          id.hashCode,
+          $mrjc(
+              label.hashCode,
+              $mrjc(description.hashCode,
+                  $mrjc(latitude.hashCode, longitude.hashCode))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is GeoVertexModel &&
+      (other is LabeledCoordinateModel &&
+          other.index == this.index &&
           other.id == this.id &&
+          other.label == this.label &&
+          other.description == this.description &&
           other.latitude == this.latitude &&
-          other.longitude == this.longitude &&
-          other.polygon_id == this.polygon_id);
+          other.longitude == this.longitude);
 }
 
-class GeoVertexModelsCompanion extends UpdateCompanion<GeoVertexModel> {
-  final Value<int> id;
+class LabeledCoordinateModelsCompanion
+    extends UpdateCompanion<LabeledCoordinateModel> {
+  final Value<int> index;
+  final Value<String> id;
+  final Value<String> label;
+  final Value<String> description;
   final Value<double> latitude;
   final Value<double> longitude;
-  final Value<int> polygon_id;
-  const GeoVertexModelsCompanion({
+  const LabeledCoordinateModelsCompanion({
+    this.index = const Value.absent(),
     this.id = const Value.absent(),
+    this.label = const Value.absent(),
+    this.description = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
-    this.polygon_id = const Value.absent(),
   });
-  GeoVertexModelsCompanion.insert({
-    this.id = const Value.absent(),
+  LabeledCoordinateModelsCompanion.insert({
+    this.index = const Value.absent(),
+    @required String id,
+    @required String label,
+    @required String description,
     @required double latitude,
     @required double longitude,
-    @required int polygon_id,
-  })  : latitude = Value(latitude),
-        longitude = Value(longitude),
-        polygon_id = Value(polygon_id);
-  static Insertable<GeoVertexModel> custom({
-    Expression<int> id,
+  })  : id = Value(id),
+        label = Value(label),
+        description = Value(description),
+        latitude = Value(latitude),
+        longitude = Value(longitude);
+  static Insertable<LabeledCoordinateModel> custom({
+    Expression<int> index,
+    Expression<String> id,
+    Expression<String> label,
+    Expression<String> description,
     Expression<double> latitude,
     Expression<double> longitude,
-    Expression<int> polygon_id,
   }) {
     return RawValuesInsertable({
+      if (index != null) 'index': index,
       if (id != null) 'id': id,
+      if (label != null) 'label': label,
+      if (description != null) 'description': description,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
-      if (polygon_id != null) 'polygon_id': polygon_id,
     });
   }
 
-  GeoVertexModelsCompanion copyWith(
-      {Value<int> id,
+  LabeledCoordinateModelsCompanion copyWith(
+      {Value<int> index,
+      Value<String> id,
+      Value<String> label,
+      Value<String> description,
       Value<double> latitude,
-      Value<double> longitude,
-      Value<int> polygon_id}) {
-    return GeoVertexModelsCompanion(
+      Value<double> longitude}) {
+    return LabeledCoordinateModelsCompanion(
+      index: index ?? this.index,
       id: id ?? this.id,
+      label: label ?? this.label,
+      description: description ?? this.description,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      polygon_id: polygon_id ?? this.polygon_id,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (index.present) {
+      map['index'] = Variable<int>(index.value);
+    }
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
+    }
+    if (label.present) {
+      map['label'] = Variable<String>(label.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
     }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
@@ -368,36 +243,73 @@ class GeoVertexModelsCompanion extends UpdateCompanion<GeoVertexModel> {
     if (longitude.present) {
       map['longitude'] = Variable<double>(longitude.value);
     }
-    if (polygon_id.present) {
-      map['polygon_id'] = Variable<int>(polygon_id.value);
-    }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('GeoVertexModelsCompanion(')
+    return (StringBuffer('LabeledCoordinateModelsCompanion(')
+          ..write('index: $index, ')
           ..write('id: $id, ')
+          ..write('label: $label, ')
+          ..write('description: $description, ')
           ..write('latitude: $latitude, ')
-          ..write('longitude: $longitude, ')
-          ..write('polygon_id: $polygon_id')
+          ..write('longitude: $longitude')
           ..write(')'))
         .toString();
   }
 }
 
-class $GeoVertexModelsTable extends GeoVertexModels
-    with TableInfo<$GeoVertexModelsTable, GeoVertexModel> {
+class $LabeledCoordinateModelsTable extends LabeledCoordinateModels
+    with TableInfo<$LabeledCoordinateModelsTable, LabeledCoordinateModel> {
   final GeneratedDatabase _db;
   final String _alias;
-  $GeoVertexModelsTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedIntColumn _id;
+  $LabeledCoordinateModelsTable(this._db, [this._alias]);
+  final VerificationMeta _indexMeta = const VerificationMeta('index');
+  GeneratedIntColumn _index;
   @override
-  GeneratedIntColumn get id => _id ??= _constructId();
-  GeneratedIntColumn _constructId() {
-    return GeneratedIntColumn('id', $tableName, false,
+  GeneratedIntColumn get index => _index ??= _constructIndex();
+  GeneratedIntColumn _constructIndex() {
+    return GeneratedIntColumn('index', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedTextColumn _id;
+  @override
+  GeneratedTextColumn get id => _id ??= _constructId();
+  GeneratedTextColumn _constructId() {
+    return GeneratedTextColumn(
+      'id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _labelMeta = const VerificationMeta('label');
+  GeneratedTextColumn _label;
+  @override
+  GeneratedTextColumn get label => _label ??= _constructLabel();
+  GeneratedTextColumn _constructLabel() {
+    return GeneratedTextColumn(
+      'label',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  GeneratedTextColumn _description;
+  @override
+  GeneratedTextColumn get description =>
+      _description ??= _constructDescription();
+  GeneratedTextColumn _constructDescription() {
+    return GeneratedTextColumn(
+      'description',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
@@ -424,30 +336,43 @@ class $GeoVertexModelsTable extends GeoVertexModels
     );
   }
 
-  final VerificationMeta _polygon_idMeta = const VerificationMeta('polygon_id');
-  GeneratedIntColumn _polygon_id;
   @override
-  GeneratedIntColumn get polygon_id => _polygon_id ??= _constructPolygonId();
-  GeneratedIntColumn _constructPolygonId() {
-    return GeneratedIntColumn('polygon_id', $tableName, false,
-        $customConstraints: 'REFERENCES geo_polygon_models(id)');
-  }
-
+  List<GeneratedColumn> get $columns =>
+      [index, id, label, description, latitude, longitude];
   @override
-  List<GeneratedColumn> get $columns => [id, latitude, longitude, polygon_id];
+  $LabeledCoordinateModelsTable get asDslTable => this;
   @override
-  $GeoVertexModelsTable get asDslTable => this;
+  String get $tableName => _alias ?? 'labeled_coordinate_models';
   @override
-  String get $tableName => _alias ?? 'geo_vertex_models';
+  final String actualTableName = 'labeled_coordinate_models';
   @override
-  final String actualTableName = 'geo_vertex_models';
-  @override
-  VerificationContext validateIntegrity(Insertable<GeoVertexModel> instance,
+  VerificationContext validateIntegrity(
+      Insertable<LabeledCoordinateModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('index')) {
+      context.handle(
+          _indexMeta, index.isAcceptableOrUnknown(data['index'], _indexMeta));
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+          _labelMeta, label.isAcceptableOrUnknown(data['label'], _labelMeta));
+    } else if (isInserting) {
+      context.missing(_labelMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description'], _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
     }
     if (data.containsKey('latitude')) {
       context.handle(_latitudeMeta,
@@ -461,48 +386,34 @@ class $GeoVertexModelsTable extends GeoVertexModels
     } else if (isInserting) {
       context.missing(_longitudeMeta);
     }
-    if (data.containsKey('polygon_id')) {
-      context.handle(
-          _polygon_idMeta,
-          polygon_id.isAcceptableOrUnknown(
-              data['polygon_id'], _polygon_idMeta));
-    } else if (isInserting) {
-      context.missing(_polygon_idMeta);
-    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {index};
   @override
-  GeoVertexModel map(Map<String, dynamic> data, {String tablePrefix}) {
+  LabeledCoordinateModel map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return GeoVertexModel.fromData(data, _db, prefix: effectivePrefix);
+    return LabeledCoordinateModel.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  $GeoVertexModelsTable createAlias(String alias) {
-    return $GeoVertexModelsTable(_db, alias);
+  $LabeledCoordinateModelsTable createAlias(String alias) {
+    return $LabeledCoordinateModelsTable(_db, alias);
   }
 }
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  $GeoPolygonModelsTable _geoPolygonModels;
-  $GeoPolygonModelsTable get geoPolygonModels =>
-      _geoPolygonModels ??= $GeoPolygonModelsTable(this);
-  $GeoVertexModelsTable _geoVertexModels;
-  $GeoVertexModelsTable get geoVertexModels =>
-      _geoVertexModels ??= $GeoVertexModelsTable(this);
-  GeoPolygonDaoImpl _geoPolygonDaoImpl;
-  GeoPolygonDaoImpl get geoPolygonDaoImpl =>
-      _geoPolygonDaoImpl ??= GeoPolygonDaoImpl(this as AppDatabase);
-  GeoVertexDaoImpl _geoVertexDaoImpl;
-  GeoVertexDaoImpl get geoVertexDaoImpl =>
-      _geoVertexDaoImpl ??= GeoVertexDaoImpl(this as AppDatabase);
+  $LabeledCoordinateModelsTable _labeledCoordinateModels;
+  $LabeledCoordinateModelsTable get labeledCoordinateModels =>
+      _labeledCoordinateModels ??= $LabeledCoordinateModelsTable(this);
+  LabeledCoordinateDaoImpl _labeledCoordinateDaoImpl;
+  LabeledCoordinateDaoImpl get labeledCoordinateDaoImpl =>
+      _labeledCoordinateDaoImpl ??=
+          LabeledCoordinateDaoImpl(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [geoPolygonModels, geoVertexModels];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [labeledCoordinateModels];
 }

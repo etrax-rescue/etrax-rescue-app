@@ -31,6 +31,7 @@ import 'backend/datasources/remote/remote_mission_details_data_source.dart';
 import 'backend/datasources/remote/remote_mission_state_data_source.dart';
 import 'backend/datasources/remote/remote_organizations_data_source.dart';
 import 'backend/datasources/remote/remote_poi_data_source.dart';
+import 'backend/datasources/remote/remote_search_areas_data_source.dart';
 import 'backend/repositories/app_connection_repository.dart';
 import 'backend/repositories/initialization_repository.dart';
 import 'backend/repositories/location_repository.dart';
@@ -38,6 +39,7 @@ import 'backend/repositories/login_repository.dart';
 import 'backend/repositories/mission_details_repository.dart';
 import 'backend/repositories/mission_state_repository.dart';
 import 'backend/repositories/poi_repository.dart';
+import 'backend/repositories/search_area_repository.dart';
 import 'backend/usecases/capture_poi.dart';
 import 'backend/usecases/clear_location_cache.dart';
 import 'backend/usecases/clear_mission_details.dart';
@@ -339,16 +341,21 @@ Future<void> init() async {
             remoteDetailsDataSource: sl(),
             localMissionDetailsDataSource: sl(),
             cacheManager: sl(),
-            // Hand over the instances of the DAO
-            geoPolygonDao: sl<AppDatabase>().geoPolygonDaoImpl,
-            geoVertexDao: sl<AppDatabase>().geoVertexDaoImpl,
           ));
+
+  sl.registerLazySingleton<SearchAreaRepository>(() => SearchAreaRepositoryImpl(
+        networkInfo: sl(), remoteSearchAreaDataSource: sl(),
+        // Hand over the instances of the DAOs
+        labeledCoordinateDao: sl<AppDatabase>().labeledCoordinateDaoImpl,
+      ));
 
   // Data Sources
   sl.registerLazySingleton<RemoteMissionDetailsDataSource>(
       () => RemoteMissionDetailsDataSourceImpl(sl()));
   sl.registerLazySingleton<LocalMissionDetailsDataSource>(
       () => LocalMissionDetailsDataSourceImpl(sl()));
+  sl.registerLazySingleton<RemoteSearchAreaDataSource>(
+      () => RemoteSearchAreaDataSourceImpl(sl()));
 
   //! Submit POI
   // BLoC
