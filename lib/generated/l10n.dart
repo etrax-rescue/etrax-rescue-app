@@ -253,10 +253,10 @@ class S {
     );
   }
 
-  /// `Active Missions`
+  /// `Missions and Exercises`
   String get ACTIVE_MISSIONS {
     return Intl.message(
-      'Active Missions',
+      'Missions and Exercises',
       name: 'ACTIVE_MISSIONS',
       desc: '',
       args: [],

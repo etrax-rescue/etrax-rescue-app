@@ -8,11 +8,12 @@ part 'labeled_coordinate_dao.g.dart';
 
 abstract class LabeledCoordinateDao {
   Future<List<String>> getDistinctIDs();
-  Future<void> insertCoordinates(
-      List<LatLng> coordinates, String id, String label, String description);
+  Future<void> insertCoordinates(List<LatLng> coordinates, String id,
+      String label, String description, int colorCode);
   Future<List<LatLng>> getCoordinates(String id);
   Future<String> getLabel(String id);
   Future<String> getDescription(String id);
+  Future<int> getColorCode(String id);
   Future<void> deleteAll();
 }
 
@@ -43,24 +44,27 @@ class LabeledCoordinateDaoImpl extends DatabaseAccessor<AppDatabase>
 
   @override
   Future<void> insertCoordinates(List<LatLng> coordinates, String id,
-      String label, String description) async {
-    final models = coordinates
-        .map((coordinate) => LabeledCoordinateModelsCompanion.insert(
-            id: id,
-            label: label,
-            description: description,
-            latitude: coordinate.latitude,
-            longitude: coordinate.longitude))
-        .toList();
+      String label, String description, int colorCode) async {
     await batch((batch) {
-      batch.insertAll(db.labeledCoordinateModels, models);
+      batch.insertAll(db.labeledCoordinateModels, [
+        for (var coordinate in coordinates)
+          LabeledCoordinateModelsCompanion.insert(
+              id: id,
+              label: label,
+              color: Value(colorCode),
+              description: description,
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude)
+      ]);
     });
   }
 
   @override
   Future<String> getLabel(String id) {
     final query = selectOnly(db.labeledCoordinateModels, distinct: true)
-      ..addColumns([db.labeledCoordinateModels.label]);
+      ..addColumns([db.labeledCoordinateModels.label])
+      ..where(db.labeledCoordinateModels.id.equals(id))
+      ..limit(1);
     ;
     return query
         .map((row) => row.read(db.labeledCoordinateModels.label))
@@ -70,10 +74,25 @@ class LabeledCoordinateDaoImpl extends DatabaseAccessor<AppDatabase>
   @override
   Future<String> getDescription(String id) {
     final query = selectOnly(db.labeledCoordinateModels, distinct: true)
-      ..addColumns([db.labeledCoordinateModels.description]);
+      ..addColumns([db.labeledCoordinateModels.description])
+      ..where(db.labeledCoordinateModels.id.equals(id))
+      ..limit(1);
+    ;
     ;
     return query
         .map((row) => row.read(db.labeledCoordinateModels.description))
+        .getSingle();
+  }
+
+  @override
+  Future<int> getColorCode(String id) {
+    final query = selectOnly(db.labeledCoordinateModels, distinct: true)
+      ..addColumns([db.labeledCoordinateModels.color])
+      ..where(db.labeledCoordinateModels.id.equals(id))
+      ..limit(1);
+    ;
+    return query
+        .map((row) => row.read(db.labeledCoordinateModels.color))
         .getSingle();
   }
 }

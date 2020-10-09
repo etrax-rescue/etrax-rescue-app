@@ -48,100 +48,113 @@ class _DetailsScreenState extends State<DetailsScreen> {
             _refreshCompleter = Completer();
             if (state.missionDetailCollection.details.length > 0) {
               MissionDetailCollection details = state.missionDetailCollection;
-              return ListView.builder(
-                padding: const EdgeInsets.all(8),
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: details.details.length,
-                itemBuilder: (BuildContext context, int index) {
-                  switch (details.details[index].type) {
-                    case DetailType.text:
-                      MissionDetailText detail = details.details[index];
-                      return ListTile(
-                        visualDensity: VisualDensity(
-                            horizontal: VisualDensity.maximumDensity,
-                            vertical: VisualDensity.minimumDensity),
-                        title: Text(detail.title),
-                        subtitle: Text(detail.body),
-                      );
-                      break;
-                    case DetailType.image:
-                      MissionDetailImage detail = details.details[index];
-                      if (state.appConnection != null &&
-                          state.authenticationData != null) {
-                        String imageUrl = state.appConnection
-                                .generateUri(
-                                    subPath: EtraxServerEndpoints.image)
-                                .toString() +
-                            '/' +
-                            state.missionState.mission.id.toString() +
-                            '/' +
-                            detail.uid;
-                        return CachedNetworkImage(
-                          cacheManager: _cacheManager,
-                          imageUrl: imageUrl,
-                          placeholder: (context, url) =>
-                              Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => Container(
-                            color: Colors.grey[300],
-                            child: Column(
-                              children: [
-                                Center(
-                                  child: Icon(
-                                    Icons.broken_image,
-                                    color: Colors.grey,
-                                    size: 72,
+              return CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        switch (details.details[index].type) {
+                          case DetailType.text:
+                            MissionDetailText detail = details.details[index];
+                            return ListTile(
+                              visualDensity: VisualDensity(
+                                  horizontal: VisualDensity.maximumDensity,
+                                  vertical: VisualDensity.minimumDensity),
+                              title: Text(detail.title),
+                              subtitle: Text(detail.body),
+                            );
+                            break;
+                          case DetailType.image:
+                            MissionDetailImage detail = details.details[index];
+                            if (state.appConnection != null &&
+                                state.authenticationData != null) {
+                              String imageUrl = state.appConnection
+                                      .generateUri(
+                                          subPath: EtraxServerEndpoints.image)
+                                      .toString() +
+                                  '/' +
+                                  state.missionState.mission.id.toString() +
+                                  '/' +
+                                  detail.uid;
+                              return CachedNetworkImage(
+                                cacheManager: _cacheManager,
+                                imageUrl: imageUrl,
+                                placeholder: (context, url) =>
+                                    Center(child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey[300],
+                                  child: Column(
+                                    children: [
+                                      Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          color: Colors.grey,
+                                          size: 72,
+                                        ),
+                                      ),
+                                      Center(
+                                        child: MaterialButton(
+                                          onPressed: () {
+                                            _cacheManager.removeFile(imageUrl);
+                                            BlocProvider.of<HomeBloc>(context)
+                                                .add(UpdateMissionDetails());
+                                          },
+                                          child: Text(S.of(context).RETRY),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Center(
-                                  child: MaterialButton(
-                                    onPressed: () {
-                                      _cacheManager.removeFile(imageUrl);
-                                      BlocProvider.of<HomeBloc>(context)
-                                          .add(UpdateMissionDetails());
-                                    },
-                                    child: Text(S.of(context).RETRY),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          httpHeaders:
-                              state.authenticationData.generateAuthHeader(),
-                        );
-                      } else {
-                        return ListView();
-                      }
-                      break;
-                    default:
-                      return ListView();
-                      break;
-                  }
-                },
+                                httpHeaders: state.authenticationData
+                                    .generateAuthHeader(),
+                              );
+                            } else {
+                              return SliverToBoxAdapter();
+                            }
+                            break;
+                          default:
+                            return SliverToBoxAdapter();
+                            break;
+                        }
+                      },
+                      childCount: details.details.length,
+                    ),
+                  ),
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Container(
+                      alignment: Alignment.bottomCenter,
+                      height: 96,
+                    ),
+                  ),
+                ],
               );
             } else {
-              return Container(
-                alignment: Alignment.center,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.account_circle,
-                          size: 72,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          S.of(context).NO_DETAILS,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
+              return CustomScrollView(slivers: [
+                SliverFillRemaining(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.account_circle,
+                            size: 72,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            S.of(context).NO_DETAILS,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              );
+              ]);
             }
           } else {
             return ListView();

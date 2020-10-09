@@ -24,10 +24,12 @@ void main() {
   final tLabel = 'test';
   final tDescription = 'Suchgebiet';
   final tCoordinates = [LatLng(tLatitude, tLongitude)];
+  final tColorCode = 0;
 
   group('DAO tests', () {
     setUp(() {
-      dao.insertCoordinates(tCoordinates, tSID, tLabel, tDescription);
+      dao.insertCoordinates(
+          tCoordinates, tSID, tLabel, tDescription, tColorCode);
     });
 
     test(
@@ -67,6 +69,16 @@ void main() {
         final result = await dao.getCoordinates(tSID);
         // assert
         expect(result, tCoordinates);
+      },
+    );
+
+    test(
+      'should return valid color code',
+      () async {
+        // act
+        final result = await dao.getColorCode(tSID);
+        // assert
+        expect(result, tColorCode);
       },
     );
 

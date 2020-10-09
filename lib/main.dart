@@ -5,7 +5,7 @@ import 'package:intl/intl_standalone.dart';
 
 import 'generated/l10n.dart';
 import 'injection_container.dart' as di;
-import 'routes/router.gr.dart';
+import 'routes/router.gr.dart' as routing;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +43,7 @@ class EtraxApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      builder: ExtendedNavigator<Router>(router: Router()),
+      builder: ExtendedNavigator<routing.Router>(router: routing.Router()),
     );
   }
 }

@@ -63,11 +63,13 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
                 final label = await labeledCoordinateDao.getLabel(id);
                 final description =
                     await labeledCoordinateDao.getDescription(id);
+                final color = await labeledCoordinateDao.getColorCode(id);
                 return SearchArea(
                   id: id,
                   label: label,
                   description: description,
                   coordinates: coordinates,
+                  color: color != null ? Color(color) : null,
                 );
               },
             ),
@@ -82,32 +84,32 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
       } else {
         try {
           await labeledCoordinateDao.deleteAll();
-          await collection.areas.map((area) async =>
-              await labeledCoordinateDao.insertCoordinates(
-                  area.coordinates, area.id, area.label, area.description));
-        } on CacheException {
+          await collection.areas.forEach((area) =>
+              labeledCoordinateDao.insertCoordinates(area.coordinates, area.id,
+                  area.label, area.description, area.color.value));
+        } on InvalidDataException {
           return Left(CacheFailure());
+        } on MoorWrappedException {
+          return Left(PlatformFailure());
         }
         return Right(collection);
       }
     } else {
       try {
         final ids = await labeledCoordinateDao.getDistinctIDs();
-        final searchAreas = List<SearchArea>.from(
-          ids.map(
-            (id) async {
-              final coordinates = await labeledCoordinateDao.getCoordinates(id);
-              final label = await labeledCoordinateDao.getLabel(id);
-              final description = await labeledCoordinateDao.getDescription(id);
-              return SearchArea(
-                id: id,
-                label: label,
-                description: description,
-                coordinates: coordinates,
-              );
-            },
-          ),
-        ).toList();
+        List<SearchArea> searchAreas = [];
+        for (var id in ids) {
+          final coordinates = await labeledCoordinateDao.getCoordinates(id);
+          final label = await labeledCoordinateDao.getLabel(id);
+          final description = await labeledCoordinateDao.getDescription(id);
+          searchAreas.add(SearchArea(
+            id: id,
+            label: label,
+            description: description,
+            coordinates: coordinates,
+          ));
+        }
+
         collection = SearchAreaCollection(areas: searchAreas);
       } on InvalidDataException {
         return Left(CacheFailure());

@@ -83,8 +83,9 @@ class _MapScreenState extends State<MapScreen> {
               searchAreas.add(Polygon(
                   points: area.coordinates,
                   borderStrokeWidth: 2,
-                  color: Theme.of(context).accentColor.withOpacity(0.4),
-                  borderColor: Theme.of(context).accentColor));
+                  color: (area.color ?? Theme.of(context).accentColor)
+                      .withOpacity(0.4),
+                  borderColor: area.color ?? Theme.of(context).accentColor));
             } else if (area.coordinates.length == 1) {
               // Point Search
               _markers.add(Marker(
@@ -92,7 +93,7 @@ class _MapScreenState extends State<MapScreen> {
                 point: area.coordinates[0],
                 builder: (ctx) => Container(
                   child: Icon(Icons.beenhere,
-                      color: Theme.of(context).accentColor),
+                      color: (area.color ?? Theme.of(context).accentColor)),
                 ),
               ));
             }
@@ -144,9 +145,6 @@ class _MapScreenState extends State<MapScreen> {
                   subdomains: ['a', 'b', 'c'],
                   tileProvider: CachedNetworkTileProvider(),
                 ),
-                MarkerLayerOptions(
-                  markers: _markers,
-                ),
                 PolylineLayerOptions(
                   polylines: [
                     Polyline(
@@ -158,6 +156,9 @@ class _MapScreenState extends State<MapScreen> {
                   ],
                 ),
                 PolygonLayerOptions(polygons: searchAreas),
+                MarkerLayerOptions(
+                  markers: _markers,
+                ),
               ],
             ),
             Container(

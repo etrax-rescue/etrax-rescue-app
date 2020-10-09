@@ -5,6 +5,7 @@ class LabeledCoordinateModels extends Table {
   TextColumn get id => text()();
   TextColumn get label => text()();
   TextColumn get description => text()();
+  IntColumn get color => integer().nullable()();
   RealColumn get latitude => real()();
   RealColumn get longitude => real()();
 }

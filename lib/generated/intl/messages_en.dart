@@ -24,7 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "ABOUT" : MessageLookupByLibrary.simpleMessage("About"),
     "ACCEPT_MISSION" : MessageLookupByLibrary.simpleMessage("Confirm"),
     "ACCURACY" : MessageLookupByLibrary.simpleMessage("Accuracy"),
-    "ACTIVE_MISSIONS" : MessageLookupByLibrary.simpleMessage("Active Missions"),
+    "ACTIVE_MISSIONS" : MessageLookupByLibrary.simpleMessage("Missions and Exercises"),
     "ACTIVE_STATE" : MessageLookupByLibrary.simpleMessage("Currently active state"),
     "ALTITUDE" : MessageLookupByLibrary.simpleMessage("Altitude"),
     "APP_CONNECTION_HEADING" : MessageLookupByLibrary.simpleMessage("Connect App:"),

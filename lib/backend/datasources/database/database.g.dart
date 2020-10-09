@@ -13,6 +13,7 @@ class LabeledCoordinateModel extends DataClass
   final String id;
   final String label;
   final String description;
+  final int color;
   final double latitude;
   final double longitude;
   LabeledCoordinateModel(
@@ -20,6 +21,7 @@ class LabeledCoordinateModel extends DataClass
       @required this.id,
       @required this.label,
       @required this.description,
+      this.color,
       @required this.latitude,
       @required this.longitude});
   factory LabeledCoordinateModel.fromData(
@@ -36,6 +38,7 @@ class LabeledCoordinateModel extends DataClass
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}label']),
       description: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      color: intType.mapFromDatabaseResponse(data['${effectivePrefix}color']),
       latitude: doubleType
           .mapFromDatabaseResponse(data['${effectivePrefix}latitude']),
       longitude: doubleType
@@ -57,6 +60,9 @@ class LabeledCoordinateModel extends DataClass
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
+    if (!nullToAbsent || color != null) {
+      map['color'] = Variable<int>(color);
+    }
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
     }
@@ -76,6 +82,8 @@ class LabeledCoordinateModel extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      color:
+          color == null && nullToAbsent ? const Value.absent() : Value(color),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
           : Value(latitude),
@@ -93,6 +101,7 @@ class LabeledCoordinateModel extends DataClass
       id: serializer.fromJson<String>(json['id']),
       label: serializer.fromJson<String>(json['label']),
       description: serializer.fromJson<String>(json['description']),
+      color: serializer.fromJson<int>(json['color']),
       latitude: serializer.fromJson<double>(json['latitude']),
       longitude: serializer.fromJson<double>(json['longitude']),
     );
@@ -105,6 +114,7 @@ class LabeledCoordinateModel extends DataClass
       'id': serializer.toJson<String>(id),
       'label': serializer.toJson<String>(label),
       'description': serializer.toJson<String>(description),
+      'color': serializer.toJson<int>(color),
       'latitude': serializer.toJson<double>(latitude),
       'longitude': serializer.toJson<double>(longitude),
     };
@@ -115,6 +125,7 @@ class LabeledCoordinateModel extends DataClass
           String id,
           String label,
           String description,
+          int color,
           double latitude,
           double longitude}) =>
       LabeledCoordinateModel(
@@ -122,6 +133,7 @@ class LabeledCoordinateModel extends DataClass
         id: id ?? this.id,
         label: label ?? this.label,
         description: description ?? this.description,
+        color: color ?? this.color,
         latitude: latitude ?? this.latitude,
         longitude: longitude ?? this.longitude,
       );
@@ -132,6 +144,7 @@ class LabeledCoordinateModel extends DataClass
           ..write('id: $id, ')
           ..write('label: $label, ')
           ..write('description: $description, ')
+          ..write('color: $color, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude')
           ..write(')'))
@@ -145,8 +158,10 @@ class LabeledCoordinateModel extends DataClass
           id.hashCode,
           $mrjc(
               label.hashCode,
-              $mrjc(description.hashCode,
-                  $mrjc(latitude.hashCode, longitude.hashCode))))));
+              $mrjc(
+                  description.hashCode,
+                  $mrjc(color.hashCode,
+                      $mrjc(latitude.hashCode, longitude.hashCode)))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -155,6 +170,7 @@ class LabeledCoordinateModel extends DataClass
           other.id == this.id &&
           other.label == this.label &&
           other.description == this.description &&
+          other.color == this.color &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude);
 }
@@ -165,6 +181,7 @@ class LabeledCoordinateModelsCompanion
   final Value<String> id;
   final Value<String> label;
   final Value<String> description;
+  final Value<int> color;
   final Value<double> latitude;
   final Value<double> longitude;
   const LabeledCoordinateModelsCompanion({
@@ -172,6 +189,7 @@ class LabeledCoordinateModelsCompanion
     this.id = const Value.absent(),
     this.label = const Value.absent(),
     this.description = const Value.absent(),
+    this.color = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
   });
@@ -180,6 +198,7 @@ class LabeledCoordinateModelsCompanion
     @required String id,
     @required String label,
     @required String description,
+    this.color = const Value.absent(),
     @required double latitude,
     @required double longitude,
   })  : id = Value(id),
@@ -192,6 +211,7 @@ class LabeledCoordinateModelsCompanion
     Expression<String> id,
     Expression<String> label,
     Expression<String> description,
+    Expression<int> color,
     Expression<double> latitude,
     Expression<double> longitude,
   }) {
@@ -200,6 +220,7 @@ class LabeledCoordinateModelsCompanion
       if (id != null) 'id': id,
       if (label != null) 'label': label,
       if (description != null) 'description': description,
+      if (color != null) 'color': color,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
     });
@@ -210,6 +231,7 @@ class LabeledCoordinateModelsCompanion
       Value<String> id,
       Value<String> label,
       Value<String> description,
+      Value<int> color,
       Value<double> latitude,
       Value<double> longitude}) {
     return LabeledCoordinateModelsCompanion(
@@ -217,6 +239,7 @@ class LabeledCoordinateModelsCompanion
       id: id ?? this.id,
       label: label ?? this.label,
       description: description ?? this.description,
+      color: color ?? this.color,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
     );
@@ -237,6 +260,9 @@ class LabeledCoordinateModelsCompanion
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (color.present) {
+      map['color'] = Variable<int>(color.value);
+    }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
     }
@@ -253,6 +279,7 @@ class LabeledCoordinateModelsCompanion
           ..write('id: $id, ')
           ..write('label: $label, ')
           ..write('description: $description, ')
+          ..write('color: $color, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude')
           ..write(')'))
@@ -312,6 +339,18 @@ class $LabeledCoordinateModelsTable extends LabeledCoordinateModels
     );
   }
 
+  final VerificationMeta _colorMeta = const VerificationMeta('color');
+  GeneratedIntColumn _color;
+  @override
+  GeneratedIntColumn get color => _color ??= _constructColor();
+  GeneratedIntColumn _constructColor() {
+    return GeneratedIntColumn(
+      'color',
+      $tableName,
+      true,
+    );
+  }
+
   final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
   GeneratedRealColumn _latitude;
   @override
@@ -338,7 +377,7 @@ class $LabeledCoordinateModelsTable extends LabeledCoordinateModels
 
   @override
   List<GeneratedColumn> get $columns =>
-      [index, id, label, description, latitude, longitude];
+      [index, id, label, description, color, latitude, longitude];
   @override
   $LabeledCoordinateModelsTable get asDslTable => this;
   @override
@@ -373,6 +412,10 @@ class $LabeledCoordinateModelsTable extends LabeledCoordinateModels
               data['description'], _descriptionMeta));
     } else if (isInserting) {
       context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+          _colorMeta, color.isAcceptableOrUnknown(data['color'], _colorMeta));
     }
     if (data.containsKey('latitude')) {
       context.handle(_latitudeMeta,
