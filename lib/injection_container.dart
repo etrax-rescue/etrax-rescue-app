@@ -235,6 +235,7 @@ Future<void> init() async {
         setSelectedUserRole: sl(),
         getAppConnection: sl(),
         getAuthenticationData: sl(),
+        logout: sl(),
       ));
 
   // Use Cases

@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:intl/intl.dart';
 
 import '../../../backend/types/etrax_server_endpoints.dart';
 import '../../../backend/types/mission_details.dart';
@@ -125,6 +126,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     child: Container(
                       alignment: Alignment.bottomCenter,
                       height: 96,
+                      child: Text(
+                        state.lastupdate != null
+                            ? '${S.of(context).LAST_UPDATE}:\n${DateFormat("dd.MM.yyyy - HH:mm:ss\n").format(state.lastupdate)}'
+                            : '',
+                        style:
+                            TextStyle(color: Theme.of(context).disabledColor),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],

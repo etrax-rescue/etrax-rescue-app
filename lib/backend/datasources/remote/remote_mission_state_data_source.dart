@@ -74,7 +74,7 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
       throw ServerException();
     }
 
-    if (response.statusCode == 403) {
+    if (response.statusCode == 401) {
       throw AuthenticationException();
     }
 
@@ -98,7 +98,7 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
       throw ServerException();
     }
 
-    if (response.statusCode == 403) {
+    if (response.statusCode == 401) {
       throw AuthenticationException();
     }
 
@@ -133,7 +133,7 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
       throw ServerException();
     }
 
-    if (response.statusCode == 403) {
+    if (response.statusCode == 401) {
       throw AuthenticationException();
     }
 

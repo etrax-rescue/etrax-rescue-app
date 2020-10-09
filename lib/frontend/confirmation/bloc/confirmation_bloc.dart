@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/usecases/logout.dart';
+import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/missions.dart';
@@ -22,14 +24,19 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
     @required this.getAuthenticationData,
     @required this.setSelectedMission,
     @required this.setSelectedUserRole,
+    @required this.logout,
   })  : assert(setSelectedMission != null),
         assert(setSelectedUserRole != null),
+        assert(getAppConnection != null),
+        assert(getAuthenticationData != null),
+        assert(logout != null),
         super(ConfirmationInitial());
 
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final SetSelectedMission setSelectedMission;
   final SetSelectedUserRole setSelectedUserRole;
+  final Logout logout;
 
   @override
   Stream<ConfirmationState> mapEventToState(
@@ -56,8 +63,13 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
                   mission: event.mission));
 
           yield* setMissionEither.fold((failure) async* {
-            yield ConfirmationError(
-                messageKey: mapFailureToMessageKey(failure));
+            if (failure is AuthenticationFailure) {
+              yield ConfirmationUnrecoverableError(
+                  messageKey: mapFailureToMessageKey(failure));
+            } else {
+              yield ConfirmationError(
+                  messageKey: mapFailureToMessageKey(failure));
+            }
           }, (_) async* {
             if (event.role == null) {
               yield ConfirmationSuccess();
@@ -76,6 +88,14 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
             }
           });
         });
+      });
+    } else if (event is LogoutEvent) {
+      final logoutEither = await logout(NoParams());
+
+      yield* logoutEither.fold((failure) async* {
+        // TODO: handle failure
+      }, (_) async* {
+        yield ConfirmationLogoutSuccess();
       });
     }
   }

@@ -68,7 +68,6 @@ class LaunchBloc extends Bloc<LaunchEvent, LaunchState> {
               // TODO: add logic for checking if mission is active
               final missionStateEither = await getMissionState(NoParams());
               yield* missionStateEither.fold((failure) async* {
-                print('mission state error');
                 // If there is no mission state, there is probably no mission as well
                 yield LaunchLoginPage(
                   organizations: organizations,

@@ -186,7 +186,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* getMissionDetailsEither.fold((failure) async* {
         // TODO: handle failure
       }, (missionDetailCollection) async* {
-        yield state.copyWith(missionDetailCollection: missionDetailCollection);
+        yield state.copyWith(
+          missionDetailCollection: missionDetailCollection,
+          lastupdate: DateTime.now(),
+        );
         final getSearchAreasEither = await getSearchAreas(GetSearchAreaParams(
             appConnection: state.appConnection,
             authenticationData: state.authenticationData));

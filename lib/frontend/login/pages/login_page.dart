@@ -54,7 +54,17 @@ class _LoginPageState extends State<LoginPage> {
               automaticallyImplyLeading: false,
               elevation: 0,
               actions: <Widget>[
-                PopupMenu(actions: {0: generateAboutMenuEntry(context)}),
+                PopupMenu(actions: {
+                  0: generateAboutMenuEntry(context),
+                  1: PopupAction(
+                    child: Text(S.of(context).RECONNECT),
+                    onPressed: () {
+                      context
+                          .bloc<LoginBloc>()
+                          .add(RequestAppConnectionUpdate());
+                    },
+                  ),
+                }),
               ],
               expandedHeight: MediaQuery.of(context).size.height / 3,
               flexibleSpace: Align(
@@ -224,27 +234,14 @@ class _LoginPageState extends State<LoginPage> {
                             color: Theme.of(context).backgroundColor,
                             child: WidthLimiter(
                               child: Align(
-                                alignment: Alignment.bottomCenter,
+                                alignment: Alignment.bottomRight,
                                 child: Padding(
                                   padding: EdgeInsets.all(16),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      MaterialButton(
-                                          onPressed: () {
-                                            context.bloc<LoginBloc>().add(
-                                                RequestAppConnectionUpdate());
-                                          },
-                                          child: Text(S.of(context).RECONNECT)),
-                                      MaterialButton(
-                                        color: Theme.of(context).accentColor,
-                                        textColor: Colors.white,
-                                        onPressed: submit,
-                                        child: Text(S.of(context).LOGIN),
-                                      ),
-                                    ],
+                                  child: MaterialButton(
+                                    color: Theme.of(context).accentColor,
+                                    textColor: Colors.white,
+                                    onPressed: submit,
+                                    child: Text(S.of(context).LOGIN),
                                   ),
                                 ),
                               ),

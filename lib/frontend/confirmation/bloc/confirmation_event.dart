@@ -14,3 +14,5 @@ class SubmitConfirmation extends ConfirmationEvent {
   @override
   List<Object> get props => [mission, role];
 }
+
+class LogoutEvent extends ConfirmationEvent {}

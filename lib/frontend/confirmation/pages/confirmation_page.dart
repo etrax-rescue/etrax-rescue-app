@@ -65,6 +65,25 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                 content: Text(translateErrorMessage(context, state.messageKey)),
               ),
             );
+          } else if (state is ConfirmationUnrecoverableError) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text(translateErrorMessage(context, state.messageKey)),
+                duration: const Duration(days: 365),
+                action: SnackBarAction(
+                  label: S.of(context).LOGOUT,
+                  onPressed: () {
+                    BlocProvider.of<ConfirmationBloc>(context)
+                        .add(LogoutEvent());
+                  },
+                ),
+              ),
+            );
+          } else if (state is ConfirmationLogoutSuccess) {
+            ExtendedNavigator.of(context).pushAndRemoveUntil(
+              Routes.launchPage,
+              (route) => false,
+            );
           }
         },
         child: CustomScrollView(
