@@ -22,12 +22,11 @@ jobs:
       uses: gittools/actions/gitversion/setup@v0.9.4
       with:
         versionSpec: '5.3.x'
-    - name: Use GitVersion
-      id: gitversion # step id used as reference for output values
+    - id: gitversion
+      name: Use GitVersion  
       uses: gittools/actions/gitversion/execute@v0.9.4
     - run: |
-        export VERSION=${{steps.gitversion.outputs.nuGetVersion}}
-        echo "::set-output name=test::$VERSION"
+        echo "::set-output name=test::${{steps.gitversion.outputs.nuGetVersion}}"
   job2:
     runs-on: ubuntu-latest
     needs: job1
