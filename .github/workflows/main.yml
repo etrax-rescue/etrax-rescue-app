@@ -19,7 +19,7 @@ jobs:
           flutter-version: '1.22.1'
       - run: flutter pub get
       - run: flutter test --coverage test
-      - run: lcov --remove coverage/lcov.info 'lib/generated/*' -o coverage/lcov_new.info
+      - run: lcov --remove coverage/lcov.info 'lib/generated/*' 'lib/backend/datasources/database/database.g.dart' 'lib/backend/datasources/database/daos/labeled_coordinate_dao.g.dart' -o coverage/lcov_new.info
       - uses: codecov/codecov-action@v1.0.2
         with:
           token: ${{secrets.CODECOV_TOKEN}}
