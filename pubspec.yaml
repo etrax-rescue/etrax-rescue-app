@@ -56,8 +56,7 @@ dependencies:
   # Getting location data
   background_location:
     git:
-      url: git@github.com:yozoon/background_location.git
-      ref: main
+      url: https://github.com/etrax-rescue/flutter_background_location.git
   # For opening the system settings page corresponding to the app
   app_settings: ^4.0.3
   # For storing the authentication token

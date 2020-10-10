@@ -68,9 +68,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: c32c2265b10d0696b48877fd99ecfe16b497fc55
-      url: "git@github.com:yozoon/background_location.git"
+      ref: HEAD
+      resolved-ref: b1da3acc1809a714c89c2f89dbcb9b7243679d3d
+      url: "https://github.com/etrax-rescue/flutter_background_location.git"
     source: git
     version: "0.0.2"
   barcode_scan:
@@ -198,7 +198,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.1"
+    version: "3.5.0"
   collection:
     dependency: transitive
     description:
