@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+
 import 'package:etrax_rescue_app/backend/types/etrax_server_endpoints.dart';
 import 'package:etrax_rescue_app/backend/usecases/scan_qr_code.dart';
 import 'package:etrax_rescue_app/backend/usecases/set_app_connection.dart';
 import 'package:etrax_rescue_app/frontend/app_connection/cubit/app_connection_cubit.dart';
 import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/frontend/util/uri_input_converter.dart';
 

@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:etrax_rescue_app/backend/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
-import 'package:etrax_rescue_app/backend/types/organizations.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_organizations_data_source.dart';
 
 import '../../../fixtures/fixture_reader.dart';

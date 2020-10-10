@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/datasources/local/local_barcode_data_source.dart';
-import 'package:etrax_rescue_app/backend/repositories/app_connection_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import 'package:etrax_rescue_app/backend/datasources/local/local_barcode_data_source.dart';
+import 'package:etrax_rescue_app/backend/repositories/app_connection_repository.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/backend/types/app_connection.dart';

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:matcher/matcher.dart';
 
 import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
+
 import '../../fixtures/fixture_reader.dart';
 import '../../reference_types.dart';
 

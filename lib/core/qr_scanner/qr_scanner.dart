@@ -1,5 +1,6 @@
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:etrax_rescue_app/core/error/exceptions.dart';
+
+import '../error/exceptions.dart';
 
 abstract class QRScanner {
   Future<String> scan(

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:etrax_rescue_app/backend/types/usecase.dart';
-import 'package:etrax_rescue_app/backend/types/missions.dart';
 import 'package:etrax_rescue_app/backend/repositories/initialization_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_missions.dart';
 

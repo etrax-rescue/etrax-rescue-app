@@ -8,7 +8,6 @@ import 'package:matcher/matcher.dart';
 import 'package:etrax_rescue_app/backend/types/shared_preferences_keys.dart';
 import 'package:etrax_rescue_app/core/error/exceptions.dart';
 import 'package:etrax_rescue_app/backend/datasources/local/local_user_states_data_source.dart';
-import 'package:etrax_rescue_app/backend/types/user_states.dart';
 
 import '../../../fixtures/fixture_reader.dart';
 import '../../../reference_types.dart';

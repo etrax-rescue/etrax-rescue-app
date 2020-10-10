@@ -1,11 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:etrax_rescue_app/backend/repositories/login_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/organizations.dart';
-import 'package:etrax_rescue_app/backend/repositories/mission_state_repository.dart';
+import 'package:etrax_rescue_app/backend/repositories/login_repository.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_organizations.dart';
 
 import '../../reference_types.dart';
