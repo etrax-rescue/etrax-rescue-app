@@ -25,8 +25,7 @@ jobs:
     - id: gitversion
       name: Use GitVersion  
       uses: gittools/actions/gitversion/execute@v0.9.4
-    - run: |
-        echo "::set-output name=test::0.1.0"
+    - run: echo "::set-output name=test::0.1.0"
     #${{steps.gitversion.outputs.nuGetVersion}}"
   job2:
     runs-on: ubuntu-latest
