@@ -10,6 +10,7 @@ class EtraxServerEndpoints {
   static const String stateSelect = 'stateselect';
   static const String postLocation = 'locationupdate';
   static const String missionDetails = 'missiondetails';
+  static const String missionActive = 'missionactive';
   static const String image = 'image';
   static const String uploadPoi = 'uploadpoi';
   static const String quickAction = 'quickaction';

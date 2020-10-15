@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
+import 'package:matcher/matcher.dart';
 
 import 'package:etrax_rescue_app/backend/types/app_connection.dart';
 
@@ -80,6 +81,28 @@ void main() {
         final result = AppConnection.fromJson(jsonMap);
         // assert
         expect(result, tAppConnection);
+      },
+    );
+    test(
+      'should throw a FormatException if "host" field is missing',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap =
+            json.decode(fixture('app_connection/host_missing.json'));
+        // assert
+        expect(() => AppConnection.fromJson(jsonMap),
+            throwsA(TypeMatcher<FormatException>()));
+      },
+    );
+    test(
+      'should throw a FormatException if "basePath" field is missing',
+      () async {
+        // arrange
+        final Map<String, dynamic> jsonMap =
+            json.decode(fixture('app_connection/base_path_missing.json'));
+        // assert
+        expect(() => AppConnection.fromJson(jsonMap),
+            throwsA(TypeMatcher<FormatException>()));
       },
     );
   });

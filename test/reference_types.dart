@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:etrax_rescue_app/backend/types/app_configuration.dart';
 import 'package:etrax_rescue_app/backend/types/app_connection.dart';
 import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
@@ -98,6 +100,25 @@ final tInitializationData = InitializationData(
   quickActionCollection: tQuickActionCollection,
 );
 
-// Search Area
-final tSearchArea = SearchArea(coordinates: [LatLng(48.2084114, 16.3712767)]);
+// SearchArea
+final tSearchAreaID = 'SID';
+final tSearchAreaLabel = 'Test';
+final tSearchAreaDescription = 'Suchgebiet';
+final tSearchAreaCoordinates = [
+  LatLng(48.34271585959392, 16.297574043273926),
+  LatLng(48.34371421407914, 16.299269199371334),
+  LatLng(48.34539711023241, 16.29566431045532),
+  LatLng(48.34475533435577, 16.295814514160153),
+  LatLng(48.34475533435577, 16.295814514160153)
+];
+final tSearchAreaColor = Color(0xFF00FF00);
+
+final tSearchArea = SearchArea(
+    id: tSearchAreaID,
+    label: tSearchAreaLabel,
+    description: tSearchAreaDescription,
+    color: tSearchAreaColor,
+    coordinates: tSearchAreaCoordinates);
+
+// SearchAreaCollection
 final tSearchAreaCollection = SearchAreaCollection(areas: [tSearchArea]);

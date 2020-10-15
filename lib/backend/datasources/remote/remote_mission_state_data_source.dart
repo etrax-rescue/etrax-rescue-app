@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:background_location/background_location.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 
 import '../../../core/error/exceptions.dart';
 import '../../types/app_connection.dart';
@@ -28,6 +29,9 @@ abstract class RemoteMissionStateDataSource {
     UserState action,
     LocationData currentLocation,
   );
+
+  Future<bool> isMissionActive(
+      AppConnection appConnection, AuthenticationData authenticationData);
 }
 
 class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
@@ -139,6 +143,31 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
 
     if (response.body != 'ok' || response.statusCode != 200) {
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<bool> isMissionActive(AppConnection appConnection,
+      AuthenticationData authenticationData) async {
+    final request = client.get(
+        appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
+        headers: authenticationData.generateAuthHeader());
+
+    http.Response response;
+    try {
+      response = await request.timeout(const Duration(seconds: 2));
+    } on Exception {
+      throw ServerException();
+    }
+
+    if (response.statusCode == 401) {
+      return false;
+    }
+
+    if (response.body == '1') {
+      return true;
+    } else {
+      return false;
     }
   }
 }

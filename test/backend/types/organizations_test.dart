@@ -67,14 +67,6 @@ void main() {
   });
 
   group('OrganizationCollection', () {
-    test(
-      'should be a subclass of OrganizationCollection entity',
-      () async {
-        // assert
-        expect(tOrganizationCollection, isA<OrganizationCollection>());
-      },
-    );
-
     group('fromJson', () {
       test(
         'should return a valid model when the JSON is properly formatted',

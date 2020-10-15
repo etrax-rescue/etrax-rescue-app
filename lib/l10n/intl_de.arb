@@ -6,8 +6,8 @@
     "DROPDOWN_HINT": "-- Bitte Auswählen --",
     "OK": "Ok",
     "YES": "Ja",
-    "CONTINUE": "Weiter",
     "ABOUT": "App Info",
+    "PRIVACY_NOTICE": "Datenschutzerklärung",
 
     "LEGALESE": "Die offizielle eTrax|rescue App",
     
@@ -44,8 +44,11 @@
 
     "STATE_HEADING": "Status Aktualisieren",
     "STATE": "Status",
-    "ACTIVE_STATE": "Derzeit aktiver Status", 
-    "UPDATE_STATE": "Aktualisieren",
+    "ACTIVE_STATE": "Gerade aktiv:", 
+    "SELECT_STATE": "Neuen Status auswählen:",
+    "LOCATION_DISCLAIMER": "Im ausgewählten Status greift die App auf den Gerätestandort zu, um der Einsatzleitung während des Einsatzes Ihren aktuellen Standort zu schicken. Das passiert auch, wenn die App nicht geöffnet ist und im Hintergrund läuft.",
+    "CONTINUE": "Fortfahren",
+    "CONTINUE_ANYWAY": "Trotzdem fortfahren",
     "CONFIRM_LOGOUT": "Wirklich abmelden?",
     "CONFIRM_CALL_TO_ACTION": "Folgenden Status Rückmelden?",
     

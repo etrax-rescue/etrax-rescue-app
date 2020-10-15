@@ -158,13 +158,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle),
-                title: Text(S.of(context).HEADING_INFO_SHORT)),
+                label: S.of(context).HEADING_INFO_SHORT),
             BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                title: Text(S.of(context).HEADING_MAP_SHORT)),
+                icon: Icon(Icons.map), label: S.of(context).HEADING_MAP_SHORT),
             BottomNavigationBarItem(
                 icon: Icon(Icons.place),
-                title: Text(S.of(context).HEADING_GPS_SHORT)),
+                label: S.of(context).HEADING_GPS_SHORT),
           ],
           onTap: (index) {
             _pageController.jumpToPage(index);

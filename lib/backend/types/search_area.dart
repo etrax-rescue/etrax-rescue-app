@@ -37,7 +37,7 @@ class SearchArea extends Equatable {
     @required this.id,
     @required this.coordinates,
     @required this.description,
-    @required this.color,
+    this.color,
   });
 
   final List<LatLng> coordinates;
@@ -73,5 +73,5 @@ class SearchArea extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, label, description, coordinates];
+  List<Object> get props => [id, label, description, coordinates, color];
 }

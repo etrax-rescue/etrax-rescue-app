@@ -6,8 +6,8 @@
     "DROPDOWN_HINT": "-- Please Select --",
     "OK": "Ok",
     "YES": "Yes",
-    "CONTINUE": "Continue",
     "ABOUT": "About",
+    "PRIVACY_NOTICE": "Privacy Notice",
 
     "LEGALESE": "The official eTrax|rescue app",
     
@@ -44,8 +44,11 @@
 
     "STATE_HEADING": "Update State",
     "STATE": "State",
-    "ACTIVE_STATE": "Currently active state", 
-    "UPDATE_STATE": "Update",
+    "ACTIVE_STATE": "Currently active:",
+    "SELECT_STATE": "Select new state:",
+    "CONTINUE": "Continue",
+    "CONTINUE_ANYWAY": "Continue anyway",
+    "LOCATION_DISCLAIMER": "In this state the app collects location data to enable mission control to monitor your location during the mission even when the app is closed or not in use.",
     "CONFIRM_LOGOUT": "Would you like to log out?",
     "CONFIRM_CALL_TO_ACTION": "Confirm status update",
 

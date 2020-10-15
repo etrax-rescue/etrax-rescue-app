@@ -1,6 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/check_requirements/cubit/check_requirements_cubit.dart';
-import 'package:etrax_rescue_app/frontend/state_update/bloc/state_update_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +7,9 @@ import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
+import '../../check_requirements/cubit/check_requirements_cubit.dart';
+import '../../widgets/width_limiter.dart';
+import '../bloc/state_update_bloc.dart';
 
 class StateUpdatePage extends StatefulWidget implements AutoRouteWrapper {
   StateUpdatePage({Key key, @required this.currentState}) : super(key: key);
@@ -38,74 +39,132 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).STATE_HEADING),
+        elevation: 0,
+        title: Text(
+          S.of(context).STATE_HEADING,
+        ),
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       body: BlocBuilder<StateUpdateBloc, StateUpdateState>(
         builder: (context, state) {
           if (state is FetchingStatesSuccess) {
             List<UserState> stateList = state.states.states;
+            bool locationRequired = (_selectedState?.locationAccuracy ?? 0) > 0;
+            Widget locationDisclaimer = locationRequired
+                ? Container(
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of(context).errorColor,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      S.of(context).LOCATION_DISCLAIMER,
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
+                  )
+                : SizedBox();
 
             return SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        S.of(context).STATE,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 24),
-                      ),
-                    ),
-                    ListTile(
-                      title: Text(S.of(context).ACTIVE_STATE),
-                      subtitle: Text(widget.currentState.name),
-                    ),
-                    ListTile(
-                      title: DropdownButtonFormField<UserState>(
-                          //value: widget.currentState,
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: S.of(context).STATE,
-                          ),
-                          items: stateList
-                              .where((state) => state != widget.currentState)
-                              .map((UserState userState) {
-                            return DropdownMenuItem<UserState>(
-                              value: userState,
-                              child: Text(userState.name),
-                            );
-                          }).toList(),
-                          onChanged: (val) {
-                            _selectedState = val;
-                          },
-                          validator: (val) => val == null
-                              ? S.of(context).FIELD_REQUIRED
-                              : null),
-                    ),
-                    SizedBox(height: 16),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: ButtonTheme(
-                          minWidth: double.infinity,
-                          child: MaterialButton(
-                            height: 48,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
+              child: WidthLimiter(
+                child: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Card(
+                          elevation: 4,
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                Text(S.of(context).ACTIVE_STATE,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
+                                SizedBox(height: 8),
+                                Text(widget.currentState.name),
+                              ],
                             ),
-                            onPressed: submit,
-                            textTheme: ButtonTextTheme.primary,
-                            child: Text(S.of(context).UPDATE_STATE),
-                            color: Theme.of(context).accentColor,
                           ),
                         ),
-                      ),
+                        Center(
+                          child: Icon(
+                            Icons.arrow_downward,
+                            size: 48,
+                            color: Colors.grey[350],
+                          ),
+                        ),
+                        Card(
+                          elevation: 4,
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                Text(S.of(context).SELECT_STATE,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
+                                SizedBox(height: 16),
+                                DropdownButtonFormField<UserState>(
+                                  isExpanded: true,
+                                  decoration: InputDecoration(
+                                      labelText: S.of(context).STATE,
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)))),
+                                  items: stateList
+                                      .where((state) =>
+                                          state != widget.currentState)
+                                      .map((UserState userState) {
+                                    return DropdownMenuItem<UserState>(
+                                      value: userState,
+                                      child: Text(userState.name),
+                                    );
+                                  }).toList(),
+                                  onChanged: (val) {
+                                    _selectedState = val;
+                                    setState(() {});
+                                  },
+                                  validator: (val) => val == null
+                                      ? S.of(context).FIELD_REQUIRED
+                                      : null,
+                                ),
+                                SizedBox(height: 16),
+                                AnimatedSwitcher(
+                                  duration: kThemeAnimationDuration,
+                                  child: locationDisclaimer,
+                                  transitionBuilder: (child, animation) {
+                                    return SizeTransition(
+                                        sizeFactor: animation, child: child);
+                                  },
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: submit,
+                                    child: Text(
+                                      locationRequired
+                                          ? S.of(context).CONTINUE_ANYWAY
+                                          : S.of(context).CONTINUE,
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             );

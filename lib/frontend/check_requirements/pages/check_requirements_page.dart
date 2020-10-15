@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:etrax_rescue_app/frontend/check_requirements/widgets/complete_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +8,7 @@ import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../cubit/check_requirements_cubit.dart';
+import '../widgets/complete_overlay.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/sequence_item.dart';
 import '../widgets/sequence_sliver.dart';

@@ -103,21 +103,21 @@ class S {
     );
   }
 
-  /// `Continue`
-  String get CONTINUE {
-    return Intl.message(
-      'Continue',
-      name: 'CONTINUE',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `About`
   String get ABOUT {
     return Intl.message(
       'About',
       name: 'ABOUT',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Notice`
+  String get PRIVACY_NOTICE {
+    return Intl.message(
+      'Privacy Notice',
+      name: 'PRIVACY_NOTICE',
       desc: '',
       args: [],
     );
@@ -423,21 +423,51 @@ class S {
     );
   }
 
-  /// `Currently active state`
+  /// `Currently active:`
   String get ACTIVE_STATE {
     return Intl.message(
-      'Currently active state',
+      'Currently active:',
       name: 'ACTIVE_STATE',
       desc: '',
       args: [],
     );
   }
 
-  /// `Update`
-  String get UPDATE_STATE {
+  /// `Select new state:`
+  String get SELECT_STATE {
     return Intl.message(
-      'Update',
-      name: 'UPDATE_STATE',
+      'Select new state:',
+      name: 'SELECT_STATE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get CONTINUE {
+    return Intl.message(
+      'Continue',
+      name: 'CONTINUE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue anyway`
+  String get CONTINUE_ANYWAY {
+    return Intl.message(
+      'Continue anyway',
+      name: 'CONTINUE_ANYWAY',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In this state the app collects location data to enable mission control to monitor your location during the mission even when the app is closed or not in use.`
+  String get LOCATION_DISCLAIMER {
+    return Intl.message(
+      'In this state the app collects location data to enable mission control to monitor your location during the mission even when the app is closed or not in use.',
+      name: 'LOCATION_DISCLAIMER',
       desc: '',
       args: [],
     );

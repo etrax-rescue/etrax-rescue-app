@@ -377,7 +377,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
         _next();
       } else {
-        // TODO: add proper message key
         emit(state.copyWith(
             sequenceStatus:
                 _generateSequenceStatus(currentStatus: StepStatus.failure),
