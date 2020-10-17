@@ -39,12 +39,30 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        //elevation: 0,
         title: Text(
           S.of(context).STATE_HEADING,
         ),
+        bottom: PreferredSize(
+          preferredSize: Size(
+            double.infinity,
+            Theme.of(context).textTheme.bodyText2.fontSize + 8,
+          ),
+          child: Container(
+            color: Theme.of(context).accentColor,
+            height: Theme.of(context).textTheme.bodyText2.fontSize + 8,
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.all(2),
+              child: Text(
+                S.of(context).STATUS_DISPLAY + widget.currentState.name,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
       ),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocBuilder<StateUpdateBloc, StateUpdateState>(
         builder: (context, state) {
           if (state is FetchingStatesSuccess) {
@@ -69,104 +87,84 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                   )
                 : SizedBox();
 
-            return SingleChildScrollView(
-              child: WidthLimiter(
-                child: Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Card(
-                          elevation: 4,
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(S.of(context).ACTIVE_STATE,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1),
-                                SizedBox(height: 8),
-                                Text(widget.currentState.name),
-                              ],
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: WidthLimiter(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(S.of(context).SELECT_STATE,
+                                style: Theme.of(context).textTheme.headline5),
+                            SizedBox(height: 16),
+                            DropdownButtonFormField<UserState>(
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                  labelText: S.of(context).STATE,
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(12)))),
+                              items: stateList
+                                  .where(
+                                      (state) => state != widget.currentState)
+                                  .map((UserState userState) {
+                                return DropdownMenuItem<UserState>(
+                                  value: userState,
+                                  child: Text(userState.name),
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                _selectedState = val;
+                                setState(() {});
+                              },
+                              validator: (val) => val == null
+                                  ? S.of(context).FIELD_REQUIRED
+                                  : null,
                             ),
-                          ),
-                        ),
-                        Center(
-                          child: Icon(
-                            Icons.arrow_downward,
-                            size: 48,
-                            color: Colors.grey[350],
-                          ),
-                        ),
-                        Card(
-                          elevation: 4,
-                          child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Text(S.of(context).SELECT_STATE,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1),
-                                SizedBox(height: 16),
-                                DropdownButtonFormField<UserState>(
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                      labelText: S.of(context).STATE,
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12)))),
-                                  items: stateList
-                                      .where((state) =>
-                                          state != widget.currentState)
-                                      .map((UserState userState) {
-                                    return DropdownMenuItem<UserState>(
-                                      value: userState,
-                                      child: Text(userState.name),
-                                    );
-                                  }).toList(),
-                                  onChanged: (val) {
-                                    _selectedState = val;
-                                    setState(() {});
-                                  },
-                                  validator: (val) => val == null
-                                      ? S.of(context).FIELD_REQUIRED
-                                      : null,
-                                ),
-                                SizedBox(height: 16),
-                                AnimatedSwitcher(
-                                  duration: kThemeAnimationDuration,
-                                  child: locationDisclaimer,
-                                  transitionBuilder: (child, animation) {
-                                    return SizeTransition(
-                                        sizeFactor: animation, child: child);
-                                  },
-                                ),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: TextButton(
-                                    onPressed: submit,
-                                    child: Text(
-                                      locationRequired
-                                          ? S.of(context).CONTINUE_ANYWAY
-                                          : S.of(context).CONTINUE,
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            SizedBox(height: 16),
+                            AnimatedSwitcher(
+                              duration: kThemeAnimationDuration,
+                              child: locationDisclaimer,
+                              transitionBuilder: (child, animation) {
+                                return SizeTransition(
+                                    sizeFactor: animation, child: child);
+                              },
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: ButtonTheme(
+                        minWidth: double.infinity,
+                        child: MaterialButton(
+                          height: 48,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                          onPressed: submit,
+                          textTheme: ButtonTextTheme.primary,
+                          child: Text(locationRequired
+                              ? S.of(context).CONTINUE_ANYWAY
+                              : S.of(context).CONTINUE),
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             );
           }
           return Center(child: CircularProgressIndicator());
