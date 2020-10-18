@@ -32,8 +32,10 @@
     "LOGOUT": "Abmelden",
     "RECONNECT": "App neu verbinden",
     "NO_MISSIONS": "Keine aktiven Einsätze vorhanden.",
+    "TRACKING_INFO": "Tracking Info",
+    "ORGANIZATION_TRACKING": "Ihre Organisation hat festgelegt, dass bei folgenden Statusmeldungen auf den Standort dieses Gerätes zugegriffen wird:",
 
-    "CONFIRMATION_HEADING": "Rückmelden",
+    "CONFIRMATION_HEADING": "Rückmeldung",
     "ACCEPT_MISSION": "Zusagen",
     "LATITUDE": "Latitude",
     "LONGITUDE": "Longitude",

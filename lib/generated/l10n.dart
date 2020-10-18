@@ -323,6 +323,26 @@ class S {
     );
   }
 
+  /// `Tracking Information`
+  String get TRACKING_INFO {
+    return Intl.message(
+      'Tracking Information',
+      name: 'TRACKING_INFO',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your organisation enabled location tracking for the following states:`
+  String get ORGANIZATION_TRACKING {
+    return Intl.message(
+      'Your organisation enabled location tracking for the following states:',
+      name: 'ORGANIZATION_TRACKING',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Confirmation`
   String get CONFIRMATION_HEADING {
     return Intl.message(

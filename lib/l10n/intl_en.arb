@@ -32,6 +32,8 @@
     "LOGOUT": "Logout",
     "RECONNECT": "Reconnect App",
     "NO_MISSIONS": "There are no active missions.",
+    "TRACKING_INFO": "Tracking Information",
+    "ORGANIZATION_TRACKING": "Your organisation enabled location tracking for the following states:",
 
     "CONFIRMATION_HEADING": "Confirmation",
     "ACCEPT_MISSION": "Confirm",
