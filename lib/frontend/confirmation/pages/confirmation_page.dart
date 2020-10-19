@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import '../../widgets/animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -169,48 +170,17 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               hasScrollBody: false,
               child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
                 builder: (context, state) {
-                  return Stack(
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CircularProgressIndicator(),
-                        ),
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: AnimatedButton(
+                        label: S.of(context).ACCEPT_MISSION,
+                        onPressed: submit,
+                        selected: (state is ConfirmationInProgress ||
+                            state is ConfirmationSuccess),
                       ),
-                      IgnorePointer(
-                        ignoring: state is ConfirmationInProgress,
-                        child: AnimatedOpacity(
-                          opacity: state is ConfirmationInProgress ? 0.0 : 1.0,
-                          duration: Duration(milliseconds: 250),
-                          child: Container(
-                            color: Theme.of(context).backgroundColor,
-                            child: WidthLimiter(
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: ButtonTheme(
-                                    minWidth: double.infinity,
-                                    child: MaterialButton(
-                                      height: 48,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                      ),
-                                      onPressed: submit,
-                                      textTheme: ButtonTextTheme.primary,
-                                      child: Text(S.of(context).ACCEPT_MISSION),
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   );
                 },
               ),

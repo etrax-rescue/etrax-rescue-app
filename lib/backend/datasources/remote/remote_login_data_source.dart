@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -20,17 +22,20 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
   @override
   Future<AuthenticationData> login(AppConnection appConnection,
       String organizationID, String username, String password) async {
-    final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.login),
-        body: {
-          'organization_id': organizationID,
-          'username': username,
-          'password': password
-        });
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.post(
+          appConnection.generateUri(subPath: EtraxServerEndpoints.login),
+          body: {
+            'organization_id': organizationID,
+            'username': username,
+            'password': password
+          });
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 

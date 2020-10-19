@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -22,14 +24,17 @@ class RemoteInitializationDataSourceImpl
   @override
   Future<InitializationData> fetchInitialization(AppConnection appConnection,
       AuthenticationData authenticationData) async {
-    final request = client.get(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.initialization),
-        headers: authenticationData.generateAuthHeader());
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.get(
+          appConnection.generateUri(
+              subPath: EtraxServerEndpoints.initialization),
+          headers: authenticationData.generateAuthHeader());
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 

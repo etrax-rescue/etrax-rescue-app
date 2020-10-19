@@ -9,6 +9,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/about_menu_entry.dart';
+import '../../widgets/animated_button.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
 import '../bloc/login_bloc.dart';
@@ -31,6 +32,7 @@ class LoginPage extends StatefulWidget implements AutoRouteWrapper {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+
   String _username;
   String _password;
   String _selectedOrganization;
@@ -187,18 +189,22 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 SizedBox(height: 16),
                                 BlocBuilder<LoginBloc, LoginState>(
-                                    builder: (context, state) {
-                                  if (state is LoginError) {
-                                    return Text(
-                                      translateErrorMessage(
-                                          context, state.messageKey),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(context).accentColor),
+                                  builder: (context, state) {
+                                    return AnimatedSwitcher(
+                                      duration: kThemeAnimationDuration,
+                                      child: state is LoginError
+                                          ? Text(
+                                              translateErrorMessage(
+                                                  context, state.messageKey),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                            )
+                                          : SizedBox(),
                                     );
-                                  }
-                                  return Container();
-                                }),
+                                  },
+                                ),
                               ],
                             ),
                           ),
@@ -216,40 +222,20 @@ class _LoginPageState extends State<LoginPage> {
                   if (state is LoginInitial) {
                     return Container();
                   }
-                  return Stack(
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CircularProgressIndicator(),
+                  return WidthLimiter(
+                    child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: AnimatedButton(
+                          selected: (state is LoginInProgress ||
+                              state is LoginSuccess),
+                          onPressed: submit,
+                          label: S.of(context).LOGIN,
+                          duration: const Duration(milliseconds: 500),
                         ),
                       ),
-                      IgnorePointer(
-                        ignoring: state is LoginInProgress,
-                        child: AnimatedOpacity(
-                          opacity: state is LoginInProgress ? 0.0 : 1.0,
-                          duration: Duration(milliseconds: 250),
-                          child: Container(
-                            color: Theme.of(context).backgroundColor,
-                            child: WidthLimiter(
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: MaterialButton(
-                                    color: Theme.of(context).accentColor,
-                                    textColor: Colors.white,
-                                    onPressed: submit,
-                                    child: Text(S.of(context).LOGIN),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   );
                 },
               ),

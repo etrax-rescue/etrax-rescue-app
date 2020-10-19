@@ -8,6 +8,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/about_menu_entry.dart';
+import '../../widgets/animated_button.dart';
 import '../../widgets/custom_material_icons.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
@@ -113,19 +114,19 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                             SizedBox(height: 16),
                             BlocBuilder<AppConnectionCubit, AppConnectionState>(
                               builder: (context, state) {
-                                return AnimatedOpacity(
-                                  opacity:
+                                return AnimatedSwitcher(
+                                  duration: kThemeAnimationDuration,
+                                  child:
                                       state.status == AppConnectionStatus.error
-                                          ? 1.0
-                                          : 0.0,
-                                  duration: Duration(milliseconds: 250),
-                                  child: Text(
-                                    translateErrorMessage(
-                                        context, state.messageKey),
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Theme.of(context).accentColor),
-                                  ),
+                                          ? Text(
+                                              translateErrorMessage(
+                                                  context, state.messageKey),
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                            )
+                                          : SizedBox(),
                                 );
                               },
                             ),
@@ -141,40 +142,17 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
               hasScrollBody: false,
               child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
                 builder: (context, state) {
-                  return Stack(
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CircularProgressIndicator(),
-                        ),
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: AnimatedButton(
+                        onPressed: submit,
+                        label: S.of(context).CONNECT,
+                        selected: (state == AppConnectionState.success() ||
+                            state.status == AppConnectionStatus.loading),
                       ),
-                      IgnorePointer(
-                        ignoring: state.status == AppConnectionStatus.loading,
-                        child: AnimatedOpacity(
-                          opacity: state.status == AppConnectionStatus.loading
-                              ? 0.0
-                              : 1.0,
-                          duration: Duration(milliseconds: 250),
-                          child: WidthLimiter(
-                            child: Container(
-                              color: Theme.of(context).backgroundColor,
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: MaterialButton(
-                                  color: Theme.of(context).accentColor,
-                                  textColor: Colors.white,
-                                  onPressed: submit,
-                                  child: Text(S.of(context).CONNECT),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   );
                 },
               ),

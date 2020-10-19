@@ -64,4 +64,17 @@ void main() {
           throwsA(TypeMatcher<ServerException>()));
     },
   );
+
+  test(
+    'should throw a ServerException when a HTTP client exception occurs ',
+    () async {
+      // arrange
+      when(mockedHttpClient.get(any)).thenThrow(http.ClientException(''));
+      // act
+      final call = endpointVerification.verifyRemoteEndpoint;
+      // assert
+      expect(() => call(tHost, tBasePath),
+          throwsA(TypeMatcher<ServerException>()));
+    },
+  );
 }

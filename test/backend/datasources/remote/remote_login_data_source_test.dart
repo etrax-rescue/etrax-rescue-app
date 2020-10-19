@@ -43,6 +43,20 @@ void main() {
     );
 
     test(
+      'should throw a ServerException when a HTTP client exception occurs',
+      () async {
+        // arrange
+        when(mockedHttpClient.post(any, body: anyNamed('body')))
+            .thenThrow(http.ClientException(''));
+        final call = remoteDataSource.login;
+        // assert
+        expect(
+            () => call(tAppConnection, tOrganizationID, tUsername, tPassword),
+            throwsA(TypeMatcher<ServerException>()));
+      },
+    );
+
+    test(
       'should throw a ServerException when the response is empty',
       () async {
         // arrange

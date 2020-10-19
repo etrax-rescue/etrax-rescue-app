@@ -118,12 +118,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               await getAppConfiguration(NoParams());
 
           yield* getAppConfigurationEither.fold((failure) async* {
-            // TODO: handle failure -> Refetch
+            // TODO: handle failure -> (recoverable) LoginPage or Refetch
           }, (appConfiguration) async* {
             final getQuickActionsEither = await getQuickActions(NoParams());
 
             yield* getQuickActionsEither.fold((failure) async* {
-              // TODO: handle failure -> Refetch
+              // TODO: handle failure -> (recoverable) LoginPage or Refetch
             }, (quickActions) async* {
               yield state.copyWith(
                 appConnection: appConnection,

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 
@@ -21,12 +24,14 @@ class RemoteAppConnectionDataSourceImpl
     final path =
         Uri.parse(p.join(host, basePath, EtraxServerEndpoints.version));
 
-    final request = client.get(path);
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.get(path);
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 

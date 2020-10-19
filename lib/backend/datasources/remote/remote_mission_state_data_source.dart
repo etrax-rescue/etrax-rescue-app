@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -41,15 +42,18 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<void> selectMission(AppConnection appConnection,
       AuthenticationData authenticationData, Mission mission) async {
-    final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.missionSelect),
-        headers: authenticationData.generateAuthHeader(),
-        body: {'mission_id': mission.id.toString()});
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.post(
+          appConnection.generateUri(
+              subPath: EtraxServerEndpoints.missionSelect),
+          headers: authenticationData.generateAuthHeader(),
+          body: {'mission_id': mission.id.toString()});
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 
@@ -65,15 +69,17 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<void> selectUserState(AppConnection appConnection,
       AuthenticationData authenticationData, UserState state) async {
-    final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
-        headers: authenticationData.generateAuthHeader(),
-        body: {'state_id': state.id.toString()});
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.post(
+          appConnection.generateUri(subPath: EtraxServerEndpoints.stateSelect),
+          headers: authenticationData.generateAuthHeader(),
+          body: {'state_id': state.id.toString()});
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 
@@ -89,15 +95,17 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<void> selectUserRole(AppConnection appConnection,
       AuthenticationData authenticationData, UserRole role) async {
-    final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.roleSelect),
-        headers: authenticationData.generateAuthHeader(),
-        body: {'role_id': role.id.toString()});
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.post(
+          appConnection.generateUri(subPath: EtraxServerEndpoints.roleSelect),
+          headers: authenticationData.generateAuthHeader(),
+          body: {'role_id': role.id.toString()});
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 
@@ -124,15 +132,17 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
     final headers = authenticationData.generateAuthHeader()
       ..addAll({HttpHeaders.contentTypeHeader: 'application/json'});
 
-    final request = client.post(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
-        headers: headers,
-        body: json.encode(bodyMap));
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.post(
+          appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
+          headers: headers,
+          body: json.encode(bodyMap));
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 
@@ -148,14 +158,16 @@ class RemoteMissionStateDataSourceImpl implements RemoteMissionStateDataSource {
   @override
   Future<bool> isMissionActive(AppConnection appConnection,
       AuthenticationData authenticationData) async {
-    final request = client.get(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
-        headers: authenticationData.generateAuthHeader());
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.get(
+          appConnection.generateUri(subPath: EtraxServerEndpoints.quickAction),
+          headers: authenticationData.generateAuthHeader());
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 

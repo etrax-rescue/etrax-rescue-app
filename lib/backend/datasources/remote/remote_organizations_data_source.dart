@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -20,13 +22,15 @@ class RemoteOrganizationsDataSourceImpl
   @override
   Future<OrganizationCollection> getOrganizations(
       AppConnection appConnection) async {
-    final request = client.get(
-        appConnection.generateUri(subPath: EtraxServerEndpoints.organizations));
-
     http.Response response;
     try {
-      response = await request.timeout(const Duration(seconds: 2));
-    } on Exception {
+      response = await client.get(appConnection.generateUri(
+          subPath: EtraxServerEndpoints.organizations));
+    } on http.ClientException {
+      throw ServerException();
+    } on TimeoutException {
+      throw ServerException();
+    } on SocketException {
       throw ServerException();
     }
 
