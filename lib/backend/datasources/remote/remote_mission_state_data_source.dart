@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:background_location/background_location.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as p;
 
 import '../../../core/error/exceptions.dart';
 import '../../types/app_connection.dart';

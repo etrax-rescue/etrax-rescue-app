@@ -174,7 +174,6 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
   }
 
   void submit() {
-    // TODO: implement logic to update mission data
     if (_formKey.currentState.validate()) {
       ExtendedNavigator.of(context).popAndPush(
         Routes.checkRequirementsPage,

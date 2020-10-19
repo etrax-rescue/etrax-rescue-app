@@ -143,11 +143,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     final getAppConnectionEither = await getAppConnection(NoParams());
     getAppConnectionEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (appConnection) async {
       final getAuthenticationDataEither =
           await getAuthenticationData(NoParams());
@@ -162,11 +158,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         final getAppConfigurationEither = await getAppConfiguration(NoParams());
 
         getAppConfigurationEither.fold((failure) async {
-          emit(state.copyWith(
-            sequenceStatus:
-                _generateSequenceStatus(currentStatus: StepStatus.failure),
-            messageKey: mapFailureToMessageKey(failure),
-          ));
+          emitFailure(failure);
         }, (appConfiguration) async {
           emit(state.copyWith(
             sequenceStatus:
@@ -189,11 +181,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         await requestLocationPermission(NoParams());
 
     locationPermissionRequestEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (permissionStatus) async {
       switch (permissionStatus) {
         case PermissionStatus.denied:
@@ -232,11 +220,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
             appConfiguration: state.appConfiguration));
 
     locationServicesRequestEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (enabled) async {
       if (enabled == true) {
         emit(state.copyWith(
@@ -293,11 +277,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     ));
 
     setStateEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (_) async {
       emit(state.copyWith(
         sequenceStatus:
@@ -321,11 +301,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     ));
 
     quickActionEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (_) async {
       emit(state.copyWith(
         sequenceStatus:
@@ -342,11 +318,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
             _generateSequenceStatus(currentStatus: StepStatus.loading)));
     final logoutEither = await logout(NoParams());
     logoutEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (_) async {
       emit(state.copyWith(
         sequenceStatus:
@@ -364,11 +336,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     final stopLocationUpdatesEither = await stopLocationUpdates(NoParams());
     stopLocationUpdatesEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (stopped) async {
       if (stopped == true) {
         emit(state.copyWith(
@@ -392,11 +360,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     final getSelectedMissionEither = await getSelectedMission(NoParams());
     getSelectedMissionEither.fold((failure) async {
-      emit(state.copyWith(
-        sequenceStatus:
-            _generateSequenceStatus(currentStatus: StepStatus.failure),
-        messageKey: mapFailureToMessageKey(failure),
-      ));
+      emitFailure(failure);
     }, (selectedMission) async {
       final startLocationUpdatesEither = await startLocationUpdates(
         StartLocationUpdatesParams(
@@ -412,11 +376,7 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
       );
 
       startLocationUpdatesEither.fold((failure) async {
-        emit(state.copyWith(
-          sequenceStatus:
-              _generateSequenceStatus(currentStatus: StepStatus.failure),
-          messageKey: mapFailureToMessageKey(failure),
-        ));
+        emitFailure(failure);
       }, (success) async {
         if (success == true) {
           emit(state.copyWith(
@@ -425,7 +385,6 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
           _next();
         } else {
-          // TODO: add proper message key
           emit(state.copyWith(
               sequenceStatus:
                   _generateSequenceStatus(currentStatus: StepStatus.failure),
@@ -442,22 +401,22 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
 
     final clearMissionStateEither = await clearMissionState(NoParams());
     clearMissionStateEither.fold((failure) async {
-      // TODO: handle failure
+      emitFailure(failure);
     }, (_) async {
       final clearMissionDetailsEither = await clearMissionDetails(NoParams());
 
       clearMissionDetailsEither.fold((failure) async {
-        // TODO: handle failure
+        emitFailure(failure);
       }, (_) async {
         final clearSearchAreasEither = await clearSearchAreas(NoParams());
 
         clearSearchAreasEither.fold((failure) async {
-          // TODO: handle failure
+          emitFailure(failure);
         }, (_) async {
           final clearLocationCacheEither = await clearLocationCache(NoParams());
 
           clearLocationCacheEither.fold((failure) async {
-            // TODO: handle failure
+            emitFailure(failure);
           }, (_) async {
             emit(state.copyWith(
                 sequenceStatus: _generateSequenceStatus(
@@ -468,6 +427,14 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
         });
       });
     });
+  }
+
+  void emitFailure(failure) {
+    emit(state.copyWith(
+      sequenceStatus:
+          _generateSequenceStatus(currentStatus: StepStatus.failure),
+      messageKey: mapFailureToMessageKey(failure),
+    ));
   }
 
   List<SequenceStep> _generateSequence(

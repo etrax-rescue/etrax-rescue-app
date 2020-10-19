@@ -74,7 +74,6 @@ class SubmitPoiCubit extends Cubit<SubmitPoiState> {
               currentLocation: state.currentLocation,
               messageKey: mapFailureToMessageKey(failure)));
         }, (progressStream) async {
-          // TODO: subscribe to stream
           await _streamSubscription?.cancel();
           emit(SubmitPoiUploading(
               imagePath: state.imagePath,

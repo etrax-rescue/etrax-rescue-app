@@ -31,6 +31,8 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
           } else if (state is LaunchHomePage) {
             ExtendedNavigator.of(context).popAndPush(Routes.homePage,
                 arguments: HomePageArguments(state: state.missionState.state));
+          } else if (state is LaunchUnecoverableError) {
+            ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
           }
         },
         builder: (context, state) {
@@ -56,7 +58,11 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
                 child: WidthLimiter(
                   child: Padding(
                     padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator(),
+                    child: BlocBuilder<LaunchBloc, LaunchState>(
+                      builder: (context, state) {
+                        return CircularProgressIndicator();
+                      },
+                    ),
                   ),
                 ),
               ),

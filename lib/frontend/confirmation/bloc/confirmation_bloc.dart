@@ -90,13 +90,8 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
         });
       });
     } else if (event is LogoutEvent) {
-      final logoutEither = await logout(NoParams());
-
-      yield* logoutEither.fold((failure) async* {
-        // TODO: handle failure
-      }, (_) async* {
-        yield ConfirmationLogoutSuccess();
-      });
+      await logout(NoParams());
+      yield ConfirmationLogoutSuccess();
     }
   }
 }

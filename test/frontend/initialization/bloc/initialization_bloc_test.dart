@@ -118,7 +118,7 @@ void main() {
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInProgress(),
+        InitializationInProgress(initializationData: null),
         InitializationUnrecoverableError(messageKey: FailureMessageKey.cache),
       ];
       expectLater(bloc, emitsInOrder(expected));

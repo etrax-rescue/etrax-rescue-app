@@ -23,6 +23,11 @@ void main() {
   final tFlashOnText = 'Flash On';
   final tFlashOffText = 'Flash Off';
 
+  final tScanQrCodeParams = ScanQrCodeParams(
+    cancelText: tCancelText,
+    flashOnText: tFlashOnText,
+    flashOffText: tFlashOffText,
+  );
   test(
     'should call the scan QR code method of the AppConnectionRepository',
     () async {
@@ -30,13 +35,7 @@ void main() {
       when(mockAppConnectionRepository.scanQRCode(any, any, any))
           .thenAnswer((_) async => Right(tHost));
       // act
-      final result = await usecase(
-        ScanQrCodeParams(
-          cancelText: tCancelText,
-          flashOnText: tFlashOnText,
-          flashOffText: tFlashOffText,
-        ),
-      );
+      final result = await usecase(tScanQrCodeParams);
       // assert
       expect(result, Right(tHost));
       verify(mockAppConnectionRepository.scanQRCode(

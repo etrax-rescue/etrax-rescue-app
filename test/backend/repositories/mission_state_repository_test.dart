@@ -34,24 +34,6 @@ void main() {
     );
   });
 
-  void testOnline(Function body) {
-    group('device is online', () {
-      setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      });
-      body();
-    });
-  }
-
-  void testOffline(Function body) {
-    group('device is offline', () {
-      setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      });
-      body();
-    });
-  }
-
   group('setSelectedMission', () {
     test(
       'should check if the device is online',

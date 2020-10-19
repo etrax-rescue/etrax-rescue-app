@@ -18,6 +18,7 @@ class HomeState extends Equatable {
     @required this.locationHistory,
     this.renewStatus = false,
     this.lastupdate,
+    this.messageKey,
   });
 
   final HomeStatus status;
@@ -31,6 +32,7 @@ class HomeState extends Equatable {
   final SearchAreaCollection searchAreaCollection;
   final bool renewStatus;
   final DateTime lastupdate;
+  final FailureMessageKey messageKey;
 
   const HomeState.initial()
       : this(
@@ -57,6 +59,7 @@ class HomeState extends Equatable {
     List<LocationData> locationHistory,
     bool renewStatus,
     DateTime lastupdate,
+    FailureMessageKey messageKey,
   }) {
     return HomeState(
       status: status ?? this.status,
@@ -71,6 +74,7 @@ class HomeState extends Equatable {
       searchAreaCollection: searchAreaCollection ?? this.searchAreaCollection,
       renewStatus: renewStatus ?? false,
       lastupdate: lastupdate ?? this.lastupdate,
+      messageKey: messageKey,
     );
   }
 
@@ -87,5 +91,6 @@ class HomeState extends Equatable {
         searchAreaCollection,
         renewStatus,
         lastupdate,
+        messageKey,
       ];
 }

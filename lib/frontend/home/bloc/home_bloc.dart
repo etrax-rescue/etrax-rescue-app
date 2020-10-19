@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -101,28 +102,29 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final appConnectionEither = await getAppConnection(NoParams());
 
     yield* appConnectionEither.fold((failure) async* {
-      // TODO: handle failure
+      // TODO: handle failure -> (unrecoverable) AppConnectionPage
     }, (appConnection) async* {
       final authenticationDataEither = await getAuthenticationData(NoParams());
 
       yield* authenticationDataEither.fold((failure) async* {
-        // TODO: handle failure
+        // TODO: handle failure -> (recoverable) LoginPage
       }, (authenticationData) async* {
-        final getAppConfigurationEither = await getAppConfiguration(NoParams());
+        final getMissionStateEither = await getMissionState(NoParams());
 
-        yield* getAppConfigurationEither.fold((failure) async* {
-          // TODO: handle failure
-        }, (appConfiguration) async* {
-          final getQuickActionsEither = await getQuickActions(NoParams());
+        yield* getMissionStateEither.fold((failure) async* {
+          // TODO: handle failure -> (recoverable) LoginPage
+        }, (missionState) async* {
+          final getAppConfigurationEither =
+              await getAppConfiguration(NoParams());
 
-          yield* getQuickActionsEither.fold((failure) async* {
-            // TODO: handle failure
-          }, (quickActions) async* {
-            final getMissionStateEither = await getMissionState(NoParams());
+          yield* getAppConfigurationEither.fold((failure) async* {
+            // TODO: handle failure -> Refetch
+          }, (appConfiguration) async* {
+            final getQuickActionsEither = await getQuickActions(NoParams());
 
-            yield* getMissionStateEither.fold((failure) async* {
-              // TODO: handle failure
-            }, (missionState) async* {
+            yield* getQuickActionsEither.fold((failure) async* {
+              // TODO: handle failure -> Refetch
+            }, (quickActions) async* {
               yield state.copyWith(
                 appConnection: appConnection,
                 authenticationData: authenticationData,
