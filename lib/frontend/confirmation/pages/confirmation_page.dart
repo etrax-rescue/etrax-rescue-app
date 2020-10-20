@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import '../../widgets/animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +13,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../check_requirements/cubit/check_requirements_cubit.dart';
 import '../../util/translate_error_messages.dart';
+import '../../widgets/animated_button.dart';
 import '../../widgets/width_limiter.dart';
 import '../bloc/confirmation_bloc.dart';
 

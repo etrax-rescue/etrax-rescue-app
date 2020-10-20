@@ -144,7 +144,7 @@ class _MissionPageState extends State<MissionPage> {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: Text(S.of(context).ACTIVE_MISSIONS,
+                  child: Text(S.of(context).MISSIONS_AND_EXERCICES,
                       style: Theme.of(context).textTheme.headline5),
                 ),
               ),

@@ -22,10 +22,8 @@
     "ORGANIZATION": "Organization",
     "USERNAME": "Username",
     "PASSWORD": "Password",
-    "AUTHENTICATION_SUCCESS": "Success!",
 
-    "MISSIONS": "Missions",
-    "ACTIVE_MISSIONS": "Missions and Exercises",
+    "MISSIONS_AND_EXERCICES": "Missions and Exercises",
     "MISSION": "Mission",
     "EXERCISE": "Exercise",
     "MISSION_NAME": "Mission Name",

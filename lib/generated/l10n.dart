@@ -233,31 +233,11 @@ class S {
     );
   }
 
-  /// `Success!`
-  String get AUTHENTICATION_SUCCESS {
-    return Intl.message(
-      'Success!',
-      name: 'AUTHENTICATION_SUCCESS',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Missions`
-  String get MISSIONS {
-    return Intl.message(
-      'Missions',
-      name: 'MISSIONS',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Missions and Exercises`
-  String get ACTIVE_MISSIONS {
+  String get MISSIONS_AND_EXERCICES {
     return Intl.message(
       'Missions and Exercises',
-      name: 'ACTIVE_MISSIONS',
+      name: 'MISSIONS_AND_EXERCICES',
       desc: '',
       args: [],
     );
