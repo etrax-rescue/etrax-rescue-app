@@ -1,3 +1,4 @@
+import '../../widgets/width_limiter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,32 +11,34 @@ class TrackingInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: BlocBuilder<InitializationBloc, InitializationState>(
-        builder: (context, state) {
-          if (state.initializationData != null) {
-            final trackingStates = state
-                .initializationData.userStateCollection.states
-                .where((s) => s.locationAccuracy > 0);
-            if (trackingStates.length > 0) {
-              return Theme(
-                data: Theme.of(context)
-                    .copyWith(accentColor: Theme.of(context).primaryColor),
-                child: ExpansionTile(
-                  initiallyExpanded: false,
-                  leading: Icon(Icons.info),
-                  title: Text(S.of(context).TRACKING_INFO),
-                  childrenPadding: EdgeInsets.all(16),
-                  children: [
-                    Text(S.of(context).ORGANIZATION_TRACKING),
-                  ]..addAll(List<Widget>.from(trackingStates
-                      .map((s) => BulletItem(text: s.name))
-                      .toList())),
-                ),
-              );
+      child: WidthLimiter(
+        child: BlocBuilder<InitializationBloc, InitializationState>(
+          builder: (context, state) {
+            if (state.initializationData != null) {
+              final trackingStates = state
+                  .initializationData.userStateCollection.states
+                  .where((s) => s.locationAccuracy > 0);
+              if (trackingStates.length > 0) {
+                return Theme(
+                  data: Theme.of(context)
+                      .copyWith(accentColor: Theme.of(context).primaryColor),
+                  child: ExpansionTile(
+                    initiallyExpanded: false,
+                    leading: Icon(Icons.info),
+                    title: Text(S.of(context).TRACKING_INFO),
+                    childrenPadding: EdgeInsets.all(16),
+                    children: [
+                      Text(S.of(context).ORGANIZATION_TRACKING),
+                    ]..addAll(List<Widget>.from(trackingStates
+                        .map((s) => BulletItem(text: s.name))
+                        .toList())),
+                  ),
+                );
+              }
             }
-          }
-          return SizedBox();
-        },
+            return SizedBox();
+          },
+        ),
       ),
     );
   }

@@ -14,8 +14,9 @@ class WidthLimiter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: alignment,
+      alignment: Alignment.center,
       child: Container(
+        alignment: alignment,
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: child,
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 
 enum AppTheme {
   LightStatusBar,
@@ -94,7 +95,10 @@ final themeData = {
       hintStyle: TextStyle(color: Colors.grey),
     ),
     appBarTheme: AppBarTheme(
-      brightness: Brightness.light,
+      // On Android the status bar has a semi-transparent background,
+      // which darkens the scaffold color. In my opinion it looks nicer when we
+      // use the white icons instead of the dark ones (provided by Brighness.light)
+      brightness: Platform.isAndroid ? Brightness.dark : Brightness.light,
       color: Color(0xFFFAFAFA),
       textTheme: TextTheme(
         headline6: TextStyle(

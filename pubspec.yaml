@@ -70,6 +70,8 @@ dependencies:
   flutter_image_compress: ^0.7.0
   # Database
   moor: ^3.3.1
+  # Nicer loading animations
+  flutter_spinkit: ^4.1.2+1
 
 dev_dependencies:
   flutter_test:
@@ -98,4 +100,3 @@ flutter:
 
 flutter_intl:
   enabled: true
-

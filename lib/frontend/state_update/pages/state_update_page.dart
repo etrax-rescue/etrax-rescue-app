@@ -99,7 +99,7 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(S.of(context).SELECT_STATE,
-                                style: Theme.of(context).textTheme.headline5),
+                                style: Theme.of(context).textTheme.subtitle1),
                             SizedBox(height: 16),
                             DropdownButtonFormField<UserState>(
                               isExpanded: true,

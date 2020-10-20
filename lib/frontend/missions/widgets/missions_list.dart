@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/router.gr.dart';
 import '../../widgets/custom_material_icons.dart';
+import '../../widgets/width_limiter.dart';
 import '../bloc/missions_bloc.dart';
 
 class MissionsList extends StatelessWidget {
@@ -24,35 +25,37 @@ class MissionsList extends StatelessWidget {
                 (context, index) {
                   if (index == missions.length)
                     return Divider(height: 1, color: Colors.grey[400]);
-                  return Container(
-                    color: missions[index].exercise
-                        ? Colors.lightBlue[50]
-                        : Theme.of(context).scaffoldBackgroundColor,
-                    child: InkWell(
-                      onTap: () {
-                        ExtendedNavigator.of(context).push(
-                          '/confirmation-page',
-                          arguments: ConfirmationPageArguments(
-                            mission: missions[index],
-                            states: initializationData.userStateCollection,
-                            roles: initializationData.userRoleCollection,
-                          ),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Divider(height: 1, color: Colors.grey[400]),
-                          ListTile(
-                            title: Text(initializationData
-                                .missionCollection.missions[index].name),
-                            subtitle: Text(
-                              DateFormat.yMd(Intl.systemLocale).format(
-                                  initializationData
-                                      .missionCollection.missions[index].start),
+                  return WidthLimiter(
+                    child: Container(
+                      color: missions[index].exercise
+                          ? Colors.lightBlue[50]
+                          : Theme.of(context).scaffoldBackgroundColor,
+                      child: InkWell(
+                        onTap: () {
+                          ExtendedNavigator.of(context).push(
+                            '/confirmation-page',
+                            arguments: ConfirmationPageArguments(
+                              mission: missions[index],
+                              states: initializationData.userStateCollection,
+                              roles: initializationData.userRoleCollection,
                             ),
-                            trailing: Icon(Icons.chevron_right),
-                          ),
-                        ],
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Divider(height: 1, color: Colors.grey[400]),
+                            ListTile(
+                              title: Text(initializationData
+                                  .missionCollection.missions[index].name),
+                              subtitle: Text(
+                                DateFormat.yMd(Intl.systemLocale).format(
+                                    initializationData.missionCollection
+                                        .missions[index].start),
+                              ),
+                              trailing: Icon(Icons.chevron_right),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

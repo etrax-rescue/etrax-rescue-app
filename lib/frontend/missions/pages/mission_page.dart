@@ -96,60 +96,61 @@ class _MissionPageState extends State<MissionPage> {
           );
         }
       },
-      child: WidthLimiter(
-        child: RefreshIndicator(
-          key: _refreshIndicatorKey,
-          onRefresh: () async {
-            BlocProvider.of<InitializationBloc>(context)
-                .add(StartFetchingInitializationData());
-            Scaffold.of(context).hideCurrentSnackBar();
-            return _refreshCompleter.future;
-          },
-          child: CustomScrollView(
-            physics: RangeMaintainingScrollPhysics()
-                .applyTo(AlwaysScrollableScrollPhysics()),
-            slivers: [
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                elevation: 0,
-                actions: <Widget>[
-                  PopupMenu(
-                    actions: {
-                      0: PopupAction(
-                        onPressed: () {
-                          BlocProvider.of<InitializationBloc>(context)
-                              .add(LogoutEvent());
-                        },
-                        child: Text(S.of(context).LOGOUT),
-                      ),
-                      1: generateAboutMenuEntry(context),
-                    },
-                  ),
-                ],
-                expandedHeight: MediaQuery.of(context).size.height / 4,
-                flexibleSpace: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Image(
-                      // Maybe we want to replace this with the organization logo?
-                      image: AssetImage('assets/images/etrax_rescue_logo.png'),
-                      width: 200,
+      child: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async {
+          BlocProvider.of<InitializationBloc>(context)
+              .add(StartFetchingInitializationData());
+          Scaffold.of(context).hideCurrentSnackBar();
+          return _refreshCompleter.future;
+        },
+        child: CustomScrollView(
+          physics: RangeMaintainingScrollPhysics()
+              .applyTo(AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              elevation: 0,
+              actions: <Widget>[
+                PopupMenu(
+                  actions: {
+                    0: PopupAction(
+                      onPressed: () {
+                        BlocProvider.of<InitializationBloc>(context)
+                            .add(LogoutEvent());
+                      },
+                      child: Text(S.of(context).LOGOUT),
                     ),
+                    1: generateAboutMenuEntry(context),
+                  },
+                ),
+              ],
+              expandedHeight: MediaQuery.of(context).size.height / 4,
+              flexibleSpace: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Image(
+                    // Maybe we want to replace this with the organization logo?
+                    image: AssetImage('assets/images/etrax_rescue_logo.png'),
+                    width: 200,
                   ),
                 ),
               ),
-              TrackingInfo(),
-              SliverToBoxAdapter(
+            ),
+            TrackingInfo(),
+            SliverToBoxAdapter(
+              child: WidthLimiter(
+                alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(S.of(context).ACTIVE_MISSIONS,
                       style: Theme.of(context).textTheme.headline5),
                 ),
               ),
-              MissionsList(),
-            ],
-          ),
+            ),
+            MissionsList(),
+          ],
         ),
       ),
     );

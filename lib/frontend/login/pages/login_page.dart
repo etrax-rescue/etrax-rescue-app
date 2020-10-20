@@ -232,7 +232,6 @@ class _LoginPageState extends State<LoginPage> {
                               state is LoginSuccess),
                           onPressed: submit,
                           label: S.of(context).LOGIN,
-                          duration: const Duration(milliseconds: 500),
                         ),
                       ),
                     ),
