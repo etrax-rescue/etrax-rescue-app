@@ -13,7 +13,7 @@ PopupAction generateAboutMenuEntry(BuildContext context) {
       showAboutDialog(
           context: context,
           applicationName: S.of(context).APP_NAME,
-          applicationIcon: Image.asset('assets/images/etrax_rescue_icon.png'),
+          applicationIcon: Image.asset('assets/images/small_icon.png'),
           applicationVersion: packageInfo.version,
           children: [
             Text(S.of(context).LEGALESE),
