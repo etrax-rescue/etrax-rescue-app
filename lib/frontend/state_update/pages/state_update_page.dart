@@ -142,23 +142,25 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                 ),
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: ButtonTheme(
-                        minWidth: double.infinity,
-                        child: MaterialButton(
-                          height: 48,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.0),
+                  child: WidthLimiter(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: ButtonTheme(
+                          minWidth: double.infinity,
+                          child: MaterialButton(
+                            height: 48,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            onPressed: submit,
+                            textTheme: ButtonTextTheme.primary,
+                            child: Text(locationRequired
+                                ? S.of(context).CONTINUE_ANYWAY
+                                : S.of(context).CONTINUE),
+                            color: Theme.of(context).accentColor,
                           ),
-                          onPressed: submit,
-                          textTheme: ButtonTextTheme.primary,
-                          child: Text(locationRequired
-                              ? S.of(context).CONTINUE_ANYWAY
-                              : S.of(context).CONTINUE),
-                          color: Theme.of(context).accentColor,
                         ),
                       ),
                     ),

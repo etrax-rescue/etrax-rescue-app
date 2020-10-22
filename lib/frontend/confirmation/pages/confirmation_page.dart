@@ -168,23 +168,25 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
             ),
             SliverFillRemaining(
               hasScrollBody: false,
-              child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
-                builder: (context, state) {
-                  return WidthLimiter(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: AnimatedButton(
-                          label: S.of(context).ACCEPT_MISSION,
-                          onPressed: submit,
-                          selected: (state is ConfirmationInProgress ||
-                              state is ConfirmationSuccess),
+              child: WidthLimiter(
+                child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
+                  builder: (context, state) {
+                    return WidthLimiter(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: AnimatedButton(
+                            label: S.of(context).ACCEPT_MISSION,
+                            onPressed: submit,
+                            selected: (state is ConfirmationInProgress ||
+                                state is ConfirmationSuccess),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],

@@ -140,21 +140,23 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
             ),
             SliverFillRemaining(
               hasScrollBody: false,
-              child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
-                builder: (context, state) {
-                  return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: AnimatedButton(
-                        onPressed: submit,
-                        label: S.of(context).CONNECT,
-                        selected: (state == AppConnectionState.success() ||
-                            state.status == AppConnectionStatus.loading),
+              child: WidthLimiter(
+                child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
+                  builder: (context, state) {
+                    return Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: AnimatedButton(
+                          onPressed: submit,
+                          label: S.of(context).CONNECT,
+                          selected: (state == AppConnectionState.success() ||
+                              state.status == AppConnectionStatus.loading),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
