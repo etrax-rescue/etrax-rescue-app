@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:etrax_rescue_app/backend/types/app_connection.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
+import 'package:etrax_rescue_app/backend/types/organizations.dart';
+import 'package:etrax_rescue_app/backend/usecases/get_organizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/initialization_data.dart';
@@ -27,7 +31,7 @@ class InitializationBloc
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
         assert(logout != null),
-        super(InitializationInitial());
+        super(InitializationState.initial());
 
   final FetchInitializationData fetchInitializationData;
   final GetAppConnection getAppConnection;
@@ -39,22 +43,28 @@ class InitializationBloc
     InitializationEvent event,
   ) async* {
     if (event is StartFetchingInitializationData) {
-      yield InitializationInProgress(
-          initializationData: state.initializationData);
+      yield state.copyWith(status: InitializationStatus.inProgress);
 
       final appConnectionEither = await getAppConnection(NoParams());
 
       yield* appConnectionEither.fold((failure) async* {
-        yield InitializationUnrecoverableError(
+        yield state.copyWith(
+            status: InitializationStatus.unrecoverableFailure,
             messageKey: FailureMessageKey.cache);
       }, (appConnection) async* {
         final authenticationDataEither =
             await getAuthenticationData(NoParams());
 
         yield* authenticationDataEither.fold((failure) async* {
-          yield InitializationUnrecoverableError(
+          yield state.copyWith(
+              status: InitializationStatus.unrecoverableFailure,
               messageKey: FailureMessageKey.cache);
         }, (authenticationData) async* {
+          yield state.copyWith(
+              status: InitializationStatus.inProgress,
+              appConnection: appConnection,
+              authenticationData: authenticationData);
+
           final initializationEither = await fetchInitializationData(
               FetchInitializationDataParams(
                   appConnection: appConnection,
@@ -63,7 +73,9 @@ class InitializationBloc
           yield* initializationEither.fold((failure) async* {
             yield _mapFailureToErrorState(failure);
           }, (initializationData) async* {
-            yield InitializationSuccess(initializationData: initializationData);
+            yield state.copyWith(
+                status: InitializationStatus.success,
+                initializationData: initializationData);
           });
         });
       });
@@ -73,34 +85,38 @@ class InitializationBloc
       yield* logoutEither.fold((failure) async* {
         yield _mapFailureToErrorState(failure);
       }, (initializationData) async* {
-        yield InitializationLogoutSuccess();
+        yield state.copyWith(status: InitializationStatus.logout);
       });
     }
   }
 
   //! TODO: Update to mapFailureToMessageKey
   InitializationState _mapFailureToErrorState(Failure failure) {
+    InitializationStatus status;
+    FailureMessageKey messageKey = mapFailureToMessageKey(failure);
+
+    print(messageKey);
+
     switch (failure.runtimeType) {
       case NetworkFailure:
-        return InitializationRecoverableError(
-            initializationData: state.initializationData,
-            messageKey: FailureMessageKey.network);
+        status = InitializationStatus.failure;
+        break;
       case ServerFailure:
-        return InitializationRecoverableError(
-            initializationData: state.initializationData,
-            messageKey: FailureMessageKey.server);
+        status = InitializationStatus.failure;
+        break;
       case CacheFailure:
-        return InitializationUnrecoverableError(
-            messageKey: FailureMessageKey.cache);
+        status = InitializationStatus.unrecoverableFailure;
+        break;
       case LoginFailure:
-        return InitializationUnrecoverableError(
-            messageKey: FailureMessageKey.login);
+        status = InitializationStatus.unrecoverableFailure;
+        break;
       case AuthenticationFailure:
-        return InitializationUnrecoverableError(
-            messageKey: FailureMessageKey.authentication);
+        status = InitializationStatus.unrecoverableFailure;
+        break;
       default:
-        return InitializationUnrecoverableError(
-            messageKey: FailureMessageKey.unexpected);
+        status = InitializationStatus.unrecoverableFailure;
+        break;
     }
+    return state.copyWith(status: status, messageKey: messageKey);
   }
 }

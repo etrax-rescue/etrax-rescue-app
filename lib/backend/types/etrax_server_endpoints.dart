@@ -15,4 +15,5 @@ class EtraxServerEndpoints {
   static const String uploadPoi = 'uploadpoi';
   static const String quickAction = 'quickaction';
   static const String searchArea = 'searchareas';
+  static const String organizationLogo = 'orglogo';
 }

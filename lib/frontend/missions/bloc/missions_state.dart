@@ -1,45 +1,63 @@
 part of 'missions_bloc.dart';
 
-abstract class InitializationState extends Equatable {
-  const InitializationState({@required this.initializationData});
+enum InitializationStatus {
+  inProgress,
+  success,
+  failure,
+  unrecoverableFailure,
+  logout,
+}
+
+class InitializationState extends Equatable {
+  const InitializationState({
+    @required this.status,
+    this.initializationData,
+    this.appConnection,
+    this.authenticationData,
+    this.messageKey,
+  });
+
+  final InitializationStatus status;
+
+  final AppConnection appConnection;
+  final AuthenticationData authenticationData;
 
   final InitializationData initializationData;
 
-  @override
-  List<Object> get props => [initializationData];
-}
-
-class InitializationInitial extends InitializationState {}
-
-class InitializationInProgress extends InitializationState {
-  InitializationInProgress({@required InitializationData initializationData})
-      : super(initializationData: initializationData);
-}
-
-class InitializationSuccess extends InitializationState {
-  InitializationSuccess({@required InitializationData initializationData})
-      : super(initializationData: initializationData);
-}
-
-class InitializationLogoutSuccess extends InitializationState {}
-
-class InitializationRecoverableError extends InitializationState {
   final FailureMessageKey messageKey;
 
-  InitializationRecoverableError(
-      {@required InitializationData initializationData,
-      @required this.messageKey})
-      : super(initializationData: initializationData);
+  const InitializationState.initial()
+      : this(status: InitializationStatus.inProgress);
+
+  InitializationState copyWith({
+    @required InitializationStatus status,
+    AppConnection appConnection,
+    AuthenticationData authenticationData,
+    InitializationData initializationData,
+    bool logout,
+    FailureMessageKey messageKey,
+    bool unrecoverable,
+  }) {
+    return InitializationState(
+      status: status,
+      appConnection: appConnection ?? this.appConnection,
+      authenticationData: authenticationData ?? this.authenticationData,
+      initializationData: initializationData ?? this.initializationData,
+      messageKey: messageKey,
+    );
+  }
 
   @override
-  List<Object> get props => [initializationData, messageKey];
-}
-
-class InitializationUnrecoverableError extends InitializationState {
-  final FailureMessageKey messageKey;
-
-  InitializationUnrecoverableError({@required this.messageKey});
+  String toString() {
+    return 'Status: $status; appConnection: $appConnection; authenticationData: $authenticationData; initializationData: $initializationData; messageKey: $messageKey';
+  }
 
   @override
-  List<Object> get props => [messageKey];
+  List<Object> get props => [
+        status,
+        appConnection,
+        authenticationData,
+        initializationData,
+        messageKey,
+      ];
 }

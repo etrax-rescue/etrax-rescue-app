@@ -56,7 +56,7 @@ void main() {
     'should contain proper initial state',
     () async {
       // assert
-      expect(bloc.state, InitializationInitial());
+      expect(bloc.state, InitializationState.initial());
     },
   );
 
@@ -93,15 +93,17 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationError] when retrieving of the AppConnection failed',
+    'should emit [InProgress, UnrecoverableFailure] when retrieving of the AppConnection failed',
     () async {
       // arrange
       when(mockGetAppConnection(any))
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationUnrecoverableError(messageKey: FailureMessageKey.cache),
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.unrecoverableFailure,
+            messageKey: FailureMessageKey.cache),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -110,7 +112,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationError] when retrieving of the AuthenticationData failed',
+    'should emit [InProgress, UnrecoverableFailure] when retrieving of the AuthenticationData failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -118,8 +120,10 @@ void main() {
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationUnrecoverableError(messageKey: FailureMessageKey.cache),
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.unrecoverableFailure,
+            messageKey: FailureMessageKey.cache),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -146,7 +150,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationSuccess] when retrieving of the AuthenticationData failed',
+    'should emit [InProgress, InProgress, Success] when retrieving of the InitializationData succeeded',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -155,8 +159,16 @@ void main() {
           .thenAnswer((_) async => Right(tInitializationData));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationSuccess(initializationData: tInitializationData),
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.inProgress,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData),
+        InitializationState(
+            status: InitializationStatus.success,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData,
+            initializationData: tInitializationData),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -165,7 +177,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationError] when storing the initialization data failed',
+    'should emit [InProgress, InProgress, UnrecoverableFailure] when storing the initialization data failed',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -174,8 +186,16 @@ void main() {
           .thenAnswer((_) async => Left(CacheFailure()));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationUnrecoverableError(messageKey: FailureMessageKey.cache),
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.inProgress,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData),
+        InitializationState(
+            status: InitializationStatus.unrecoverableFailure,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData,
+            messageKey: FailureMessageKey.cache),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -184,7 +204,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationError] when no network connection is available',
+    'should emit [InProgress, InProgress, Failure] when no network connection is available',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -193,9 +213,16 @@ void main() {
           .thenAnswer((_) async => Left(NetworkFailure()));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationRecoverableError(
-            initializationData: null, messageKey: FailureMessageKey.network),
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.inProgress,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData),
+        InitializationState(
+            status: InitializationStatus.failure,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData,
+            messageKey: FailureMessageKey.network),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -204,7 +231,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationError] when a server failure occurs',
+    'should emit [InProgress, InProgress, Failure] when a server failure occurs',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -213,9 +240,16 @@ void main() {
           .thenAnswer((_) async => Left(ServerFailure()));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationRecoverableError(
-            initializationData: null, messageKey: FailureMessageKey.server),
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.inProgress,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData),
+        InitializationState(
+            status: InitializationStatus.failure,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData,
+            messageKey: FailureMessageKey.server),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act
@@ -224,7 +258,7 @@ void main() {
   );
 
   test(
-    'should emit [InitializationInProgress, InitializationError] when an authentication failure occurs',
+    'should emit [InProgress, InProgress, UnrecoverableFailure] when an authentication failure occurs',
     () async {
       // arrange
       mockGetAppConnectionSuccess();
@@ -233,28 +267,16 @@ void main() {
           .thenAnswer((_) async => Left(AuthenticationFailure()));
       // assert
       final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationUnrecoverableError(
+        InitializationState(status: InitializationStatus.inProgress),
+        InitializationState(
+            status: InitializationStatus.inProgress,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData),
+        InitializationState(
+            status: InitializationStatus.unrecoverableFailure,
+            appConnection: tAppConnection,
+            authenticationData: tAuthenticationData,
             messageKey: FailureMessageKey.authentication),
-      ];
-      expectLater(bloc, emitsInOrder(expected));
-      // act
-      bloc.add(StartFetchingInitializationData());
-    },
-  );
-
-  test(
-    'should emit [InitializationInProgress, InitializationSuccess] when retrieving of the AuthenticationData failed',
-    () async {
-      // arrange
-      mockGetAppConnectionSuccess();
-      mockGetAuthenticationDataSuccess();
-      when(mockFetchInitializationData(any))
-          .thenAnswer((_) async => Right(tInitializationData));
-      // assert
-      final expected = [
-        InitializationInProgress(initializationData: null),
-        InitializationSuccess(initializationData: tInitializationData),
       ];
       expectLater(bloc, emitsInOrder(expected));
       // act

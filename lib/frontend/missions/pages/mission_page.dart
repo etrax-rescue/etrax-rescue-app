@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart' as p;
 
+import '../../../backend/types/etrax_server_endpoints.dart';
 import '../../../generated/l10n.dart';
 import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
@@ -54,17 +58,16 @@ class _MissionPageState extends State<MissionPage> {
   Widget build(BuildContext context) {
     return BlocListener<InitializationBloc, InitializationState>(
       listener: (context, state) {
-        if (state is InitializationInitial ||
-            state is InitializationInProgress) {
+        if (state.status == InitializationStatus.inProgress) {
           return;
         }
-        if (state is InitializationLogoutSuccess) {
+        if (state.status == InitializationStatus.logout) {
           ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
         }
 
         _refreshCompleter?.complete();
         _refreshCompleter = Completer();
-        if (state is InitializationRecoverableError) {
+        if (state.status == InitializationStatus.failure) {
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text(translateErrorMessage(context, state.messageKey)),
@@ -80,7 +83,7 @@ class _MissionPageState extends State<MissionPage> {
               ),
             ),
           );
-        } else if (state is InitializationUnrecoverableError) {
+        } else if (state.status == InitializationStatus.unrecoverableFailure) {
           Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text(translateErrorMessage(context, state.messageKey)),
@@ -125,15 +128,46 @@ class _MissionPageState extends State<MissionPage> {
                   },
                 ),
               ],
-              expandedHeight: MediaQuery.of(context).size.height / 4,
+              expandedHeight: max(MediaQuery.of(context).size.height / 3, 150),
               flexibleSpace: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Image(
-                    // Maybe we want to replace this with the organization logo?
-                    image: AssetImage('assets/images/etrax_rescue_logo.png'),
-                    width: 200,
+                  padding: EdgeInsets.fromLTRB(
+                      16, MediaQuery.of(context).padding.top + 8, 16, 16),
+                  child: BlocBuilder<InitializationBloc, InitializationState>(
+                    builder: (context, state) {
+                      if (state.appConnection != null &&
+                          state.authenticationData != null) {
+                        String imageUrl = p.join(
+                            state.appConnection
+                                .generateUri(
+                                    subPath:
+                                        EtraxServerEndpoints.organizationLogo)
+                                .toString(),
+                            state.authenticationData.organizationID);
+
+                        return CachedNetworkImage(
+                          width: 200,
+                          imageUrl: imageUrl,
+                          placeholder: (context, url) => Container(
+                            alignment: Alignment.center,
+                            height: 200,
+                          ),
+                          errorWidget: (context, url, error) => Image(
+                            // Fallback to eTrax Logo
+                            image: AssetImage(
+                                'assets/images/etrax_rescue_logo.png'),
+                            width: 200,
+                          ),
+                        );
+                      }
+                      return Image(
+                        // Fallback to eTrax Logo
+                        image:
+                            AssetImage('assets/images/etrax_rescue_logo.png'),
+                        width: 200,
+                      );
+                    },
                   ),
                 ),
               ),

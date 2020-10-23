@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,11 +56,12 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
               automaticallyImplyLeading: false,
               elevation: 0,
               backgroundColor: Theme.of(context).backgroundColor,
-              expandedHeight: MediaQuery.of(context).size.height / 3,
+              expandedHeight: max(MediaQuery.of(context).size.height / 3, 150),
               flexibleSpace: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(
+                      16, MediaQuery.of(context).padding.top + 8, 16, 16),
                   child: Image(
                     image: AssetImage('assets/images/etrax_rescue_logo.png'),
                     width: 200,
