@@ -12,8 +12,8 @@
 ## Screenshots
 
 <p align="center">
-<img src="screenshots/app_connection.png" width="200" alt="App Connection Page"/>
-<img src="screenshots/map_view.png" width="200" alt="Map View"/>
+<img src="screenshots/app_connection.png" width="300" alt="App Connection Page"/>
+<img src="screenshots/map_view.png" width="300" alt="Map View"/>
 </p>
 
 ---

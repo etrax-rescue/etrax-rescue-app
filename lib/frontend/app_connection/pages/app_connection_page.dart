@@ -8,7 +8,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/about_menu_entry.dart';
-import '../../widgets/animated_button.dart';
+import '../../widgets/animated_button_sliver.dart';
 import '../../widgets/custom_material_icons.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
@@ -75,89 +75,72 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
               child: WidthLimiter(
                 child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
-                    builder: (context, state) {
-                      return Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(S.of(context).APP_CONNECTION_HEADING,
-                                style: Theme.of(context).textTheme.headline5),
-                            TextFormField(
-                              controller: _controller,
-                              keyboardType: TextInputType.url,
-                              decoration: InputDecoration(
-                                hintText: 'https://app.etrax.at',
-                                suffixIcon: IconButton(
-                                  icon: Icon(CustomMaterialIcons.qrCodeScanner),
-                                  onPressed: () {
-                                    context.bloc<AppConnectionCubit>().scanCode(
-                                          S.of(context).CANCEL,
-                                          S.of(context).FLASH_ON,
-                                          S.of(context).FLASH_OFF,
-                                        );
-                                  },
-                                ),
-                              ),
-                              onChanged: (val) {
-                                _connectionString = val;
-                              },
-                              onFieldSubmitted: (val) {
-                                submit();
-                              },
-                              validator: (val) => val.length < 1
-                                  ? S.of(context).FIELD_REQUIRED
-                                  : null,
-                            ),
-                            SizedBox(height: 16),
-                            BlocBuilder<AppConnectionCubit, AppConnectionState>(
-                              builder: (context, state) {
-                                return AnimatedSwitcher(
-                                  duration: kThemeAnimationDuration,
-                                  child:
-                                      state.status == AppConnectionStatus.error
-                                          ? Text(
-                                              translateErrorMessage(
-                                                  context, state.messageKey),
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Theme.of(context)
-                                                      .accentColor),
-                                            )
-                                          : SizedBox(),
-                                );
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(S.of(context).APP_CONNECTION_HEADING,
+                            style: Theme.of(context).textTheme.headline5),
+                        TextFormField(
+                          controller: _controller,
+                          keyboardType: TextInputType.url,
+                          decoration: InputDecoration(
+                            hintText: 'https://app.etrax.at',
+                            suffixIcon: IconButton(
+                              icon: Icon(CustomMaterialIcons.qrCodeScanner),
+                              onPressed: () {
+                                context.bloc<AppConnectionCubit>().scanCode(
+                                      S.of(context).CANCEL,
+                                      S.of(context).FLASH_ON,
+                                      S.of(context).FLASH_OFF,
+                                    );
                               },
                             ),
-                          ],
+                          ),
+                          onChanged: (val) {
+                            _connectionString = val;
+                          },
+                          onFieldSubmitted: (val) {
+                            submit();
+                          },
+                          validator: (val) => val.length < 1
+                              ? S.of(context).FIELD_REQUIRED
+                              : null,
                         ),
-                      );
-                    },
+                        SizedBox(height: 16),
+                        BlocBuilder<AppConnectionCubit, AppConnectionState>(
+                          builder: (context, state) {
+                            return AnimatedSwitcher(
+                              duration: kThemeAnimationDuration,
+                              child: state.status == AppConnectionStatus.error
+                                  ? Text(
+                                      translateErrorMessage(
+                                          context, state.messageKey),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context).accentColor),
+                                    )
+                                  : SizedBox(),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: WidthLimiter(
-                child: BlocBuilder<AppConnectionCubit, AppConnectionState>(
-                  builder: (context, state) {
-                    return Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: AnimatedButton(
-                          onPressed: submit,
-                          label: S.of(context).CONNECT,
-                          selected: (state == AppConnectionState.success() ||
-                              state.status == AppConnectionStatus.loading),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            BlocBuilder<AppConnectionCubit, AppConnectionState>(
+              builder: (context, state) {
+                return AnimatedButtonSliver(
+                  onPressed: submit,
+                  label: S.of(context).CONNECT,
+                  selected: (state == AppConnectionState.success() ||
+                      state.status == AppConnectionStatus.loading),
+                );
+              },
             ),
           ],
         ),

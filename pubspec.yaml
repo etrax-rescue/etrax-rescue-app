@@ -84,8 +84,6 @@ dev_dependencies:
   moor_generator: ^3.3.1
   # Database testing
   moor_ffi: ^0.8.0
-  # To generate the adaptive launcher icon
-  flutter_launcher_icons: "^0.8.0"
 
 flutter:
   uses-material-design: true
@@ -101,10 +99,3 @@ flutter:
 
 flutter_intl:
   enabled: true
-
-flutter_icons:
-  ios: false
-  android: "launcher_icon"
-  image_path: "assets/launcher/icon.png"
-  adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/launcher/foreground.png"

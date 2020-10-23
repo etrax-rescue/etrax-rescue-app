@@ -13,7 +13,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../check_requirements/cubit/check_requirements_cubit.dart';
 import '../../util/translate_error_messages.dart';
-import '../../widgets/animated_button.dart';
+import '../../widgets/animated_button_sliver.dart';
 import '../../widgets/width_limiter.dart';
 import '../bloc/confirmation_bloc.dart';
 
@@ -166,28 +166,15 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
                 ),
               ),
             ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: WidthLimiter(
-                child: BlocBuilder<ConfirmationBloc, ConfirmationState>(
-                  builder: (context, state) {
-                    return WidthLimiter(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: AnimatedButton(
-                            label: S.of(context).ACCEPT_MISSION,
-                            onPressed: submit,
-                            selected: (state is ConfirmationInProgress ||
-                                state is ConfirmationSuccess),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            BlocBuilder<ConfirmationBloc, ConfirmationState>(
+              builder: (context, state) {
+                return AnimatedButtonSliver(
+                  label: S.of(context).ACCEPT_MISSION,
+                  onPressed: submit,
+                  selected: (state is ConfirmationInProgress ||
+                      state is ConfirmationSuccess),
+                );
+              },
             ),
           ],
         ),

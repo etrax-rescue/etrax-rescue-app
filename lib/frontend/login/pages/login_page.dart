@@ -9,7 +9,7 @@ import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../util/translate_error_messages.dart';
 import '../../widgets/about_menu_entry.dart';
-import '../../widgets/animated_button.dart';
+import '../../widgets/animated_button_sliver.dart';
 import '../../widgets/popup_menu.dart';
 import '../../widgets/width_limiter.dart';
 import '../bloc/login_bloc.dart';
@@ -215,29 +215,17 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: BlocBuilder<LoginBloc, LoginState>(
-                builder: (context, state) {
-                  if (state is LoginInitial) {
-                    return Container();
-                  }
-                  return WidthLimiter(
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: AnimatedButton(
-                          selected: (state is LoginInProgress ||
-                              state is LoginSuccess),
-                          onPressed: submit,
-                          label: S.of(context).LOGIN,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                if (state is LoginInitial) {
+                  return SliverToBoxAdapter();
+                }
+                return AnimatedButtonSliver(
+                  selected: (state is LoginInProgress || state is LoginSuccess),
+                  onPressed: submit,
+                  label: S.of(context).LOGIN,
+                );
+              },
             ),
           ],
         ),

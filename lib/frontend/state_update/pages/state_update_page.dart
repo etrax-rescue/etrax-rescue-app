@@ -8,6 +8,7 @@ import '../../../injection_container.dart';
 import '../../../routes/router.gr.dart';
 import '../../../themes.dart';
 import '../../check_requirements/cubit/check_requirements_cubit.dart';
+import '../../widgets/animated_button_sliver.dart';
 import '../../widgets/width_limiter.dart';
 import '../bloc/state_update_bloc.dart';
 
@@ -39,7 +40,6 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //elevation: 0,
         title: Text(
           S.of(context).STATE_HEADING,
         ),
@@ -140,32 +140,13 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
                     ),
                   ),
                 ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: WidthLimiter(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: ButtonTheme(
-                          minWidth: double.infinity,
-                          child: MaterialButton(
-                            height: 48,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
-                            ),
-                            onPressed: submit,
-                            textTheme: ButtonTextTheme.primary,
-                            child: Text(locationRequired
-                                ? S.of(context).CONTINUE_ANYWAY
-                                : S.of(context).CONTINUE),
-                            color: Theme.of(context).accentColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+                AnimatedButtonSliver(
+                  selected: false,
+                  onPressed: submit,
+                  label: locationRequired
+                      ? S.of(context).CONTINUE_ANYWAY
+                      : S.of(context).CONTINUE,
+                ),
               ],
             );
           }

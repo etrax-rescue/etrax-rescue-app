@@ -21,7 +21,7 @@
         android:fullBackupContent="false"
         android:name="io.flutter.app.FlutterApplication"
         android:label="eTrax|rescue"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name="at.etrax.etrax_rescue_app.MainActivity"
             android:launchMode="singleTop"
