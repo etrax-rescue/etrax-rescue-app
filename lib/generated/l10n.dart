@@ -1222,6 +1222,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Maximum number of attempts exceeded. Try again in a minute.`
+  String get TOO_MANY_TRYS_FAILURE_MESSAGE {
+    return Intl.message(
+      'Maximum number of attempts exceeded. Try again in a minute.',
+      name: 'TOO_MANY_TRYS_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

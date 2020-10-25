@@ -131,6 +131,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "STOP_UPDATES_TITLE" : MessageLookupByLibrary.simpleMessage("Standortdienst anhalten"),
     "SUBMIT_POI" : MessageLookupByLibrary.simpleMessage("POI Hochladen"),
     "TAKE_PHOTO" : MessageLookupByLibrary.simpleMessage("Foto aufnehmen"),
+    "TOO_MANY_TRYS_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Maximale Zahl an versuchen überschritten. Versuchen Sie es in einer Minute erneut."),
     "TRACKING_INFO" : MessageLookupByLibrary.simpleMessage("Tracking Info"),
     "TRIGGERING_QUICK_ACTION" : MessageLookupByLibrary.simpleMessage("QuickAction wird verschickt..."),
     "TRIGGERING_QUICK_ACTION_DONE" : MessageLookupByLibrary.simpleMessage("QuickAction wurde verschickt"),

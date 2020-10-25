@@ -10,4 +10,6 @@ class PermissionException implements Exception {}
 
 class AuthenticationException implements Exception {}
 
+class TooManyTrysException implements Exception {}
+
 class BarcodeException implements Exception {}

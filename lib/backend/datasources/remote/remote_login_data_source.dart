@@ -50,6 +50,8 @@ class RemoteLoginDataSourceImpl implements RemoteLoginDataSource {
       return data;
     } else if (response.statusCode == 401) {
       throw LoginException();
+    } else if (response.statusCode == 429) {
+      throw TooManyTrysException();
     } else {
       throw ServerException();
     }

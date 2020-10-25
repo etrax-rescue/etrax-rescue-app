@@ -142,5 +142,6 @@
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Location permission permanently denied. Open settings to resolve this.",
     "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled",
     "PLATFORM_FAILURE_MESSAGE": "A plugin raised an error",
-    "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Couldn't acquire current location"
+    "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Couldn't acquire current location",
+    "TOO_MANY_TRYS_FAILURE_MESSAGE": "Maximum number of attempts exceeded. Try again in a minute."
 }
