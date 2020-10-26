@@ -210,24 +210,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _checkStatus(
     HomeEvent event,
   ) async* {
-    if (state.missionState.state.locationAccuracy > 0) {
-      final locationUpdatesStatusEither =
-          await getLocationUpdatesStatus(NoParams());
-      yield* locationUpdatesStatusEither.fold((failure) async* {
-        yield state.copyWith(renewStatus: true);
-      }, (active) async* {
-        if (!active) {
+    if (state.authenticationData != null) {
+      if (state.authenticationData.expirationDate.isBefore(DateTime.now())) {
+        yield state.copyWith(tokenExpired: true);
+      }
+    } else {
+      if (state.missionState.state.locationAccuracy > 0) {
+        final locationUpdatesStatusEither =
+            await getLocationUpdatesStatus(NoParams());
+        yield* locationUpdatesStatusEither.fold((failure) async* {
           yield state.copyWith(renewStatus: true);
-        }
-      });
-    }
-    // Trigger one location update even if the status doesn't require location
-    // tracking so that the map view gets updated with the location history
-    // from previous statuses.
-    add(LocationUpdate());
+        }, (active) async* {
+          if (!active) {
+            yield state.copyWith(renewStatus: true);
+          }
+        });
+      }
+      // Trigger one location update even if the status doesn't require location
+      // tracking so that the map view gets updated with the location history
+      // from previous statuses.
+      add(LocationUpdate());
 
-    // Also update the mission details.
-    add(UpdateMissionDetails());
+      // Also update the mission details.
+      add(UpdateMissionDetails());
+    }
   }
 
   @override

@@ -1133,10 +1133,10 @@ class S {
     );
   }
 
-  /// `An error occured during the URI storage process.`
+  /// `An error occured while stored ressources were accessed.`
   String get CACHE_FAILURE_MESSAGE {
     return Intl.message(
-      'An error occured during the URI storage process.',
+      'An error occured while stored ressources were accessed.',
       name: 'CACHE_FAILURE_MESSAGE',
       desc: '',
       args: [],
@@ -1163,10 +1163,10 @@ class S {
     );
   }
 
-  /// `Access rights to the ressources on the server expired. Please log in again.`
+  /// `Access rights to the ressources on the server were revoked. Please log in again.`
   String get AUTHENTICATION_FAILURE_MESSAGE {
     return Intl.message(
-      'Access rights to the ressources on the server expired. Please log in again.',
+      'Access rights to the ressources on the server were revoked. Please log in again.',
       name: 'AUTHENTICATION_FAILURE_MESSAGE',
       desc: '',
       args: [],
@@ -1223,11 +1223,21 @@ class S {
     );
   }
 
-  /// `Maximum number of attempts exceeded. Try again in a minute.`
+  /// `Maximum number of retry attempts exceeded. Try again in a minute.`
   String get TOO_MANY_TRYS_FAILURE_MESSAGE {
     return Intl.message(
-      'Maximum number of attempts exceeded. Try again in a minute.',
+      'Maximum number of retry attempts exceeded. Try again in a minute.',
       name: 'TOO_MANY_TRYS_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Access rights to the ressources on the server expired. Please log in again.`
+  String get TOKEN_EXPIRED_FAILURE_MESSAGE {
+    return Intl.message(
+      'Access rights to the ressources on the server expired. Please log in again.',
+      name: 'TOKEN_EXPIRED_FAILURE_MESSAGE',
       desc: '',
       args: [],
     );

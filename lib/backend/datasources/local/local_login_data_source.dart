@@ -11,8 +11,8 @@ abstract class LocalLoginDataSource {
   Future<void> cacheSelectedOrganizationID(String organizationID);
   Future<String> getCachedSelectedOrganizationID();
 
-  Future<void> cacheIssuingDate(DateTime issuingDate);
-  Future<DateTime> getCachedIssuingDate();
+  Future<void> cacheExpirationDate(DateTime expirationDate);
+  Future<DateTime> getCachedExpirationDate();
 
   Future<void> cacheToken(String token);
   Future<String> getCachedToken();
@@ -58,14 +58,15 @@ class LocalLoginDataSourceImpl implements LocalLoginDataSource {
   }
 
   @override
-  Future<void> cacheIssuingDate(DateTime issuingDate) async {
-    await sharedPreferences.setString(SharedPreferencesKeys.issuingDate,
-        issuingDate.millisecondsSinceEpoch.toString());
+  Future<void> cacheExpirationDate(DateTime expirationDate) async {
+    await sharedPreferences.setString(SharedPreferencesKeys.expirationDate,
+        expirationDate.millisecondsSinceEpoch.toString());
   }
 
   @override
-  Future<DateTime> getCachedIssuingDate() async {
-    final data = sharedPreferences.getString(SharedPreferencesKeys.issuingDate);
+  Future<DateTime> getCachedExpirationDate() async {
+    final data =
+        sharedPreferences.getString(SharedPreferencesKeys.expirationDate);
     if (data != null) {
       return DateTime.fromMillisecondsSinceEpoch(int.parse(data));
     } else {

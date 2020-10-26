@@ -25,12 +25,12 @@ final tAppConnection = AppConnection(host: tHost, basePath: tBasePath);
 final tOrganizationID = 'DEV';
 final tUsername = 'JohnDoe';
 final tToken = '0123456789ABCDEF';
-final tIssuingDate = tDate;
+final tExpirationDate = tDate;
 final tAuthenticationData = AuthenticationData(
     organizationID: tOrganizationID,
     username: tUsername,
     token: tToken,
-    issuingDate: tIssuingDate);
+    expirationDate: tExpirationDate);
 
 final tPassword = '0123456789ABCDEF';
 

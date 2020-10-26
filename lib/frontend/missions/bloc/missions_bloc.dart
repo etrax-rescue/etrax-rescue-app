@@ -50,16 +50,18 @@ class InitializationBloc
       yield* appConnectionEither.fold((failure) async* {
         yield state.copyWith(
             status: InitializationStatus.unrecoverableFailure,
-            messageKey: FailureMessageKey.cache);
+            messageKey: mapFailureToMessageKey(failure));
       }, (appConnection) async* {
         final authenticationDataEither =
             await getAuthenticationData(NoParams());
 
         yield* authenticationDataEither.fold((failure) async* {
+          print("failure while getting auth data");
           yield state.copyWith(
               status: InitializationStatus.unrecoverableFailure,
-              messageKey: FailureMessageKey.cache);
+              messageKey: mapFailureToMessageKey(failure));
         }, (authenticationData) async* {
+          print(authenticationData);
           yield state.copyWith(
               status: InitializationStatus.inProgress,
               appConnection: appConnection,
@@ -94,8 +96,6 @@ class InitializationBloc
   InitializationState _mapFailureToErrorState(Failure failure) {
     InitializationStatus status;
     FailureMessageKey messageKey = mapFailureToMessageKey(failure);
-
-    print(messageKey);
 
     switch (failure.runtimeType) {
       case NetworkFailure:

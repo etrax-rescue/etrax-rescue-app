@@ -93,9 +93,9 @@ class LoginRepositoryImpl implements LoginRepository {
     if (!(await networkInfo.isConnected)) {
       return Left(NetworkFailure());
     }
-    AuthenticationData authenticationDataModel;
+    AuthenticationData authenticationData;
     try {
-      authenticationDataModel = await remoteLoginDataSource.login(
+      authenticationData = await remoteLoginDataSource.login(
           appConnection, organizationID, username, password);
     } on ServerException {
       return Left(ServerFailure());
@@ -112,12 +112,11 @@ class LoginRepositoryImpl implements LoginRepository {
     }
     try {
       await localLoginDataSource
-          .cacheSelectedOrganizationID(authenticationDataModel.organizationID);
+          .cacheSelectedOrganizationID(authenticationData.organizationID);
+      await localLoginDataSource.cacheUsername(authenticationData.username);
+      await localLoginDataSource.cacheToken(authenticationData.token);
       await localLoginDataSource
-          .cacheUsername(authenticationDataModel.username);
-      await localLoginDataSource.cacheToken(authenticationDataModel.token);
-      await localLoginDataSource
-          .cacheIssuingDate(authenticationDataModel.issuingDate);
+          .cacheExpirationDate(authenticationData.expirationDate);
     } on CacheException {
       return Left(CacheFailure());
     }
@@ -140,21 +139,24 @@ class LoginRepositoryImpl implements LoginRepository {
     String username;
     String organizationID;
     String token;
-    DateTime issuingDate;
+    DateTime expirationDate;
     try {
       username = await localLoginDataSource.getCachedUsername();
       organizationID =
           await localLoginDataSource.getCachedSelectedOrganizationID();
       token = await localLoginDataSource.getCachedToken();
-      issuingDate = await localLoginDataSource.getCachedIssuingDate();
+      expirationDate = await localLoginDataSource.getCachedExpirationDate();
     } on CacheException {
       return Left(CacheFailure());
+    }
+    if (expirationDate.isBefore(DateTime.now())) {
+      return Left(TokenExpiredFailure());
     }
     data = AuthenticationData(
       organizationID: organizationID,
       username: username,
       token: token,
-      issuingDate: issuingDate,
+      expirationDate: expirationDate,
     );
     return Right(data);
   }

@@ -19,6 +19,8 @@ class LoginFailure extends Failure {}
 
 class AuthenticationFailure extends Failure {}
 
+class TokenExpiredFailure extends Failure {}
+
 class TooManyTrysFailure extends Failure {}
 
 class PlatformFailure extends Failure {}

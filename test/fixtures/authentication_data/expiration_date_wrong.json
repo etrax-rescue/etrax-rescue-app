@@ -1,5 +1,5 @@
 {
-    "organizationID": "DEV",
+    "organization_id": "DEV",
     "username": "JohnDoe",
     "token": "0123456789ABCDEF"
 }

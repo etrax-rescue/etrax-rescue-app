@@ -12,6 +12,7 @@ enum FailureMessageKey {
   invalidInput,
   login,
   authentication,
+  tokenExpired,
   platform,
   locationPermissionDenied,
   locationPermissionPermanentlyDenied,
@@ -36,6 +37,8 @@ FailureMessageKey mapFailureToMessageKey(Failure failure) {
       return FailureMessageKey.login;
     case AuthenticationFailure:
       return FailureMessageKey.authentication;
+    case TokenExpiredFailure:
+      return FailureMessageKey.tokenExpired;
     case PlatformFailure:
       return FailureMessageKey.platform;
     case NoLockOnLocationFailure:
@@ -67,6 +70,8 @@ String translateErrorMessage(BuildContext context, FailureMessageKey key) {
       return S.of(context).LOGIN_FAILURE_MESSAGE;
     case FailureMessageKey.authentication:
       return S.of(context).AUTHENTICATION_FAILURE_MESSAGE;
+    case FailureMessageKey.tokenExpired:
+      return S.of(context).TOKEN_EXPIRED_FAILURE_MESSAGE;
     case FailureMessageKey.locationPermissionDenied:
       return S.of(context).LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE;
     case FailureMessageKey.locationPermissionPermanentlyDenied:

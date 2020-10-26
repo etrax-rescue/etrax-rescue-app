@@ -50,11 +50,11 @@ void main() {
     );
 
     test(
-      'should throw a FormatException when the json map is missing the issuingDate field',
+      'should throw a FormatException when the json map is missing the expiration date field',
       () async {
         // arrange
-        final Map<String, dynamic> jsonMap = json
-            .decode(fixture('authentication_data/issuing_date_missing.json'));
+        final Map<String, dynamic> jsonMap = json.decode(
+            fixture('authentication_data/expiration_date_missing.json'));
         // assert
         expect(() => AuthenticationData.fromJson(jsonMap),
             throwsA(TypeMatcher<FormatException>()));
@@ -62,11 +62,11 @@ void main() {
     );
 
     test(
-      'should throw a FormatException when the json map is missing the issuingDate field',
+      'should throw a FormatException when the json map is missing the expiration date field',
       () async {
         // arrange
-        final Map<String, dynamic> jsonMap =
-            json.decode(fixture('authentication_data/issuing_date_wrong.json'));
+        final Map<String, dynamic> jsonMap = json
+            .decode(fixture('authentication_data/expiration_date_wrong.json'));
         // assert
         expect(() => AuthenticationData.fromJson(jsonMap),
             throwsA(TypeMatcher<FormatException>()));

@@ -6,7 +6,7 @@ class SharedPreferencesKeys {
   static final String userStates = 'CACHE_USER_STATES';
   static final String userRoles = 'CACHE_USER_ROLES';
   static final String missions = 'CACHE_MISSIONS';
-  static final String issuingDate = 'ISSUING_DATE';
+  static final String expirationDate = 'EXPIRATION_DATE';
   static final String username = 'USERNAME';
   static final String token = 'TOKEN';
   static final String selectedOrganization = 'SELECTED_ORGANIZATION';

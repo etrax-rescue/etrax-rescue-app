@@ -133,15 +133,16 @@
     "NETWORK_FAILURE_MESSAGE": "Your device is offline.",
     "SERVER_URL_FAILURE_MESSAGE": "Either the provided URI doesn't point to a valid eTrax|rescue Server,\n or the server is not reachable at the moment.",
     "SERVER_FAILURE_MESSAGE": "The server is not reachable at the moment.",
-    "CACHE_FAILURE_MESSAGE": "An error occured during the URI storage process.",
+    "CACHE_FAILURE_MESSAGE": "An error occured while stored ressources were accessed.",
     "INVALID_INPUT_FAILURE_MESSAGE": "The provided URL does not resemble a valid format.\n Example for a valid URL: https://app.etrax.at",
     "LOGIN_FAILURE_MESSAGE": "Invalid username or password",
-    "AUTHENTICATION_FAILURE_MESSAGE": "Access rights to the ressources on the server expired. Please log in again.",
+    "AUTHENTICATION_FAILURE_MESSAGE": "Access rights to the ressources on the server were revoked. Please log in again.",
 
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Location permission denied",
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Location permission permanently denied. Open settings to resolve this.",
     "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled",
     "PLATFORM_FAILURE_MESSAGE": "A plugin raised an error",
     "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Couldn't acquire current location",
-    "TOO_MANY_TRYS_FAILURE_MESSAGE": "Maximum number of attempts exceeded. Try again in a minute."
+    "TOO_MANY_TRYS_FAILURE_MESSAGE": "Maximum number of retry attempts exceeded. Try again in a minute.",
+    "TOKEN_EXPIRED_FAILURE_MESSAGE": "Access rights to the ressources on the server expired. Please log in again."
 }

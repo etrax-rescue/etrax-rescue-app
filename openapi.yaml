@@ -1,0 +1,625 @@
+openapi: 3.0.0
+info:
+  description: API specification for the eTrax|rescue app<->server interface
+  version: "1.0.0"
+  title: eTrax|rescue API
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: 'Bearer <base64 with 64 chars>'
+  responses:
+    UnauthorizedError:
+      description: Token invalid
+    MalformedRequestError:
+      description: Malformed request
+    Ok:
+      description: ok
+  schemas:
+    AppConfiguration:
+      type: object
+      required:
+        - locationUpdateInterval
+        - locationUpdateMinDistance
+        - infoUpdateInterval
+      properties:
+        locationUpdateInterval:
+          type: integer
+          description: Location update interval in seconds
+          example: 60
+        locationUpdateMinDistance:
+          type: integer
+          description: | 
+            The minimal position change in meters a person has to move in order 
+            to trigger an update
+          example: 50
+        infoUpdateInterval:
+          type: integer
+          description: |
+            Interval in seconds at which the mission info should be updated
+          example: 300
+    Organization:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: OID
+          example: DEV
+        name:
+          type: string
+          description: \"bezeichnung\" field in the data json in the db
+          example: Rettungshunde
+    State:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: "Anreise"
+        description:
+          type: string
+          example: "..."
+    QuickAction:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: "Anreise"
+        description:
+          type: string
+          example: "..."
+    Role:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: "Hundeführer*in"
+        description:
+          type: string
+          example: "..."
+    Mission:
+      type: object
+      required:
+        - id
+        - name
+        - start
+        - latitude
+        - longitude
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: Wien
+        start:
+          type: string
+          format: date-time
+        latitude:
+          type: number
+          example: 48.2206635
+        longitude:
+          type: number
+          example: 16.309849
+    LocationData:
+      type: object
+      required:
+        - timestamp
+        - latitude
+        - longitude
+        - accuracy
+        - altitude
+        - speed
+      properties:
+        timestamp:
+          description: milliseconds since 1970-01-01
+          type: integer
+          format: int64
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        accuracy:
+          type: number
+          format: float
+        altitude:
+          type: number
+          format: double
+        speed:
+          type: number
+          format: float
+    LonLat:
+      type: array
+      items:
+        oneOf:
+          - type: number
+            description: 'longitude'
+            example: 16.309849
+          - type: number
+            description: 'latitude'
+            example: 48.2206635
+      minItems: 2
+      maxItems: 2
+    SearchArea:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'SID-007'
+        label:
+          type: string
+          example: 'Group 2 search area'
+        description:
+          type: string
+          example: 'riverside'
+        color:
+          type: string
+          example: '0x00FF00'
+        coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/LonLat'
+
+paths:
+  /version:
+    get:
+      summary: server version
+      description: |
+        get the current version of the eTrax|rescue server. This endpoint is
+        used during the app connection process to verify that the server really
+        is an eTrax|rescue server.
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - version
+                  - magic
+                properties:
+                  version:
+                    type: string
+                    example: "5.0.1"
+                  magic:
+                    type: string
+                    example: "eTrax|rescue"
+  /organizations:
+    get:
+      summary: get the registered organizations
+      description: get a list of the organizations registered on the eTrax|rescue server
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+
+  /orglogo/{oid}:
+    get:
+      summary: get the logo of the organization
+      parameters:
+        - in: path
+          name: oid
+          schema:
+            type: string
+            example: "DEV"
+          required: true
+          description: ID of the organization of which the logo should be returned
+      responses:
+        '200':
+          description: ok
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/gif:
+              schema:
+                type: string
+                format: binary
+            image/bmp:
+              schema:
+                type: string
+                format: binary
+
+  /login:
+    post:
+      summary: login
+      description: logs the user in
+      requestBody:
+        description: Login information 
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - organization_id
+                - username
+                - password
+              properties:
+                organization_id:
+                  type: string
+                  example: DEV
+                username:
+                  type: string
+                  example: demouser
+                password:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                  - issuingDate
+                properties:
+                  token:
+                    type: string
+                    example: "0123456789ABCDEF"
+                  issuingDate:
+                    type: integer
+                    format: timestamp
+        '401':
+          description: username, password or organization ID are incorrect
+        '429':
+          description: Too many requests
+  
+  /logout:
+    get:
+      summary: log out
+      description: |
+        log the user out by sending the logout state to the BOS interface
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/Ok'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  
+  /initialization:
+    get:
+      summary: retrieve initial data
+      description: |
+        receive initial app data. This includes configuration settings for the
+        location updates, available roles, states, quickactions and currently
+        active missions. 
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - appSettings
+                  - roles
+                  - missions
+                properties:
+                  appConfiguration:
+                    $ref: '#/components/schemas/AppConfiguration'
+                  roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+                  states:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/State'
+                  actions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/QuickAction'
+                  missions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mission'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+          
+  /missionselect:
+    post:
+      summary: select a mission
+      description: |
+        allows the client to select a mission
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: the ID of the selected missioni
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - mission_id
+              properties:
+                mission_id:
+                  type: integer
+                  example: 42
+      responses:
+        '200': 
+          $ref: '#/components/responses/Ok'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          $ref: '#/components/responses/MalformedRequestError'
+          
+  /roleselect:
+    post:
+      summary: update user role
+      description: Update the user role
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: the ID of the selected user role 
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - role_id
+              properties:
+                role_id:
+                  type: integer
+                  example: 42
+      responses:
+        '200': 
+          $ref: '#/components/responses/Ok'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          $ref: '#/components/responses/MalformedRequestError'
+  
+  /stateselect:
+    post:
+      summary: update user state
+      description: Update the user state
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Login information 
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - state_id
+              properties:
+                state_id:
+                  type: integer
+                  example: 42
+      responses:
+        '200': 
+          $ref: '#/components/responses/Ok'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          $ref: '#/components/responses/MalformedRequestError'
+  
+  /quickaction:
+    post:
+      summary: trigger a quickaction
+      description: Allows the client to trigger a quickaction
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Login information 
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - action_id
+              properties:
+                action_id:
+                  type: integer
+                  example: 42
+                location:
+                  $ref: '#/components/schemas/LocationData'
+                  
+      responses:
+        '200': 
+          $ref: '#/components/responses/Ok'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '400':
+          $ref: '#/components/responses/MalformedRequestError'
+          
+  /missiondetails:
+    get:
+      summary: get mission details
+      description: get detailed mission info
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                  - lastSeen
+                  - description
+                properties:
+                  name:
+                    type: string
+                    example: "John Doe"
+                  lastSeen:
+                    type: string
+                    format: date-time
+                  description:
+                    type: string
+                    example: "Very average person"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  
+  /image/{eid}/{uid}:
+    get:
+      summary: get image
+      description: get the mission image
+      parameters:
+        - in: path
+          name: eid
+          schema:
+            type: integer
+            example: 1
+          required: true
+          description: ID of the current mission
+        - in: path
+          name: uid
+          schema:
+            type: string
+            example: "1234"
+          required: true
+          description: unique identifier of the image resource
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ok
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  
+  /locationupdate:
+    post:
+      summary: send location data to server
+      description: |
+        Endpoint that receives the location updates from the client and inserts them
+        into the location database.
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: List of location data to add to the 
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - uid
+                - token
+                - rescue_mission_id
+                - data
+              properties:
+                mission_id:
+                  type: string
+                  example: "42"
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LocationData'
+      responses:
+        '201':
+          description: item created
+        '400':
+          $ref: '#/components/responses/MalformedRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+          
+  /missionactive:
+    get:
+      summary: Check if mission is active
+      description: |
+        Checks if the selected mission of the user is still active
+      security:
+        - bearerAuth: []
+      responses:
+        '200': 
+          $ref: '#/components/responses/Ok'
+
+  /uploadpoi:
+    post:
+      summary: upload a POI
+      description: |
+        The client can upload a Point of Interest (POI) consisting of a an image, corresponding location data and a short description
+      security:
+        - bearerAuth: []
+      requestBody:
+        content: 
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                location_data:
+                  $ref: '#/components/schemas/LocationData'
+                image:
+                  description: jpg image
+                  type: string
+                  format: binary
+      responses:
+        '200': 
+          $ref: '#/components/responses/Ok'
+        '400':
+          $ref: '#/components/responses/MalformedRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /searchareas:
+    get:
+      summary: get search areas
+      description: |
+        Returns a list of search aread for the selected mission.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchArea'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+              
+

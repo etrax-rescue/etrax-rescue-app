@@ -1,6 +1,6 @@
 {
-    "organizationID": "DEV",
+    "organization_id": "DEV",
     "username": "JohnDoe",
     "token": "0123456789ABCDEF",
-    "issuingDate": "ABC"
+    "expiration_date": "ABC"
 }

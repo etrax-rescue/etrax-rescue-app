@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -194,7 +195,7 @@ void main() {
               .cacheSelectedOrganizationID(tOrganizationID));
           verify(mockLocalLoginDataSource.cacheUsername(tUsername));
           verify(mockLocalLoginDataSource.cacheToken(tToken));
-          verify(mockLocalLoginDataSource.cacheIssuingDate(tIssuingDate));
+          verify(mockLocalLoginDataSource.cacheExpirationDate(tExpirationDate));
           verifyNoMoreInteractions(mockLocalLoginDataSource);
         },
       );
@@ -405,5 +406,52 @@ void main() {
         },
       );
     });
+  });
+
+  group('getAuthenticationData', () {
+    test(
+      'should return cached data when it is present',
+      () async {
+        // arrange
+        final tExpirationDate = DateTime.now().add(Duration(days: 1));
+        final tAuthenticationData = AuthenticationData(
+            token: tToken,
+            username: tUsername,
+            organizationID: tOrganizationID,
+            expirationDate: tExpirationDate);
+        when(mockLocalLoginDataSource.getCachedToken())
+            .thenAnswer((_) async => tToken);
+        when(mockLocalLoginDataSource.getCachedUsername())
+            .thenAnswer((_) async => tUsername);
+        when(mockLocalLoginDataSource.getCachedSelectedOrganizationID())
+            .thenAnswer((_) async => tOrganizationID);
+        when(mockLocalLoginDataSource.getCachedExpirationDate())
+            .thenAnswer((_) async => tExpirationDate);
+        // act
+        final result = await repository.getAuthenticationData();
+        // assert
+        expect(result, equals(Right(tAuthenticationData)));
+      },
+    );
+
+    test(
+      'should return TokenExpiredFailure when the token already expired.',
+      () async {
+        // arrange
+        final tExpirationDate = DateTime.now().subtract(Duration(days: 1));
+        when(mockLocalLoginDataSource.getCachedToken())
+            .thenAnswer((_) async => tToken);
+        when(mockLocalLoginDataSource.getCachedUsername())
+            .thenAnswer((_) async => tUsername);
+        when(mockLocalLoginDataSource.getCachedSelectedOrganizationID())
+            .thenAnswer((_) async => tOrganizationID);
+        when(mockLocalLoginDataSource.getCachedExpirationDate())
+            .thenAnswer((_) async => tExpirationDate);
+        // act
+        final result = await repository.getAuthenticationData();
+        // assert
+        expect(result, equals(Left(TokenExpiredFailure())));
+      },
+    );
   });
 }
