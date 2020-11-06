@@ -135,7 +135,7 @@
     "SERVER_FAILURE_MESSAGE": "Der Server ist derzeit nicht erreichbar.",
     "CACHE_FAILURE_MESSAGE": "Beim Zugreifen auf gespeicherte Ressourcen ist ein Fehler aufgetreten.",
     "INVALID_INPUT_FAILURE_MESSAGE": "Der eingegebene URL entspricht nicht dem erwarteten Format.\nBeispiel für das richtige Format: https://app.etrax.at",
-    "LOGIN_FAILURE_MESSAGE": "Der eingegebene Username oder das Passwort sind falsch",
+    "LOGIN_FAILURE_MESSAGE": "Der eingegebene Username, das Passwort oder die ausgewählte Organisation sind falsch",
     "AUTHENTICATION_FAILURE_MESSAGE": "Die Zugriffsrechte auf die Ressourcen am Server wurden zurückgesetzt. Bitte erneut anmelden.",
 
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Standortberechtigung verweigert",

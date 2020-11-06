@@ -1153,10 +1153,10 @@ class S {
     );
   }
 
-  /// `Invalid username or password`
+  /// `Invalid username, password or organization`
   String get LOGIN_FAILURE_MESSAGE {
     return Intl.message(
-      'Invalid username or password',
+      'Invalid username, password or organization',
       name: 'LOGIN_FAILURE_MESSAGE',
       desc: '',
       args: [],

@@ -81,7 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "LOGGING_OUT" : MessageLookupByLibrary.simpleMessage("Abmeldung im Gange..."),
     "LOGGING_OUT_DONE" : MessageLookupByLibrary.simpleMessage("Abgemeldet"),
     "LOGIN" : MessageLookupByLibrary.simpleMessage("Anmelden"),
-    "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene Username oder das Passwort sind falsch"),
+    "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Der eingegebene Username, das Passwort oder die ausgewählte Organisation sind falsch"),
     "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Anmelden"),
     "LOGOUT" : MessageLookupByLibrary.simpleMessage("Abmelden"),
     "LOGOUT_TITLE" : MessageLookupByLibrary.simpleMessage("Abmelden"),

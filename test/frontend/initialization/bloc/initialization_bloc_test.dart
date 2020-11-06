@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:etrax_rescue_app/backend/usecases/delete_token.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -20,25 +21,25 @@ class MockGetAppConnection extends Mock implements GetAppConnection {}
 
 class MockGetAuthenticationData extends Mock implements GetAuthenticationData {}
 
-class MockLogout extends Mock implements Logout {}
+class MockDeleteToken extends Mock implements DeleteToken {}
 
 void main() {
   InitializationBloc bloc;
   MockFetchInitializationData mockFetchInitializationData;
   MockGetAppConnection mockGetAppConnection;
   MockGetAuthenticationData mockGetAuthenticationData;
-  MockLogout mockLogout;
+  MockDeleteToken mockDeleteToken;
 
   setUp(() {
     mockFetchInitializationData = MockFetchInitializationData();
     mockGetAppConnection = MockGetAppConnection();
     mockGetAuthenticationData = MockGetAuthenticationData();
-    mockLogout = MockLogout();
+    mockDeleteToken = MockDeleteToken();
     bloc = InitializationBloc(
         fetchInitializationData: mockFetchInitializationData,
         getAppConnection: mockGetAppConnection,
         getAuthenticationData: mockGetAuthenticationData,
-        logout: mockLogout);
+        deleteToken: mockDeleteToken);
   });
 
   tearDown(() {

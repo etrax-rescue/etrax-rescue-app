@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -17,7 +16,6 @@ import '../../../backend/types/usecase.dart';
 import '../../../backend/types/user_states.dart';
 import '../../../backend/usecases/clear_location_cache.dart';
 import '../../../backend/usecases/clear_mission_state.dart';
-import '../../../backend/usecases/get_search_areas.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
@@ -27,7 +25,9 @@ import '../../../backend/usecases/get_location_updates_status.dart';
 import '../../../backend/usecases/get_mission_details.dart';
 import '../../../backend/usecases/get_mission_state.dart';
 import '../../../backend/usecases/get_quick_actions.dart';
+import '../../../backend/usecases/get_search_areas.dart';
 import '../../../backend/usecases/stop_location_updates.dart';
+import '../../util/translate_error_messages.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -89,8 +89,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield* _startup(event);
     } else if (event is LocationUpdate) {
       yield* _getLocationUpdate(event);
-    } else if (event is UpdateMissionDetails) {
-      yield* _updateMissionDetails(event);
+    } else if (event is Update) {
+      yield* _update(event);
     } else if (event is CheckStatus) {
       yield* _checkStatus(event);
     }
@@ -137,7 +137,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               await _tickerSubscription?.cancel();
               _tickerSubscription = Stream.periodic(
                       Duration(minutes: appConfiguration.infoUpdateInterval))
-                  .listen((_) => add(UpdateMissionDetails()));
+                  .listen((_) => add(Update()));
 
               final getLocationUpdateStreamEither =
                   await getLocationUpdateStream(GetLocationUpdateStreamParams(
@@ -176,7 +176,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
   }
 
-  Stream<HomeState> _updateMissionDetails(
+  Stream<HomeState> _update(
     HomeEvent event,
   ) async* {
     if (state.appConnection != null && state.authenticationData != null) {
@@ -232,7 +232,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       add(LocationUpdate());
 
       // Also update the mission details.
-      add(UpdateMissionDetails());
+      add(Update());
     }
   }
 

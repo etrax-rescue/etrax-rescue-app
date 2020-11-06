@@ -1,7 +1,6 @@
 import 'package:background_location/background_location.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/clear_search_areas.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/app_configuration.dart';
@@ -12,6 +11,7 @@ import '../../../backend/types/user_states.dart';
 import '../../../backend/usecases/clear_location_cache.dart';
 import '../../../backend/usecases/clear_mission_details.dart';
 import '../../../backend/usecases/clear_mission_state.dart';
+import '../../../backend/usecases/clear_search_areas.dart';
 import '../../../backend/usecases/get_app_configuration.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
@@ -316,7 +316,9 @@ class CheckRequirementsCubit extends Cubit<CheckRequirementsState> {
     emit(state.copyWith(
         sequenceStatus:
             _generateSequenceStatus(currentStatus: StepStatus.loading)));
-    final logoutEither = await logout(NoParams());
+    final logoutEither = await logout(LogoutParams(
+        appConnection: state.appConnection,
+        authenticationData: state.authenticationData));
     logoutEither.fold((failure) async {
       emitFailure(failure);
     }, (_) async {

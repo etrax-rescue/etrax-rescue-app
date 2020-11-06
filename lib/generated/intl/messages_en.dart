@@ -81,7 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "LOGGING_OUT" : MessageLookupByLibrary.simpleMessage("Logging out..."),
     "LOGGING_OUT_DONE" : MessageLookupByLibrary.simpleMessage("Logged out"),
     "LOGIN" : MessageLookupByLibrary.simpleMessage("Login"),
-    "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Invalid username or password"),
+    "LOGIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("Invalid username, password or organization"),
     "LOGIN_HEADING" : MessageLookupByLibrary.simpleMessage("Login"),
     "LOGOUT" : MessageLookupByLibrary.simpleMessage("Logout"),
     "LOGOUT_TITLE" : MessageLookupByLibrary.simpleMessage("Logout"),

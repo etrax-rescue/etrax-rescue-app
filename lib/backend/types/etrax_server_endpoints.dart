@@ -3,6 +3,7 @@ const SERVER_API_BASE_PATH = '';
 class EtraxServerEndpoints {
   static const String version = 'version';
   static const String login = 'login';
+  static const String logout = 'logout';
   static const String initialization = 'initialization';
   static const String organizations = 'organizations';
   static const String missionSelect = 'missionselect';

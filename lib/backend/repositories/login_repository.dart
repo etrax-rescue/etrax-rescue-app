@@ -19,7 +19,8 @@ abstract class LoginRepository {
   // Login and logout
   Future<Either<Failure, None>> login(AppConnection appConnection,
       String organizationID, String username, String password);
-  Future<Either<Failure, None>> logout();
+  Future<Either<Failure, None>> logout(
+      AppConnection appConnection, AuthenticationData authenticationData);
 
   // Authentication
   Future<Either<Failure, AuthenticationData>> getAuthenticationData();
@@ -27,6 +28,8 @@ abstract class LoginRepository {
   // Organizations
   Future<Either<Failure, OrganizationCollection>> getOrganizations(
       AppConnection appConnection);
+
+  Future<Either<Failure, None>> deleteToken();
 }
 
 class LoginRepositoryImpl implements LoginRepository {
@@ -124,7 +127,17 @@ class LoginRepositoryImpl implements LoginRepository {
   }
 
   @override
-  Future<Either<Failure, None>> logout() async {
+  Future<Either<Failure, None>> logout(AppConnection appConnection,
+      AuthenticationData authenticationData) async {
+    if (!(await networkInfo.isConnected)) {
+      return Left(NetworkFailure());
+    }
+    try {
+      await remoteLoginDataSource.logout(appConnection, authenticationData);
+    } on ServerException {
+      return Left(ServerFailure());
+    } on LoginException {} // Token timed out or was revoked -> continue
+
     try {
       await localLoginDataSource.deleteToken();
     } on CacheException {
@@ -159,5 +172,15 @@ class LoginRepositoryImpl implements LoginRepository {
       expirationDate: expirationDate,
     );
     return Right(data);
+  }
+
+  @override
+  Future<Either<Failure, None>> deleteToken() async {
+    try {
+      await localLoginDataSource.deleteToken();
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+    return Right(None());
   }
 }

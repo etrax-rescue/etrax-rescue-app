@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/usecases/logout.dart';
-import 'package:etrax_rescue_app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../backend/types/missions.dart';
 import '../../../backend/types/usecase.dart';
 import '../../../backend/types/user_roles.dart';
+import '../../../backend/usecases/delete_token.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
 import '../../../backend/usecases/set_selected_mission.dart';
 import '../../../backend/usecases/set_selected_user_role.dart';
+import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
 part 'confirmation_event.dart';
@@ -24,19 +24,19 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
     @required this.getAuthenticationData,
     @required this.setSelectedMission,
     @required this.setSelectedUserRole,
-    @required this.logout,
+    @required this.deleteToken,
   })  : assert(setSelectedMission != null),
         assert(setSelectedUserRole != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
-        assert(logout != null),
+        assert(deleteToken != null),
         super(ConfirmationInitial());
 
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
   final SetSelectedMission setSelectedMission;
   final SetSelectedUserRole setSelectedUserRole;
-  final Logout logout;
+  final DeleteToken deleteToken;
 
   @override
   Stream<ConfirmationState> mapEventToState(
@@ -90,7 +90,7 @@ class ConfirmationBloc extends Bloc<ConfirmationEvent, ConfirmationState> {
         });
       });
     } else if (event is LogoutEvent) {
-      await logout(NoParams());
+      await deleteToken(NoParams());
       yield ConfirmationLogoutSuccess();
     }
   }

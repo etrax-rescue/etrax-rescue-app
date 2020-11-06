@@ -2,18 +2,16 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:etrax_rescue_app/backend/types/app_connection.dart';
-import 'package:etrax_rescue_app/backend/types/authentication_data.dart';
-import 'package:etrax_rescue_app/backend/types/organizations.dart';
-import 'package:etrax_rescue_app/backend/usecases/get_organizations.dart';
 import 'package:flutter/material.dart';
 
+import '../../../backend/types/app_connection.dart';
+import '../../../backend/types/authentication_data.dart';
 import '../../../backend/types/initialization_data.dart';
 import '../../../backend/types/usecase.dart';
+import '../../../backend/usecases/delete_token.dart';
 import '../../../backend/usecases/fetch_initialization_data.dart';
 import '../../../backend/usecases/get_app_connection.dart';
 import '../../../backend/usecases/get_authentication_data.dart';
-import '../../../backend/usecases/logout.dart';
 import '../../../core/error/failures.dart';
 import '../../util/translate_error_messages.dart';
 
@@ -26,17 +24,17 @@ class InitializationBloc
     @required this.fetchInitializationData,
     @required this.getAppConnection,
     @required this.getAuthenticationData,
-    @required this.logout,
+    @required this.deleteToken,
   })  : assert(fetchInitializationData != null),
         assert(getAppConnection != null),
         assert(getAuthenticationData != null),
-        assert(logout != null),
+        assert(deleteToken != null),
         super(InitializationState.initial());
 
   final FetchInitializationData fetchInitializationData;
   final GetAppConnection getAppConnection;
   final GetAuthenticationData getAuthenticationData;
-  final Logout logout;
+  final DeleteToken deleteToken;
 
   @override
   Stream<InitializationState> mapEventToState(
@@ -82,7 +80,7 @@ class InitializationBloc
         });
       });
     } else if (event is LogoutEvent) {
-      final logoutEither = await logout(NoParams());
+      final logoutEither = await deleteToken(NoParams());
 
       yield* logoutEither.fold((failure) async* {
         yield _mapFailureToErrorState(failure);

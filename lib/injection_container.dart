@@ -46,6 +46,7 @@ import 'backend/usecases/clear_mission_details.dart';
 import 'backend/usecases/clear_mission_state.dart';
 import 'backend/usecases/clear_search_areas.dart';
 import 'backend/usecases/delete_app_connection.dart';
+import 'backend/usecases/delete_token.dart';
 import 'backend/usecases/fetch_initialization_data.dart';
 import 'backend/usecases/get_app_configuration.dart';
 import 'backend/usecases/get_app_connection.dart';
@@ -221,12 +222,13 @@ Future<void> init() async {
         getAppConnection: sl(),
         getAuthenticationData: sl(),
         fetchInitializationData: sl(),
-        logout: sl(),
+        deleteToken: sl(),
       ));
 
   // Use Cases
   sl.registerLazySingleton<FetchInitializationData>(
       () => FetchInitializationData(sl()));
+  sl.registerLazySingleton<DeleteToken>(() => DeleteToken(sl()));
 
   //! Features - Confirmation
   // BLoC
@@ -235,7 +237,7 @@ Future<void> init() async {
         setSelectedUserRole: sl(),
         getAppConnection: sl(),
         getAuthenticationData: sl(),
-        logout: sl(),
+        deleteToken: sl(),
       ));
 
   // Use Cases

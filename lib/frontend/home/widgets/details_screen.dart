@@ -38,7 +38,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: () async {
-        BlocProvider.of<HomeBloc>(context).add(UpdateMissionDetails());
+        BlocProvider.of<HomeBloc>(context).add(Update());
         Scaffold.of(context).hideCurrentSnackBar();
       },
       child: BlocBuilder<HomeBloc, HomeState>(
@@ -100,7 +100,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           onPressed: () {
                                             _cacheManager.removeFile(imageUrl);
                                             BlocProvider.of<HomeBloc>(context)
-                                                .add(UpdateMissionDetails());
+                                                .add(Update());
                                           },
                                           child: Text(S.of(context).RETRY),
                                         ),

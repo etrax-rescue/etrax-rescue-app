@@ -135,7 +135,7 @@
     "SERVER_FAILURE_MESSAGE": "The server is not reachable at the moment.",
     "CACHE_FAILURE_MESSAGE": "An error occured while stored ressources were accessed.",
     "INVALID_INPUT_FAILURE_MESSAGE": "The provided URL does not resemble a valid format.\n Example for a valid URL: https://app.etrax.at",
-    "LOGIN_FAILURE_MESSAGE": "Invalid username or password",
+    "LOGIN_FAILURE_MESSAGE": "Invalid username, password or organization",
     "AUTHENTICATION_FAILURE_MESSAGE": "Access rights to the ressources on the server were revoked. Please log in again.",
 
     "LOCATION_PERMISSION_DENIED_FAILURE_MESSAGE": "Location permission denied",
