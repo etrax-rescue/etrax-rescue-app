@@ -3,7 +3,7 @@
 [![Tests](https://github.com/etrax-rescue/etrax-rescue-app/workflows/Tests/badge.svg)](https://github.com/etrax-rescue/etrax-rescue-app/actions)
 [![codecov](https://codecov.io/gh/yozoon/etrax-rescue-app/branch/main/graph/badge.svg?token=2MU8A9DNBQ)](https://codecov.io/gh/yozoon/etrax-rescue-app)
 
-Die _eTrax | rescue_ App ist der offizielle Client des _eTrax | rescue_ Projektes, dessen Ziel es ist die Verwaltung von Personensuchen für Hilfsorganisationen zu vereinfachen, sowie die zentrale Koordination von Suchteams aus der Einsatzleitung zu ermöglichen.
+Die _eTrax | rescue_ App ist der offizielle Client des _eTrax | rescue_ Projektes, dessen Ziel es ist die Verwaltung von Personensuchen für Hilfsorganisationen zu vereinfachen, sowie die zentrale Koordination von Suchteams aus der Einsatzleitung zu ermöglichen. Die App ist sowohl für Android als auch für iOS verfügbar.
 
 ## Funktionsumfang
 
@@ -54,6 +54,10 @@ cd etrax-rescue-app
 ## App Architektur
 
 Die Architektur der App basiert auf einer vereinfachten Version des [Clean Architecture Prinzips](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). Für die Implementierung wurde insbesondere die [Version](https://resocoder.com/flutter-clean-architecture-tdd/) dieses Architekturprinzips von Matt Rešetár als starke Inspiration herangezogen.
+
+## Background Location Plugin
+
+Da die Ortungsfunktionalität plattformspezifische Funktionen benötigt (Android/iOS) wurde sie als separates Plugin entwickelt, welches in folgendem Repository zu finden ist: https://github.com/etrax-rescue/flutter_background_location
 
 ---
 
