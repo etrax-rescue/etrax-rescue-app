@@ -44,13 +44,16 @@ cd etrax-rescue-app
  flutter run --release
  ```
 
-
 ## Screenshots
 
 <p align="center">
 <img src="screenshots/app_connection.png" width="300" alt="App Connection Page"/>
 <img src="screenshots/map_view.png" width="300" alt="Map View"/>
 </p>
+
+## App Architektur
+
+Die Architektur der App basiert auf einer vereinfachten Version des [Clean Architecture Prinzips](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). Für die Implementierung wurde insbesondere die [Version](https://resocoder.com/flutter-clean-architecture-tdd/) dieses Architekturprinzips von Matt Rešetár als starke Inspiration herangezogen.
 
 ---
 
