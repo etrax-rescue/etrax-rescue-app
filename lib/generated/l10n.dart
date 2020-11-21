@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -893,10 +895,10 @@ class S {
     );
   }
 
-  /// `GPS Details`
+  /// `Location Details`
   String get HEADING_GPS {
     return Intl.message(
-      'GPS Details',
+      'Location Details',
       name: 'HEADING_GPS',
       desc: '',
       args: [],
@@ -923,10 +925,10 @@ class S {
     );
   }
 
-  /// `GPS`
+  /// `Location`
   String get HEADING_GPS_SHORT {
     return Intl.message(
-      'GPS',
+      'Location',
       name: 'HEADING_GPS_SHORT',
       desc: '',
       args: [],
