@@ -142,6 +142,7 @@
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Standortberechtigung permanent verweigert. Öffne die Standorteinstellungen um dies zu beheben.",
     "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Ortungsdienste sind deaktiviert",
     "PLATFORM_FAILURE_MESSAGE": "Ein plugin hat einen Fehler verursacht",
+    "ADMIN_FAILURE_MESSAGE": "Die Konfiguration der App ist für Ihre Organisation am Server noch nicht abgeschlossen. Bitte kontaktieren Sie Ihre*n Administrator*in.",
     "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Der aktuelle Standort konnte nicht erfasst werden",
     "TOO_MANY_TRYS_FAILURE_MESSAGE": "Maximale Zahl an versuchen überschritten. Versuchen Sie es in einer Minute erneut.",
     "TOKEN_EXPIRED_FAILURE_MESSAGE": "Die Zugriffsrechte auf die Ressourcen am Server sind abgelaufen. Bitte erneut anmelden."

@@ -142,6 +142,7 @@
     "LOCATION_PERMISSION_PERMANENTLY_DENIED_FAILURE_MESSAGE": "Location permission permanently denied. Open settings to resolve this.",
     "LOCATION_SERVICES_DISABLED_FAILURE_MESSAGE": "Location services are disabled",
     "PLATFORM_FAILURE_MESSAGE": "A plugin raised an error",
+    "ADMIN_FAILURE_MESSAGE": "The server-sided app configuration has not yet been completed by your organization. Please contact your administrator.",
     "NO_LOCK_ON_LOCATION_FAILURE_MESSAGE": "Couldn't acquire current location",
     "TOO_MANY_TRYS_FAILURE_MESSAGE": "Maximum number of retry attempts exceeded. Try again in a minute.",
     "TOKEN_EXPIRED_FAILURE_MESSAGE": "Access rights to the ressources on the server expired. Please log in again."

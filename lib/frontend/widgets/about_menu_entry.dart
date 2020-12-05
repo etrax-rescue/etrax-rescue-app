@@ -24,8 +24,7 @@ PopupAction generateAboutMenuEntry(BuildContext context) {
                   decoration: TextDecoration.underline,
                 ),
               ),
-              onTap: () async =>
-                  await launch('https://v5.etrax.at/datenschutz/'),
+              onTap: () async => await launch('https://etrax.at/datenschutz/'),
             ),
           ]);
     },

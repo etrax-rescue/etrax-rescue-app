@@ -1215,6 +1215,16 @@ class S {
     );
   }
 
+  /// `The server-sided app configuration has not yet been completed by your organization. Please contact your administrator.`
+  String get ADMIN_FAILURE_MESSAGE {
+    return Intl.message(
+      'The server-sided app configuration has not yet been completed by your organization. Please contact your administrator.',
+      name: 'ADMIN_FAILURE_MESSAGE',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Couldn't acquire current location`
   String get NO_LOCK_ON_LOCATION_FAILURE_MESSAGE {
     return Intl.message(

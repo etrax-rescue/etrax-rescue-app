@@ -35,7 +35,7 @@ cd etrax-rescue-app
 2. Dependencies installieren/ updaten
 
  ```bash
- flutter pub upgrade
+ flutter pub get
  ```
  
  3. App kompilieren

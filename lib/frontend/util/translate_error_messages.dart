@@ -14,6 +14,7 @@ enum FailureMessageKey {
   authentication,
   tokenExpired,
   platform,
+  contactAdmin,
   locationPermissionDenied,
   locationPermissionPermanentlyDenied,
   locationServicesDisabled,
@@ -84,6 +85,8 @@ String translateErrorMessage(BuildContext context, FailureMessageKey key) {
       return S.of(context).NO_LOCK_ON_LOCATION_FAILURE_MESSAGE;
     case FailureMessageKey.platform:
       return S.of(context).PLATFORM_FAILURE_MESSAGE;
+    case FailureMessageKey.contactAdmin:
+      return S.of(context).ADMIN_FAILURE_MESSAGE;
     case FailureMessageKey.tooManyTrys:
       return S.of(context).TOO_MANY_TRYS_FAILURE_MESSAGE;
     default:

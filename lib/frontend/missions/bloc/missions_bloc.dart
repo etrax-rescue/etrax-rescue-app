@@ -73,9 +73,16 @@ class InitializationBloc
           yield* initializationEither.fold((failure) async* {
             yield _mapFailureToErrorState(failure);
           }, (initializationData) async* {
-            yield state.copyWith(
-                status: InitializationStatus.success,
-                initializationData: initializationData);
+            if (initializationData.userStateCollection.states.isEmpty) {
+              yield state.copyWith(
+                  status: InitializationStatus.unrecoverableFailure,
+                  messageKey: FailureMessageKey.contactAdmin,
+                  initializationData: initializationData);
+            } else {
+              yield state.copyWith(
+                  status: InitializationStatus.success,
+                  initializationData: initializationData);
+            }
           });
         });
       });

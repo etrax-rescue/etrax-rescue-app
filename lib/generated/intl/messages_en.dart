@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "ACCEPT_MISSION" : MessageLookupByLibrary.simpleMessage("Confirm"),
     "ACCURACY" : MessageLookupByLibrary.simpleMessage("Accuracy"),
     "ACTIVE_STATE" : MessageLookupByLibrary.simpleMessage("Currently active:"),
+    "ADMIN_FAILURE_MESSAGE" : MessageLookupByLibrary.simpleMessage("The server-sided app configuration has not yet been completed by your organization. Please contact your administrator."),
     "ALTITUDE" : MessageLookupByLibrary.simpleMessage("Altitude"),
     "APP_CONNECTION_HEADING" : MessageLookupByLibrary.simpleMessage("Connect App:"),
     "APP_NAME" : MessageLookupByLibrary.simpleMessage("eTrax|rescue"),
