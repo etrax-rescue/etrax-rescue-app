@@ -140,7 +140,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: 3b6a534a3df22db367e4dedeeca73d1ddfcf0e2f
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
-  background_location: da7e81eb03ecd67783b710c32025d3c6501c2b45
+  background_location: 56628a0d2d8090645498c97bcdba257cdc565e52
   barcode_scan: a5c27959edfafaa0c771905bad0b29d6d39e4479
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
