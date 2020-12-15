@@ -68,8 +68,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: b1da3acc1809a714c89c2f89dbcb9b7243679d3d
+      ref: main
+      resolved-ref: "5c2566c60fde9704a1f14395def3b10bec571b05"
       url: "https://github.com/etrax-rescue/flutter_background_location.git"
     source: git
     version: "0.0.2"
@@ -86,7 +86,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "6.1.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -177,7 +177,7 @@ packages:
       name: checked_yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   cli_util:
     dependency: transitive
     description:
@@ -451,7 +451,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.7+14"
+    version: "0.6.7+15"
   image_picker_platform_interface:
     dependency: transitive
     description:
@@ -752,7 +752,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.2+2"
+    version: "4.3.2+3"
   pub_semver:
     dependency: transitive
     description:
@@ -766,7 +766,7 @@ packages:
       name: pubspec_parse
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.7"
   quiver:
     dependency: transitive
     description:
@@ -953,7 +953,7 @@ packages:
       name: timing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+2"
+    version: "0.1.1+3"
   transparent_image:
     dependency: transitive
     description:

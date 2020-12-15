@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/etrax-rescue/etrax-rescue-app/workflows/Tests/badge.svg)](https://github.com/etrax-rescue/etrax-rescue-app/actions)
 [![codecov](https://codecov.io/gh/yozoon/etrax-rescue-app/branch/main/graph/badge.svg?token=2MU8A9DNBQ)](https://codecov.io/gh/yozoon/etrax-rescue-app)
+[![Codemagic build status](https://api.codemagic.io/apps/5fccbea7db6d1a4fe667fc34/5fccbea7db6d1a4fe667fc33/status_badge.svg)](https://codemagic.io/apps/5fccbea7db6d1a4fe667fc34/5fccbea7db6d1a4fe667fc33/latest_build)
 
 Die _eTrax | rescue_ App ist der offizielle Client des _eTrax | rescue_ Projektes, dessen Ziel es ist die Verwaltung von Personensuchen für Hilfsorganisationen zu vereinfachen, sowie die zentrale Koordination von Suchteams aus der Einsatzleitung zu ermöglichen. Die App ist sowohl für Android als auch für iOS verfügbar.
 
