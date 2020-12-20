@@ -22,6 +22,7 @@ class EtraxApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'eTrax|rescue',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         backgroundColor: const Color(0xFFFAFAFA),
         primaryColor: const Color(0xFF465a64),
