@@ -5,7 +5,7 @@
   Created by Test on 20.12.20.
   Copyright © 2020 piso e-communications. All rights reserved.
 */
-NSLocationAlwaysAndWhenInUseUsageDescription = "Heyo 1!";
-NSLocationWhenInUseUsageDescription = "Heyo 2!";
+NSLocationAlwaysAndWhenInUseUsageDescription = "This allows the app to use your location during certain states of a rescue operation to provide the operations center valuable feedback of the location of their search teams, improving their ability to coordinate the operation.";
+NSLocationWhenInUseUsageDescription = "This allows the app to use your location during certain states of a rescue operation to provide the operations center valuable feedback of the location of their search teams, improving their ability to coordinate the operation.";
 NSCameraUsageDescription = "Camera access is required to send photos of POIs to server and also to scan QR-codes.";
 NSPhotoLibraryUsageDescription = "Photo library access required by a 3rd party library, but the photo library is never actually accessed in the app.";
