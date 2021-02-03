@@ -1,0 +1,11 @@
+/* 
+  InfoPlist.strings
+  Runner
+
+  Created by Test on 20.12.20.
+  Copyright © 2020 piso e-communications. All rights reserved.
+*/
+NSLocationAlwaysAndWhenInUseUsageDescription = "Um die Hauptfunktionalität der App zu ermöglichen muss der Zugriff auf den Gerätestandort gewährt werden. Durch einen blauen Banner werden Sie darauf hingewiesen, dass die App gerade auf den Standort zugreift.";
+NSLocationWhenInUseUsageDescription = "Um die Hauptfunktionalität der App zu ermöglichen muss der Zugriff auf den Gerätestandort gewährt werden. Durch einen blauen Banner werden Sie darauf hingewiesen, dass die App gerade auf den Standort zugreift.";
+NSCameraUsageDescription = "Die Kameraberechtigung wird für das Aufnehmen von Bildern von POIs, sowie für das Einscannen von QR-Codes benötigt.";
+NSPhotoLibraryUsageDescription = "Die Berechtigung um auf die Fotobibliothek zuzugreifen wird von der Implementierung einer Appkomponente benötigt, aber auf die Fotos wird niemals wirklich zugegriffen.";

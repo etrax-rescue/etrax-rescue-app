@@ -27,13 +27,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera access required to send photos of POIs to server.</string>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo library access required by a 3rd party library, but the photo library is never actually accessed in the app.</string>
+	<string></string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>eTrax|rescue needs location access to fulfill its core functions.</string>
+	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open and in the background.</string>
+	<string></string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
