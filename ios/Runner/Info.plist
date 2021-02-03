@@ -27,13 +27,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>NSCameraUsageDescription</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>NSPhotoLibraryUsageDescription</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string></string>
+	<string>NSLocationAlwaysAndWhenInUseUsageDescription</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>NSLocationWhenInUseUsageDescription</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
