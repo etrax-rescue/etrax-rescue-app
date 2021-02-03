@@ -1,7 +1,7 @@
 name: etrax_rescue_app
 description: The official app of the eTrax|rescue project.
 
-version: 1.0.6+18
+version: 1.0.7+19
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
