@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(S.of(context).RECONNECT),
                     onPressed: () {
                       context
-                          .bloc<LoginBloc>()
+                          .read<LoginBloc>()
                           .add(RequestAppConnectionUpdate());
                     },
                   ),
@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
   void submit() {
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
-      context.bloc<LoginBloc>().add(SubmitLogin(
+      context.read<LoginBloc>().add(SubmitLogin(
           username: _username,
           password: _password,
           organizationID: _selectedOrganization));

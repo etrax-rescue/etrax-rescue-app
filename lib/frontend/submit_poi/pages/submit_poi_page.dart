@@ -37,7 +37,7 @@ class _SubmitPoiPageState extends State<SubmitPoiPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.bloc<SubmitPoiCubit>().capture();
+      context.read<SubmitPoiCubit>().capture();
     });
   }
 

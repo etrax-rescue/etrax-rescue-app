@@ -3,7 +3,6 @@ import 'package:etrax_rescue_app/backend/usecases/delete_token.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:etrax_rescue_app/backend/usecases/logout.dart';
 import 'package:etrax_rescue_app/frontend/util/translate_error_messages.dart';
 import 'package:etrax_rescue_app/backend/usecases/get_app_connection.dart';
 import 'package:etrax_rescue_app/core/error/failures.dart';

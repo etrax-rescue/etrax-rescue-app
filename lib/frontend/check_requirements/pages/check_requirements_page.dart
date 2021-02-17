@@ -50,7 +50,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
 
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.bloc<CheckRequirementsCubit>().start(
+        context.read<CheckRequirementsCubit>().start(
               action: widget.action,
               currentState: widget.currentState,
               desiredState: widget.desiredState,
@@ -63,7 +63,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).RETRIEVING_SETTINGS,
             completeMessage: S.of(context).RETRIEVING_SETTINGS_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().retrieveSettings();
+              context.read<CheckRequirementsCubit>().retrieveSettings();
             },
           ),
           SequenceStep.checkPermissions: StepContent(
@@ -71,7 +71,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).CHECKING_PERMISSIONS,
             completeMessage: S.of(context).CHECKING_PERMISSIONS_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().locationPermissionCheck();
+              context.read<CheckRequirementsCubit>().locationPermissionCheck();
             },
           ),
           SequenceStep.checkServices: StepContent(
@@ -79,7 +79,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).CHECKING_SERVICES,
             completeMessage: S.of(context).CHECKING_SERVICES_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().locationServicesCheck();
+              context.read<CheckRequirementsCubit>().locationServicesCheck();
             },
           ),
           SequenceStep.getLastLocation: StepContent(
@@ -87,7 +87,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).GETTING_CURRENT_LOCATION,
             completeMessage: S.of(context).GETTING_CURRENT_LOCATION_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().getLocation();
+              context.read<CheckRequirementsCubit>().getLocation();
             },
           ),
           SequenceStep.updateState: StepContent(
@@ -95,7 +95,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).UPDATING_STATE,
             completeMessage: S.of(context).UPDATING_STATE_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().updateState();
+              context.read<CheckRequirementsCubit>().updateState();
             },
           ),
           SequenceStep.quickAction: StepContent(
@@ -103,7 +103,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).TRIGGERING_QUICK_ACTION,
             completeMessage: S.of(context).TRIGGERING_QUICK_ACTION_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().quickAction();
+              context.read<CheckRequirementsCubit>().quickAction();
             },
           ),
           SequenceStep.logout: StepContent(
@@ -111,7 +111,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).LOGGING_OUT,
             completeMessage: S.of(context).LOGGING_OUT_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().signout();
+              context.read<CheckRequirementsCubit>().signout();
             },
           ),
           SequenceStep.stopUpdates: StepContent(
@@ -119,7 +119,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).STOPPING_UPDATES,
             completeMessage: S.of(context).STOPPING_UPDATES_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().stopUpdates();
+              context.read<CheckRequirementsCubit>().stopUpdates();
             },
           ),
           SequenceStep.clearState: StepContent(
@@ -127,7 +127,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).CLEARING_STATE,
             completeMessage: S.of(context).CLEARING_STATE_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().clearState();
+              context.read<CheckRequirementsCubit>().clearState();
             },
           ),
           SequenceStep.startUpdates: StepContent(
@@ -135,7 +135,7 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
             loadingMessage: S.of(context).STARTING_UPDATES,
             completeMessage: S.of(context).STARTING_UPDATES_DONE,
             onRetry: (context) {
-              context.bloc<CheckRequirementsCubit>().startUpdates();
+              context.read<CheckRequirementsCubit>().startUpdates();
             },
           ),
         };

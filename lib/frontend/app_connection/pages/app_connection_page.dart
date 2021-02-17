@@ -94,7 +94,7 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
                             suffixIcon: IconButton(
                               icon: Icon(CustomMaterialIcons.qrCodeScanner),
                               onPressed: () {
-                                context.bloc<AppConnectionCubit>().scanCode(
+                                context.read<AppConnectionCubit>().scanCode(
                                       S.of(context).CANCEL,
                                       S.of(context).FLASH_ON,
                                       S.of(context).FLASH_OFF,
@@ -154,7 +154,7 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
   void submit() {
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
-      context.bloc<AppConnectionCubit>().submit(_connectionString);
+      context.read<AppConnectionCubit>().submit(_connectionString);
     }
   }
 }

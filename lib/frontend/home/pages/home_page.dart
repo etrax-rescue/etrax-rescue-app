@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       // Check for new locations that were recorded while the app was in the background
-      context.bloc<HomeBloc>().add(CheckStatus());
+      context.read<HomeBloc>().add(CheckStatus());
     }
   }
 
