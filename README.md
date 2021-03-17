@@ -18,9 +18,8 @@ Die _eTrax | rescue_ App ist der offizielle Client des _eTrax | rescue_ Projekte
 
 ### Über die App Stores
 
-<p align="center">
-<a href="https://play.google.com/store/apps/details?id=at.etrax.etrax_rescue_app&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img width="300" alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"/></a>
-</p>
+<p align="center"><a href="https://play.google.com/store/apps/details?id=at.etrax.etrax_rescue_app&amp;pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="116.1px"></a></p>
+<p align="center"><a href="https://apps.apple.com/at/app/etrax-rescue/id1544828744?itsct=apps_box&amp;itscg=30200"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1615939200&amp;h=93212b1ed79f391b722cb3411f22a78e" alt="Download on the App Store" style="border-radius: 13px; width: 250px; height: 116.1px;"></a></p>
 
 ### Manuell
 
