@@ -55,12 +55,10 @@ class InitializationBloc
             await getAuthenticationData(NoParams());
 
         yield* authenticationDataEither.fold((failure) async* {
-          print("failure while getting auth data");
           yield state.copyWith(
               status: InitializationStatus.unrecoverableFailure,
               messageKey: mapFailureToMessageKey(failure));
         }, (authenticationData) async* {
-          print(authenticationData);
           yield state.copyWith(
               status: InitializationStatus.inProgress,
               appConnection: appConnection,
