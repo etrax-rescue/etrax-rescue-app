@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../core/error/failures.dart';
 import '../repositories/mission_state_repository.dart';
@@ -23,9 +22,9 @@ class SetSelectedMission extends UseCase<None, SetSelectedMissionParams> {
 
 class SetSelectedMissionParams extends Equatable {
   SetSelectedMissionParams({
-    @required this.appConnection,
-    @required this.authenticationData,
-    @required this.mission,
+    required this.appConnection,
+    required this.authenticationData,
+    required this.mission,
   });
 
   final AppConnection appConnection;

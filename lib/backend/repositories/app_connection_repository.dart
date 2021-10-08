@@ -24,10 +24,10 @@ abstract class AppConnectionRepository {
 
 class AppConnectionRepositoryImpl implements AppConnectionRepository {
   AppConnectionRepositoryImpl({
-    @required this.networkInfo,
-    @required this.localBarcodeDataSource,
-    @required this.localAppConnectionDataSource,
-    @required this.remoteAppConnectionDataSource,
+    required this.networkInfo,
+    required this.localBarcodeDataSource,
+    required this.localAppConnectionDataSource,
+    required this.remoteAppConnectionDataSource,
   });
 
   final NetworkInfo networkInfo;

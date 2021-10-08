@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,7 @@ class HomePage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.DarkStatusBar],
+      data: AppThemeData.DarkStatusBar,
       child: BlocProvider<HomeBloc>(
           lazy: false,
           create: (_) => sl<HomeBloc>()..add(Startup(userState: state)),
@@ -112,9 +113,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
         if (state.renewStatus) {
-          ExtendedNavigator.of(context).popAndPush(
-            Routes.checkRequirementsPage,
-            arguments: CheckRequirementsPageArguments(
+          AutoRouter.of(context).popAndPush(
+            CheckRequirementsPageRoute(
               currentState: widget.state,
               desiredState: widget.state,
               action: StatusAction.refresh,
@@ -226,22 +226,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           title: Text(S.of(context).LEAVE_MISSION),
           content: Text(S.of(context).CONFIRM_LEAVE_MISSION),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text(S.of(context).CANCEL),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(S.of(context).YES),
               onPressed: () {
-                ExtendedNavigator.of(context).pushAndRemoveUntil(
-                  Routes.checkRequirementsPage,
-                  (route) => false,
-                  arguments: CheckRequirementsPageArguments(
-                      desiredState: widget.state,
-                      currentState: widget.state,
-                      action: StatusAction.logout),
+                AutoRouter.of(context).pushAndPopUntil(
+                  CheckRequirementsPageRoute(
+                    desiredState: widget.state,
+                    currentState: widget.state,
+                    action: StatusAction.logout,
+                  ),
+                  predicate: (route) => false,
                 );
               },
             ),
@@ -252,11 +252,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void _updateState() {
-    ExtendedNavigator.of(context).push(Routes.stateUpdatePage,
-        arguments: StateUpdatePageArguments(currentState: widget.state));
+    AutoRouter.of(context).push(
+      StateUpdatePageRoute(currentState: widget.state),
+    );
   }
 
   void _takePhoto() async {
-    ExtendedNavigator.of(context).push(Routes.submitPoiPage);
+    AutoRouter.of(context).push(SubmitPoiPageRoute());
   }
 }

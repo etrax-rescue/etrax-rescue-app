@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -21,22 +22,21 @@ class LogoutButton extends StatelessWidget {
               title: Text(S.of(context).LOGOUT),
               content: Text(S.of(context).CONFIRM_LOGOUT),
               actions: [
-                FlatButton(
+                TextButton(
                   child: Text(S.of(context).CANCEL),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(S.of(context).YES),
                   onPressed: () {
-                    ExtendedNavigator.of(context).pushAndRemoveUntil(
-                      Routes.checkRequirementsPage,
-                      (route) => false,
-                      arguments: CheckRequirementsPageArguments(
+                    AutoRouter.of(context).pushAndPopUntil(
+                      CheckRequirementsPageRoute(
                           desiredState: null,
                           currentState: null,
                           action: StatusAction.logout),
+                      predicate: (route) => false,
                     );
                   },
                 ),

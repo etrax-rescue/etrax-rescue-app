@@ -1,3 +1,4 @@
+// @dart=2.9
 part of 'confirmation_bloc.dart';
 
 abstract class ConfirmationState extends Equatable {

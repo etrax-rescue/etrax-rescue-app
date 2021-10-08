@@ -22,7 +22,7 @@ class GetOrganizations
 }
 
 class GetOrganizationsParams extends Equatable {
-  GetOrganizationsParams({@required this.appConnection});
+  GetOrganizationsParams({required this.appConnection});
 
   final AppConnection appConnection;
 

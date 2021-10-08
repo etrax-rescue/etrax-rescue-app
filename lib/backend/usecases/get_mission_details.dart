@@ -25,7 +25,7 @@ class GetMissionDetails
 
 class GetMissionDetailsParams extends Equatable {
   GetMissionDetailsParams(
-      {@required this.appConnection, @required this.authenticationData});
+      {required this.appConnection, required this.authenticationData});
 
   final AppConnection appConnection;
   final AuthenticationData authenticationData;

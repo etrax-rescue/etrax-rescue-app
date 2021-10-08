@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class UserStateCollection extends Equatable {
   UserStateCollection({
-    @required this.states,
+    required this.states,
   });
 
   final List<UserState> states;
@@ -37,10 +37,10 @@ class UserStateCollection extends Equatable {
 
 class UserState extends Equatable {
   UserState({
-    @required this.id,
-    @required this.name,
-    @required this.description,
-    @required this.locationAccuracy,
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.locationAccuracy,
   });
 
   final int id;

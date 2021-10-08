@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 import '../../core/error/failures.dart';
 import '../repositories/app_connection_repository.dart';
@@ -20,9 +19,9 @@ class ScanQrCode extends UseCase<String, ScanQrCodeParams> {
 
 class ScanQrCodeParams extends Equatable {
   ScanQrCodeParams({
-    @required this.cancelText,
-    @required this.flashOnText,
-    @required this.flashOffText,
+    required this.cancelText,
+    required this.flashOnText,
+    required this.flashOffText,
   });
 
   final String cancelText;

@@ -1,14 +1,26 @@
+// @dart=2.9
 import 'dart:async';
+import 'dart:math' as math;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../generated/l10n.dart';
 import '../bloc/home_bloc.dart';
+
+class CachedNetworkTileProvider extends TileProvider {
+  const CachedNetworkTileProvider();
+
+  @override
+  ImageProvider getImage(Coords<num> coords, TileLayerOptions options) {
+    return CachedNetworkImageProvider(getTileUrl(coords, options));
+  }
+}
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key key}) : super(key: key);
@@ -20,14 +32,35 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   MapController _mapController;
   bool centerButtonVisible = true;
-  StreamSubscription<MapPosition> _streamSubscription;
+  StreamSubscription<MapEvent> _streamSubscription;
   List<Marker> _markers = [];
   bool initiallyCentered = false;
+  LatLng centerPosition;
+  double compassRotation = 0;
 
   @override
   void initState() {
     super.initState();
     _mapController = MapController();
+    initMapListener();
+  }
+
+  void initMapListener() async {
+    await _mapController.onReady;
+
+    _streamSubscription?.cancel();
+    _streamSubscription = _mapController.mapEventStream.listen((event) {
+      if (_mapController.center != centerPosition) {
+        setState(() {
+          centerButtonVisible = true;
+        });
+      }
+      if (event is MapEventRotate) {
+        setState(() {
+          compassRotation = _mapController.rotation;
+        });
+      }
+    });
   }
 
   @override
@@ -40,7 +73,6 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        LatLng centerPosition;
         List<LatLng> points = [];
         List<Polygon> searchAreas = [];
 
@@ -101,22 +133,10 @@ class _MapScreenState extends State<MapScreen> {
         }
 
         // Center Button and auto centering
-        if (_mapController.ready) {
-          if (!initiallyCentered && state.missionState != null) {
-            _mapController.move(centerPosition, _mapController.zoom);
-            initiallyCentered = true;
-            centerButtonVisible = false;
-          }
-          if (_mapController.center != null) {
-            _streamSubscription?.cancel();
-            _streamSubscription = _mapController.position.listen((position) {
-              if (position.center != centerPosition) {
-                setState(() {
-                  centerButtonVisible = true;
-                });
-              }
-            });
-          }
+        if (!initiallyCentered && state.missionState != null) {
+          _mapController.move(centerPosition, _mapController.zoom);
+          initiallyCentered = true;
+          centerButtonVisible = false;
         }
 
         // Current position
@@ -163,20 +183,40 @@ class _MapScreenState extends State<MapScreen> {
             ),
             Container(
               child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Visibility(
+                    child: Transform.rotate(
+                      angle: (compassRotation % 360) * math.pi / 180,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          _mapController.rotate(0);
+                        },
+                        child: const Icon(Icons.navigation, color: Colors.red),
+                        backgroundColor: Color.fromARGB(180, 255, 255, 255),
+                        mini: true,
+                      ),
+                    ),
+                    visible: compassRotation != 0,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Visibility(
                     child: FloatingActionButton.extended(
                       onPressed: () {
-                        if (_mapController.ready) {
-                          if (_mapController.zoom != null) {
-                            _mapController.move(
-                                centerPosition, _mapController.zoom);
-                            setState(() {
-                              centerButtonVisible = false;
-                            });
-                          }
+                        if (_mapController.zoom != null) {
+                          _mapController.move(
+                              centerPosition, _mapController.zoom);
+                          setState(() {
+                            centerButtonVisible = false;
+                          });
                         }
                       },
                       icon: Icon(

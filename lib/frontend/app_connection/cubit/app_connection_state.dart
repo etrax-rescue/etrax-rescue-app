@@ -1,3 +1,4 @@
+// @dart=2.9
 part of 'app_connection_cubit.dart';
 
 enum AppConnectionStatus {

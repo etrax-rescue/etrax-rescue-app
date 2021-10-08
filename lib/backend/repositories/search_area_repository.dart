@@ -23,9 +23,9 @@ abstract class SearchAreaRepository {
 
 class SearchAreaRepositoryImpl implements SearchAreaRepository {
   SearchAreaRepositoryImpl({
-    @required this.networkInfo,
-    @required this.remoteSearchAreaDataSource,
-    @required this.labeledCoordinateDao,
+    required this.networkInfo,
+    required this.remoteSearchAreaDataSource,
+    required this.labeledCoordinateDao,
   });
 
   final NetworkInfo networkInfo;
@@ -36,7 +36,7 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
   Future<Either<Failure, SearchAreaCollection>> getSearchAreas(
       AppConnection appConnection,
       AuthenticationData authenticationData) async {
-    SearchAreaCollection collection;
+    SearchAreaCollection collection = SearchAreaCollection(areas: []);
     if (await networkInfo.isConnected) {
       bool failed = false;
       try {
@@ -69,7 +69,7 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
                   label: label,
                   description: description,
                   coordinates: coordinates,
-                  color: color != null ? Color(color) : null,
+                  color: Color(color),
                 );
               },
             ),
@@ -84,9 +84,10 @@ class SearchAreaRepositoryImpl implements SearchAreaRepository {
       } else {
         try {
           await labeledCoordinateDao.deleteAll();
-          await collection.areas.forEach((area) =>
-              labeledCoordinateDao.insertCoordinates(area.coordinates, area.id,
-                  area.label, area.description, area.color.value));
+          for (var area in collection.areas) {
+            await labeledCoordinateDao.insertCoordinates(area.coordinates,
+                area.id, area.label, area.description, area.color.value);
+          }
         } on InvalidDataException {
           return Left(CacheFailure());
         } on MoorWrappedException {

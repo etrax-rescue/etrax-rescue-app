@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -16,7 +17,7 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: themeData[AppTheme.LightStatusBar],
+        data: AppThemeData.LightStatusBar,
         child: BlocProvider(
             create: (_) => sl<LaunchBloc>()..add(Launch()), child: this));
   }
@@ -27,14 +28,14 @@ class LaunchPage extends StatelessWidget implements AutoRouteWrapper {
       body: BlocConsumer<LaunchBloc, LaunchState>(
         listener: (context, state) {
           if (state is LaunchAppConnectionPage) {
-            ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
+            AutoRouter.of(context).popAndPush(AppConnectionPageRoute());
           } else if (state is LaunchLoginPage) {
-            ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
+            AutoRouter.of(context).popAndPush(LoginPageRoute());
           } else if (state is LaunchHomePage) {
-            ExtendedNavigator.of(context).popAndPush(Routes.homePage,
-                arguments: HomePageArguments(state: state.missionState.state));
+            AutoRouter.of(context)
+                .popAndPush(HomePageRoute(state: state.missionState.state));
           } else if (state is LaunchUnecoverableError) {
-            ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
+            AutoRouter.of(context).popAndPush(AppConnectionPageRoute());
           }
         },
         builder: (context, state) {

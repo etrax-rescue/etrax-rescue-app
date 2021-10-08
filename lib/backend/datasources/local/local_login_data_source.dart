@@ -86,7 +86,7 @@ class LocalLoginDataSourceImpl implements LocalLoginDataSource {
 
   @override
   Future<String> getCachedToken() async {
-    final data = secureStorage.read(key: SharedPreferencesKeys.token);
+    final data = await secureStorage.read(key: SharedPreferencesKeys.token);
     if (data != null) {
       return data;
     } else {

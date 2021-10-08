@@ -33,36 +33,8 @@ final textTheme = TextTheme(
   subtitle1: TextStyle(color: textColor),
 );
 
-/*
-final themeData = {
-  AppTheme.DarkStatusBar: ThemeData.from(
-    colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: primarySwatch,
-        accentColor: accentColor,
-        backgroundColor: lightBackgroundColor,
-        brightness: Brightness.dark),
-    textTheme: textTheme,
-  ),
-  AppTheme.LightStatusBar: ThemeData.from(
-    colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: primarySwatch,
-        accentColor: accentColor,
-        backgroundColor: lightBackgroundColor,
-        brightness: Brightness.light),
-    textTheme: textTheme,
-  ),
-  AppTheme.Black: ThemeData.from(
-    colorScheme: ColorScheme.fromSwatch(
-        primarySwatch: primarySwatch,
-        accentColor: accentColor,
-        backgroundColor: darkBackgroundColor,
-        brightness: Brightness.dark),
-    textTheme: textTheme,
-  ),
-};*/
-
-final themeData = {
-  AppTheme.DarkStatusBar: ThemeData(
+class AppThemeData {
+  static final DarkStatusBar = ThemeData(
     backgroundColor: const Color(0xFFFAFAFA),
     primaryColor: textColor,
     primaryColorLight: const Color(0xFFa3adb2),
@@ -83,8 +55,9 @@ final themeData = {
         color: Colors.white,
       ),
     ),
-  ),
-  AppTheme.LightStatusBar: ThemeData(
+  );
+
+  static final LightStatusBar = ThemeData(
     backgroundColor: const Color(0xFFFAFAFA),
     primaryColor: textColor,
     primaryColorLight: const Color(0xFFa3adb2),
@@ -108,8 +81,8 @@ final themeData = {
         color: textColor,
       ),
     ),
-  ),
-  AppTheme.Black: ThemeData(
+  );
+  static final Black = ThemeData(
     backgroundColor: Colors.black,
     primaryColor: textColor,
     primaryColorLight: const Color(0xFFa3adb2),
@@ -130,5 +103,5 @@ final themeData = {
         color: Colors.white,
       ),
     ),
-  ),
-};
+  );
+}

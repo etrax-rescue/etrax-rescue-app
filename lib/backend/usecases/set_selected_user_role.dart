@@ -23,9 +23,9 @@ class SetSelectedUserRole extends UseCase<None, SetSelectedUserRoleParams> {
 
 class SetSelectedUserRoleParams extends Equatable {
   SetSelectedUserRoleParams({
-    @required this.appConnection,
-    @required this.authenticationData,
-    @required this.role,
+    required this.appConnection,
+    required this.authenticationData,
+    required this.role,
   });
 
   final AppConnection appConnection;

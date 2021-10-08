@@ -7,7 +7,7 @@ enum DetailType {
 }
 
 abstract class MissionDetail extends Equatable {
-  MissionDetail({@required this.title, @required this.type});
+  MissionDetail({required this.title, required this.type});
 
   final String title;
   final DetailType type;
@@ -16,7 +16,7 @@ abstract class MissionDetail extends Equatable {
 }
 
 class MissionDetailText extends MissionDetail {
-  MissionDetailText({@required this.title, @required this.body})
+  MissionDetailText({required this.title, required this.body})
       : super(type: DetailType.text, title: title);
   final String title;
   final String body;
@@ -39,7 +39,7 @@ class MissionDetailText extends MissionDetail {
 }
 
 class MissionDetailImage extends MissionDetail {
-  MissionDetailImage({@required this.title, @required this.uid})
+  MissionDetailImage({required this.title, required this.uid})
       : super(type: DetailType.image, title: title);
   final String title;
   final String uid;
@@ -62,7 +62,7 @@ class MissionDetailImage extends MissionDetail {
 }
 
 class MissionDetailCollection extends Equatable {
-  MissionDetailCollection({@required this.details});
+  MissionDetailCollection({required this.details});
 
   final List<MissionDetail> details;
 

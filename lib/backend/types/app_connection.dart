@@ -3,13 +3,13 @@ import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
 class AppConnection extends Equatable {
-  AppConnection({@required this.host, @required this.basePath});
+  AppConnection({required this.host, required this.basePath});
 
   final String basePath;
   final String host;
 
-  Uri generateUri({String subPath, Map<String, String> paramMap}) {
-    final uri = Uri.parse(p.join(host, basePath ?? '', subPath ?? ''));
+  Uri generateUri({String? subPath, Map<String, String>? paramMap}) {
+    final uri = Uri.parse(p.join(host, basePath, subPath ?? ''));
     if (paramMap != null) {
       return Uri(
           scheme: uri.scheme,

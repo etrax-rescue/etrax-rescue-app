@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:async';
 import 'dart:math';
 
@@ -27,7 +28,7 @@ class MissionPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.LightStatusBar],
+      data: AppThemeData.LightStatusBar,
       child: BlocProvider(
         create: (_) =>
             sl<InitializationBloc>()..add(StartFetchingInitializationData()),
@@ -62,13 +63,13 @@ class _MissionPageState extends State<MissionPage> {
           return;
         }
         if (state.status == InitializationStatus.logout) {
-          ExtendedNavigator.of(context).popAndPush(Routes.launchPage);
+          AutoRouter.of(context).popAndPush(LaunchPageRoute());
         }
 
         _refreshCompleter?.complete();
         _refreshCompleter = Completer();
         if (state.status == InitializationStatus.failure) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(translateErrorMessage(context, state.messageKey)),
               duration: const Duration(days: 365),
@@ -77,14 +78,14 @@ class _MissionPageState extends State<MissionPage> {
                 onPressed: () {
                   BlocProvider.of<InitializationBloc>(context)
                       .add(StartFetchingInitializationData());
-                  Scaffold.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   _refreshIndicatorKey.currentState.show();
                 },
               ),
             ),
           );
         } else if (state.status == InitializationStatus.unrecoverableFailure) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(translateErrorMessage(context, state.messageKey)),
               duration: const Duration(days: 365),
@@ -104,7 +105,7 @@ class _MissionPageState extends State<MissionPage> {
         onRefresh: () async {
           BlocProvider.of<InitializationBloc>(context)
               .add(StartFetchingInitializationData());
-          Scaffold.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
           return _refreshCompleter.future;
         },
         child: CustomScrollView(

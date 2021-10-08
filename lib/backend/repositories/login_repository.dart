@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 
 import '../../core/error/exceptions.dart';
 import '../../core/error/failures.dart';
@@ -34,11 +33,11 @@ abstract class LoginRepository {
 
 class LoginRepositoryImpl implements LoginRepository {
   LoginRepositoryImpl({
-    @required this.networkInfo,
-    @required this.remoteOrganizationsDataSource,
-    @required this.localOrganizationsDataSource,
-    @required this.remoteLoginDataSource,
-    @required this.localLoginDataSource,
+    required this.networkInfo,
+    required this.remoteOrganizationsDataSource,
+    required this.localOrganizationsDataSource,
+    required this.remoteLoginDataSource,
+    required this.localLoginDataSource,
   });
 
   final NetworkInfo networkInfo;
@@ -52,7 +51,7 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<Either<Failure, OrganizationCollection>> getOrganizations(
       AppConnection appConnection) async {
-    OrganizationCollection model;
+    OrganizationCollection model = OrganizationCollection(organizations: []);
     if (await networkInfo.isConnected) {
       bool failed = false;
       try {

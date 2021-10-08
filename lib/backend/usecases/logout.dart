@@ -21,8 +21,7 @@ class Logout extends UseCase<None, LogoutParams> {
 }
 
 class LogoutParams extends Equatable {
-  LogoutParams(
-      {@required this.appConnection, @required this.authenticationData});
+  LogoutParams({required this.appConnection, required this.authenticationData});
 
   final AppConnection appConnection;
   final AuthenticationData authenticationData;

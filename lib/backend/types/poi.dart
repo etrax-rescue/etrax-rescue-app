@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:background_location/background_location.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';

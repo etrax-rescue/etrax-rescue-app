@@ -2,7 +2,7 @@ import 'package:moor/moor.dart';
 
 import '../database.dart';
 import '../models/labeled_coordinate_model.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 part 'labeled_coordinate_dao.g.dart';
 
@@ -24,10 +24,13 @@ class LabeledCoordinateDaoImpl extends DatabaseAccessor<AppDatabase>
   LabeledCoordinateDaoImpl(AppDatabase db) : super(db);
 
   @override
-  Future<List<String>> getDistinctIDs() {
+  Future<List<String>> getDistinctIDs() async {
     final query = selectOnly(db.labeledCoordinateModels, distinct: true)
       ..addColumns([db.labeledCoordinateModels.id]);
-    return query.map((row) => row.read(db.labeledCoordinateModels.id)).get();
+
+    final result =
+        await query.map((row) => row.read(db.labeledCoordinateModels.id)).get();
+    return result.whereType<String>().toList();
   }
 
   @override
@@ -60,39 +63,43 @@ class LabeledCoordinateDaoImpl extends DatabaseAccessor<AppDatabase>
   }
 
   @override
-  Future<String> getLabel(String id) {
+  Future<String> getLabel(String id) async {
     final query = selectOnly(db.labeledCoordinateModels, distinct: true)
       ..addColumns([db.labeledCoordinateModels.label])
       ..where(db.labeledCoordinateModels.id.equals(id))
       ..limit(1);
     ;
-    return query
+    final result = await query
         .map((row) => row.read(db.labeledCoordinateModels.label))
         .getSingle();
+    return result ?? "";
   }
 
   @override
-  Future<String> getDescription(String id) {
+  Future<String> getDescription(String id) async {
     final query = selectOnly(db.labeledCoordinateModels, distinct: true)
       ..addColumns([db.labeledCoordinateModels.description])
       ..where(db.labeledCoordinateModels.id.equals(id))
       ..limit(1);
     ;
     ;
-    return query
+    final result = await query
         .map((row) => row.read(db.labeledCoordinateModels.description))
         .getSingle();
+    return result ?? "";
   }
 
   @override
-  Future<int> getColorCode(String id) {
+  Future<int> getColorCode(String id) async {
     final query = selectOnly(db.labeledCoordinateModels, distinct: true)
       ..addColumns([db.labeledCoordinateModels.color])
       ..where(db.labeledCoordinateModels.id.equals(id))
       ..limit(1);
     ;
-    return query
+    final result = await query
         .map((row) => row.read(db.labeledCoordinateModels.color))
         .getSingle();
+
+    return result ?? 0;
   }
 }

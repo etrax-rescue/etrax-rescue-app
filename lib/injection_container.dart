@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:background_location/background_location.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';

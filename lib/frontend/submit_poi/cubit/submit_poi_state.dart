@@ -1,3 +1,4 @@
+// @dart=2.9
 part of 'submit_poi_cubit.dart';
 
 abstract class SubmitPoiState extends Equatable {

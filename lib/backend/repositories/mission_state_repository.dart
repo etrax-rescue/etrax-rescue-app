@@ -48,9 +48,9 @@ abstract class MissionStateRepository {
 
 class MissionStateRepositoryImpl implements MissionStateRepository {
   MissionStateRepositoryImpl({
-    @required this.localMissionStateDataSource,
-    @required this.remoteMissionStateDataSource,
-    @required this.networkInfo,
+    required this.localMissionStateDataSource,
+    required this.remoteMissionStateDataSource,
+    required this.networkInfo,
   });
 
   final NetworkInfo networkInfo;

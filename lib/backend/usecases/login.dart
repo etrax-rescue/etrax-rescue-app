@@ -21,10 +21,10 @@ class Login extends UseCase<None, LoginParams> {
 
 class LoginParams extends Equatable {
   LoginParams({
-    @required this.appConnection,
-    @required this.organizationID,
-    @required this.username,
-    @required this.password,
+    required this.appConnection,
+    required this.organizationID,
+    required this.username,
+    required this.password,
   });
 
   final AppConnection appConnection;

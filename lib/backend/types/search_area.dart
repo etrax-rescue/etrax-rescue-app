@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 class SearchAreaCollection extends Equatable {
-  SearchAreaCollection({@required this.areas});
+  SearchAreaCollection({required this.areas});
 
   final List<SearchArea> areas;
 
@@ -33,11 +33,11 @@ Color hexToColor(String code) {
 
 class SearchArea extends Equatable {
   SearchArea({
-    @required this.label,
-    @required this.id,
-    @required this.coordinates,
-    @required this.description,
-    this.color,
+    required this.label,
+    required this.id,
+    required this.coordinates,
+    required this.description,
+    this.color = const Color.fromARGB(255, 255, 0, 0),
   });
 
   final List<LatLng> coordinates;
@@ -69,7 +69,9 @@ class SearchArea extends Equatable {
             ? throw FormatException()
             : json['description'],
         coordinates: coordinates,
-        color: json['color'] == null ? null : hexToColor(json['color']));
+        color: json['color'] == null
+            ? hexToColor("0xFF0000")
+            : hexToColor(json['color']));
   }
 
   @override

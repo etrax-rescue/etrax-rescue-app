@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -22,7 +23,7 @@ class LoginPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: themeData[AppTheme.LightStatusBar],
+        data: AppThemeData.LightStatusBar,
         child: BlocProvider(
             create: (_) => sl<LoginBloc>()..add(InitializeLogin()),
             child: this));
@@ -45,9 +46,9 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            ExtendedNavigator.of(context).popAndPush(Routes.missionPage);
+            AutoRouter.of(context).popAndPush(MissionPageRoute());
           } else if (state is OpenAppConnectionPage) {
-            ExtendedNavigator.of(context).popAndPush(Routes.appConnectionPage);
+            AutoRouter.of(context).popAndPush(AppConnectionPageRoute());
           }
         },
         child: CustomScrollView(

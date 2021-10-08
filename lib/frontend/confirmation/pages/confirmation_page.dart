@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,7 @@ class ConfirmationPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.LightStatusBar],
+      data: AppThemeData.LightStatusBar,
       child: BlocProvider(create: (_) => sl<ConfirmationBloc>(), child: this),
     );
   }
@@ -52,22 +53,21 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
         listener: (context, state) {
           if (state is ConfirmationSuccess) {
             // We set current and desired state to the first state of the supplied states.
-            ExtendedNavigator.of(context).push(
-              Routes.checkRequirementsPage,
-              arguments: CheckRequirementsPageArguments(
+            AutoRouter.of(context).push(
+              CheckRequirementsPageRoute(
                 currentState: widget.states.states[0],
                 desiredState: widget.states.states[0],
                 action: StatusAction.change,
               ),
             );
           } else if (state is ConfirmationError) {
-            Scaffold.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(translateErrorMessage(context, state.messageKey)),
               ),
             );
           } else if (state is ConfirmationUnrecoverableError) {
-            Scaffold.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(translateErrorMessage(context, state.messageKey)),
                 duration: const Duration(days: 365),
@@ -81,9 +81,9 @@ class _ConfirmationPageState extends State<ConfirmationPage> {
               ),
             );
           } else if (state is ConfirmationLogoutSuccess) {
-            ExtendedNavigator.of(context).pushAndRemoveUntil(
-              Routes.launchPage,
-              (route) => false,
+            AutoRouter.of(context).pushAndPopUntil(
+              LaunchPageRoute(),
+              predicate: (route) => false,
             );
           }
         },

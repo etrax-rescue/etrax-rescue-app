@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -39,7 +40,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       key: _refreshIndicatorKey,
       onRefresh: () async {
         BlocProvider.of<HomeBloc>(context).add(Update());
-        Scaffold.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
       },
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {

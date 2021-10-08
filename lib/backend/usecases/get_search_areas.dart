@@ -25,7 +25,7 @@ class GetSearchAreas
 
 class GetSearchAreaParams extends Equatable {
   GetSearchAreaParams(
-      {@required this.appConnection, @required this.authenticationData});
+      {required this.appConnection, required this.authenticationData});
 
   final AppConnection appConnection;
   final AuthenticationData authenticationData;

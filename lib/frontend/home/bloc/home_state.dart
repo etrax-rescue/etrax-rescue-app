@@ -1,3 +1,4 @@
+// @dart=2.9
 part of 'home_bloc.dart';
 
 enum HomeStatus {

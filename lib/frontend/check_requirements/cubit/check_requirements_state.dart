@@ -1,3 +1,4 @@
+// @dart=2.9
 part of 'check_requirements_cubit.dart';
 
 enum StepStatus {

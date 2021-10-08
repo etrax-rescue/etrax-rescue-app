@@ -4,7 +4,7 @@ description: The official app of the eTrax|rescue project.
 version: 1.0.8+20
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -13,77 +13,77 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   # Service locator
-  get_it: ^4.0.4
+  get_it: ^7.2.0
   # Bloc for state management
-  flutter_bloc: ^6.1.0
+  flutter_bloc: ^7.3.0
   # Value equality
-  equatable: ^1.2.5
+  equatable: ^2.0.3
   # Functional programming features
-  dartz: ^0.9.1
+  dartz: ^0.10.0
   # Local cache
-  shared_preferences: ^0.5.8
+  shared_preferences: ^2.0.8
   # QR scanner data source
-  barcode_scan: ^3.0.1
+  barcode_scan2: ^4.1.4
   # Internet connection checker
   data_connection_checker: ^0.3.4
   # For proper conversion of DateTime to string
-  intl: ^0.16.1
+  intl: ^0.17.0
   # Making requests to the API
-  http: ^0.12.2
+  http: ^0.13.4
   # HTTP library
-  dio: ^3.0.10
+  dio: ^4.0.0
   # For advanced routing features
-  auto_route: ^0.6.6
+  auto_route: ^2.4.2
   # Internationalization
-  flutter_i18n: ^0.18.0
+  flutter_i18n: ^0.30.0
   # Paths and corresponding convenience functions
-  path: ^1.7.0
-  path_provider: ^1.6.14
+  path: ^1.8.0
+  path_provider: ^2.0.5
   # Launching Maps app from coordinates
-  maps_launcher: ^1.2.1
+  maps_launcher: ^2.0.1
   # FAB menu for home screen
   flutter_speed_dial_quickaction:
     git:
       url: https://github.com/yozoon/flutter_speed_dial.git
   # Keeping pages loaded on home screen
-  preload_page_view: ^0.1.4
+  preload_page_view: ^0.1.6
   # Displaying a map widget
-  flutter_map: ^0.10.1+1
+  flutter_map: ^0.14.0
   # Launching system camera to take pictures
-  image_picker: ^0.6.7+4
+  image_picker: ^0.8.4+2
   # Zoomable photo view
-  photo_view: ^0.10.1
+  photo_view: ^0.13.0
   # Getting location data
   background_location:
     git:
       url: https://github.com/etrax-rescue/flutter_background_location.git
       ref: main
   # For opening the system settings page corresponding to the app
-  app_settings: ^4.0.3
+  app_settings: ^4.1.1
   # For storing the authentication token
-  flutter_secure_storage: ^3.3.3
+  flutter_secure_storage: ^4.2.1
   # For caching images retrieved by the server
-  cached_network_image: ^2.3.1
-  flutter_cache_manager: ^1.4.1
+  cached_network_image: ^3.1.0
+  flutter_cache_manager: ^3.1.2
   # To retrieve the app version
-  package_info: ^0.4.3
+  package_info: ^2.0.2
   # To fix image rotation on some devices
-  flutter_image_compress: ^0.7.0
+  flutter_image_compress: ^1.1.0
   # Database
-  moor: ^3.3.1
-  sqlite3_flutter_libs: ^0.4.0
+  moor: ^4.5.0
+  sqlite3_flutter_libs: ^0.5.1
   # Nicer loading animations
-  flutter_spinkit: ^4.1.2+1
+  flutter_spinkit: ^5.1.0
+  latlong2: ^0.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^4.1.1
-  build_runner: null
-  auto_route_generator: ^0.6.6
-  intl_translation: ^0.17.10
+  mockito: ^5.0.16
+  build_runner: ^2.1.4
+  auto_route_generator: ^2.4.1
   # Code generator for the database
-  moor_generator: ^3.3.1
+  moor_generator: ^4.5.1
 
 flutter:
   uses-material-design: true

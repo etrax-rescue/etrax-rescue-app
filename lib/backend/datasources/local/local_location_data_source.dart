@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:background_location/background_location.dart';
 
 import '../../types/app_connection.dart';

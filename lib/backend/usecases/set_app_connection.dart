@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import '../../core/error/failures.dart';
 import '../repositories/app_connection_repository.dart';
@@ -18,7 +17,7 @@ class SetAppConnection extends UseCase<None, AppConnectionParams> {
 }
 
 class AppConnectionParams extends Equatable {
-  AppConnectionParams({@required this.authority, @required this.basePath});
+  AppConnectionParams({required this.authority, required this.basePath});
 
   final String authority;
   final String basePath;

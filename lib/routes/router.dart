@@ -1,5 +1,5 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
-import 'package:auto_route/auto_route_annotations.dart';
 
 import '../frontend/app_connection/pages/app_connection_page.dart';
 import '../frontend/check_requirements/pages/check_requirements_page.dart';

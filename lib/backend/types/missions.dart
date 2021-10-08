@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class MissionCollection extends Equatable {
-  MissionCollection({@required this.missions});
+  MissionCollection({required this.missions});
 
   final List<Mission> missions;
 
@@ -35,11 +35,11 @@ class MissionCollection extends Equatable {
 
 class Mission extends Equatable {
   Mission({
-    @required this.id,
-    @required this.name,
-    @required this.start,
-    @required this.latitude,
-    @required this.longitude,
+    required this.id,
+    required this.name,
+    required this.start,
+    required this.latitude,
+    required this.longitude,
     this.exercise = false,
   });
 

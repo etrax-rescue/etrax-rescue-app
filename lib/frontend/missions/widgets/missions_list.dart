@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,9 +33,8 @@ class MissionsList extends StatelessWidget {
                           : Theme.of(context).scaffoldBackgroundColor,
                       child: InkWell(
                         onTap: () {
-                          ExtendedNavigator.of(context).push(
-                            '/confirmation-page',
-                            arguments: ConfirmationPageArguments(
+                          AutoRouter.of(context).push(
+                            ConfirmationPageRoute(
                               mission: missions[index],
                               states: initializationData.userStateCollection,
                               roles: initializationData.userRoleCollection,

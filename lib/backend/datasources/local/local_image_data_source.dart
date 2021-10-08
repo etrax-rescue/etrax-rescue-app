@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -15,14 +16,12 @@ class LocalImageDataSourceImpl implements LocalImageDataSource {
 
   @override
   Future<String> takePhoto() async {
-    PickedFile pickedFile = await imagePicker.getImage(
+    final XFile? pickedFile = await imagePicker.pickImage(
         source: ImageSource.camera, maxWidth: 800, imageQuality: 100);
     if (pickedFile != null) {
       String imagePath = pickedFile.path;
       _fixRotation(imagePath);
-      if (imagePath != null) {
-        return imagePath;
-      }
+      return imagePath;
     }
     throw PlatformException(code: 'No camera photo returned');
   }
@@ -35,7 +34,7 @@ class LocalImageDataSourceImpl implements LocalImageDataSource {
    */
   void _fixRotation(String imagePath) async {
     final originalFile = File(imagePath);
-    List<int> imageBytes = await originalFile.readAsBytes();
+    Uint8List imageBytes = await originalFile.readAsBytes();
     List<int> compressedBytes =
         await FlutterImageCompress.compressWithList(imageBytes, quality: 85);
     await originalFile.writeAsBytes(compressedBytes);

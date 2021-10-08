@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +38,8 @@ class QuickActionButton extends StatelessWidget {
                   FlatButton(
                     child: Text(S.of(context).YES),
                     onPressed: () {
-                      ExtendedNavigator.of(context).popAndPush(
-                        Routes.checkRequirementsPage,
-                        arguments: CheckRequirementsPageArguments(
+                      AutoRouter.of(context).popAndPush(
+                        CheckRequirementsPageRoute(
                           currentState: action,
                           desiredState: action,
                           action: StatusAction.quickAction,

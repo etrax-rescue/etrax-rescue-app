@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 import 'app_configuration.dart';
 import 'missions.dart';
@@ -9,11 +8,11 @@ import 'user_states.dart';
 
 class InitializationData extends Equatable {
   InitializationData({
-    @required this.appConfiguration,
-    @required this.missionCollection,
-    @required this.userStateCollection,
-    @required this.quickActionCollection,
-    @required this.userRoleCollection,
+    required this.appConfiguration,
+    required this.missionCollection,
+    required this.userStateCollection,
+    required this.quickActionCollection,
+    required this.userRoleCollection,
   });
 
   final AppConfiguration appConfiguration;

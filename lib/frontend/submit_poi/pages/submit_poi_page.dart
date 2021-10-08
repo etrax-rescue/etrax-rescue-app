@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -20,7 +21,7 @@ class SubmitPoiPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.Black],
+      data: AppThemeData.Black,
       child: BlocProvider(
         create: (_) => sl<SubmitPoiCubit>(),
         child: this,

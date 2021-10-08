@@ -46,13 +46,13 @@ abstract class InitializationRepository {
 
 class InitializationRepositoryImpl implements InitializationRepository {
   InitializationRepositoryImpl({
-    @required this.remoteInitializationDataSource,
-    @required this.localUserStatesDataSource,
-    @required this.localAppConfigurationDataSource,
-    @required this.localMissionsDataSource,
-    @required this.localUserRolesDataSource,
-    @required this.localQuickActionDataSource,
-    @required this.networkInfo,
+    required this.remoteInitializationDataSource,
+    required this.localUserStatesDataSource,
+    required this.localAppConfigurationDataSource,
+    required this.localMissionsDataSource,
+    required this.localUserRolesDataSource,
+    required this.localQuickActionDataSource,
+    required this.networkInfo,
   });
 
   final RemoteInitializationDataSource remoteInitializationDataSource;

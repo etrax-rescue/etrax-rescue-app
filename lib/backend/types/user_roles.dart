@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class UserRoleCollection extends Equatable {
   UserRoleCollection({
-    @required this.roles,
+    required this.roles,
   });
 
   final List<UserRole> roles;
@@ -37,9 +37,9 @@ class UserRoleCollection extends Equatable {
 
 class UserRole extends Equatable {
   UserRole({
-    @required this.id,
-    @required this.name,
-    @required this.description,
+    required this.id,
+    required this.name,
+    required this.description,
   });
 
   final int id;

@@ -24,10 +24,10 @@ abstract class MissionDetailsRepository {
 
 class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
   MissionDetailsRepositoryImpl({
-    @required this.networkInfo,
-    @required this.remoteDetailsDataSource,
-    @required this.localMissionDetailsDataSource,
-    @required this.cacheManager,
+    required this.networkInfo,
+    required this.remoteDetailsDataSource,
+    required this.localMissionDetailsDataSource,
+    required this.cacheManager,
   });
 
   final NetworkInfo networkInfo;
@@ -39,7 +39,7 @@ class MissionDetailsRepositoryImpl implements MissionDetailsRepository {
   Future<Either<Failure, MissionDetailCollection>> getMissionDetails(
       AppConnection appConnection,
       AuthenticationData authenticationData) async {
-    MissionDetailCollection collection;
+    MissionDetailCollection collection = MissionDetailCollection(details: []);
     if (await networkInfo.isConnected) {
       bool failed = false;
       try {

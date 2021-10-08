@@ -5,7 +5,7 @@ import 'user_states.dart';
 
 class QuickActionCollection extends Equatable {
   QuickActionCollection({
-    @required this.actions,
+    required this.actions,
   });
 
   final List<UserState> actions;

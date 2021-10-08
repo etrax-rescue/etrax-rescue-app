@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class AppConfiguration extends Equatable {
   AppConfiguration({
-    @required this.locationUpdateInterval,
-    @required this.locationUpdateMinDistance,
-    @required this.infoUpdateInterval,
+    required this.locationUpdateInterval,
+    required this.locationUpdateMinDistance,
+    required this.infoUpdateInterval,
   });
 
   final int locationUpdateInterval;

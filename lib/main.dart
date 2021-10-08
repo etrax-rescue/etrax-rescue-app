@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+// @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl_standalone.dart';
@@ -16,13 +16,12 @@ void main() async {
 }
 
 class EtraxApp extends StatelessWidget {
-  const EtraxApp({Key key}) : super(key: key);
+  final _router = routing.Router();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'eTrax|rescue',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         backgroundColor: const Color(0xFFFAFAFA),
         primaryColor: const Color(0xFF465a64),
@@ -44,7 +43,9 @@ class EtraxApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      builder: ExtendedNavigator<routing.Router>(router: routing.Router()),
+      routeInformationParser: _router.defaultRouteParser(),
+      routerDelegate: _router.delegate(),
+      routeInformationProvider: _router.routeInfoProvider(),
     );
   }
 }

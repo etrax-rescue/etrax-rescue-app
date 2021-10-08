@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,7 @@ class StateUpdatePage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.DarkStatusBar],
+      data: AppThemeData.DarkStatusBar,
       child: BlocProvider(
         create: (_) => sl<StateUpdateBloc>()..add(FetchStates()),
         child: this,
@@ -158,9 +159,8 @@ class _StateUpdatePageState extends State<StateUpdatePage> {
 
   void submit() {
     if (_formKey.currentState.validate()) {
-      ExtendedNavigator.of(context).popAndPush(
-        Routes.checkRequirementsPage,
-        arguments: CheckRequirementsPageArguments(
+      AutoRouter.of(context).popAndPush(
+        CheckRequirementsPageRoute(
           currentState: widget.currentState,
           desiredState: _selectedState,
           action: StatusAction.change,

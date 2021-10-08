@@ -23,9 +23,9 @@ class SetSelectedUserState extends UseCase<None, SetSelectedUserStateParams> {
 
 class SetSelectedUserStateParams extends Equatable {
   SetSelectedUserStateParams({
-    @required this.appConnection,
-    @required this.authenticationData,
-    @required this.state,
+    required this.appConnection,
+    required this.authenticationData,
+    required this.state,
   });
 
   final AppConnection appConnection;

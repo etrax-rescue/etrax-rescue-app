@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class OrganizationCollection extends Equatable {
-  OrganizationCollection({@required this.organizations});
+  OrganizationCollection({required this.organizations});
 
   final List<Organization> organizations;
 
@@ -33,8 +33,8 @@ class OrganizationCollection extends Equatable {
 
 class Organization extends Equatable {
   Organization({
-    @required this.id,
-    @required this.name,
+    required this.id,
+    required this.name,
   });
 
   final String id;

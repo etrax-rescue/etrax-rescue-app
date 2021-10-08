@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
@@ -22,7 +23,7 @@ class AppConnectionPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-        data: themeData[AppTheme.LightStatusBar],
+        data: AppThemeData.LightStatusBar,
         child:
             BlocProvider(create: (_) => sl<AppConnectionCubit>(), child: this));
   }
@@ -45,7 +46,7 @@ class _AppConnectionPageState extends State<AppConnectionPage> {
           _controller.text = _connectionString;
 
           if (state.status == AppConnectionStatus.success) {
-            ExtendedNavigator.of(context).popAndPush(Routes.loginPage);
+            AutoRouter.of(context).popAndPush(LoginPageRoute());
           }
         },
         child: CustomScrollView(

@@ -25,8 +25,8 @@ class FetchInitializationData
 
 class FetchInitializationDataParams extends Equatable {
   FetchInitializationDataParams({
-    @required this.appConnection,
-    @required this.authenticationData,
+    required this.appConnection,
+    required this.authenticationData,
   });
 
   final AppConnection appConnection;

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class LoginData extends Equatable {
   LoginData({
-    @required this.username,
-    @required this.password,
+    required this.username,
+    required this.password,
   });
 
   final String username;

@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,7 @@ class CheckRequirementsPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return Theme(
-      data: themeData[AppTheme.DarkStatusBar],
+      data: AppThemeData.DarkStatusBar,
       child: BlocProvider(
         create: (_) => sl<CheckRequirementsCubit>(),
         child: this,
@@ -187,14 +188,14 @@ class _CheckRequirementsPageState extends State<CheckRequirementsPage> {
   void delayedPop() async {
     await Future.delayed(const Duration(seconds: 1)).then((_) {
       if (widget.action == StatusAction.logout) {
-        ExtendedNavigator.of(context).pushAndRemoveUntil(
-          Routes.loginPage,
-          (route) => false,
+        AutoRouter.of(context).pushAndPopUntil(
+          LoginPageRoute(),
+          predicate: (route) => false,
         );
       } else {
-        ExtendedNavigator.of(context).pushAndRemoveUntil(
-          Routes.launchPage,
-          (route) => false,
+        AutoRouter.of(context).pushAndPopUntil(
+          LaunchPageRoute(),
+          predicate: (route) => false,
         );
       }
     });
